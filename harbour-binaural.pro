@@ -21,15 +21,17 @@ SOURCES += src/binaural.cpp \
     src/audioengine.cpp
 
 DISTFILES += qml/harbour-binaural.qml \
+    qml/pages/MainPage.qml \
     qml/cover/CoverPage.qml \
     qml/pages/AboutPage.qml \
-    qml/pages/AmbiencePage.qml \
-    qml/pages/BinauralPage.qml \
-    qml/pages/InstructionsPage.qml \
-    qml/pages/MainPage.qml \
+    qml/pages/components/InfoBinauralPage.qml \
     rpm/harbour-binaural.changes.in \
     rpm/harbour-binaural.changes.run.in \
     rpm/harbour-binaural.spec \
+    sounds/brown.wav \
+    sounds/grey.wav \
+    sounds/pink.wav \
+    sounds/white.wav \
     translations/*.ts \
     harbour-binaural.desktop \
     sounds/wind.mp3 \
@@ -50,16 +52,19 @@ TRANSLATIONS += translations/harbour-binaural-de.ts
 HEADERS += \
     src/audioengine.h
 
-# Install the ambient audio files as application data.
+# Install the audio files as application data.
 #
-# qmake's install system is used here so the normal
-# `make install` step puts the files into the same
+# qmake's install system puts the files into the same
 # directory that AudioEngine expects at runtime.
 ambient.files = sounds/wind.mp3 \
                 sounds/seawaves.mp3 \
                 sounds/crickets.mp3 \
                 sounds/stream.mp3 \
-                sounds/rain.mp3
+                sounds/rain.mp3 \
+                sounds/white.wav \
+                sounds/pink.wav \
+                sounds/brown.wav \
+                sounds/grey.wav
 
 ambient.path = /usr/share/harbour-binaural/sounds
 

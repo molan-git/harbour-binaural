@@ -63,17 +63,133 @@ Page {
             }
 
             SectionHeader {
-                text: "Developer"
+                text: "Development"
+            }
+
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                text: "Source code on Github"
+
+                onClicked: {
+                    Qt.openUrlExternally("https://github.com/molan-git/harbour-binaural")
+                }
+            }
+
+            SectionHeader {
+                text: "Translations"
             }
 
             Label {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: "molan"
+                text: "Help translate the application into your language."
 
                 color: Theme.primaryColor
-                font.pixelSize: Theme.fontSizeMedium
+                font.pixelSize: Theme.fontSizeSmall
+                wrapMode: Text.WordWrap
+            }
+
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                text: "Transifex"
+
+                onClicked: {
+                    Qt.openUrlExternally("https://www.transifex.com/")
+                }
+            }
+
+            SectionHeader {
+                text: "Support"
+            }
+
+            Label {
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                x: Theme.horizontalPageMargin
+
+                text: "Support the project via"
+
+                color: Theme.primaryColor
+                font.pixelSize: Theme.fontSizeSmall
+                wrapMode: Text.WordWrap
+            }
+
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                text: "tba"
+
+                onClicked: {
+                    Qt.openUrlExternally("https://tba")
+                }
+            }
+
+            SectionHeader {
+                text: "Project"
+            }
+
+            Label {
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                x: Theme.horizontalPageMargin
+
+                text: "Binaural was inspired by the Metiq app. The ambient audio files are sourced from the same project. Many thanks to the developers of Metiq for their work and inspiration."
+
+                color: Theme.primaryColor
+                font.pixelSize: Theme.fontSizeSmall
+                wrapMode: Text.WordWrap
+            }
+
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                text: "Metiq on Github"
+
+                onClicked: {
+                    Qt.openUrlExternally("https://github.com/metiq-xyz")
+                }
+            }
+
+            Label {
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                x: Theme.horizontalPageMargin
+
+                text: "The coloured noise sound files were generated using the Metiq colored noise generator."
+
+                color: Theme.primaryColor
+                font.pixelSize: Theme.fontSizeSmall
+                wrapMode: Text.WordWrap
+            }
+
+            SectionHeader {
+                text: "Data protection"
+            }
+
+            Label {
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                x: Theme.horizontalPageMargin
+
+                text: "This application works exclusively offline and requires permission to output audio. No data is collected."
+
+                color: Theme.primaryColor
+                font.pixelSize: Theme.fontSizeSmall
+                wrapMode: Text.WordWrap
+            }
+
+            SectionHeader {
+                text: "License"
+            }
+
+            Label {
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                x: Theme.horizontalPageMargin
+
+                text: "Binaural is licensed under the GNU General Public License v3.0 or later."
+
+                color: Theme.primaryColor
+                font.pixelSize: Theme.fontSizeSmall
+                wrapMode: Text.WordWrap
             }
         }
     }
