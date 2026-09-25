@@ -1,4 +1,4 @@
-# Binaural <img width="50" title="Page Home" src="https://github.com/poetaster/harbour-tooter/raw/master/icons/86x86/harbour-tooterb.png">
+# Binaural <img width="50" title="Page Home" src="https://github.com/molan-git/harbour-binaural/blob/main/icons/172x172/harbour-binaural.png">
 
 ## About
 Binaural is a simple sound app for [Sailfish OS](https://sailfishos.org) designed for relaxation, focus, sleep, and meditation. Create your own listening experience with binaural frequency waves, color noises, and ambient sounds. Mix different sounds together, adjust their levels, and find the combination that works best for you.
