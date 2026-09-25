@@ -156,10 +156,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Colored Noise</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>White</source>
         <translation type="unfinished"></translation>
     </message>
@@ -173,10 +169,6 @@
     </message>
     <message>
         <source>Grey</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Colored noise volume</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -213,6 +205,14 @@
     </message>
     <message>
         <source>Binaural frequency range</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Color Noise</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Color noise volume</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

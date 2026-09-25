@@ -51,7 +51,7 @@ FullscreenContentPage {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("Binaural beats are created by playing two slightly different frequencies in each ear, producing a rhythmic effect often used for relaxation, focus, sleep, and meditation. Color noises are different types of sound frequencies that can be used individually or combined to create different listening experiences.")
+                text: qsTr("Binaural beats are created by playing two slightly different frequencies in each ear, producing a rhythmic effect often used for relaxation, focus, sleep, and meditation.")
 
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeMedium
