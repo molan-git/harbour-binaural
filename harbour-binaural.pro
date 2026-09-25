@@ -25,20 +25,22 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/cover/CoverPage.qml \
     qml/pages/AboutPage.qml \
     qml/pages/components/InfoBinauralPage.qml \
+    qml/pages/components/InfoColoredPage.qml \
     rpm/harbour-binaural.changes.in \
     rpm/harbour-binaural.changes.run.in \
     rpm/harbour-binaural.spec \
-    sounds/brown.wav \
-    sounds/grey.wav \
-    sounds/pink.wav \
-    sounds/white.wav \
+    sounds/brown.mp3 \
+    sounds/grey.mp3 \
+    sounds/pink.mp3 \
+    sounds/white.mp3 \
     translations/*.ts \
     harbour-binaural.desktop \
     sounds/wind.mp3 \
     sounds/seawaves.mp3 \
     sounds/crickets.mp3 \
     sounds/stream.mp3 \
-    sounds/rain.mp3
+    sounds/rain.mp3 \
+    sounds/birds.mp3
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 
@@ -61,10 +63,11 @@ ambient.files = sounds/wind.mp3 \
                 sounds/crickets.mp3 \
                 sounds/stream.mp3 \
                 sounds/rain.mp3 \
-                sounds/white.wav \
-                sounds/pink.wav \
-                sounds/brown.wav \
-                sounds/grey.wav
+                sounds/birds.mp3 \
+                sounds/white.mp3 \
+                sounds/pink.mp3 \
+                sounds/brown.mp3 \
+                sounds/grey.mp3
 
 ambient.path = /usr/share/harbour-binaural/sounds
 

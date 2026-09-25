@@ -17,7 +17,7 @@ Page {
             spacing: Theme.paddingLarge
 
             PageHeader {
-                title: "About"
+                title: qsTr("About")
             }
 
             Image {
@@ -44,7 +44,7 @@ Page {
                 width: parent.width
                 horizontalAlignment: Text.AlignHCenter
 
-                text: "Version 0.1"
+                text: qsTr("Version") + " 0.1"
 
                 color: Theme.secondaryColor
                 font.pixelSize: Theme.fontSizeSmall
@@ -54,7 +54,7 @@ Page {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: "Application for binaural beats and ambience sounds"
+                text: qsTr("Application for binaural beats, colored noise and ambience sounds.")
 
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeMedium
@@ -63,13 +63,13 @@ Page {
             }
 
             SectionHeader {
-                text: "Development"
+                text: qsTr("Development")
             }
 
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                text: "Source code on Github"
+                text: qsTr("Source code on") + " Github"
 
                 onClicked: {
                     Qt.openUrlExternally("https://github.com/molan-git/harbour-binaural")
@@ -77,14 +77,14 @@ Page {
             }
 
             SectionHeader {
-                text: "Translations"
+                text: qsTr("Translations")
             }
 
             Label {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: "Help translate the application into your language."
+                text: qsTr("Help translate the application into your language.")
 
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeSmall
@@ -102,14 +102,14 @@ Page {
             }
 
             SectionHeader {
-                text: "Support"
+                text: qsTr("Support")
             }
 
             Label {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: "Support the project via"
+                text: qsTr("For small tips to support the project.")
 
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeSmall
@@ -127,14 +127,14 @@ Page {
             }
 
             SectionHeader {
-                text: "Project"
+                text: qsTr("Project")
             }
 
             Label {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: "Binaural was inspired by the Metiq app. The ambient audio files are sourced from the same project. Many thanks to the developers of Metiq for their work and inspiration."
+                text: qsTr("Binaural was inspired by the Metiq app. The ambient audio files are sourced from the same project. Many thanks to the developers of Metiq for their work and inspiration.")
 
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeSmall
@@ -144,7 +144,7 @@ Page {
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                text: "Metiq on Github"
+                text: "Metiq - Github"
 
                 onClicked: {
                     Qt.openUrlExternally("https://github.com/metiq-xyz")
@@ -155,7 +155,7 @@ Page {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: "The coloured noise sound files were generated using the Metiq colored noise generator."
+                text: qsTr("The coloured noise sound files were generated using the Metiq colored noise generator.")
 
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeSmall
@@ -163,14 +163,14 @@ Page {
             }
 
             SectionHeader {
-                text: "Data protection"
+                text: qsTr("Data protection")
             }
 
             Label {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: "This application works exclusively offline and requires permission to output audio. No data is collected."
+                text: qsTr("This application works exclusively offline and requires permission to output audio. No data is collected.")
 
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeSmall
@@ -178,14 +178,14 @@ Page {
             }
 
             SectionHeader {
-                text: "License"
+                text: qsTr("License")
             }
 
             Label {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: "Binaural is licensed under the GNU General Public License v3.0 or later."
+                text: qsTr("Binaural is licensed under the GNU General Public License v3.0 or later.")
 
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeSmall

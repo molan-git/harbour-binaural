@@ -40,7 +40,7 @@ FullscreenContentPage {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("Binaural Beats")
+                text: qsTr("Color Noise")
 
                 color: Theme.highlightColor
                 font.pixelSize: Theme.fontSizeLarge
@@ -51,7 +51,7 @@ FullscreenContentPage {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("Binaural beats are created by playing two slightly different frequencies in each ear, producing a rhythmic effect often used for relaxation, focus, sleep, and meditation. Color noises are different types of sound frequencies that can be used individually or combined to create different listening experiences.")
+                text: qsTr("Color noises are different sound profiles with varying frequency distributions. They are commonly used for relaxation, focus, sleep, meditation, and masking unwanted sounds.")
 
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeMedium
@@ -62,34 +62,10 @@ FullscreenContentPage {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("Tap a frequency button to play or stop it. You can also add a color noise and/or ambient sound and adjust the volume of each sound individually.")
-
-                color: Theme.primaryColor
-                font.pixelSize: Theme.fontSizeMedium
-                wrapMode: Text.WordWrap
-            }
-
-
-            Label {
-                width: parent.width - 2 * Theme.horizontalPageMargin
-                x: Theme.horizontalPageMargin
-
-                text: qsTr("Frequency ranges")
-
-                color: Theme.highlightColor
-                font.pixelSize: Theme.fontSizeMedium
-                wrapMode: Text.WordWrap
-            }
-
-            Label {
-                width: parent.width - 2 * Theme.horizontalPageMargin
-                x: Theme.horizontalPageMargin
-
-                text: qsTr("<b>Delta (0.5–4 Hz):</b> associated with deep sleep and restorative rest.<br><br>") +
-                      qsTr("<b>Theta (4–8 Hz):</b> associated with drowsiness, meditation, and relaxed creativity.<br><br>") +
-                      qsTr("<b>Alpha (8–12 Hz):</b> associated with relaxed wakefulness, calmness, and light meditation.<br><br>") +
-                      qsTr("<b>Beta (13–30 Hz):</b> associated with alertness, concentration, and active thinking.<br><br>") +
-                      qsTr("<b>Gamma (30–100 Hz):</b> associated with complex cognitive processing and perception.")
+                text: qsTr("<b>White:</b> masks distractions.<br><br>") +
+                      qsTr("<b>Pink:</b> helps with sleep and focus.<br><br>") +
+                      qsTr("<b>Brown:</b> helps relaxation and focus.<br><br>") +
+                      qsTr("<b>Grey:</b> masks sounds evenly.")
 
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeMedium

@@ -15,9 +15,8 @@ namespace
     const double CarrierFrequency = 200.0;
     const double Amplitude = 16000.0;
 
-    // Duration of Crossfade (1000 = 1sec). ColoredNoise uses separades CrossfadeDuration
     const int CrossfadeDuration = 8000;
-    const int ColoredNoiseCrossfadeDuration = 4000;
+    const int ColoredNoiseCrossfadeDuration = 2000;
     const int FadeInDuration = 2000;
     const int FadeInterval = 50;
 }
@@ -142,7 +141,6 @@ AudioEngine::AudioEngine(QObject *parent)
     m_binauralFadeTimer->setInterval(FadeInterval);
     m_ambienceFadeTimer->setInterval(FadeInterval);
     m_coloredNoiseFadeTimer->setInterval(FadeInterval);
-    m_coloredNoiseCrossfadeTimer->setInterval(FadeInterval);
 
     connect(
         m_ambiencePlayerA,
@@ -215,16 +213,10 @@ AudioEngine::AudioEngine(QObject *parent)
         this,
         [this]()
         {
-            updateColoredNoiseFadeIn();
-        });
-
-    connect(
-        m_coloredNoiseCrossfadeTimer,
-        &QTimer::timeout,
-        this,
-        [this]()
-        {
-            updateColoredNoiseCrossfade();
+            if (m_fadingColoredNoisePlayer)
+                updateColoredNoiseCrossfade();
+            else
+                updateColoredNoiseFadeIn();
         });
 
     m_ambiencePlayerA->setVolume(0);
@@ -245,6 +237,8 @@ void AudioEngine::setFrequencyBand(const QString &band)
 {
     if (band == "Delta")
         m_beatFrequency = 2.0;
+    else if (band == "Delta/Theta")
+        m_beatFrequency = 4.0;
     else if (band == "Theta")
         m_beatFrequency = 6.0;
     else if (band == "Alpha")
@@ -299,8 +293,7 @@ void AudioEngine::setColoredNoiseVolume(int volume)
         qRound(m_coloredNoiseVolume * 0.3);
 
     if (m_activeColoredNoisePlayer &&
-        !m_coloredNoiseFadeTimer->isActive() &&
-        !m_coloredNoiseCrossfadeTimer->isActive())
+        !m_coloredNoiseFadeTimer->isActive())
     {
         m_activeColoredNoisePlayer->setVolume(
             actualVolume);
@@ -326,6 +319,9 @@ void AudioEngine::setAmbience(const QString &ambience)
     else if (ambience == "Rain")
         mediaUrl = QUrl(
             "file:///usr/share/harbour-binaural/sounds/rain.mp3");
+    else if (ambience == "Birds")
+        mediaUrl = QUrl(
+            "file:///usr/share/harbour-binaural/sounds/birds.mp3");
     else
         return;
 
@@ -370,16 +366,16 @@ void AudioEngine::setColoredNoise(const QString &noise)
 
     if (noise == "White")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/white.wav");
+            "file:///usr/share/harbour-binaural/sounds/white.mp3");
     else if (noise == "Pink")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/pink.wav");
+            "file:///usr/share/harbour-binaural/sounds/pink.mp3");
     else if (noise == "Brown")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/brown.wav");
+            "file:///usr/share/harbour-binaural/sounds/brown.mp3");
     else if (noise == "Grey")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/grey.wav");
+            "file:///usr/share/harbour-binaural/sounds/grey.mp3");
     else
         return;
 
@@ -396,6 +392,7 @@ void AudioEngine::setColoredNoise(const QString &noise)
     m_activeColoredNoisePlayer->setVolume(0);
 
     m_coloredNoiseFadePosition = 0;
+    m_coloredNoiseCrossfadePosition = 0;
 
     m_activeColoredNoisePlayer->play();
 
@@ -430,9 +427,6 @@ void AudioEngine::checkColoredNoiseCrossfade(
         return;
 
     if (m_fadingColoredNoisePlayer)
-        return;
-
-    if (m_coloredNoiseCrossfadeTimer->isActive())
         return;
 
     const qint64 duration =
@@ -485,11 +479,9 @@ void AudioEngine::startColoredNoiseCrossfade(
 
     m_coloredNoiseCrossfadePosition = 0;
 
-    m_coloredNoiseFadeTimer->stop();
-
     nextPlayer->play();
 
-    m_coloredNoiseCrossfadeTimer->start();
+    m_coloredNoiseFadeTimer->start();
 }
 
 void AudioEngine::updateColoredNoiseCrossfade()
@@ -497,7 +489,7 @@ void AudioEngine::updateColoredNoiseCrossfade()
     if (!m_activeColoredNoisePlayer ||
         !m_fadingColoredNoisePlayer)
     {
-        m_coloredNoiseCrossfadeTimer->stop();
+        m_coloredNoiseFadeTimer->stop();
         return;
     }
 
@@ -515,7 +507,6 @@ void AudioEngine::updateColoredNoiseCrossfade()
     const int maximumVolume =
         qRound(m_coloredNoiseVolume * 0.3);
 
-    // Equal-power crossfade curve to reduce the perceived volume dip at the midpoint
     const double angle =
         progress * M_PI_2;
 
@@ -545,7 +536,7 @@ void AudioEngine::updateColoredNoiseCrossfade()
         m_activeColoredNoisePlayer->setVolume(
             maximumVolume);
 
-        m_coloredNoiseCrossfadeTimer->stop();
+        m_coloredNoiseFadeTimer->stop();
 
         m_coloredNoiseCrossfadePosition = 0;
     }
@@ -736,13 +727,16 @@ void AudioEngine::updateColoredNoiseFadeIn()
             / static_cast<double>(
                 FadeInDuration));
 
+    const double easedProgress =
+        1.0 - qPow(1.0 - progress, 2.0);
+
     const int maximumVolume =
         qRound(m_coloredNoiseVolume * 0.3);
 
     m_activeColoredNoisePlayer->setVolume(
-        static_cast<int>(
+        qRound(
             maximumVolume *
-            progress));
+            easedProgress));
 
     if (progress >= 1.0)
     {

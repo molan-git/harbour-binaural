@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>sounds/test.ogg</file>
-    </qresource>
-</RCC>

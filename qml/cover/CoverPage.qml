@@ -25,8 +25,8 @@ CoverBackground {
             wrapMode: Text.WordWrap
 
             text: (activeBand === "" && activeAmbience === "" && activeNoise === "")
-                  ? "Nothing being played"
-                  : "Playing"
+                  ? qsTr("Nothing being played")
+                  : qsTr("Playing")
         }
 
         Label {
