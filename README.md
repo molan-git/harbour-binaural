@@ -3,6 +3,8 @@
 ## About
 Binaural is a simple sound app for [Sailfish OS](https://sailfishos.org) designed for relaxation, focus, sleep, and meditation. Create your own listening experience with binaural frequency waves, color noises, and ambient sounds. Mix different sounds together, adjust their levels, and find the combination that works best for you.
 
+Binaural is work-in-progress and hasn't been released yet. 
+
 ## Build 
 Clone / download this repository and import it into your SailfishOS IDE using the harbour-binaural.pro project file. No additional configuration needed. 
 
