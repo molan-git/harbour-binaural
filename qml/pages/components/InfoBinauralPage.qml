@@ -22,13 +22,16 @@ FullscreenContentPage {
                 height: Theme.itemSizeLarge + Theme.paddingLarge
 
                 IconButton {
+                    width: Theme.iconSizeMedium
+                    height: Theme.iconSizeMedium
+
                     anchors {
                         right: parent.right
                         rightMargin: Theme.horizontalPageMargin
                         bottom: parent.bottom
                     }
 
-                    icon.source: "image://theme/icon-splus-cancel"
+                    icon.source: "image://theme/icon-m-cancel"
 
                     onClicked: {
                         pageStack.pop()
@@ -51,7 +54,7 @@ FullscreenContentPage {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("Binaural beats are created by playing two slightly different frequencies in each ear, producing a rhythmic effect often used for relaxation, focus, sleep, and meditation.")
+                text: qsTr("Binaural beats are created by playing two slightly different tones, one in each ear. The brain processes the difference between the tones as a rhythmic beat. Different beat frequencies may be used to support relaxation, focus, meditation, or sleep.")
 
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeMedium
@@ -62,19 +65,34 @@ FullscreenContentPage {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("Tap a frequency button to play or stop it. You can also add a color noise and/or ambient sound and adjust the volume of each sound individually.")
+                text: qsTr("The frequency shown below is the perceived beat frequency, measured in Hertz (Hz). Different frequency ranges are traditionally associated with different states of mental activity.")
 
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeMedium
                 wrapMode: Text.WordWrap
             }
 
+            Label {
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                x: Theme.horizontalPageMargin
+
+                text: qsTr("Tap a frequency button to start or stop it. You can also add colored noise and/or ambient sounds and adjust the volume of each sound individually.")
+
+                color: Theme.primaryColor
+                font.pixelSize: Theme.fontSizeMedium
+                wrapMode: Text.WordWrap
+            }
+
+            Item {
+                width: 1
+                height: Theme.paddingSmall
+            }
 
             Label {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("Frequency ranges")
+                text: qsTr("Choose from:")
 
                 color: Theme.highlightColor
                 font.pixelSize: Theme.fontSizeMedium
@@ -85,15 +103,32 @@ FullscreenContentPage {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("<b>Delta (0.5–4 Hz):</b> associated with deep sleep and restorative rest.<br><br>") +
-                      qsTr("<b>Theta (4–8 Hz):</b> associated with drowsiness, meditation, and relaxed creativity.<br><br>") +
-                      qsTr("<b>Alpha (8–12 Hz):</b> associated with relaxed wakefulness, calmness, and light meditation.<br><br>") +
-                      qsTr("<b>Beta (13–30 Hz):</b> associated with alertness, concentration, and active thinking.<br><br>") +
-                      qsTr("<b>Gamma (30–100 Hz):</b> associated with complex cognitive processing and perception.")
+                text: qsTr("<b>Delta (2 Hz):</b> Deep sleep, restorative rest.<br><br>") +
+                      qsTr("<b>Delta/Theta (4 Hz):</b> Deep relaxation, sleep onset.<br><br>") +
+                      qsTr("<b>Theta (6 Hz):</b> Drowsiness, meditation, relaxed creativity.<br><br>") +
+                      qsTr("<b>Alpha (10 Hz):</b> Relaxed wakefulness, calmness, light meditation.<br><br>") +
+                      qsTr("<b>Beta (20 Hz):</b> Alertness, concentration, active thinking.<br><br>") +
+                      qsTr("<b>Gamma (40 Hz):</b> Complex cognitive processing, perception.")
 
                 color: Theme.primaryColor
-                font.pixelSize: Theme.fontSizeMedium
+                font.pixelSize: Theme.fontSizeSmall
                 textFormat: Text.RichText
+                wrapMode: Text.WordWrap
+            }
+
+            Item {
+                width: 1
+                height: Theme.paddingSmall
+            }
+
+            Label {
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                x: Theme.horizontalPageMargin
+
+                text: qsTr("These descriptions refer to commonly associated brainwave states. Individual experiences may vary.")
+
+                color: Theme.secondaryColor
+                font.pixelSize: Theme.fontSizeSmall
                 wrapMode: Text.WordWrap
             }
         }

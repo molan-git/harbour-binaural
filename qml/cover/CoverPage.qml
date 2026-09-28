@@ -20,51 +20,39 @@ CoverBackground {
             width: parent.width
 
             horizontalAlignment: Text.AlignHCenter
-            color: Theme.highlightColor
+            color: Theme.secondaryColor
             font.pixelSize: Theme.fontSizeMedium
             wrapMode: Text.WordWrap
 
             text: (activeBand === "" && activeAmbience === "" && activeNoise === "")
-                  ? qsTr("Nothing being played")
-                  : qsTr("Playing")
+                  ? qsTr("Start your sound mix")
+                  : qsTr("Playing:")
         }
 
         Label {
             width: parent.width
 
             horizontalAlignment: Text.AlignHCenter
-            color: Theme.primaryColor
+            color: Theme.highlightColor
             font.pixelSize: Theme.fontSizeMedium
             wrapMode: Text.WordWrap
 
             text: (activeBand !== "" ? activeBand : "") +
-                  (activeBand !== "" && (activeAmbience !== "" || activeNoise !== "") ? "\n" : "") +
-                  (activeAmbience !== "" ? activeAmbience : "") +
-                  (activeAmbience !== "" && activeNoise !== "" ? "\n" : "") +
-                  (activeNoise !== "" ? activeNoise : "")
+                  (activeBand !== "" && (activeNoise !== "" || activeAmbience !== "") ? "\n" : "") +
+                  (activeNoise !== "" ? activeNoise : "") +
+                  (activeNoise !== "" && activeAmbience !== "" ? "\n" : "") +
+                  (activeAmbience !== "" ? activeAmbience : "")
         }
-    }
 
-    // Nothing selected: show "new" button
-    CoverActionList {
-        id: newActionList
-
-        enabled: activeBand === "" && activeAmbience === "" && activeNoise === ""
-
-        CoverAction {
-            iconSource: "image://theme/icon-cover-new"
-
-            onTriggered: {
-                appWindow.activate()
-            }
-        }
     }
 
     // Something selected: show play/pause button
     CoverActionList {
         id: playbackActionList
 
-        enabled: activeBand !== "" || activeAmbience !== "" || activeNoise !== ""
+        enabled: activeBand !== "" ||
+                 activeAmbience !== "" ||
+                 activeNoise !== ""
 
         CoverAction {
             iconSource: isPlaying

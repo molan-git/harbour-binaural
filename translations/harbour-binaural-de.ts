@@ -28,26 +28,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Support</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>For small tips to support the project.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Project</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Binaural was inspired by the Metiq app. The ambient audio files are sourced from the same project. Many thanks to the developers of Metiq for their work and inspiration.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The coloured noise sound files were generated using the Metiq colored noise generator.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Data protection</source>
         <translation type="unfinished"></translation>
     </message>
@@ -60,119 +40,131 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Binaural is licensed under the GNU General Public License v3.0 or later.</source>
+        <source>Application for binaural beats, colored noise and ambience sounds.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Application for binaural beats, colored noise and ambience sounds.</source>
+        <source>Binaural was inspired by the &lt;a href=&quot;https://github.com/metiq-xyz/android-app&quot;&gt;&lt;font color=&quot;%1&quot;&gt;Metiq app&lt;/font&gt;&lt;/a&gt;. The ambient audio files are sourced from the same project. Many thanks to the developers of Metiq for their work and inspiration.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The coloured noise sound files were generated using the &lt;a href=&quot;https://github.com/metiq-xyz/colored-noise-generator&quot;&gt;&lt;font color=&quot;%1&quot;&gt;Metiq colored noise generator&lt;/font&gt;&lt;/a&gt;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Credits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Binaural is licensed under the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.html&quot;&gt;&lt;font color=&quot;%1&quot;&gt;GNU General Public License v3.0 or later&lt;/font&gt;&lt;/a&gt;.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>CoverPage</name>
     <message>
-        <source>Nothing being played</source>
+        <source>Playing:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Playing</source>
+        <source>Start your sound mix</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>InfoBinauralPage</name>
     <message>
-        <source>Binaural beats are created by playing two slightly different frequencies in each ear, producing a rhythmic effect often used for relaxation, focus, sleep, and meditation. Color noises are different types of sound frequencies that can be used individually or combined to create different listening experiences.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Tap a frequency button to play or stop it. You can also add a color noise and/or ambient sound and adjust the volume of each sound individually.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Delta (0.5–4 Hz):&lt;/b&gt; associated with deep sleep and restorative rest.&lt;br&gt;&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Theta (4–8 Hz):&lt;/b&gt; associated with drowsiness, meditation, and relaxed creativity.&lt;br&gt;&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Alpha (8–12 Hz):&lt;/b&gt; associated with relaxed wakefulness, calmness, and light meditation.&lt;br&gt;&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Beta (13–30 Hz):&lt;/b&gt; associated with alertness, concentration, and active thinking.&lt;br&gt;&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Gamma (30–100 Hz):&lt;/b&gt; associated with complex cognitive processing and perception.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frequency ranges</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Binaural Beats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose from:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Binaural beats are created by playing two slightly different tones, one in each ear. The brain processes the difference between the tones as a rhythmic beat. Different beat frequencies may be used to support relaxation, focus, meditation, or sleep.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The frequency shown below is the perceived beat frequency, measured in Hertz (Hz). Different frequency ranges are traditionally associated with different states of mental activity.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tap a frequency button to start or stop it. You can also add colored noise and/or ambient sounds and adjust the volume of each sound individually.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>These descriptions refer to commonly associated brainwave states. Individual experiences may vary.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Delta (2 Hz):&lt;/b&gt; Deep sleep, restorative rest.&lt;br&gt;&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Delta/Theta (4 Hz):&lt;/b&gt; Deep relaxation, sleep onset.&lt;br&gt;&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Theta (6 Hz):&lt;/b&gt; Drowsiness, meditation, relaxed creativity.&lt;br&gt;&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Alpha (10 Hz):&lt;/b&gt; Relaxed wakefulness, calmness, light meditation.&lt;br&gt;&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Beta (20 Hz):&lt;/b&gt; Alertness, concentration, active thinking.&lt;br&gt;&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Gamma (40 Hz):&lt;/b&gt; Complex cognitive processing, perception.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>InfoColoredPage</name>
     <message>
-        <source>&lt;b&gt;White:&lt;/b&gt; masks distractions.&lt;br&gt;&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Pink:&lt;/b&gt; helps with sleep and focus.&lt;br&gt;&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Brown:&lt;/b&gt; helps relaxation and focus.&lt;br&gt;&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Grey:&lt;/b&gt; masks sounds evenly.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Color noises are different sound profiles with varying frequency distributions. They are commonly used for relaxation, focus, sleep, meditation, and masking unwanted sounds.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Color Noise</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose from:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Color noise refers to sounds with different distributions of frequencies. The different colors describe how the sound&apos;s energy is distributed across the frequency spectrum. They are commonly used for relaxation, focus, sleep, meditation, and masking unwanted sounds.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Each type of noise has a different sound character. White noise contains a broad range of frequencies, while pink and brown noise place more emphasis on lower frequencies.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Individual experiences and preferences vary, so you may find some types of noise more comfortable or useful than others.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;White:&lt;/b&gt; Bright, evenly distributed noise with broad range of frequencies.&lt;br&gt;&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Pink:&lt;/b&gt; Softer noise with more energy in the lower frequencies, used for relaxation and sleep.&lt;br&gt;&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Brown:&lt;/b&gt; Deeper, bass-heavy noise with even more emphasis on lower frequencies, used for relaxation and masking sounds.&lt;br&gt;&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Grey:&lt;/b&gt; Noise shaped to sound more balanced to human hearing, with frequencies adjusted according to perceived loudness.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainPage</name>
     <message>
-        <source>About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Binaural volume</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>White</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pink</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Brown</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Grey</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ambiences</source>
+        <source>Ambience volume</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -200,11 +192,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Ambience volume</source>
+        <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Binaural frequency range</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Binaural volume</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -213,6 +209,38 @@
     </message>
     <message>
         <source>Color noise volume</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>White</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pink</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Brown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Grey</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start your sound mix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ambience</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play an Ambience</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Playing %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

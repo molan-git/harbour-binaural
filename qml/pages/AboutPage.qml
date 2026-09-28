@@ -40,11 +40,12 @@ Page {
                 font.pixelSize: Theme.fontSizeLarge
             }
 
+            // Version number
             Label {
                 width: parent.width
                 horizontalAlignment: Text.AlignHCenter
 
-                text: qsTr("Version") + " 0.1"
+                text: qsTr("Version") + " 0.2"
 
                 color: Theme.secondaryColor
                 font.pixelSize: Theme.fontSizeSmall
@@ -101,6 +102,7 @@ Page {
                 }
             }
 
+            /*
             SectionHeader {
                 text: qsTr("Support")
             }
@@ -125,29 +127,27 @@ Page {
                     Qt.openUrlExternally("https://tba")
                 }
             }
+            */
 
             SectionHeader {
-                text: qsTr("Project")
+                text: qsTr("Credits")
             }
 
             Label {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("Binaural was inspired by the Metiq app. The ambient audio files are sourced from the same project. Many thanks to the developers of Metiq for their work and inspiration.")
+                textFormat: Text.StyledText
+
+                text: qsTr("Binaural was inspired by the <a href=\"https://github.com/metiq-xyz/android-app\"><font color=\"%1\">Metiq app</font></a>. The ambient audio files are sourced from the same project. Many thanks to the developers of Metiq for their work and inspiration.").arg(Theme.highlightColor)
 
                 color: Theme.primaryColor
+                linkColor: Theme.highlightColor
                 font.pixelSize: Theme.fontSizeSmall
                 wrapMode: Text.WordWrap
-            }
 
-            Button {
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                text: "Metiq - Github"
-
-                onClicked: {
-                    Qt.openUrlExternally("https://github.com/metiq-xyz")
+                onLinkActivated: {
+                    Qt.openUrlExternally(link)
                 }
             }
 
@@ -155,11 +155,18 @@ Page {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("The coloured noise sound files were generated using the Metiq colored noise generator.")
+                textFormat: Text.StyledText
+
+                text: qsTr("The coloured noise sound files were generated using the <a href=\"https://github.com/metiq-xyz/colored-noise-generator\"><font color=\"%1\">Metiq colored noise generator</font></a>.").arg(Theme.highlightColor)
 
                 color: Theme.primaryColor
+                linkColor: Theme.highlightColor
                 font.pixelSize: Theme.fontSizeSmall
                 wrapMode: Text.WordWrap
+
+                onLinkActivated: {
+                    Qt.openUrlExternally(link)
+                }
             }
 
             SectionHeader {
@@ -185,11 +192,18 @@ Page {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("Binaural is licensed under the GNU General Public License v3.0 or later.")
+                textFormat: Text.StyledText
+
+                text: qsTr("Binaural is licensed under the <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\"><font color=\"%1\">GNU General Public License v3.0 or later</font></a>.").arg(Theme.highlightColor)
 
                 color: Theme.primaryColor
+                linkColor: Theme.highlightColor
                 font.pixelSize: Theme.fontSizeSmall
                 wrapMode: Text.WordWrap
+
+                onLinkActivated: {
+                    Qt.openUrlExternally(link)
+                }
             }
         }
     }
