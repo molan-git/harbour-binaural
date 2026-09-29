@@ -16,9 +16,9 @@ namespace
     const double Amplitude = 16000.0;
 
     const int CrossfadeDuration = 8000;
-    const int ColoredNoiseCrossfadeDuration = 2000;
-    const int FadeInDuration = 2000;
-    const int FadeInterval = 50;
+    const int ColoredNoiseCrossfadeDuration = 3000;
+    const int FadeInDuration = 1500;
+    const int FadeInterval = 20;
 }
 
 class AudioGenerator : public QIODevice

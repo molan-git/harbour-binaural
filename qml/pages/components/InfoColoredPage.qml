@@ -4,8 +4,14 @@ import Sailfish.Silica 1.0
 FullscreenContentPage {
     id: page
 
+    Rectangle {
+        anchors.fill: parent
+        color: Theme.overlayBackgroundColor
+    }
+
     SilicaFlickable {
         anchors.fill: parent
+
         contentHeight: contentColumn.height + Theme.paddingLarge
 
         VerticalScrollDecorator { }
@@ -30,7 +36,7 @@ FullscreenContentPage {
                         bottom: parent.bottom
                     }
 
-                    icon.source: "image://theme/icon-m-cancel"
+                    icon.source: "image://theme/icon-m-cancel?" + Theme.primaryColor
 
                     onClicked: {
                         pageStack.pop()

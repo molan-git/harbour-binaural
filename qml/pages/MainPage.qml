@@ -114,22 +114,6 @@ Page {
                 }
 
                 // Ambience selection
-                Slider {
-                    id: ambienceVolumeSlider
-
-                    width: parent.width * 0.75
-                    anchors.horizontalCenter: parent.horizontalCenter
-
-                    minimumValue: 0
-                    maximumValue: 100
-                    value: 50
-                    label: qsTr("Ambience volume")
-
-                    onValueChanged: {
-                        audioEngine.setAmbienceVolume(value)
-                    }
-                }
-
                 SilicaGridView {
                     id: ambienceDrawerGrid
 
@@ -207,6 +191,22 @@ Page {
                     }
                 }
 
+                Slider {
+                    id: ambienceVolumeSlider
+
+                    width: parent.width * 0.75
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    minimumValue: 0
+                    maximumValue: 100
+                    value: 50
+                    label: qsTr("Ambience volume")
+
+                    onValueChanged: {
+                        audioEngine.setAmbienceVolume(value)
+                    }
+                }
+
                 Item {
                     width: 1
                     height: Theme.paddingLarge
@@ -262,46 +262,6 @@ Page {
                 // Binaural frequency selection
                 SectionHeader {
                     text: qsTr("Binaural frequency range")
-                }
-
-                Item {
-                    width: parent.width
-                    height: binauralVolumeSlider.height
-
-                    Slider {
-                        id: binauralVolumeSlider
-
-                        anchors.left: parent.left
-                        anchors.leftMargin: Theme.horizontalPageMargin
-                        anchors.right: infoBinauralsButton.left
-                        anchors.rightMargin: Theme.paddingLarge
-
-                        minimumValue: 0
-                        maximumValue: 100
-                        value: 50
-                        label: qsTr("Binaural volume")
-
-                        onValueChanged: {
-                            audioEngine.setBinauralVolume(value)
-                        }
-                    }
-
-                    IconButton {
-                        id: infoBinauralsButton
-
-                        anchors.right: parent.right
-                        anchors.rightMargin: Theme.horizontalPageMargin
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        icon.source: "image://theme/icon-m-about?" +
-                                     (pressed
-                                      ? Theme.highlightColor
-                                      : Theme.primaryColor)
-
-                        onClicked: {
-                            pageStack.push(infoBinauralPageComponent)
-                        }
-                    }
                 }
 
                 SilicaGridView {
@@ -382,35 +342,30 @@ Page {
                     }
                 }
 
-                // Color Noise selection
-                SectionHeader {
-                    text: qsTr("Color Noise")
-                }
-
                 Item {
                     width: parent.width
-                    height: coloredNoiseVolumeSlider.height
+                    height: binauralVolumeSlider.height
 
                     Slider {
-                        id: coloredNoiseVolumeSlider
+                        id: binauralVolumeSlider
 
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.horizontalPageMargin
-                        anchors.right: infoColoredButton.left
+                        anchors.right: infoBinauralsButton.left
                         anchors.rightMargin: Theme.paddingLarge
 
                         minimumValue: 0
                         maximumValue: 100
                         value: 50
-                        label: qsTr("Color noise volume")
+                        label: qsTr("Binaural volume")
 
                         onValueChanged: {
-                            audioEngine.setColoredNoiseVolume(value)
+                            audioEngine.setBinauralVolume(value)
                         }
                     }
 
                     IconButton {
-                        id: infoColoredButton
+                        id: infoBinauralsButton
 
                         anchors.right: parent.right
                         anchors.rightMargin: Theme.horizontalPageMargin
@@ -422,9 +377,14 @@ Page {
                                       : Theme.primaryColor)
 
                         onClicked: {
-                            pageStack.push(infoColoredPageComponent)
+                            pageStack.push(infoBinauralPageComponent)
                         }
                     }
+                }
+
+                // Color Noise selection
+                SectionHeader {
+                    text: qsTr("Color Noise")
                 }
 
                 SilicaGridView {
@@ -498,6 +458,46 @@ Page {
                                        ? Theme.highlightColor
                                        : Theme.primaryColor
                             }
+                        }
+                    }
+                }
+
+                Item {
+                    width: parent.width
+                    height: coloredNoiseVolumeSlider.height
+
+                    Slider {
+                        id: coloredNoiseVolumeSlider
+
+                        anchors.left: parent.left
+                        anchors.leftMargin: Theme.horizontalPageMargin
+                        anchors.right: infoColoredButton.left
+                        anchors.rightMargin: Theme.paddingLarge
+
+                        minimumValue: 0
+                        maximumValue: 100
+                        value: 50
+                        label: qsTr("Color noise volume")
+
+                        onValueChanged: {
+                            audioEngine.setColoredNoiseVolume(value)
+                        }
+                    }
+
+                    IconButton {
+                        id: infoColoredButton
+
+                        anchors.right: parent.right
+                        anchors.rightMargin: Theme.horizontalPageMargin
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        icon.source: "image://theme/icon-m-about?" +
+                                     (pressed
+                                      ? Theme.highlightColor
+                                      : Theme.primaryColor)
+
+                        onClicked: {
+                            pageStack.push(infoColoredPageComponent)
                         }
                     }
                 }
@@ -582,39 +582,12 @@ Page {
 
         Rectangle {
             anchors.fill: parent
-            color: "#080808"
+            color: Theme.overlayBackgroundColor
 
             MouseArea {
                 anchors.fill: parent
                 enabled: true
                 onClicked: {}
-            }
-
-            Rectangle {
-                anchors.fill: parent
-
-                color: Theme.rgba(
-                    Theme.highlightColor,
-                    Theme.highlightBackgroundOpacity
-                )
-
-                MouseArea {
-                    anchors.fill: parent
-                    enabled: true
-                    onClicked: {}
-                }
-
-                Rectangle {
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: 1
-
-                    color: Theme.rgba(
-                        Theme.highlightColor,
-                        Theme.highlightBackgroundOpacity
-                    )
-                }
             }
         }
 
