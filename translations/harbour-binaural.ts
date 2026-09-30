@@ -164,10 +164,6 @@
 <context>
     <name>MainPage</name>
     <message>
-        <source>Ambience volume</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Wind</source>
         <translation type="unfinished"></translation>
     </message>
@@ -200,15 +196,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Binaural volume</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Color Noise</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Color noise volume</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -228,19 +216,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Start your sound mix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Ambience</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Play an Ambience</source>
+        <source>Volume</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Playing %1</source>
+        <source>Choose an Ambience</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>harbour-binaural</name>
+    <message>
+        <source>Start your sound mix</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

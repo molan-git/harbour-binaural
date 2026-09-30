@@ -24,7 +24,7 @@ FullscreenContentPage {
 
             Item {
                 width: parent.width
-                height: Theme.itemSizeLarge + Theme.paddingLarge
+                height: Theme.itemSizeLarge + Theme.paddingMedium
 
                 IconButton {
                     width: Theme.iconSizeMedium
