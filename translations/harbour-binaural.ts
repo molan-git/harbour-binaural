@@ -44,19 +44,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Binaural was inspired by the &lt;a href=&quot;https://github.com/metiq-xyz/android-app&quot;&gt;&lt;font color=&quot;%1&quot;&gt;Metiq app&lt;/font&gt;&lt;/a&gt;. The ambient audio files are sourced from the same project.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Color noise sound files were generated using the &lt;a href=&quot;https://github.com/metiq-xyz/colored-noise-generator&quot;&gt;&lt;font color=&quot;%1&quot;&gt;Metiq colored noise generator&lt;/font&gt;&lt;/a&gt;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.html&quot;&gt;&lt;font color=&quot;%1&quot;&gt;GNU General Public License v3.0 or later&lt;/font&gt;&lt;/a&gt;.</source>
+        <source>Application for playing binaural beats, colored noises and ambient sounds.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Application for playing binaural beats, color noises and ambient sounds.</source>
+        <source>Binaural was inspired by the &lt;a href=&quot;https://github.com/metiq-xyz/android-app&quot;&gt;&lt;font color=&quot;%1&quot;&gt;Metiq app project&lt;/font&gt;&lt;/a&gt;. The ambient audio files are sourced from the same project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.html&quot;&gt;&lt;font color=&quot;%1&quot;&gt;GNU General Public License v3.0 or later&lt;/font&gt;&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -141,10 +141,6 @@
 <context>
     <name>InfoColoredPage</name>
     <message>
-        <source>Color Noise</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Choose from:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -186,6 +182,10 @@
     </message>
     <message>
         <source>Sound masking and general listening</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Colored Noise</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -244,11 +244,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Color Noise</source>
+        <source>Ambient Sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Ambient Sound</source>
+        <source>Colored Noise</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
