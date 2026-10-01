@@ -72,7 +72,7 @@
     <name>AudioCreditPage</name>
     <message>
         <source>Pixabay Content License</source>
-        <translation type="unfinished"></translation>
+        <translation>Pixabay-Inhaltslizenz</translation>
     </message>
     <message>
         <source>Audio Credits</source>
@@ -84,43 +84,43 @@
     </message>
     <message>
         <source>Sound Effect by </source>
-        <translation type="unfinished"></translation>
+        <translation>Soundeffekt von </translation>
     </message>
     <message>
         <source>from </source>
-        <translation type="unfinished"></translation>
+        <translation>von </translation>
     </message>
     <message>
         <source>Rain</source>
-        <translation type="unfinished"></translation>
+        <translation>Regen</translation>
     </message>
     <message>
         <source>Crickets</source>
-        <translation type="unfinished"></translation>
+        <translation>Grillen zirpen</translation>
     </message>
     <message>
         <source>Birds</source>
-        <translation type="unfinished"></translation>
+        <translation>Vögel</translation>
     </message>
     <message>
         <source>Fire</source>
-        <translation type="unfinished"></translation>
+        <translation>Feuer</translation>
     </message>
     <message>
         <source>Chimes</source>
-        <translation type="unfinished"></translation>
+        <translation>Windspiel</translation>
     </message>
     <message>
         <source>Stream</source>
-        <translation type="unfinished"></translation>
+        <translation>Bach</translation>
     </message>
     <message>
         <source>Audio files have been manually edited and adjusted for use in the app. Pixabay content is used under the Pixabay Content License: </source>
-        <translation type="unfinished"></translation>
+        <translation>Die Audiodateien wurden manuell bearbeitet und für die Verwendung in der App angepasst. Pixabay-Inhalte werden gemäss der Pixabay-Inhaltslizenz verwendet: </translation>
     </message>
     <message>
         <source>Sea Waves</source>
-        <translation type="unfinished"></translation>
+        <translation>Meeresrauschen</translation>
     </message>
 </context>
 <context>
@@ -154,31 +154,31 @@
     </message>
     <message>
         <source>Delta 2 Hz</source>
-        <translation type="unfinished">Delta 2 Hz</translation>
+        <translation>Delta 2 Hz</translation>
     </message>
     <message>
         <source>Delta/Theta 4 Hz</source>
-        <translation type="unfinished">Delta/Theta 4 Hz</translation>
+        <translation>Delta/Theta 4 Hz</translation>
     </message>
     <message>
         <source>Theta 6 Hz</source>
-        <translation type="unfinished">Theta 6 Hz</translation>
+        <translation>Theta 6 Hz</translation>
     </message>
     <message>
         <source>Alpha 10 Hz</source>
-        <translation type="unfinished">Alpha 10 Hz</translation>
+        <translation>Alpha 10 Hz</translation>
     </message>
     <message>
         <source>Beta 20 Hz</source>
-        <translation type="unfinished">Beta 20 Hz</translation>
+        <translation>Beta 20 Hz</translation>
     </message>
     <message>
         <source>Gamma 40 Hz</source>
-        <translation type="unfinished">Gamma 40 Hz</translation>
+        <translation>Gamma 40 Hz</translation>
     </message>
     <message>
         <source>Deep sleep, rest</source>
-        <translation type="unfinished">Deep sleep, rest</translation>
+        <translation>Tiefer Schlaf, Erholung</translation>
     </message>
     <message>
         <source>Deep relaxation, sleep</source>
