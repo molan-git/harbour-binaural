@@ -5,67 +5,67 @@
     <name>AboutPage</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Über</translation>
     </message>
     <message>
         <source>Version</source>
-        <translation type="unfinished"></translation>
+        <translation>Version</translation>
     </message>
     <message>
         <source>Development</source>
-        <translation type="unfinished"></translation>
+        <translation>Entwicklung</translation>
     </message>
     <message>
         <source>Source code on</source>
-        <translation type="unfinished"></translation>
+        <translation>Quellcode auf</translation>
     </message>
     <message>
         <source>Translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Übersetzungen</translation>
     </message>
     <message>
         <source>Help translate the application into your language.</source>
-        <translation type="unfinished"></translation>
+        <translation>Hilf mit die App in deine Sprache zu übersetzen.</translation>
     </message>
     <message>
         <source>Data protection</source>
-        <translation type="unfinished"></translation>
+        <translation>Datenschutz</translation>
     </message>
     <message>
         <source>This application works exclusively offline and requires permission to output audio. No data is collected.</source>
-        <translation type="unfinished"></translation>
+        <translation>Diese Anwendung funktioniert ausschliesslich offline und benötigt die Berechtigung zur Audioausgabe. Es werden keine Daten erfasst.</translation>
     </message>
     <message>
         <source>License</source>
-        <translation type="unfinished"></translation>
+        <translation>Lizenz</translation>
     </message>
     <message>
         <source>Credits</source>
-        <translation type="unfinished"></translation>
+        <translation>Drittanbieterinhalte</translation>
     </message>
     <message>
         <source>Color noise sound files were generated using the &lt;a href=&quot;https://github.com/metiq-xyz/colored-noise-generator&quot;&gt;&lt;font color=&quot;%1&quot;&gt;Metiq colored noise generator&lt;/font&gt;&lt;/a&gt;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Die Sounddateien für farbiges Rauschen wurden mit dem &lt;a href=&quot;https://github.com/metiq-xyz/colored-noise-generator&quot;&gt;\&lt;font color=&quot;%1&quot;&gt;Metiq Colored Noise Generator&lt;/font&gt;&lt;/a&gt; erstellt.</translation>
     </message>
     <message>
         <source>Application for playing binaural beats, colored noises and ambient sounds.</source>
-        <translation type="unfinished"></translation>
+        <translation>Anwendung zum Abspielen von binauralen Beats, farbigem Rauschen und Umgebungsgeräuschen.</translation>
     </message>
     <message>
         <source>&lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.html&quot;&gt;&lt;font color=&quot;%1&quot;&gt;GNU General Public License v3.0 or later&lt;/font&gt;&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.html&quot;&gt;&lt;font color=&quot;%1&quot;&gt;GNU General Public License v3.0 oder höher&lt;/font&gt;&lt;/a&gt;</translation>
     </message>
     <message>
         <source>Binaural was inspired by the &lt;a href=&quot;https://github.com/metiq-xyz/android-app&quot;&gt;&lt;font color=&quot;%1&quot;&gt;Metiq app project&lt;/font&gt;&lt;/a&gt;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Binaural wurde durch das &lt;a href=&quot;https://github.com/metiq-xyz/android-app&quot;&gt;&lt;font color=&quot;%1&quot;&gt;Metiq-App-Projekt&lt;/font&gt;&lt;/a&gt; inspiriert.</translation>
     </message>
     <message>
         <source>Support</source>
-        <translation type="unfinished"></translation>
+        <translation>Unterstützung</translation>
     </message>
     <message>
         <source>For small tips to support the project.</source>
-        <translation type="unfinished"></translation>
+        <translation>Für kleine Trinkgelder zur Unterstützung des Projekts.</translation>
     </message>
 </context>
 <context>
@@ -76,11 +76,11 @@
     </message>
     <message>
         <source>Audio Credits</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio-Quellen</translation>
     </message>
     <message>
         <source>Wind</source>
-        <translation type="unfinished"></translation>
+        <translation>Wind</translation>
     </message>
     <message>
         <source>Sound Effect by </source>
@@ -127,207 +127,207 @@
     <name>CoverPage</name>
     <message>
         <source>Playing:</source>
-        <translation type="unfinished"></translation>
+        <translation>Wiedergabe:</translation>
     </message>
     <message>
         <source>Start your sound mix</source>
-        <translation type="unfinished"></translation>
+        <translation>Starte deinen Sound-Mix</translation>
     </message>
 </context>
 <context>
     <name>InfoBinauralPage</name>
     <message>
         <source>Binaural Beats</source>
-        <translation type="unfinished"></translation>
+        <translation>Binaurale Beats</translation>
     </message>
     <message>
         <source>Choose from:</source>
-        <translation type="unfinished"></translation>
+        <translation>Wähle aus:</translation>
     </message>
     <message>
         <source>Are created by playing two slightly different tones, one in each ear. The brain processes the difference as a rhythmic beat. Different beat frequencies can be used to support focus, relaxation, meditation, or sleep.</source>
-        <translation type="unfinished"></translation>
+        <translation>Entstehen, indem zwei leicht unterschiedliche Töne abgespielt werden – einer in jedem Ohr. Das Gehirn verarbeitet den Unterschied als rhythmischen Beat. Unterschiedliche Beat-Frequenzen können zur Unterstützung von Konzentration, Entspannung, Meditation oder Schlaf eingesetzt werden.</translation>
     </message>
     <message>
         <source>Individual experiences may vary.</source>
-        <translation type="unfinished"></translation>
+        <translation>Individuelle Erfahrungen können variieren.</translation>
     </message>
     <message>
         <source>Delta 2 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Delta 2 Hz</translation>
     </message>
     <message>
         <source>Delta/Theta 4 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Delta/Theta 4 Hz</translation>
     </message>
     <message>
         <source>Theta 6 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Theta 6 Hz</translation>
     </message>
     <message>
         <source>Alpha 10 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alpha 10 Hz</translation>
     </message>
     <message>
         <source>Beta 20 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Beta 20 Hz</translation>
     </message>
     <message>
         <source>Gamma 40 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gamma 40 Hz</translation>
     </message>
     <message>
         <source>Deep sleep, rest</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Deep sleep, rest</translation>
     </message>
     <message>
         <source>Deep relaxation, sleep</source>
-        <translation type="unfinished"></translation>
+        <translation>Tiefe Entspannung, Schlaf</translation>
     </message>
     <message>
         <source>Meditation and relaxation</source>
-        <translation type="unfinished"></translation>
+        <translation>Meditation und Entspannung</translation>
     </message>
     <message>
         <source>Calm and relaxed wakefulness</source>
-        <translation type="unfinished"></translation>
+        <translation>Ruhige und entspannte Wachheit</translation>
     </message>
     <message>
         <source>Alertness and focus</source>
-        <translation type="unfinished"></translation>
+        <translation>Wachheit und Konzentration</translation>
     </message>
     <message>
         <source>Complex thinking and information processing</source>
-        <translation type="unfinished"></translation>
+        <translation>Komplexes Denken und Informationsverarbeitung</translation>
     </message>
 </context>
 <context>
     <name>InfoColoredPage</name>
     <message>
         <source>Choose from:</source>
-        <translation type="unfinished"></translation>
+        <translation>Wähle aus:</translation>
     </message>
     <message>
         <source>Sound with different amounts of energy at different frequencies. Each color has a different character and is commonly used for different purposes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Klang mit unterschiedlich starken Anteilen an Energie bei verschiedenen Frequenzen. Jede Farbe hat ihren eigenen Charakter und wird üblicherweise für unterschiedliche Zwecke verwendet.</translation>
     </message>
     <message>
         <source>White</source>
-        <translation type="unfinished"></translation>
+        <translation>Weiss</translation>
     </message>
     <message>
         <source>Pink</source>
-        <translation type="unfinished"></translation>
+        <translation>Pink</translation>
     </message>
     <message>
         <source>Brown</source>
-        <translation type="unfinished"></translation>
+        <translation>Braun</translation>
     </message>
     <message>
         <source>Grey</source>
-        <translation type="unfinished"></translation>
+        <translation>Grau</translation>
     </message>
     <message>
         <source>Individual experiences may vary.</source>
-        <translation type="unfinished"></translation>
+        <translation>Individuelle Erfahrungen können variieren.</translation>
     </message>
     <message>
         <source>Focus, sleep and background noise masking</source>
-        <translation type="unfinished"></translation>
+        <translation>Konzentration, Schlaf und Maskierung von Hintergrundgeräuschen</translation>
     </message>
     <message>
         <source>Relaxation, sleep and concentration</source>
-        <translation type="unfinished"></translation>
+        <translation>Entspannung, Schlaf und Konzentration</translation>
     </message>
     <message>
         <source>Relaxation, sleep and reducing distracting sounds</source>
-        <translation type="unfinished"></translation>
+        <translation>Entspannung, Schlaf und Reduzierung störender Geräusche</translation>
     </message>
     <message>
         <source>Sound masking and general listening</source>
-        <translation type="unfinished"></translation>
+        <translation>Geräuschmaskierung und allgemeines Hören</translation>
     </message>
     <message>
         <source>Colored Noise</source>
-        <translation type="unfinished"></translation>
+        <translation>Farbiges Rauschen</translation>
     </message>
 </context>
 <context>
     <name>MainPage</name>
     <message>
         <source>Wind</source>
-        <translation type="unfinished"></translation>
+        <translation>Wind</translation>
     </message>
     <message>
         <source>Sea Waves</source>
-        <translation type="unfinished"></translation>
+        <translation>Meeresrauschen</translation>
     </message>
     <message>
         <source>Crickets</source>
-        <translation type="unfinished"></translation>
+        <translation>Grillen zirpen</translation>
     </message>
     <message>
         <source>Stream</source>
-        <translation type="unfinished"></translation>
+        <translation>Bach</translation>
     </message>
     <message>
         <source>Rain</source>
-        <translation type="unfinished"></translation>
+        <translation>Regen</translation>
     </message>
     <message>
         <source>Birds</source>
-        <translation type="unfinished"></translation>
+        <translation>Vögel</translation>
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Über</translation>
     </message>
     <message>
         <source>White</source>
-        <translation type="unfinished"></translation>
+        <translation>Weiss</translation>
     </message>
     <message>
         <source>Pink</source>
-        <translation type="unfinished"></translation>
+        <translation>Pink</translation>
     </message>
     <message>
         <source>Brown</source>
-        <translation type="unfinished"></translation>
+        <translation>Braun</translation>
     </message>
     <message>
         <source>Grey</source>
-        <translation type="unfinished"></translation>
+        <translation>Grau</translation>
     </message>
     <message>
         <source>Choose an ambient sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Wähle ein Umgebungsgeräusch</translation>
     </message>
     <message>
         <source>Binaural Beats</source>
-        <translation type="unfinished"></translation>
+        <translation>Binaurale Beats</translation>
     </message>
     <message>
         <source>Ambient Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Umgebungsgeräusch</translation>
     </message>
     <message>
         <source>Colored Noise</source>
-        <translation type="unfinished"></translation>
+        <translation>Farbiges Rauschen</translation>
     </message>
     <message>
         <source>Fire</source>
-        <translation type="unfinished"></translation>
+        <translation>Feuer</translation>
     </message>
     <message>
         <source>Chimes</source>
-        <translation type="unfinished"></translation>
+        <translation>Windspiel</translation>
     </message>
 </context>
 <context>
     <name>harbour-binaural</name>
     <message>
         <source>Start your sound mix</source>
-        <translation type="unfinished"></translation>
+        <translation>Starte deinen Sound-Mix</translation>
     </message>
 </context>
 </TS>
