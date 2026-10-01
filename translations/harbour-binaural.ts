@@ -40,10 +40,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Application for binaural beats, colored noise and ambience sounds.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Credits</source>
         <translation type="unfinished"></translation>
     </message>
@@ -57,6 +53,10 @@
     </message>
     <message>
         <source>&lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.html&quot;&gt;&lt;font color=&quot;%1&quot;&gt;GNU General Public License v3.0 or later&lt;/font&gt;&lt;/a&gt;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Application for playing binaural beats, color noises and ambient sounds.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

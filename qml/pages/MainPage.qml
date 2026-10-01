@@ -454,9 +454,9 @@ Page {
                         }
                     }
 
-                    // Color Noise selection
+                    // Colored Noise selection
                     SectionHeader {
-                        text: qsTr("Color Noise")
+                        text: qsTr("Colored Noise")
                     }
 
                     SilicaGridView {

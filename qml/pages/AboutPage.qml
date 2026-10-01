@@ -55,7 +55,7 @@ Page {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("Application for playing binaural beats, color noises and ambient sounds.")
+                text: qsTr("Application for playing binaural beats, colored noises and ambient sounds.")
 
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeMedium
@@ -95,10 +95,10 @@ Page {
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                text: "Transifex"
+                text: "Hosted Weblate"
 
                 onClicked: {
-                    Qt.openUrlExternally("https://www.transifex.com/")
+                    Qt.openUrlExternally("https://hosted.weblate.org/projects/harbour-binaural/")
                 }
             }
 
@@ -139,7 +139,7 @@ Page {
 
                 textFormat: Text.StyledText
 
-                text: qsTr("Binaural was inspired by the <a href=\"https://github.com/metiq-xyz/android-app\"><font color=\"%1\">Metiq app</font></a>. The ambient audio files are sourced from the same project.").arg(Theme.highlightColor)
+                text: qsTr("Binaural was inspired by the <a href=\"https://github.com/metiq-xyz/android-app\"><font color=\"%1\">Metiq app project</font></a>. The ambient audio files are sourced from the same project.").arg(Theme.highlightColor)
 
                 color: Theme.primaryColor
                 linkColor: Theme.highlightColor
@@ -194,7 +194,7 @@ Page {
 
                 textFormat: Text.StyledText
 
-                text: qsTr("<a href=\"https://www.gnu.org/licenses/gpl-3.0.html\"><font color=\"%1\">GNU General Public License v3.0 or later</font></a>.").arg(Theme.highlightColor)
+                text: qsTr("<a href=\"https://www.gnu.org/licenses/gpl-3.0.html\"><font color=\"%1\">GNU General Public License v3.0 or later</font></a>").arg(Theme.highlightColor)
 
                 color: Theme.primaryColor
                 linkColor: Theme.highlightColor

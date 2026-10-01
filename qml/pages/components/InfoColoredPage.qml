@@ -48,7 +48,7 @@ FullscreenContentPage {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("Color Noise")
+                text: qsTr("Colored Noise")
 
                 color: Theme.highlightColor
                 font.pixelSize: Theme.fontSizeLarge
