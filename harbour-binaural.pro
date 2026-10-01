@@ -33,6 +33,11 @@ DISTFILES += qml/harbour-binaural.qml \
     sounds/grey.mp3 \
     sounds/pink.mp3 \
     sounds/white.mp3 \
+    qml/images/binaural-cover.svg \
+    qml/images/icon-s-volume-1.svg \
+    qml/images/icon-s-volume-2.svg \
+    qml/images/icon-s-volume-3.svg \
+    qml/images/icon-s-volume-4.svg \
     translations/*.ts \
     harbour-binaural.desktop \
     sounds/wind.mp3 \

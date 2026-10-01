@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
+
 CoverBackground {
     id: cover
 
@@ -11,9 +12,31 @@ CoverBackground {
 
     signal playPauseClicked()
 
+    Image {
+        id: coverBackgroundImage
+
+        anchors.top: parent.top
+        //anchors.topMargin: Theme.paddingSmall
+        anchors.horizontalCenter: parent.horizontalCenter
+
+        width: parent.width - 2 * Theme.paddingSmall
+        height: parent.height * 0.45
+
+        source: "../images/binaural-cover.svg"
+        fillMode: Image.PreserveAspectFit
+
+        // Keep the SVG purely visual and behind all cover content.
+        z: 0
+    }
+
     Column {
-        anchors.centerIn: parent
-        width: parent.width - 2 * Theme.paddingLarge
+        id: coverLabels
+
+        anchors.top: coverBackgroundImage.bottom
+        anchors.topMargin: -Theme.paddingLarge
+        anchors.left: parent.left
+        anchors.right: parent.right
+
         spacing: Theme.paddingSmall
 
         Label {
@@ -43,7 +66,6 @@ CoverBackground {
                   (activeNoise !== "" && activeAmbience !== "" ? "\n" : "") +
                   (activeAmbience !== "" ? activeAmbience : "")
         }
-
     }
 
     // Something selected: show play/pause button

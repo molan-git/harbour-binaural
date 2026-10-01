@@ -15,10 +15,11 @@ namespace
     const double CarrierFrequency = 200.0;
     const double Amplitude = 16000.0;
 
+    // Crossfade for Color Noise has different lenght
     const int CrossfadeDuration = 8000;
-    const int ColoredNoiseCrossfadeDuration = 5000;
+    const int ColoredNoiseCrossfadeDuration = 4000;
     const int FadeInDuration = 1000;
-    const int FadeInterval = 10;
+    const int FadeInterval = 15;
 }
 
 class AudioGenerator : public QIODevice

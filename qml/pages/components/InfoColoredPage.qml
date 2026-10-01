@@ -59,18 +59,7 @@ FullscreenContentPage {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("Color noise refers to sounds with different distributions of frequencies. The different colors describe how the sound's energy is distributed across the frequency spectrum. They are commonly used for relaxation, focus, sleep, meditation, and masking unwanted sounds.")
-
-                color: Theme.primaryColor
-                font.pixelSize: Theme.fontSizeMedium
-                wrapMode: Text.WordWrap
-            }
-
-            Label {
-                width: parent.width - 2 * Theme.horizontalPageMargin
-                x: Theme.horizontalPageMargin
-
-                text: qsTr("Each type of noise has a different sound character. White noise contains a broad range of frequencies, while pink and brown noise place more emphasis on lower frequencies.")
+                text: qsTr("Sound with different amounts of energy at different frequencies. Each color has a different character and is commonly used for different purposes.")
 
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeMedium
@@ -93,19 +82,118 @@ FullscreenContentPage {
                 wrapMode: Text.WordWrap
             }
 
-            Label {
+            Grid {
+                id: noiseGrid
+
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("<b>White:</b> Bright, evenly distributed noise with broad range of frequencies.<br><br>") +
-                      qsTr("<b>Pink:</b> Softer noise with more energy in the lower frequencies, used for relaxation and sleep.<br><br>") +
-                      qsTr("<b>Brown:</b> Deeper, bass-heavy noise with even more emphasis on lower frequencies, used for relaxation and masking sounds.<br><br>") +
-                      qsTr("<b>Grey:</b> Noise shaped to sound more balanced to human hearing, with frequencies adjusted according to perceived loudness.")
+                columns: 2
+                columnSpacing: Theme.paddingMedium * 1.5
+                rowSpacing: Theme.paddingMedium
 
-                color: Theme.primaryColor
-                font.pixelSize: Theme.fontSizeSmall
-                textFormat: Text.RichText
-                wrapMode: Text.WordWrap
+                property real labelWidth: Math.max(
+                    whiteLabel.implicitWidth,
+                    pinkLabel.implicitWidth,
+                    brownLabel.implicitWidth,
+                    greyLabel.implicitWidth
+                )
+
+                Label {
+                    id: whiteLabel
+
+                    width: noiseGrid.labelWidth
+
+                    text: qsTr("White")
+
+                    color: Theme.secondaryHighlightColor
+                    font.pixelSize: Theme.fontSizeSmall
+                    wrapMode: Text.NoWrap
+                }
+
+                Label {
+                    width: noiseGrid.width
+                           - noiseGrid.labelWidth
+                           - noiseGrid.columnSpacing
+
+                    text: qsTr("Focus, sleep and background noise masking")
+
+                    color: Theme.primaryColor
+                    font.pixelSize: Theme.fontSizeSmall
+                    wrapMode: Text.WordWrap
+                }
+
+                Label {
+                    id: pinkLabel
+
+                    width: noiseGrid.labelWidth
+
+                    text: qsTr("Pink")
+
+                    color: Theme.secondaryHighlightColor
+                    font.pixelSize: Theme.fontSizeSmall
+                    wrapMode: Text.NoWrap
+                }
+
+                Label {
+                    width: noiseGrid.width
+                           - noiseGrid.labelWidth
+                           - noiseGrid.columnSpacing
+
+                    text: qsTr("Relaxation, sleep and concentration")
+
+                    color: Theme.primaryColor
+                    font.pixelSize: Theme.fontSizeSmall
+                    wrapMode: Text.WordWrap
+                }
+
+                Label {
+                    id: brownLabel
+
+                    width: noiseGrid.labelWidth
+
+                    text: qsTr("Brown")
+
+                    color: Theme.secondaryHighlightColor
+                    font.pixelSize: Theme.fontSizeSmall
+                    wrapMode: Text.NoWrap
+                }
+
+                Label {
+                    width: noiseGrid.width
+                           - noiseGrid.labelWidth
+                           - noiseGrid.columnSpacing
+
+                    text: qsTr("Relaxation, sleep and reducing distracting sounds")
+
+                    color: Theme.primaryColor
+                    font.pixelSize: Theme.fontSizeSmall
+                    wrapMode: Text.WordWrap
+                }
+
+                Label {
+                    id: greyLabel
+
+                    width: noiseGrid.labelWidth
+
+                    text: qsTr("Grey")
+
+                    color: Theme.secondaryHighlightColor
+                    font.pixelSize: Theme.fontSizeSmall
+                    wrapMode: Text.NoWrap
+                }
+
+                Label {
+                    width: noiseGrid.width
+                           - noiseGrid.labelWidth
+                           - noiseGrid.columnSpacing
+
+                    text: qsTr("Sound masking and general listening")
+
+                    color: Theme.primaryColor
+                    font.pixelSize: Theme.fontSizeSmall
+                    wrapMode: Text.WordWrap
+                }
             }
 
             Item {
@@ -117,7 +205,7 @@ FullscreenContentPage {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("Individual experiences and preferences vary, so you may find some types of noise more comfortable or useful than others.")
+                text: qsTr("Individual experiences may vary.")
 
                 color: Theme.secondaryColor
                 font.pixelSize: Theme.fontSizeSmall
@@ -126,3 +214,4 @@ FullscreenContentPage {
         }
     }
 }
+

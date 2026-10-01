@@ -203,23 +203,51 @@ Page {
                     }
                 }
 
-                Slider {
-                    id: ambienceVolumeSlider
+                Item {
+                    width: parent.width
+                    height: ambienceVolumeSlider.height
 
-                    width: parent.width * 0.7
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    Slider {
+                        id: ambienceVolumeSlider
 
-                    minimumValue: 0
-                    maximumValue: 100
-                    value: 50
+                        width: parent.width * 0.7
+                        anchors.horizontalCenter: parent.horizontalCenter
 
-                    enabled: activeAmbience !== ""
-                    opacity: enabled ? 1.0 : 0.5
+                        minimumValue: 0
+                        maximumValue: 100
+                        value: 50
 
-                    label: qsTr("Volume")
+                        enabled: activeAmbience !== ""
+                        opacity: enabled ? 1.0 : 0.5
 
-                    onValueChanged: {
-                        audioEngine.setAmbienceVolume(value)
+                        onValueChanged: {
+                            audioEngine.setAmbienceVolume(value)
+                        }
+                    }
+
+                    Image {
+                        id: ambienceVolumeIcon
+
+                        source: ambienceVolumeSlider.value === 0
+                                ? "../images/icon-s-volume-1.svg"
+                                : ambienceVolumeSlider.value <= 33
+                                  ? "../images/icon-s-volume-2.svg"
+                                  : ambienceVolumeSlider.value <= 66
+                                    ? "../images/icon-s-volume-3.svg"
+                                    : "../images/icon-s-volume-4.svg"
+
+                        fillMode: Image.PreserveAspectFit
+
+                        height: Theme.iconSizeSmall * 1.2
+                        width: Theme.iconSizeSmall * 1.2
+
+                        anchors.top: ambienceVolumeSlider.bottom
+                        // moves icon closer to volume slider
+                        anchors.topMargin: -Theme.paddingLarge * 1.2
+                        anchors.horizontalCenter: ambienceVolumeSlider.horizontalCenter
+                        anchors.horizontalCenterOffset: Theme.paddingSmall / 1.5
+
+                        opacity: activeAmbience !== "" ? 1.0 : 0.5
                     }
                 }
             }
@@ -276,7 +304,7 @@ Page {
 
                     // Binaural frequency selection
                     SectionHeader {
-                        text: qsTr("Binaural frequency range")
+                        text: qsTr("Binaural Beats")
                     }
 
                     SilicaGridView {
@@ -376,12 +404,36 @@ Page {
                             enabled: activeBand !== ""
                             opacity: enabled ? 1.0 : 0.5
 
-                            label: qsTr("Volume")
-
                             onValueChanged: {
                                 audioEngine.setBinauralVolume(value)
                             }
                         }
+
+                        Image {
+                            id: binauralVolumeIcon
+
+                            source: binauralVolumeSlider.value === 0
+                                        ? "../images/icon-s-volume-1.svg"
+                                        : binauralVolumeSlider.value <= 33
+                                          ? "../images/icon-s-volume-2.svg"
+                                          : binauralVolumeSlider.value <= 66
+                                            ? "../images/icon-s-volume-3.svg"
+                                            : "../images/icon-s-volume-4.svg"
+
+                            fillMode: Image.PreserveAspectFit
+
+                            height: Theme.iconSizeSmall * 1.2
+                            width: Theme.iconSizeSmall * 1.2
+
+                            anchors.top: binauralVolumeSlider.bottom
+                            // moves icon closer to volume slider
+                            anchors.topMargin: -Theme.paddingLarge * 1.2
+                            anchors.horizontalCenter: binauralVolumeSlider.horizontalCenter
+                            anchors.horizontalCenterOffset: Theme.paddingSmall / 1.5
+
+                            opacity: activeBand !== "" ? 1.0 : 0.5
+                        }
+
 
                         IconButton {
                             id: infoBinauralsButton
@@ -389,6 +441,7 @@ Page {
                             anchors.right: parent.right
                             anchors.rightMargin: Theme.horizontalPageMargin
                             anchors.verticalCenter: parent.verticalCenter
+                            anchors.verticalCenterOffset: Theme.paddingSmall * 1.7
 
                             icon.source: "image://theme/icon-m-about?" +
                                          (pressed
@@ -500,11 +553,34 @@ Page {
                             enabled: activeNoise !== ""
                             opacity: enabled ? 1.0 : 0.5
 
-                            label: qsTr("Volume")
-
                             onValueChanged: {
                                 audioEngine.setColoredNoiseVolume(value)
                             }
+                        }
+
+                        Image {
+                            id: coloredNoiseVolumeIcon
+
+                            source: coloredNoiseVolumeSlider.value === 0
+                                    ? "../images/icon-s-volume-1.svg"
+                                    : coloredNoiseVolumeSlider.value <= 33
+                                      ? "../images/icon-s-volume-2.svg"
+                                      : coloredNoiseVolumeSlider.value <= 66
+                                        ? "../images/icon-s-volume-3.svg"
+                                        : "../images/icon-s-volume-4.svg"
+
+                            fillMode: Image.PreserveAspectFit
+
+                            height: Theme.iconSizeSmall * 1.2
+                            width: Theme.iconSizeSmall * 1.2
+
+                            anchors.top: coloredNoiseVolumeSlider.bottom
+                            // moves icon closer to volume slider
+                            anchors.topMargin: -Theme.paddingLarge * 1.2
+                            anchors.horizontalCenter: coloredNoiseVolumeSlider.horizontalCenter
+                            anchors.horizontalCenterOffset: Theme.paddingSmall / 1.5
+
+                            opacity: activeNoise !== "" ? 1.0 : 0.5
                         }
 
                         IconButton {
@@ -513,6 +589,7 @@ Page {
                             anchors.right: parent.right
                             anchors.rightMargin: Theme.horizontalPageMargin
                             anchors.verticalCenter: parent.verticalCenter
+                            anchors.verticalCenterOffset: Theme.paddingSmall * 1.7
 
                             icon.source: "image://theme/icon-m-about?" +
                                          (pressed
@@ -527,7 +604,7 @@ Page {
 
                     // Ambience selection with button that opens Drawer
                     SectionHeader {
-                        text: qsTr("Ambience")
+                        text: qsTr("Ambient Sound")
                     }
 
                     Item {
@@ -562,7 +639,7 @@ Page {
                             preferredWidth: Theme.buttonWidthMedium
 
                             text: activeAmbience === ""
-                                  ? qsTr("Choose an Ambience")
+                                  ? qsTr("Choose an ambient sound")
                                   : activeAmbience
 
                             highlighted: activeAmbience !== ""

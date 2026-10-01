@@ -45,7 +45,7 @@ Page {
                 width: parent.width
                 horizontalAlignment: Text.AlignHCenter
 
-                text: qsTr("Version") + " 0.2"
+                text: qsTr("Version") + " 0.3"
 
                 color: Theme.secondaryColor
                 font.pixelSize: Theme.fontSizeSmall
@@ -55,7 +55,7 @@ Page {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("Application for binaural beats, colored noise and ambience sounds.")
+                text: qsTr("Application for playing binaural beats, color noises and ambient sounds.")
 
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeMedium
@@ -139,7 +139,7 @@ Page {
 
                 textFormat: Text.StyledText
 
-                text: qsTr("Binaural was inspired by the <a href=\"https://github.com/metiq-xyz/android-app\"><font color=\"%1\">Metiq app</font></a>. The ambient audio files are sourced from the same project. Many thanks to the developers of Metiq for their work and inspiration.").arg(Theme.highlightColor)
+                text: qsTr("Binaural was inspired by the <a href=\"https://github.com/metiq-xyz/android-app\"><font color=\"%1\">Metiq app</font></a>. The ambient audio files are sourced from the same project.").arg(Theme.highlightColor)
 
                 color: Theme.primaryColor
                 linkColor: Theme.highlightColor
@@ -157,7 +157,7 @@ Page {
 
                 textFormat: Text.StyledText
 
-                text: qsTr("The coloured noise sound files were generated using the <a href=\"https://github.com/metiq-xyz/colored-noise-generator\"><font color=\"%1\">Metiq colored noise generator</font></a>.").arg(Theme.highlightColor)
+                text: qsTr("Color noise sound files were generated using the <a href=\"https://github.com/metiq-xyz/colored-noise-generator\"><font color=\"%1\">Metiq colored noise generator</font></a>.").arg(Theme.highlightColor)
 
                 color: Theme.primaryColor
                 linkColor: Theme.highlightColor
@@ -194,7 +194,7 @@ Page {
 
                 textFormat: Text.StyledText
 
-                text: qsTr("Binaural is licensed under the <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\"><font color=\"%1\">GNU General Public License v3.0 or later</font></a>.").arg(Theme.highlightColor)
+                text: qsTr("<a href=\"https://www.gnu.org/licenses/gpl-3.0.html\"><font color=\"%1\">GNU General Public License v3.0 or later</font></a>.").arg(Theme.highlightColor)
 
                 color: Theme.primaryColor
                 linkColor: Theme.highlightColor
