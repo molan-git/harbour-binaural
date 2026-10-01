@@ -91,7 +91,7 @@ Page {
 
                 color: Theme.rgba(
                     Theme.highlightBackgroundColor,
-                    Theme.highlightBackgroundOpacity * 1.3
+                    Theme.highlightBackgroundOpacity * 0.35
                 )
             }
 
