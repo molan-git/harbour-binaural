@@ -135,7 +135,7 @@ Page {
                     x: Theme.horizontalPageMargin
                     width: parent.width -
                            2 * Theme.horizontalPageMargin
-                    height: Theme.itemSizeMedium * 3
+                    height: Theme.itemSizeMedium * 4
                     cellWidth: width / 2
                     cellHeight: Theme.itemSizeMedium
 
@@ -145,7 +145,9 @@ Page {
                         qsTr("Crickets"),
                         qsTr("Stream"),
                         qsTr("Rain"),
-                        qsTr("Birds")
+                        qsTr("Birds"),
+                        qsTr("Fire"),
+                        qsTr("Chimes")
                     ]
 
                     delegate: Item {

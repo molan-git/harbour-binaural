@@ -323,6 +323,12 @@ void AudioEngine::setAmbience(const QString &ambience)
     else if (ambience == "Birds")
         mediaUrl = QUrl(
             "file:///usr/share/harbour-binaural/sounds/birds.mp3");
+    else if (ambience == "Fire")
+        mediaUrl = QUrl(
+            "file:///usr/share/harbour-binaural/sounds/fire.mp3");
+    else if (ambience == "Chimes")
+        mediaUrl = QUrl(
+            "file:///usr/share/harbour-binaural/sounds/chimes.mp3");
     else
         return;
 

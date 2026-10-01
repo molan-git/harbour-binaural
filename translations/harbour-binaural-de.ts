@@ -52,11 +52,74 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Binaural was inspired by the &lt;a href=&quot;https://github.com/metiq-xyz/android-app&quot;&gt;&lt;font color=&quot;%1&quot;&gt;Metiq app project&lt;/font&gt;&lt;/a&gt;. The ambient audio files are sourced from the same project.</source>
+        <source>&lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.html&quot;&gt;&lt;font color=&quot;%1&quot;&gt;GNU General Public License v3.0 or later&lt;/font&gt;&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.html&quot;&gt;&lt;font color=&quot;%1&quot;&gt;GNU General Public License v3.0 or later&lt;/font&gt;&lt;/a&gt;</source>
+        <source>Binaural was inspired by the &lt;a href=&quot;https://github.com/metiq-xyz/android-app&quot;&gt;&lt;font color=&quot;%1&quot;&gt;Metiq app project&lt;/font&gt;&lt;/a&gt;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>For small tips to support the project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AudioCreditPage</name>
+    <message>
+        <source>Pixabay Content License</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Credits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sound Effect by </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>from </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Crickets</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waves</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Birds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fire</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chimes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stream</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio files have been manually edited and adjusted for use in the app. Pixabay content is used under the Pixabay Content License: </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -249,6 +312,14 @@
     </message>
     <message>
         <source>Colored Noise</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fire</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chimes</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

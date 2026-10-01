@@ -102,7 +102,6 @@ Page {
                 }
             }
 
-            /*
             SectionHeader {
                 text: qsTr("Support")
             }
@@ -121,13 +120,12 @@ Page {
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                text: "tba"
+                text: "liberapay"
 
                 onClicked: {
-                    Qt.openUrlExternally("https://tba")
+                    Qt.openUrlExternally("https://liberapay.com/molan-git/donate")
                 }
             }
-            */
 
             SectionHeader {
                 text: qsTr("Credits")
@@ -139,7 +137,7 @@ Page {
 
                 textFormat: Text.StyledText
 
-                text: qsTr("Binaural was inspired by the <a href=\"https://github.com/metiq-xyz/android-app\"><font color=\"%1\">Metiq app project</font></a>. The ambient audio files are sourced from the same project.").arg(Theme.highlightColor)
+                text: qsTr("Binaural was inspired by the <a href=\"https://github.com/metiq-xyz/android-app\"><font color=\"%1\">Metiq app project</font></a>.").arg(Theme.highlightColor)
 
                 color: Theme.primaryColor
                 linkColor: Theme.highlightColor
@@ -166,6 +164,17 @@ Page {
 
                 onLinkActivated: {
                     Qt.openUrlExternally(link)
+                }
+            }
+
+
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                text: "Audio credits"
+
+                onClicked: {
+                    pageStack.animatorPush(Qt.resolvedUrl("AudioCreditPage.qml"))
                 }
             }
 
