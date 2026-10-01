@@ -280,7 +280,7 @@ void AudioEngine::setAmbienceVolume(int volume)
         !m_crossfadeTimer->isActive())
     {
         m_activeAmbiencePlayer->setVolume(
-            m_ambienceVolume);
+            qRound(m_ambienceVolume * 0.6));
     }
 }
 

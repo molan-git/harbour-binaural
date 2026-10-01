@@ -99,10 +99,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Waves</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Birds</source>
         <translation type="unfinished"></translation>
     </message>
@@ -120,6 +116,10 @@
     </message>
     <message>
         <source>Audio files have been manually edited and adjusted for use in the app. Pixabay content is used under the Pixabay Content License: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sea Waves</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

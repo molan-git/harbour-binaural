@@ -175,7 +175,7 @@ Page {
                 }
             }
 
-            // Waves
+            // Sea Waves
             Column {
                 width: parent.width
                 spacing: Theme.paddingSmall
@@ -184,7 +184,7 @@ Page {
                     x: Theme.horizontalPageMargin
                     width: parent.width - 2 * Theme.horizontalPageMargin
 
-                    text: qsTr("Waves")
+                    text: qsTr("Sea Waves")
                     color: Theme.secondaryHighlightColor
                     font.pixelSize: Theme.fontSizeMedium
                 }
