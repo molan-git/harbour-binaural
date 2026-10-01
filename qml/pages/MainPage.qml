@@ -12,45 +12,48 @@ Page {
         id: audioEngine
     }
 
+        property string activeBand: ""
+        property string activeAmbience: ""
+        property string activeNoise: ""
 
-    property string activeBand: ""
-    property string activeAmbience: ""
-    property string activeNoise: ""
-    property bool isPlaying: false
-
+        property bool bandPlaying: false
+        property bool ambiencePlaying: false
+        property bool noisePlaying: false
+        property bool isPlaying: bandPlaying ||
+                                 ambiencePlaying ||
+                                 noisePlaying
 
     onIsPlayingChanged: {
         appWindow.isPlaying = isPlaying
     }
 
+        function togglePlayback() {
+            if (isPlaying) {
+                audioEngine.stop()
+                audioEngine.stopAmbience()
+                audioEngine.stopColoredNoise()
 
-    function togglePlayback() {
-        if (isPlaying) {
-            audioEngine.stop()
-            audioEngine.stopAmbience()
-            audioEngine.stopColoredNoise()
-            isPlaying = false
-        } else {
-            if (activeBand !== "") {
-                audioEngine.setFrequencyBand(activeBand)
-                audioEngine.start()
+                bandPlaying = false
+                ambiencePlaying = false
+                noisePlaying = false
+            } else {
+                if (activeBand !== "") {
+                    audioEngine.setFrequencyBand(activeBand)
+                    audioEngine.start()
+                    bandPlaying = true
+                }
+
+                if (activeAmbience !== "") {
+                    audioEngine.setAmbience(activeAmbience)
+                    ambiencePlaying = true
+                }
+
+                if (activeNoise !== "") {
+                    audioEngine.setColoredNoise(activeNoise)
+                    noisePlaying = true
+                }
             }
-
-
-            if (activeAmbience !== "") {
-                audioEngine.setAmbience(activeAmbience)
-            }
-
-
-            if (activeNoise !== "") {
-                audioEngine.setColoredNoise(activeNoise)
-            }
-
-
-            isPlaying = true
         }
-    }
-
 
     Component {
         id: infoBinauralPageComponent
@@ -184,11 +187,11 @@ Page {
                                 if (ambienceDrawerButton.highlighted) {
                                     page.activeAmbience = ""
                                     audioEngine.stopAmbience()
-                                    page.isPlaying = false
+                                    page.ambiencePlaying = false
                                 } else {
                                     page.activeAmbience = modelData
                                     audioEngine.setAmbience(modelData)
-                                    page.isPlaying = true
+                                    page.ambiencePlaying = true
                                 }
                             }
 
@@ -210,7 +213,7 @@ Page {
                     Slider {
                         id: ambienceVolumeSlider
 
-                        width: parent.width * 0.7
+                        width: parent.width * 0.9
                         anchors.horizontalCenter: parent.horizontalCenter
 
                         minimumValue: 0
@@ -236,16 +239,20 @@ Page {
                                     ? "../images/icon-s-volume-3.svg"
                                     : "../images/icon-s-volume-4.svg"
 
+                        sourceSize: Qt.size(
+                                        Theme.iconSizeSmall * 1.6 * 2,
+                                        Theme.iconSizeSmall * 1.6 * 2
+                                        )
+
                         fillMode: Image.PreserveAspectFit
 
-                        height: Theme.iconSizeSmall * 1.2
-                        width: Theme.iconSizeSmall * 1.2
+                        height: Theme.iconSizeSmall * 1.6
+                        width: Theme.iconSizeSmall * 1.6
 
                         anchors.top: ambienceVolumeSlider.bottom
                         // moves icon closer to volume slider
-                        anchors.topMargin: -Theme.paddingLarge * 1.2
+                        anchors.topMargin: -Theme.paddingLarge
                         anchors.horizontalCenter: ambienceVolumeSlider.horizontalCenter
-                        anchors.horizontalCenterOffset: Theme.paddingSmall / 1.5
 
                         opacity: activeAmbience !== "" ? 1.0 : 0.5
                     }
@@ -365,12 +372,12 @@ Page {
                                     if (frequencyButton.highlighted) {
                                         page.activeBand = ""
                                         audioEngine.stop()
-                                        page.isPlaying = false
+                                        page.bandPlaying = false
                                     } else {
                                         page.activeBand = modelData
                                         audioEngine.setFrequencyBand(modelData)
                                         audioEngine.start()
-                                        page.isPlaying = true
+                                        page.bandPlaying = true
                                     }
                                 }
 
@@ -420,16 +427,20 @@ Page {
                                             ? "../images/icon-s-volume-3.svg"
                                             : "../images/icon-s-volume-4.svg"
 
+                            sourceSize: Qt.size(
+                                            Theme.iconSizeSmall * 1.6 * 2,
+                                            Theme.iconSizeSmall * 1.6 * 2
+                                            )
+
                             fillMode: Image.PreserveAspectFit
 
-                            height: Theme.iconSizeSmall * 1.2
-                            width: Theme.iconSizeSmall * 1.2
+                            height: Theme.iconSizeSmall * 1.6
+                            width: Theme.iconSizeSmall * 1.6
 
                             anchors.top: binauralVolumeSlider.bottom
                             // moves icon closer to volume slider
-                            anchors.topMargin: -Theme.paddingLarge * 1.2
+                            anchors.topMargin: -Theme.paddingLarge
                             anchors.horizontalCenter: binauralVolumeSlider.horizontalCenter
-                            anchors.horizontalCenterOffset: Theme.paddingSmall / 1.5
 
                             opacity: activeBand !== "" ? 1.0 : 0.5
                         }
@@ -515,11 +526,11 @@ Page {
                                     if (coloredNoiseButton.highlighted) {
                                         page.activeNoise = ""
                                         audioEngine.stopColoredNoise()
-                                        page.isPlaying = false
+                                        page.noisePlaying = false
                                     } else {
                                         page.activeNoise = modelData
                                         audioEngine.setColoredNoise(modelData)
-                                        page.isPlaying = true
+                                        page.noisePlaying = true
                                     }
                                 }
 
@@ -569,16 +580,20 @@ Page {
                                         ? "../images/icon-s-volume-3.svg"
                                         : "../images/icon-s-volume-4.svg"
 
+                            sourceSize: Qt.size(
+                                            Theme.iconSizeSmall * 1.6 * 2,
+                                            Theme.iconSizeSmall * 1.6 * 2
+                                            )
+
                             fillMode: Image.PreserveAspectFit
 
-                            height: Theme.iconSizeSmall * 1.2
-                            width: Theme.iconSizeSmall * 1.2
+                            height: Theme.iconSizeSmall * 1.6
+                            width: Theme.iconSizeSmall * 1.6
 
                             anchors.top: coloredNoiseVolumeSlider.bottom
                             // moves icon closer to volume slider
-                            anchors.topMargin: -Theme.paddingLarge * 1.2
+                            anchors.topMargin: -Theme.paddingLarge
                             anchors.horizontalCenter: coloredNoiseVolumeSlider.horizontalCenter
-                            anchors.horizontalCenterOffset: Theme.paddingSmall / 1.5
 
                             opacity: activeNoise !== "" ? 1.0 : 0.5
                         }

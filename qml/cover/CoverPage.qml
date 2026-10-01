@@ -23,6 +23,8 @@ CoverBackground {
         height: parent.height * 0.45
 
         source: "../images/binaural-cover.svg"
+        sourceSize: Qt.size(width * 2, height * 2)
+
         fillMode: Image.PreserveAspectFit
 
         // Keep the SVG purely visual and behind all cover content.
