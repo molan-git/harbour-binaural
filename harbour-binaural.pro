@@ -9,16 +9,21 @@
 #   - icon definition filename in desktop file must be changed
 #   - translation filenames have to be changed
 
+
 # The name of your application
 TARGET = harbour-binaural
 
+
 CONFIG += sailfishapp
+
 
 # QtMultimedia for access to Sailfish's multimedia/audio APIs.
 QT += multimedia
 
+
 SOURCES += src/binaural.cpp \
     src/audioengine.cpp
+
 
 DISTFILES += qml/harbour-binaural.qml \
     qml/pages/AudioCreditPage.qml \
@@ -51,17 +56,23 @@ DISTFILES += qml/harbour-binaural.qml \
     sounds/fire.mp3 \
     sounds/chimes.mp3
 
+
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
+
 
 # To disable building translations every time, comment out the
 # following CONFIG line.
-CONFIG += sailfishapp_i18n
+CONFIG += sailfishapp_i18n \
+          sailfishapp_i18n_idbased
+
 
 # German translation is enabled as an example.
 TRANSLATIONS += translations/harbour-binaural-de.ts
 
+
 HEADERS += \
     src/audioengine.h
+
 
 # Install the audio files as application data.
 #
@@ -81,5 +92,6 @@ ambient.files = sounds/wind.mp3 \
                 sounds/grey.mp3
 
 ambient.path = /usr/share/harbour-binaural/sounds
+
 
 INSTALLS += ambient

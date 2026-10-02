@@ -1,8 +1,8 @@
 ﻿import QtQuick 2.0
 import Sailfish.Silica 1.0
+import QtGraphicalEffects 1.0
 import Binaural 1.0
 import "components"
-
 
 Page {
     id: page
@@ -265,26 +265,11 @@ Page {
                         }
                     }
 
-                    Image {
+                    Item {
                         id: ambienceVolumeIcon
 
-                        source: ambienceVolumeSlider.value === 0
-                                ? "../images/icon-s-volume-1.svg"
-                                : ambienceVolumeSlider.value <= 33
-                                  ? "../images/icon-s-volume-2.svg"
-                                  : ambienceVolumeSlider.value <= 66
-                                    ? "../images/icon-s-volume-3.svg"
-                                    : "../images/icon-s-volume-4.svg"
-
-                        sourceSize: Qt.size(
-                            Theme.iconSizeSmall * 1.6 * 2,
-                            Theme.iconSizeSmall * 1.6 * 2
-                        )
-
-                        fillMode: Image.PreserveAspectFit
-
-                        height: Theme.iconSizeSmall * 1.6
                         width: Theme.iconSizeSmall * 1.6
+                        height: Theme.iconSizeSmall * 1.6
 
                         anchors.top: ambienceVolumeSlider.bottom
                         // moves icon closer to volume slider
@@ -292,6 +277,36 @@ Page {
                         anchors.horizontalCenter: ambienceVolumeSlider.horizontalCenter
 
                         opacity: page.activeAmbience !== "" ? 1.0 : 0.5
+
+                        Image {
+                            id: ambienceVolumeImage
+
+                            anchors.fill: parent
+
+                            source: ambienceVolumeSlider.value === 0
+                                    ? "../images/icon-s-volume-1.svg"
+                                    : ambienceVolumeSlider.value <= 33
+                                      ? "../images/icon-s-volume-2.svg"
+                                      : ambienceVolumeSlider.value <= 66
+                                        ? "../images/icon-s-volume-3.svg"
+                                        : "../images/icon-s-volume-4.svg"
+
+                            sourceSize: Qt.size(
+                                Theme.iconSizeSmall * 1.6 * 2,
+                                Theme.iconSizeSmall * 1.6 * 2
+                            )
+
+                            fillMode: Image.PreserveAspectFit
+
+                            visible: false
+                        }
+
+                        ColorOverlay {
+                            anchors.fill: ambienceVolumeImage
+
+                            source: ambienceVolumeImage
+                            color: Theme.primaryColor
+                        }
                     }
                 }
             }
@@ -459,33 +474,49 @@ Page {
                             }
                         }
 
-                        Image {
+                        Item {
                             id: binauralVolumeIcon
 
-                            source: binauralVolumeSlider.value === 0
-                                    ? "../images/icon-s-volume-1.svg"
-                                    : binauralVolumeSlider.value <= 33
-                                      ? "../images/icon-s-volume-2.svg"
-                                      : binauralVolumeSlider.value <= 66
-                                        ? "../images/icon-s-volume-3.svg"
-                                        : "../images/icon-s-volume-4.svg"
-
-                            sourceSize: Qt.size(
-                                Theme.iconSizeSmall * 1.6 * 2,
-                                Theme.iconSizeSmall * 1.6 * 2
-                            )
-
-                            fillMode: Image.PreserveAspectFit
-
-                            height: Theme.iconSizeSmall * 1.6
                             width: Theme.iconSizeSmall * 1.6
+                            height: Theme.iconSizeSmall * 1.6
 
                             anchors.top: binauralVolumeSlider.bottom
                             // moves icon closer to volume slider
                             anchors.topMargin: -Theme.paddingLarge
                             anchors.horizontalCenter: binauralVolumeSlider.horizontalCenter
+                            anchors.horizontalCenterOffset: Theme.paddingSmall
 
                             opacity: page.activeBand !== "" ? 1.0 : 0.5
+
+                            Image {
+                                id: binauralVolumeImage
+
+                                anchors.fill: parent
+
+                                source: binauralVolumeSlider.value === 0
+                                        ? "../images/icon-s-volume-1.svg"
+                                        : binauralVolumeSlider.value <= 33
+                                          ? "../images/icon-s-volume-2.svg"
+                                          : binauralVolumeSlider.value <= 66
+                                            ? "../images/icon-s-volume-3.svg"
+                                            : "../images/icon-s-volume-4.svg"
+
+                                sourceSize: Qt.size(
+                                    Theme.iconSizeSmall * 1.6 * 2,
+                                    Theme.iconSizeSmall * 1.6 * 2
+                                )
+
+                                fillMode: Image.PreserveAspectFit
+
+                                visible: false
+                            }
+
+                            ColorOverlay {
+                                anchors.fill: binauralVolumeImage
+
+                                source: binauralVolumeImage
+                                color: Theme.primaryColor
+                            }
                         }
 
                         IconButton {
@@ -617,33 +648,49 @@ Page {
                             }
                         }
 
-                        Image {
+                        Item {
                             id: coloredNoiseVolumeIcon
 
-                            source: coloredNoiseVolumeSlider.value === 0
-                                    ? "../images/icon-s-volume-1.svg"
-                                    : coloredNoiseVolumeSlider.value <= 33
-                                      ? "../images/icon-s-volume-2.svg"
-                                      : coloredNoiseVolumeSlider.value <= 66
-                                        ? "../images/icon-s-volume-3.svg"
-                                        : "../images/icon-s-volume-4.svg"
-
-                            sourceSize: Qt.size(
-                                Theme.iconSizeSmall * 1.6 * 2,
-                                Theme.iconSizeSmall * 1.6 * 2
-                            )
-
-                            fillMode: Image.PreserveAspectFit
-
-                            height: Theme.iconSizeSmall * 1.6
                             width: Theme.iconSizeSmall * 1.6
+                            height: Theme.iconSizeSmall * 1.6
 
                             anchors.top: coloredNoiseVolumeSlider.bottom
                             // moves icon closer to volume slider
                             anchors.topMargin: -Theme.paddingLarge
                             anchors.horizontalCenter: coloredNoiseVolumeSlider.horizontalCenter
+                            anchors.horizontalCenterOffset: Theme.paddingSmall
 
                             opacity: page.activeNoise !== "" ? 1.0 : 0.5
+
+                            Image {
+                                id: coloredNoiseVolumeImage
+
+                                anchors.fill: parent
+
+                                source: coloredNoiseVolumeSlider.value === 0
+                                        ? "../images/icon-s-volume-1.svg"
+                                        : coloredNoiseVolumeSlider.value <= 33
+                                          ? "../images/icon-s-volume-2.svg"
+                                          : coloredNoiseVolumeSlider.value <= 66
+                                            ? "../images/icon-s-volume-3.svg"
+                                            : "../images/icon-s-volume-4.svg"
+
+                                sourceSize: Qt.size(
+                                    Theme.iconSizeSmall * 1.6 * 2,
+                                    Theme.iconSizeSmall * 1.6 * 2
+                                )
+
+                                fillMode: Image.PreserveAspectFit
+
+                                visible: false
+                            }
+
+                            ColorOverlay {
+                                anchors.fill: coloredNoiseVolumeImage
+
+                                source: coloredNoiseVolumeImage
+                                color: Theme.primaryColor
+                            }
                         }
 
                         IconButton {

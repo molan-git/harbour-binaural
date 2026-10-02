@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import QtGraphicalEffects 1.0
 
 
 CoverBackground {
@@ -12,8 +13,8 @@ CoverBackground {
 
     signal playPauseClicked()
 
-    Image {
-        id: coverBackgroundImage
+    Item {
+        id: coverBackgroundIcon
 
         anchors.top: parent.top
         //anchors.topMargin: Theme.paddingSmall
@@ -22,19 +23,36 @@ CoverBackground {
         width: parent.width - 2 * Theme.paddingSmall
         height: parent.height * 0.45
 
-        source: "../images/binaural-cover.svg"
-        sourceSize: Qt.size(width * 2, height * 2)
-
-        fillMode: Image.PreserveAspectFit
-
-        // Keep the SVG purely visual and behind all cover content.
         z: 0
+
+        Image {
+            id: coverBackgroundImage
+
+            anchors.fill: parent
+
+            source: "../images/binaural-cover.svg"
+            sourceSize: Qt.size(
+                width * 2,
+                height * 2
+            )
+
+            fillMode: Image.PreserveAspectFit
+
+            visible: false
+        }
+
+        ColorOverlay {
+            anchors.fill: coverBackgroundImage
+
+            source: coverBackgroundImage
+            color: Theme.primaryColor
+        }
     }
 
     Column {
         id: coverLabels
 
-        anchors.top: coverBackgroundImage.bottom
+        anchors.top: coverBackgroundIcon.bottom
         anchors.topMargin: -Theme.paddingLarge
         anchors.left: parent.left
         anchors.right: parent.right
