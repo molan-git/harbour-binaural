@@ -34,6 +34,7 @@ DISTFILES += qml/harbour-binaural.qml \
     sounds/chimes.mp3 \
     sounds/grey.mp3 \
     sounds/pink.mp3 \
+    sounds/waves.mp3 \
     sounds/white.mp3 \
     qml/images/binaural-cover.svg \
     qml/images/icon-s-volume-1.svg \
@@ -43,7 +44,6 @@ DISTFILES += qml/harbour-binaural.qml \
     translations/*.ts \
     harbour-binaural.desktop \
     sounds/wind.mp3 \
-    sounds/seawaves.mp3 \
     sounds/crickets.mp3 \
     sounds/stream.mp3 \
     sounds/rain.mp3 \
@@ -68,7 +68,7 @@ HEADERS += \
 # qmake's install system puts the files into the same
 # directory that AudioEngine expects at runtime.
 ambient.files = sounds/wind.mp3 \
-                sounds/seawaves.mp3 \
+                sounds/waves.mp3 \
                 sounds/crickets.mp3 \
                 sounds/stream.mp3 \
                 sounds/rain.mp3 \

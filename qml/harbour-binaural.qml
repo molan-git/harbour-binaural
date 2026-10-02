@@ -7,10 +7,22 @@ ApplicationWindow {
     id: appWindow
 
     property var mainPage
-    property string activeBand: ""
-    property string activeAmbience: ""
-    property string activeNoise: ""
-    property bool isPlaying: false
+
+    property string activeBand: mainPage
+                              ? mainPage.activeBand
+                              : ""
+
+    property string activeAmbience: mainPage
+                                   ? mainPage.activeAmbience
+                                   : ""
+
+    property string activeNoise: mainPage
+                                ? mainPage.activeNoise
+                                : ""
+
+    property bool isPlaying: mainPage
+                             ? mainPage.isPlaying
+                             : false
 
     bottomMargin: playbackBar.height
 
@@ -20,22 +32,6 @@ ApplicationWindow {
 
             Component.onCompleted: {
                 appWindow.mainPage = mainPageInstance
-            }
-
-            onActiveBandChanged: {
-                appWindow.activeBand = activeBand
-            }
-
-            onActiveAmbienceChanged: {
-                appWindow.activeAmbience = activeAmbience
-            }
-
-            onActiveNoiseChanged: {
-                appWindow.activeNoise = activeNoise
-            }
-
-            onIsPlayingChanged: {
-                appWindow.isPlaying = isPlaying
             }
         }
     }
@@ -135,17 +131,22 @@ ApplicationWindow {
                    appWindow.activeNoise === "" &&
                    appWindow.activeAmbience === "")
                   ? qsTr("Start your sound mix")
-                  : ((appWindow.activeBand !== "" ? appWindow.activeBand : "") +
+                  : ((appWindow.activeBand !== ""
+                      ? appWindow.activeBand
+                      : "") +
                      (appWindow.activeBand !== "" &&
                       (appWindow.activeNoise !== "" ||
                        appWindow.activeAmbience !== "")
                       ? " & " : "") +
-                     (appWindow.activeNoise !== "" ? appWindow.activeNoise : "") +
+                     (appWindow.activeNoise !== ""
+                      ? appWindow.activeNoise
+                      : "") +
                      (appWindow.activeNoise !== "" &&
                       appWindow.activeAmbience !== ""
                       ? " & " : "") +
                      (appWindow.activeAmbience !== ""
-                      ? appWindow.activeAmbience : ""))
+                      ? appWindow.activeAmbience
+                      : ""))
         }
     }
 

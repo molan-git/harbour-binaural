@@ -308,9 +308,9 @@ void AudioEngine::setAmbience(const QString &ambience)
     if (ambience == "Wind")
         mediaUrl = QUrl(
             "file:///usr/share/harbour-binaural/sounds/wind.mp3");
-    else if (ambience == "Sea Waves")
+    else if (ambience == "Waves")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/seawaves.mp3");
+            "file:///usr/share/harbour-binaural/sounds/waves.mp3");
     else if (ambience == "Crickets")
         mediaUrl = QUrl(
             "file:///usr/share/harbour-binaural/sounds/crickets.mp3");

@@ -135,9 +135,15 @@ Page {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
+                property string metiqUrl: "https://github.com/metiq-xyz/android-app"
+
                 textFormat: Text.StyledText
 
-                text: qsTr("Binaural was inspired by the <a href=\"https://github.com/metiq-xyz/android-app\"><font color=\"%1\">Metiq app project</font></a>.").arg(Theme.highlightColor)
+                text: qsTr("Binaural was inspired by") +
+                      " " +
+                      "<a href=\"" + metiqUrl + "\">" +
+                      "Metiq" +
+                      "</a>."
 
                 color: Theme.primaryColor
                 linkColor: Theme.highlightColor
@@ -153,9 +159,15 @@ Page {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
+                property string noiseGeneratorUrl: "https://github.com/metiq-xyz/colored-noise-generator"
+
                 textFormat: Text.StyledText
 
-                text: qsTr("Color noise sound files were generated using the <a href=\"https://github.com/metiq-xyz/colored-noise-generator\"><font color=\"%1\">Metiq colored noise generator</font></a>.").arg(Theme.highlightColor)
+                text: qsTr("Color noise sound files were generated using the") +
+                      " " +
+                      "<a href=\"" + noiseGeneratorUrl + "\">" +
+                      "Metiq colored noise generator" +
+                      "</a>."
 
                 color: Theme.primaryColor
                 linkColor: Theme.highlightColor
@@ -166,7 +178,6 @@ Page {
                     Qt.openUrlExternally(link)
                 }
             }
-
 
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -201,9 +212,13 @@ Page {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
+                property string gplUrl: "https://www.gnu.org/licenses/gpl-3.0.html"
+
                 textFormat: Text.StyledText
 
-                text: qsTr("<a href=\"https://www.gnu.org/licenses/gpl-3.0.html\"><font color=\"%1\">GNU General Public License v3.0 or later</font></a>").arg(Theme.highlightColor)
+                text: "<a href=\"" + gplUrl + "\">" +
+                      "GNU General Public License v3.0 or later" +
+                      "</a>"
 
                 color: Theme.primaryColor
                 linkColor: Theme.highlightColor

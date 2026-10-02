@@ -44,19 +44,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Color noise sound files were generated using the &lt;a href=&quot;https://github.com/metiq-xyz/colored-noise-generator&quot;&gt;&lt;font color=&quot;%1&quot;&gt;Metiq colored noise generator&lt;/font&gt;&lt;/a&gt;.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Application for playing binaural beats, colored noises and ambient sounds.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.html&quot;&gt;&lt;font color=&quot;%1&quot;&gt;GNU General Public License v3.0 or later&lt;/font&gt;&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Binaural was inspired by the &lt;a href=&quot;https://github.com/metiq-xyz/android-app&quot;&gt;&lt;font color=&quot;%1&quot;&gt;Metiq app project&lt;/font&gt;&lt;/a&gt;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -65,6 +53,14 @@
     </message>
     <message>
         <source>For small tips to support the project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Binaural was inspired by</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Color noise sound files were generated using the</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -80,14 +76,6 @@
     </message>
     <message>
         <source>Wind</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sound Effect by </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>from </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -115,11 +103,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Audio files have been manually edited and adjusted for use in the app. Pixabay content is used under the Pixabay Content License: </source>
+        <source>Sound effect by</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Sea Waves</source>
+        <source>from</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio files have been manually edited for use in the app under</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waves</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -259,10 +255,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Sea Waves</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Crickets</source>
         <translation type="unfinished"></translation>
     </message>
@@ -320,6 +312,10 @@
     </message>
     <message>
         <source>Chimes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waves</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

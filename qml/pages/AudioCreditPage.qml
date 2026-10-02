@@ -26,7 +26,7 @@ Page {
             sourceUrl: "https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=7015"
         },
         {
-            name: qsTr("Sea Waves"),
+            name: qsTr("Waves"),
             author: "Jurij",
             authorUrl: "https://pixabay.com/users/soundreality-31074404/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=611954",
             sourceUrl: "https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=611954"
@@ -70,20 +70,21 @@ Page {
             }
 
             Label {
-                x: Theme.horizontalPageMargin
                 width: parent.width - 2 * Theme.horizontalPageMargin
+                x: Theme.horizontalPageMargin
 
-                text: qsTr("Audio files have been manually edited and adjusted for use in the app. Pixabay content is used under the Pixabay Content License: ") +
-                      "<a href=\"https://pixabay.com/service/license-summary/\" " +
-                      "style=\"color:" + Theme.highlightColor + ";\">" +
+                text: qsTr("Audio files have been manually edited for use in the app under") +
+                      " " +
+                      "<a href=\"https://pixabay.com/service/license-summary/\">" +
                       qsTr("Pixabay Content License") +
                       "</a>"
 
                 color: Theme.primaryColor
+                linkColor: Theme.secondaryHighlightColor
                 font.pixelSize: Theme.fontSizeSmall
                 horizontalAlignment: Text.AlignLeft
                 wrapMode: Text.WordWrap
-                textFormat: Text.RichText
+                textFormat: Text.StyledText
 
                 onLinkActivated: {
                     if (link.indexOf("https://") === 0 ||
@@ -120,27 +121,30 @@ Page {
 
                     text: modelData.name
                     color: Theme.secondaryHighlightColor
-                    font.pixelSize: Theme.fontSizeMedium
+                    font.pixelSize: Theme.fontSizeSmall
                 }
 
                 Text {
                     width: parent.width
 
-                    textFormat: Text.RichText
+                    textFormat: Text.StyledText
                     wrapMode: Text.WordWrap
 
                     color: Theme.primaryColor
+                    linkColor: Theme.secondaryHighlightColor
                     font.pixelSize: Theme.fontSizeSmall
 
-                    text: qsTr("Sound Effect by ") +
-                          "<a href=\"" + modelData.authorUrl + "\" " +
-                          "style=\"color:" + Theme.highlightColor + ";\">" +
+                    text: qsTr("Sound effect by") +
+                          " " +
+                          "<a href=\"" + modelData.authorUrl + "\">" +
                           modelData.author +
-                          "</a> " +
-                          qsTr("from ") +
-                          "<a href=\"" + modelData.sourceUrl + "\" " +
-                          "style=\"color:" + Theme.highlightColor + ";\">" +
-                          "Pixabay</a>"
+                          "</a>" +
+                          " " +
+                          qsTr("from") +
+                          " " +
+                          "<a href=\"" + modelData.sourceUrl + "\">" +
+                          "Pixabay" +
+                          "</a>"
 
                     onLinkActivated: {
                         if (link.indexOf("https://") === 0 ||
