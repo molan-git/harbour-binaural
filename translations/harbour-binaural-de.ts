@@ -45,7 +45,7 @@
     </message>
     <message>
         <source>Color noise sound files were generated using the &lt;a href=&quot;https://github.com/metiq-xyz/colored-noise-generator&quot;&gt;&lt;font color=&quot;%1&quot;&gt;Metiq colored noise generator&lt;/font&gt;&lt;/a&gt;.</source>
-        <translation>Die Sounddateien für farbiges Rauschen wurden mit dem &lt;a href=&quot;https://github.com/metiq-xyz/colored-noise-generator&quot;&gt;\&lt;font color=&quot;%1&quot;&gt;Metiq Colored Noise Generator&lt;/font&gt;&lt;/a&gt; erstellt.</translation>
+        <translation>Die Sounddateien für farbiges Rauschen wurden mit dem &lt;a href=&quot;https://github.com/metiq-xyz/colored-noise-generator&quot;&gt;&lt;font color=&quot;%1&quot;&gt;Metiq Colored Noise Generator&lt;/font&gt;&lt;/a&gt; erstellt.</translation>
     </message>
     <message>
         <source>Application for playing binaural beats, colored noises and ambient sounds.</source>
