@@ -26,7 +26,8 @@ SOURCES += src/binaural.cpp \
 
 
 DISTFILES += qml/harbour-binaural.qml \
-    qml/pages/AudioCreditPage.qml \
+    icons/216x216/harbour-binaural.png \
+    qml/pages/CreditPage.qml \
     qml/pages/MainPage.qml \
     qml/cover/CoverPage.qml \
     qml/pages/AboutPage.qml \
@@ -46,6 +47,8 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/images/icon-s-volume-2.svg \
     qml/images/icon-s-volume-3.svg \
     qml/images/icon-s-volume-4.svg \
+    qml/images/icon-s-headset.svg \
+    qml/images/image-binaural-graph.svg \
     translations/*.ts \
     harbour-binaural.desktop \
     sounds/wind.mp3 \

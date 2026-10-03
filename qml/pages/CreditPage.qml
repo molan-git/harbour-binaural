@@ -66,18 +66,23 @@ Page {
             width: page.width
 
             PageHeader {
-                title: qsTr("Audio Credits")
+                title: qsTr("Asset credits")
+            }
+
+            SectionHeader {
+                text: qsTr("Audio files")
             }
 
             Label {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("Audio files have been manually edited for use in the app under") +
+                text: qsTr("Files have been manually edited for use in this app under the") +
                       " " +
                       "<a href=\"https://pixabay.com/service/license-summary/\">" +
                       qsTr("Pixabay Content License") +
-                      "</a>"
+                      "</a>" +
+                      ":"
 
                 color: Theme.primaryColor
                 linkColor: Theme.secondaryHighlightColor
@@ -96,7 +101,7 @@ Page {
 
             Item {
                 width: 1
-                height: Theme.paddingLarge
+                height: Theme.paddingLarge * 2
             }
         }
 
@@ -116,25 +121,19 @@ Page {
 
                 spacing: Theme.paddingSmall
 
-                Label {
-                    width: parent.width
-
-                    text: modelData.name
-                    color: Theme.secondaryHighlightColor
-                    font.pixelSize: Theme.fontSizeSmall
-                }
-
                 Text {
                     width: parent.width
 
                     textFormat: Text.StyledText
                     wrapMode: Text.WordWrap
 
-                    color: Theme.primaryColor
+                    color: Theme.highlightColor
                     linkColor: Theme.secondaryHighlightColor
                     font.pixelSize: Theme.fontSizeSmall
 
-                    text: qsTr("Sound effect by") +
+                    text: modelData.name +
+                          " " +
+                          qsTr("sound by") +
                           " " +
                           "<a href=\"" + modelData.authorUrl + "\">" +
                           modelData.author +
@@ -156,6 +155,73 @@ Page {
             }
         }
 
+        footer: Column {
+            width: page.width
+
+            Item {
+                width: 1
+                height: Theme.paddingLarge
+            }
+
+            SectionHeader {
+                text: qsTr("Images")
+            }
+
+            Label {
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                x: Theme.horizontalPageMargin
+
+                text: qsTr("Binaural graph image modified for use in") +
+                      " Binaural:"
+
+                color: Theme.primaryColor
+                font.pixelSize: Theme.fontSizeSmall
+                horizontalAlignment: Text.AlignLeft
+                wrapMode: Text.WordWrap
+            }
+
+            Item {
+                width: 1
+                height: Theme.paddingLarge
+            }
+
+            Text {
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                x: Theme.horizontalPageMargin
+
+                textFormat: Text.StyledText
+                wrapMode: Text.WordWrap
+
+                color: Theme.highlightColor
+                linkColor: Theme.secondaryHighlightColor
+                font.pixelSize: Theme.fontSizeSmall
+
+                text: qsTr("Based on") +
+                      " " +
+                      "Beating_Frequency.svg" +
+                      " " +
+                      qsTr("by") +
+                      " " +
+                      "Ansgar Hellwig (Ahellwig)." +
+                      "<br>" +
+                      qsTr("Licensed under") +
+                      " " +
+                      "<a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">" +
+                      "CC BY-SA 3.0" +
+                      "</a>" +
+                      " - " +
+                      "<a href=\"https://commons.wikimedia.org/wiki/File:Beating_Frequency.svg\">" +
+                      qsTr("Original source") +
+                      "</a>"
+
+                onLinkActivated: {
+                    if (link.indexOf("https://") === 0 ||
+                        link.indexOf("http://") === 0) {
+                        Qt.openUrlExternally(link)
+                    }
+                }
+            }
+        }
         VerticalScrollDecorator {}
     }
 }

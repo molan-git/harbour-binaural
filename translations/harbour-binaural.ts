@@ -48,14 +48,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Support</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>For small tips to support the project.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Binaural was inspired by</source>
         <translation type="unfinished"></translation>
     </message>
@@ -65,15 +57,18 @@
     </message>
 </context>
 <context>
-    <name>AudioCreditPage</name>
+    <name>CoverPage</name>
     <message>
-        <source>Pixabay Content License</source>
+        <source>Playing:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Audio Credits</source>
+        <source>Start your sound mix</source>
         <translation type="unfinished"></translation>
     </message>
+</context>
+<context>
+    <name>CreditPage</name>
     <message>
         <source>Wind</source>
         <translation type="unfinished"></translation>
@@ -84,6 +79,10 @@
     </message>
     <message>
         <source>Crickets</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Waves</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -103,7 +102,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Sound effect by</source>
+        <source>Audio files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pixabay Content License</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>sound by</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -111,22 +118,35 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Audio files have been manually edited for use in the app under</source>
+        <source>Images</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Waves</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>CoverPage</name>
-    <message>
-        <source>Playing:</source>
+        <source>Based on</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Start your sound mix</source>
+        <source>by</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Licensed under</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Original source</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Asset credits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Files have been manually edited for use in this app under the</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Binaural graph image modified for use in</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -316,6 +336,14 @@
     </message>
     <message>
         <source>Waves</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deselect all sounds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To be used with</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

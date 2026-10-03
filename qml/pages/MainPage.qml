@@ -66,6 +66,26 @@ Page {
         }
     }
 
+    function deselectAllSounds() {
+        audioEngine.stop()
+        audioEngine.stopAmbience()
+        audioEngine.stopColoredNoise()
+
+        page.activeBand = ""
+        page.activeAmbience = ""
+        page.activeNoise = ""
+
+        page.bandPlaying = false
+        page.ambiencePlaying = false
+        page.noisePlaying = false
+
+        audioEngine.bandPlaying = false
+        audioEngine.ambiencePlaying = false
+        audioEngine.noisePlaying = false
+
+        ambienceDrawer.open = false
+    }
+
     function ambienceLabel(key) {
         switch (key) {
         case "Wind":
@@ -337,6 +357,19 @@ Page {
                             )
                         }
                     }
+
+                    MenuItem {
+                        text: qsTr("Deselect all sounds")
+
+                        enabled: page.activeBand !== "" ||
+                                 page.activeAmbience !== "" ||
+                                 page.activeNoise !== ""
+
+                        onClicked: {
+                            page.deselectAllSounds()
+                        }
+                    }
+
                 }
 
                 MouseArea {
@@ -366,6 +399,54 @@ Page {
                     // Binaural frequency selection
                     SectionHeader {
                         text: qsTr("Binaural Beats")
+                    }
+
+                    // info text about headphones with image
+                    Item {
+                        width: parent.width - 2 * Theme.horizontalPageMargin
+                        x: Theme.horizontalPageMargin
+                        height: Theme.fontSizeExtraSmall
+
+                        Row {
+                            anchors.right: parent.right
+
+                            spacing: Theme.paddingSmall
+
+                            Label {
+                                text: qsTr("To be used with")
+
+                                color: Theme.secondaryHighlightColor
+                                font.pixelSize: Theme.fontSizeExtraSmall
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            Item {
+                                width: Theme.fontSizeExtraSmall
+                                height: Theme.fontSizeExtraSmall
+
+                                Image {
+                                    id: headsetImage
+
+                                    anchors.fill: parent
+
+                                    source: "../images/icon-s-headset.svg"
+
+                                    fillMode: Image.PreserveAspectFit
+                                    smooth: true
+                                    visible: false
+                                }
+
+                                ColorOverlay {
+                                    anchors.fill: headsetImage
+
+                                    source: headsetImage
+                                    color: Theme.secondaryHighlightColor
+                                }
+
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.verticalCenterOffset: Theme.paddingSmall / 1.8
+                            }
+                        }
                     }
 
                     SilicaGridView {

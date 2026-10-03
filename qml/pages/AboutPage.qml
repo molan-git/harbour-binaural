@@ -102,6 +102,7 @@ Page {
                 }
             }
 
+            /*
             SectionHeader {
                 text: qsTr("Support")
             }
@@ -126,6 +127,7 @@ Page {
                     Qt.openUrlExternally("https://liberapay.com/molan-git/donate")
                 }
             }
+            */
 
             SectionHeader {
                 text: qsTr("Credits")
@@ -182,10 +184,10 @@ Page {
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                text: "Audio credits"
+                text: "Asset credits"
 
                 onClicked: {
-                    pageStack.animatorPush(Qt.resolvedUrl("AudioCreditPage.qml"))
+                    pageStack.animatorPush(Qt.resolvedUrl("CreditPage.qml"))
                 }
             }
 

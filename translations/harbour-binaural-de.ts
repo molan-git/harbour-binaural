@@ -39,206 +39,231 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="106"/>
-        <source>Support</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/AboutPage.qml" line="113"/>
-        <source>For small tips to support the project.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/AboutPage.qml" line="131"/>
+        <location filename="../qml/pages/AboutPage.qml" line="133"/>
         <source>Credits</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="142"/>
+        <location filename="../qml/pages/AboutPage.qml" line="144"/>
         <source>Binaural was inspired by</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="166"/>
+        <location filename="../qml/pages/AboutPage.qml" line="168"/>
         <source>Color noise sound files were generated using the</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="193"/>
+        <location filename="../qml/pages/AboutPage.qml" line="195"/>
         <source>Data protection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="200"/>
+        <location filename="../qml/pages/AboutPage.qml" line="202"/>
         <source>This application works exclusively offline and requires permission to output audio. No data is collected.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="208"/>
+        <location filename="../qml/pages/AboutPage.qml" line="210"/>
         <source>License</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>AudioCreditPage</name>
-    <message>
-        <location filename="../qml/pages/AudioCreditPage.qml" line="11"/>
-        <source>Wind</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/AudioCreditPage.qml" line="17"/>
-        <source>Rain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/AudioCreditPage.qml" line="23"/>
-        <source>Crickets</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/AudioCreditPage.qml" line="29"/>
-        <source>Waves</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/AudioCreditPage.qml" line="35"/>
-        <source>Birds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/AudioCreditPage.qml" line="41"/>
-        <source>Fire</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/AudioCreditPage.qml" line="47"/>
-        <source>Chimes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/AudioCreditPage.qml" line="53"/>
-        <source>Stream</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/AudioCreditPage.qml" line="69"/>
-        <source>Audio Credits</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/AudioCreditPage.qml" line="76"/>
-        <source>Audio files have been manually edited for use in the app under</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/AudioCreditPage.qml" line="137"/>
-        <source>Sound effect by</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/AudioCreditPage.qml" line="143"/>
-        <source>from</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/AudioCreditPage.qml" line="79"/>
-        <source>Pixabay Content License</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>CoverPage</name>
     <message>
-        <location filename="../qml/cover/CoverPage.qml" line="53"/>
+        <location filename="../qml/cover/CoverPage.qml" line="71"/>
         <source>Start your sound mix</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/cover/CoverPage.qml" line="54"/>
+        <location filename="../qml/cover/CoverPage.qml" line="72"/>
         <source>Playing:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CreditPage</name>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="11"/>
+        <source>Wind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="17"/>
+        <source>Rain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="23"/>
+        <source>Crickets</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="29"/>
+        <source>Waves</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="35"/>
+        <source>Birds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="41"/>
+        <source>Fire</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="47"/>
+        <source>Chimes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="53"/>
+        <source>Stream</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="69"/>
+        <source>Asset credits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="73"/>
+        <source>Audio files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="80"/>
+        <source>Files have been manually edited for use in this app under the</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="174"/>
+        <source>Binaural graph image modified for use in</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="83"/>
+        <source>Pixabay Content License</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="136"/>
+        <source>sound by</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="142"/>
+        <source>from</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="167"/>
+        <source>Images</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="199"/>
+        <source>Based on</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="203"/>
+        <source>by</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="207"/>
+        <source>Licensed under</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="214"/>
+        <source>Original source</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>InfoBinauralPage</name>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="51"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="52"/>
         <source>Binaural Beats</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="62"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="63"/>
         <source>Are created by playing two slightly different tones, one in each ear. The brain processes the difference as a rhythmic beat. Different beat frequencies can be used to support focus, relaxation, meditation, or sleep.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="78"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="105"/>
         <source>Choose from:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="107"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="134"/>
         <source>Delta 2 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="115"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="142"/>
         <source>Deep sleep, rest</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="124"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="151"/>
         <source>Delta/Theta 4 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="132"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="159"/>
         <source>Deep relaxation, sleep</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="141"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="168"/>
         <source>Theta 6 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="149"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="176"/>
         <source>Meditation and relaxation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="158"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="185"/>
         <source>Alpha 10 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="166"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="193"/>
         <source>Calm and relaxed wakefulness</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="175"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="202"/>
         <source>Beta 20 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="183"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="210"/>
         <source>Alertness and focus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="192"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="219"/>
         <source>Gamma 40 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="200"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="227"/>
         <source>Complex thinking and information processing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="216"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="243"/>
         <source>Individual experiences may vary.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -309,95 +334,105 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="72"/>
-        <location filename="../qml/pages/MainPage.qml" line="176"/>
+        <location filename="../qml/pages/MainPage.qml" line="92"/>
+        <location filename="../qml/pages/MainPage.qml" line="196"/>
         <source>Wind</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="74"/>
-        <location filename="../qml/pages/MainPage.qml" line="177"/>
+        <location filename="../qml/pages/MainPage.qml" line="94"/>
+        <location filename="../qml/pages/MainPage.qml" line="197"/>
         <source>Waves</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="76"/>
-        <location filename="../qml/pages/MainPage.qml" line="178"/>
+        <location filename="../qml/pages/MainPage.qml" line="96"/>
+        <location filename="../qml/pages/MainPage.qml" line="198"/>
         <source>Crickets</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="78"/>
-        <location filename="../qml/pages/MainPage.qml" line="179"/>
+        <location filename="../qml/pages/MainPage.qml" line="98"/>
+        <location filename="../qml/pages/MainPage.qml" line="199"/>
         <source>Stream</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="80"/>
-        <location filename="../qml/pages/MainPage.qml" line="180"/>
+        <location filename="../qml/pages/MainPage.qml" line="100"/>
+        <location filename="../qml/pages/MainPage.qml" line="200"/>
         <source>Rain</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="82"/>
-        <location filename="../qml/pages/MainPage.qml" line="181"/>
+        <location filename="../qml/pages/MainPage.qml" line="102"/>
+        <location filename="../qml/pages/MainPage.qml" line="201"/>
         <source>Birds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="84"/>
-        <location filename="../qml/pages/MainPage.qml" line="182"/>
+        <location filename="../qml/pages/MainPage.qml" line="104"/>
+        <location filename="../qml/pages/MainPage.qml" line="202"/>
         <source>Fire</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="86"/>
-        <location filename="../qml/pages/MainPage.qml" line="183"/>
+        <location filename="../qml/pages/MainPage.qml" line="106"/>
+        <location filename="../qml/pages/MainPage.qml" line="203"/>
         <source>Chimes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="317"/>
+        <location filename="../qml/pages/MainPage.qml" line="352"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="353"/>
+        <location filename="../qml/pages/MainPage.qml" line="362"/>
+        <source>Deselect all sounds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/MainPage.qml" line="401"/>
         <source>Binaural Beats</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="514"/>
+        <location filename="../qml/pages/MainPage.qml" line="416"/>
+        <source>To be used with</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/MainPage.qml" line="626"/>
         <source>Colored Noise</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="528"/>
+        <location filename="../qml/pages/MainPage.qml" line="640"/>
         <source>White</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="529"/>
+        <location filename="../qml/pages/MainPage.qml" line="641"/>
         <source>Pink</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="530"/>
+        <location filename="../qml/pages/MainPage.qml" line="642"/>
         <source>Brown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="531"/>
+        <location filename="../qml/pages/MainPage.qml" line="643"/>
         <source>Grey</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="672"/>
+        <location filename="../qml/pages/MainPage.qml" line="800"/>
         <source>Ambient Sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="707"/>
+        <location filename="../qml/pages/MainPage.qml" line="835"/>
         <source>Choose an ambient sound</source>
         <translation type="unfinished"></translation>
     </message>

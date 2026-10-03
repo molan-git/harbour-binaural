@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import QtGraphicalEffects 1.0
 
 FullscreenContentPage {
     id: page
@@ -67,8 +68,34 @@ FullscreenContentPage {
             }
 
             Item {
-                width: 1
-                height: Theme.paddingSmall
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                x: Theme.horizontalPageMargin
+
+                height: width * 324 / 870.236
+
+                Image {
+                    id: binauralGraphImage
+
+                    anchors.fill: parent
+
+                    source: "../../images/image-binaural-graph.svg"
+
+                    sourceSize: Qt.size(
+                        width * 2,
+                        height * 2
+                    )
+
+                    fillMode: Image.PreserveAspectFit
+
+                    visible: false
+                }
+
+                ColorOverlay {
+                    anchors.fill: binauralGraphImage
+
+                    source: binauralGraphImage
+                    color: Theme.primaryColor
+                }
             }
 
             Label {
