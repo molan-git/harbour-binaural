@@ -32,14 +32,14 @@ public:
     Q_INVOKABLE void setColoredNoiseVolume(int volume);
 
 private:
-    void checkForCrossfade(QMediaPlayer *player);
-    void startCrossfade(QMediaPlayer *fadingPlayer);
-    void updateCrossfade();
-
     void updateBinauralFadeIn();
-    void updateAmbienceFadeIn();
-    void updateColoredNoiseFadeIn();
 
+    void updateAmbienceFadeIn();
+    void checkAmbienceCrossfade(QMediaPlayer *player);
+    void startAmbienceCrossfade(QMediaPlayer *fadingPlayer);
+    void updateAmbienceCrossfade();
+
+    void updateColoredNoiseFadeIn();
     void checkColoredNoiseCrossfade(QMediaPlayer *player);
     void startColoredNoiseCrossfade(QMediaPlayer *fadingPlayer);
     void updateColoredNoiseCrossfade();
@@ -53,10 +53,12 @@ private:
     QMediaPlayer *m_coloredNoisePlayerA;
     QMediaPlayer *m_coloredNoisePlayerB;
 
-    QTimer *m_crossfadeTimer;
     QTimer *m_binauralFadeTimer;
-    QTimer *m_ambienceFadeTimer;
-    QTimer *m_coloredNoiseFadeTimer;
+
+    QTimer *m_ambienceFadeInTimer;
+    QTimer *m_ambienceCrossfadeTimer;
+
+    QTimer *m_coloredNoiseFadeInTimer;
     QTimer *m_coloredNoiseCrossfadeTimer;
 
     QMediaPlayer *m_activeAmbiencePlayer;
@@ -71,13 +73,13 @@ private:
     int m_ambienceVolume;
     int m_coloredNoiseVolume;
 
-    int m_crossfadePosition;
-    int m_crossfadeDuration;
+    int m_binauralFadeInPosition;
 
-    int m_binauralFadePosition;
-    int m_ambienceFadePosition;
-    int m_coloredNoiseFadePosition;
+    int m_ambienceFadeInPosition;
+    int m_ambienceCrossfadePosition;
+    int m_ambienceCrossfadeDuration;
 
+    int m_coloredNoiseFadeInPosition;
     int m_coloredNoiseCrossfadePosition;
     int m_coloredNoiseCrossfadeDuration;
 };

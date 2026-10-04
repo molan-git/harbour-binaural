@@ -15,10 +15,14 @@ namespace
     const double CarrierFrequency = 200.0;
     const double Amplitude = 16000.0;
 
-    // Crossfade for Color Noise has different lenght
-    const int CrossfadeDuration = 8000;
+    const int BinauralFadeInDuration = 1000;
+
+    const int AmbienceFadeInDuration = 1000;
+    const int AmbienceCrossfadeDuration = 8000;
+
+    const int ColoredNoiseFadeInDuration = 1000;
     const int ColoredNoiseCrossfadeDuration = 4000;
-    const int FadeInDuration = 1000;
+
     const int FadeInterval = 15;
 }
 
@@ -116,10 +120,10 @@ AudioEngine::AudioEngine(QObject *parent)
       m_ambiencePlayerB(new QMediaPlayer(this)),
       m_coloredNoisePlayerA(new QMediaPlayer(this)),
       m_coloredNoisePlayerB(new QMediaPlayer(this)),
-      m_crossfadeTimer(new QTimer(this)),
       m_binauralFadeTimer(new QTimer(this)),
-      m_ambienceFadeTimer(new QTimer(this)),
-      m_coloredNoiseFadeTimer(new QTimer(this)),
+      m_ambienceFadeInTimer(new QTimer(this)),
+      m_ambienceCrossfadeTimer(new QTimer(this)),
+      m_coloredNoiseFadeInTimer(new QTimer(this)),
       m_coloredNoiseCrossfadeTimer(new QTimer(this)),
       m_activeAmbiencePlayer(nullptr),
       m_fadingAmbiencePlayer(nullptr),
@@ -129,19 +133,30 @@ AudioEngine::AudioEngine(QObject *parent)
       m_binauralVolume(50),
       m_ambienceVolume(50),
       m_coloredNoiseVolume(50),
-      m_crossfadePosition(0),
-      m_crossfadeDuration(CrossfadeDuration),
-      m_binauralFadePosition(0),
-      m_ambienceFadePosition(0),
-      m_coloredNoiseFadePosition(0),
+      m_binauralFadeInPosition(0),
+      m_ambienceFadeInPosition(0),
+      m_ambienceCrossfadePosition(0),
+      m_ambienceCrossfadeDuration(
+          AmbienceCrossfadeDuration),
+      m_coloredNoiseFadeInPosition(0),
       m_coloredNoiseCrossfadePosition(0),
       m_coloredNoiseCrossfadeDuration(
           ColoredNoiseCrossfadeDuration)
 {
-    m_crossfadeTimer->setInterval(FadeInterval);
-    m_binauralFadeTimer->setInterval(FadeInterval);
-    m_ambienceFadeTimer->setInterval(FadeInterval);
-    m_coloredNoiseFadeTimer->setInterval(FadeInterval);
+    m_binauralFadeTimer->setInterval(
+        FadeInterval);
+
+    m_ambienceFadeInTimer->setInterval(
+        FadeInterval);
+
+    m_ambienceCrossfadeTimer->setInterval(
+        FadeInterval);
+
+    m_coloredNoiseFadeInTimer->setInterval(
+        FadeInterval);
+
+    m_coloredNoiseCrossfadeTimer->setInterval(
+        FadeInterval);
 
     connect(
         m_ambiencePlayerA,
@@ -149,7 +164,8 @@ AudioEngine::AudioEngine(QObject *parent)
         this,
         [this](qint64)
         {
-            checkForCrossfade(m_ambiencePlayerA);
+            checkAmbienceCrossfade(
+                m_ambiencePlayerA);
         });
 
     connect(
@@ -158,16 +174,8 @@ AudioEngine::AudioEngine(QObject *parent)
         this,
         [this](qint64)
         {
-            checkForCrossfade(m_ambiencePlayerB);
-        });
-
-    connect(
-        m_crossfadeTimer,
-        &QTimer::timeout,
-        this,
-        [this]()
-        {
-            updateCrossfade();
+            checkAmbienceCrossfade(
+                m_ambiencePlayerB);
         });
 
     connect(
@@ -180,12 +188,30 @@ AudioEngine::AudioEngine(QObject *parent)
         });
 
     connect(
-        m_ambienceFadeTimer,
+        m_ambienceFadeInTimer,
         &QTimer::timeout,
         this,
         [this]()
         {
             updateAmbienceFadeIn();
+        });
+
+    connect(
+        m_ambienceCrossfadeTimer,
+        &QTimer::timeout,
+        this,
+        [this]()
+        {
+            updateAmbienceCrossfade();
+        });
+
+    connect(
+        m_coloredNoiseFadeInTimer,
+        &QTimer::timeout,
+        this,
+        [this]()
+        {
+            updateColoredNoiseFadeIn();
         });
 
     connect(
@@ -209,15 +235,12 @@ AudioEngine::AudioEngine(QObject *parent)
         });
 
     connect(
-        m_coloredNoiseFadeTimer,
+        m_coloredNoiseCrossfadeTimer,
         &QTimer::timeout,
         this,
         [this]()
         {
-            if (m_fadingColoredNoisePlayer)
-                updateColoredNoiseCrossfade();
-            else
-                updateColoredNoiseFadeIn();
+            updateColoredNoiseCrossfade();
         });
 
     m_ambiencePlayerA->setVolume(0);
@@ -252,7 +275,8 @@ void AudioEngine::setFrequencyBand(const QString &band)
         return;
 
     if (m_generator)
-        m_generator->setBeatFrequency(m_beatFrequency);
+        m_generator->setBeatFrequency(
+            m_beatFrequency);
 }
 
 void AudioEngine::setBinauralVolume(int volume)
@@ -276,8 +300,8 @@ void AudioEngine::setAmbienceVolume(int volume)
     m_ambienceVolume = volume;
 
     if (m_activeAmbiencePlayer &&
-        !m_ambienceFadeTimer->isActive() &&
-        !m_crossfadeTimer->isActive())
+        !m_ambienceFadeInTimer->isActive() &&
+        !m_ambienceCrossfadeTimer->isActive())
     {
         m_activeAmbiencePlayer->setVolume(
             qRound(m_ambienceVolume * 0.6));
@@ -294,14 +318,16 @@ void AudioEngine::setColoredNoiseVolume(int volume)
         qRound(m_coloredNoiseVolume * 0.3);
 
     if (m_activeColoredNoisePlayer &&
-        !m_coloredNoiseFadeTimer->isActive())
+        !m_coloredNoiseFadeInTimer->isActive() &&
+        !m_coloredNoiseCrossfadeTimer->isActive())
     {
         m_activeColoredNoisePlayer->setVolume(
             actualVolume);
     }
 }
 
-void AudioEngine::setAmbience(const QString &ambience)
+void AudioEngine::setAmbience(
+    const QString &ambience)
 {
     QUrl mediaUrl;
 
@@ -342,17 +368,17 @@ void AudioEngine::setAmbience(const QString &ambience)
 
     m_activeAmbiencePlayer->setVolume(0);
 
-    m_ambienceFadePosition = 0;
+    m_ambienceFadeInPosition = 0;
 
     m_activeAmbiencePlayer->play();
 
-    m_ambienceFadeTimer->start();
+    m_ambienceFadeInTimer->start();
 }
 
 void AudioEngine::stopAmbience()
 {
-    m_crossfadeTimer->stop();
-    m_ambienceFadeTimer->stop();
+    m_ambienceFadeInTimer->stop();
+    m_ambienceCrossfadeTimer->stop();
 
     m_ambiencePlayerA->stop();
     m_ambiencePlayerB->stop();
@@ -363,11 +389,12 @@ void AudioEngine::stopAmbience()
     m_activeAmbiencePlayer = nullptr;
     m_fadingAmbiencePlayer = nullptr;
 
-    m_crossfadePosition = 0;
-    m_ambienceFadePosition = 0;
+    m_ambienceFadeInPosition = 0;
+    m_ambienceCrossfadePosition = 0;
 }
 
-void AudioEngine::setColoredNoise(const QString &noise)
+void AudioEngine::setColoredNoise(
+    const QString &noise)
 {
     QUrl mediaUrl;
 
@@ -398,17 +425,17 @@ void AudioEngine::setColoredNoise(const QString &noise)
 
     m_activeColoredNoisePlayer->setVolume(0);
 
-    m_coloredNoiseFadePosition = 0;
+    m_coloredNoiseFadeInPosition = 0;
     m_coloredNoiseCrossfadePosition = 0;
 
     m_activeColoredNoisePlayer->play();
 
-    m_coloredNoiseFadeTimer->start();
+    m_coloredNoiseFadeInTimer->start();
 }
 
 void AudioEngine::stopColoredNoise()
 {
-    m_coloredNoiseFadeTimer->stop();
+    m_coloredNoiseFadeInTimer->stop();
     m_coloredNoiseCrossfadeTimer->stop();
 
     m_coloredNoisePlayerA->stop();
@@ -420,8 +447,242 @@ void AudioEngine::stopColoredNoise()
     m_activeColoredNoisePlayer = nullptr;
     m_fadingColoredNoisePlayer = nullptr;
 
-    m_coloredNoiseFadePosition = 0;
+    m_coloredNoiseFadeInPosition = 0;
     m_coloredNoiseCrossfadePosition = 0;
+}
+
+void AudioEngine::updateBinauralFadeIn()
+{
+    if (!m_audioOutput)
+    {
+        m_binauralFadeTimer->stop();
+        return;
+    }
+
+    m_binauralFadeInPosition +=
+        FadeInterval;
+
+    const double progress =
+        qMin(
+            1.0,
+            static_cast<double>(
+                m_binauralFadeInPosition)
+            / static_cast<double>(
+                BinauralFadeInDuration));
+
+    m_audioOutput->setVolume(
+        (m_binauralVolume / 100.0) *
+        progress);
+
+    if (progress >= 1.0)
+    {
+        m_audioOutput->setVolume(
+            m_binauralVolume / 100.0);
+
+        m_binauralFadeTimer->stop();
+        m_binauralFadeInPosition = 0;
+    }
+}
+
+void AudioEngine::updateAmbienceFadeIn()
+{
+    if (!m_activeAmbiencePlayer)
+    {
+        m_ambienceFadeInTimer->stop();
+        return;
+    }
+
+    m_ambienceFadeInPosition +=
+        FadeInterval;
+
+    const double progress =
+        qMin(
+            1.0,
+            static_cast<double>(
+                m_ambienceFadeInPosition)
+            / static_cast<double>(
+                AmbienceFadeInDuration));
+
+    const int maximumVolume =
+        qRound(m_ambienceVolume * 0.6);
+
+    m_activeAmbiencePlayer->setVolume(
+        qRound(
+            maximumVolume *
+            progress));
+
+    if (progress >= 1.0)
+    {
+        m_activeAmbiencePlayer->setVolume(
+            maximumVolume);
+
+        m_ambienceFadeInTimer->stop();
+        m_ambienceFadeInPosition = 0;
+    }
+}
+
+void AudioEngine::checkAmbienceCrossfade(
+    QMediaPlayer *player)
+{
+    if (!player)
+        return;
+
+    if (player != m_activeAmbiencePlayer)
+        return;
+
+    if (m_fadingAmbiencePlayer)
+        return;
+
+    const qint64 duration =
+        player->duration();
+
+    if (duration <= 0)
+        return;
+
+    const qint64 remaining =
+        duration - player->position();
+
+    if (remaining <=
+        m_ambienceCrossfadeDuration)
+    {
+        startAmbienceCrossfade(player);
+    }
+}
+
+void AudioEngine::startAmbienceCrossfade(
+    QMediaPlayer *fadingPlayer)
+{
+    if (!fadingPlayer)
+        return;
+
+    if (fadingPlayer !=
+        m_activeAmbiencePlayer)
+        return;
+
+    if (m_fadingAmbiencePlayer)
+        return;
+
+    QMediaPlayer *nextPlayer =
+        fadingPlayer == m_ambiencePlayerA
+            ? m_ambiencePlayerB
+            : m_ambiencePlayerA;
+
+    nextPlayer->stop();
+
+    nextPlayer->setMedia(
+        fadingPlayer->currentMedia());
+
+    nextPlayer->setPosition(0);
+    nextPlayer->setVolume(0);
+
+    m_fadingAmbiencePlayer =
+        fadingPlayer;
+
+    m_activeAmbiencePlayer =
+        nextPlayer;
+
+    m_ambienceCrossfadePosition = 0;
+
+    nextPlayer->play();
+
+    m_ambienceFadeInTimer->stop();
+    m_ambienceCrossfadeTimer->start();
+}
+
+void AudioEngine::updateAmbienceCrossfade()
+{
+    if (!m_activeAmbiencePlayer ||
+        !m_fadingAmbiencePlayer)
+    {
+        m_ambienceCrossfadeTimer->stop();
+        return;
+    }
+
+    m_ambienceCrossfadePosition +=
+        FadeInterval;
+
+    const double progress =
+        qMin(
+            1.0,
+            static_cast<double>(
+                m_ambienceCrossfadePosition)
+            / static_cast<double>(
+                m_ambienceCrossfadeDuration));
+
+    const int maximumVolume =
+        qRound(m_ambienceVolume * 0.6);
+
+    const int oldVolume =
+        qRound(
+            maximumVolume *
+            (1.0 - progress));
+
+    const int newVolume =
+        qRound(
+            maximumVolume *
+            progress);
+
+    m_fadingAmbiencePlayer->setVolume(
+        oldVolume);
+
+    m_activeAmbiencePlayer->setVolume(
+        newVolume);
+
+    if (progress >= 1.0)
+    {
+        m_activeAmbiencePlayer->setVolume(
+            maximumVolume);
+
+        m_fadingAmbiencePlayer->stop();
+        m_fadingAmbiencePlayer->setVolume(0);
+
+        m_fadingAmbiencePlayer = nullptr;
+
+        m_ambienceCrossfadeTimer->stop();
+        m_ambienceCrossfadePosition = 0;
+    }
+}
+
+void AudioEngine::updateColoredNoiseFadeIn()
+{
+    if (!m_activeColoredNoisePlayer)
+    {
+        m_coloredNoiseFadeInTimer->stop();
+        return;
+    }
+
+    m_coloredNoiseFadeInPosition +=
+        FadeInterval;
+
+    const double progress =
+        qMin(
+            1.0,
+            static_cast<double>(
+                m_coloredNoiseFadeInPosition)
+            / static_cast<double>(
+                ColoredNoiseFadeInDuration));
+
+    const double easedProgress =
+        1.0 - qPow(
+            1.0 - progress,
+            2.0);
+
+    const int maximumVolume =
+        qRound(m_coloredNoiseVolume * 0.3);
+
+    m_activeColoredNoisePlayer->setVolume(
+        qRound(
+            maximumVolume *
+            easedProgress));
+
+    if (progress >= 1.0)
+    {
+        m_activeColoredNoisePlayer->setVolume(
+            maximumVolume);
+
+        m_coloredNoiseFadeInTimer->stop();
+        m_coloredNoiseFadeInPosition = 0;
+    }
 }
 
 void AudioEngine::checkColoredNoiseCrossfade(
@@ -488,7 +749,8 @@ void AudioEngine::startColoredNoiseCrossfade(
 
     nextPlayer->play();
 
-    m_coloredNoiseFadeTimer->start();
+    m_coloredNoiseFadeInTimer->stop();
+    m_coloredNoiseCrossfadeTimer->start();
 }
 
 void AudioEngine::updateColoredNoiseCrossfade()
@@ -496,7 +758,7 @@ void AudioEngine::updateColoredNoiseCrossfade()
     if (!m_activeColoredNoisePlayer ||
         !m_fadingColoredNoisePlayer)
     {
-        m_coloredNoiseFadeTimer->stop();
+        m_coloredNoiseCrossfadeTimer->stop();
         return;
     }
 
@@ -543,214 +805,8 @@ void AudioEngine::updateColoredNoiseCrossfade()
         m_activeColoredNoisePlayer->setVolume(
             maximumVolume);
 
-        m_coloredNoiseFadeTimer->stop();
-
+        m_coloredNoiseCrossfadeTimer->stop();
         m_coloredNoiseCrossfadePosition = 0;
-    }
-}
-
-void AudioEngine::checkForCrossfade(
-    QMediaPlayer *player)
-{
-    if (player != m_activeAmbiencePlayer)
-        return;
-
-    if (m_fadingAmbiencePlayer)
-        return;
-
-    const qint64 duration =
-        player->duration();
-
-    if (duration <= 0)
-        return;
-
-    const qint64 remaining =
-        duration - player->position();
-
-    if (remaining <= m_crossfadeDuration)
-        startCrossfade(player);
-}
-
-void AudioEngine::startCrossfade(
-    QMediaPlayer *fadingPlayer)
-{
-    QMediaPlayer *nextPlayer =
-        fadingPlayer == m_ambiencePlayerA
-            ? m_ambiencePlayerB
-            : m_ambiencePlayerA;
-
-    nextPlayer->stop();
-
-    nextPlayer->setMedia(
-        fadingPlayer->currentMedia());
-
-    nextPlayer->setPosition(0);
-    nextPlayer->setVolume(0);
-    nextPlayer->play();
-
-    m_fadingAmbiencePlayer =
-        fadingPlayer;
-
-    m_activeAmbiencePlayer =
-        nextPlayer;
-
-    m_crossfadePosition = 0;
-
-    m_ambienceFadeTimer->stop();
-    m_crossfadeTimer->start();
-}
-
-void AudioEngine::updateCrossfade()
-{
-    if (!m_activeAmbiencePlayer ||
-        !m_fadingAmbiencePlayer)
-    {
-        m_crossfadeTimer->stop();
-        return;
-    }
-
-    m_crossfadePosition +=
-        FadeInterval;
-
-    const double progress =
-        qMin(
-            1.0,
-            static_cast<double>(
-                m_crossfadePosition)
-            / static_cast<double>(
-                m_crossfadeDuration));
-
-    const int oldVolume =
-        static_cast<int>(
-            m_ambienceVolume *
-            (1.0 - progress));
-
-    const int newVolume =
-        static_cast<int>(
-            m_ambienceVolume *
-            progress);
-
-    m_fadingAmbiencePlayer->setVolume(
-        oldVolume);
-
-    m_activeAmbiencePlayer->setVolume(
-        newVolume);
-
-    if (progress >= 1.0)
-    {
-        m_activeAmbiencePlayer->setVolume(
-            m_ambienceVolume);
-
-        m_fadingAmbiencePlayer->stop();
-        m_fadingAmbiencePlayer->setVolume(0);
-
-        m_fadingAmbiencePlayer = nullptr;
-
-        m_crossfadeTimer->stop();
-    }
-}
-
-void AudioEngine::updateBinauralFadeIn()
-{
-    if (!m_audioOutput)
-    {
-        m_binauralFadeTimer->stop();
-        return;
-    }
-
-    m_binauralFadePosition +=
-        FadeInterval;
-
-    const double progress =
-        qMin(
-            1.0,
-            static_cast<double>(
-                m_binauralFadePosition)
-            / static_cast<double>(
-                FadeInDuration));
-
-    m_audioOutput->setVolume(
-        (m_binauralVolume / 100.0) *
-        progress);
-
-    if (progress >= 1.0)
-    {
-        m_audioOutput->setVolume(
-            m_binauralVolume / 100.0);
-
-        m_binauralFadeTimer->stop();
-    }
-}
-
-void AudioEngine::updateAmbienceFadeIn()
-{
-    if (!m_activeAmbiencePlayer)
-    {
-        m_ambienceFadeTimer->stop();
-        return;
-    }
-
-    m_ambienceFadePosition +=
-        FadeInterval;
-
-    const double progress =
-        qMin(
-            1.0,
-            static_cast<double>(
-                m_ambienceFadePosition)
-            / static_cast<double>(
-                FadeInDuration));
-
-    m_activeAmbiencePlayer->setVolume(
-        static_cast<int>(
-            m_ambienceVolume *
-            progress));
-
-    if (progress >= 1.0)
-    {
-        m_activeAmbiencePlayer->setVolume(
-            m_ambienceVolume);
-
-        m_ambienceFadeTimer->stop();
-    }
-}
-
-void AudioEngine::updateColoredNoiseFadeIn()
-{
-    if (!m_activeColoredNoisePlayer)
-    {
-        m_coloredNoiseFadeTimer->stop();
-        return;
-    }
-
-    m_coloredNoiseFadePosition +=
-        FadeInterval;
-
-    const double progress =
-        qMin(
-            1.0,
-            static_cast<double>(
-                m_coloredNoiseFadePosition)
-            / static_cast<double>(
-                FadeInDuration));
-
-    const double easedProgress =
-        1.0 - qPow(1.0 - progress, 2.0);
-
-    const int maximumVolume =
-        qRound(m_coloredNoiseVolume * 0.3);
-
-    m_activeColoredNoisePlayer->setVolume(
-        qRound(
-            maximumVolume *
-            easedProgress));
-
-    if (progress >= 1.0)
-    {
-        m_activeColoredNoisePlayer->setVolume(
-            maximumVolume);
-
-        m_coloredNoiseFadeTimer->stop();
     }
 }
 
@@ -818,5 +874,5 @@ void AudioEngine::stop()
         m_generator = nullptr;
     }
 
-    m_binauralFadePosition = 0;
+    m_binauralFadeInPosition = 0;
 }
