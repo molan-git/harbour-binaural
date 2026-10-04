@@ -10,7 +10,7 @@ Page {
         {
             name: qsTr("Wind"),
             author: "Jurij",
-            authorUrl: "https://pixabay.com/users/soundreality-31074404//",
+            authorUrl: "https://pixabay.com/users/soundreality-31074404/",
             sourceUrl: "https://pixabay.com/"
         },
         {
@@ -52,12 +52,10 @@ Page {
         {
             name: qsTr("Stream"),
             author: "loswin23",
-            authorUrl: "https://pixabay.com/users/loswin23-15879800/
-",
+            authorUrl: "https://pixabay.com/users/loswin23-15879800/",
             sourceUrl: "https://pixabay.com/"
         }
     ]
-}
 
     SilicaListView {
         id: creditList
@@ -224,6 +222,7 @@ Page {
                 }
             }
         }
+
         VerticalScrollDecorator {}
     }
 }
