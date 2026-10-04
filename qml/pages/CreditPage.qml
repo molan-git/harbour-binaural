@@ -10,52 +10,53 @@ Page {
         {
             name: qsTr("Wind"),
             author: "Traian Mitroi",
-            authorUrl: "https://pixabay.com/users/traian1984-41907904/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=186986",
-            sourceUrl: "https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=186986"
+            authorUrl: "https://pixabay.com/users/traian1984-41907904/",
+            sourceUrl: "https://pixabay.com/"
         },
         {
             name: qsTr("Rain"),
             author: "Pig Bank - Mood",
-            authorUrl: "https://pixabay.com/users/boons_freak-39857343/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=188158",
-            sourceUrl: "https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=188158"
+            authorUrl: "https://pixabay.com/users/boons_freak-39857343/",
+            sourceUrl: "https://pixabay.com/"
         },
         {
             name: qsTr("Crickets"),
             author: "freesound_community",
-            authorUrl: "https://pixabay.com/users/freesound_community-46691455/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=7015",
-            sourceUrl: "https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=7015"
+            authorUrl: "https://pixabay.com/users/freesound_community-46691455/",
+            sourceUrl: "https://pixabay.com/"
         },
         {
             name: qsTr("Waves"),
-            author: "Jurij",
-            authorUrl: "https://pixabay.com/users/soundreality-31074404/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=611954",
-            sourceUrl: "https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=611954"
+            author: "freesound_community",
+            authorUrl: "https://pixabay.com/users/freesound_community-46691455/",
+            sourceUrl: "https://pixabay.com/sound-effects/"
         },
         {
             name: qsTr("Birds"),
             author: "Jurij",
-            authorUrl: "https://pixabay.com/users/soundreality-31074404/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=576540",
-            sourceUrl: "https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=576540"
+            authorUrl: "https://pixabay.com/users/soundreality-31074404/",
+            sourceUrl: "https://pixabay.com/"
         },
         {
             name: qsTr("Fire"),
             author: "Jurij",
-            authorUrl: "https://pixabay.com/users/soundreality-31074404/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=528618",
-            sourceUrl: "https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=528618"
+            authorUrl: "https://pixabay.com/users/soundreality-31074404/",
+            sourceUrl: "https://pixabay.com/"
         },
         {
             name: qsTr("Chimes"),
             author: "freesound_community",
-            authorUrl: "https://pixabay.com/users/freesound_community-46691455/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=57238",
-            sourceUrl: "https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=57238"
+            authorUrl: "https://pixabay.com/users/freesound_community-46691455/",
+            sourceUrl: "https://pixabay.com/sound-effects/"
         },
         {
             name: qsTr("Stream"),
             author: "Jurij",
-            authorUrl: "https://pixabay.com/users/soundreality-31074404/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=360596",
-            sourceUrl: "https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=360596"
+            authorUrl: "https://pixabay.com/users/soundreality-31074404/",
+            sourceUrl: "https://pixabay.com/"
         }
     ]
+}
 
     SilicaListView {
         id: creditList
