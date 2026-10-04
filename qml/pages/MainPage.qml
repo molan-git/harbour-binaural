@@ -434,6 +434,7 @@ Page {
                                     fillMode: Image.PreserveAspectFit
                                     smooth: true
                                     visible: false
+                                    opacity: 0.8
                                 }
 
                                 ColorOverlay {

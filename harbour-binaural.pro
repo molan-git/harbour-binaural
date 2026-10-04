@@ -49,6 +49,7 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/images/icon-s-volume-4.svg \
     qml/images/icon-s-headset.svg \
     qml/images/image-binaural-graph.svg \
+    qml/images/image-colornoise-graph.svg \
     translations/*.ts \
     harbour-binaural.desktop \
     sounds/wind.mp3 \

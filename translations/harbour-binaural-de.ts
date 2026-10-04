@@ -271,62 +271,62 @@
 <context>
     <name>InfoColoredPage</name>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="51"/>
+        <location filename="../qml/pages/components/InfoColoredPage.qml" line="52"/>
         <source>Colored Noise</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="62"/>
+        <location filename="../qml/pages/components/InfoColoredPage.qml" line="63"/>
         <source>Sound with different amounts of energy at different frequencies. Each color has a different character and is commonly used for different purposes.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="78"/>
+        <location filename="../qml/pages/components/InfoColoredPage.qml" line="105"/>
         <source>Choose from:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="107"/>
+        <location filename="../qml/pages/components/InfoColoredPage.qml" line="134"/>
         <source>White</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="119"/>
+        <location filename="../qml/pages/components/InfoColoredPage.qml" line="146"/>
         <source>Focus, sleep and background noise masking</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="131"/>
+        <location filename="../qml/pages/components/InfoColoredPage.qml" line="158"/>
         <source>Pink</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="143"/>
+        <location filename="../qml/pages/components/InfoColoredPage.qml" line="170"/>
         <source>Relaxation, sleep and concentration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="155"/>
+        <location filename="../qml/pages/components/InfoColoredPage.qml" line="182"/>
         <source>Brown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="167"/>
+        <location filename="../qml/pages/components/InfoColoredPage.qml" line="194"/>
         <source>Relaxation, sleep and reducing distracting sounds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="179"/>
+        <location filename="../qml/pages/components/InfoColoredPage.qml" line="206"/>
         <source>Grey</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="191"/>
+        <location filename="../qml/pages/components/InfoColoredPage.qml" line="218"/>
         <source>Sound masking and general listening</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="208"/>
+        <location filename="../qml/pages/components/InfoColoredPage.qml" line="235"/>
         <source>Individual experiences may vary.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -402,37 +402,37 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="626"/>
+        <location filename="../qml/pages/MainPage.qml" line="627"/>
         <source>Colored Noise</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="640"/>
+        <location filename="../qml/pages/MainPage.qml" line="641"/>
         <source>White</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="641"/>
+        <location filename="../qml/pages/MainPage.qml" line="642"/>
         <source>Pink</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="642"/>
+        <location filename="../qml/pages/MainPage.qml" line="643"/>
         <source>Brown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="643"/>
+        <location filename="../qml/pages/MainPage.qml" line="644"/>
         <source>Grey</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="800"/>
+        <location filename="../qml/pages/MainPage.qml" line="801"/>
         <source>Ambient Sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="835"/>
+        <location filename="../qml/pages/MainPage.qml" line="836"/>
         <source>Choose an ambient sound</source>
         <translation type="unfinished"></translation>
     </message>
