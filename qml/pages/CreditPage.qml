@@ -9,8 +9,8 @@ Page {
     property var soundCredits: [
         {
             name: qsTr("Wind"),
-            author: "Traian Mitroi",
-            authorUrl: "https://pixabay.com/users/traian1984-41907904/",
+            author: "Jurij",
+            authorUrl: "https://pixabay.com/users/soundreality-31074404//",
             sourceUrl: "https://pixabay.com/"
         },
         {
@@ -51,8 +51,9 @@ Page {
         },
         {
             name: qsTr("Stream"),
-            author: "Jurij",
-            authorUrl: "https://pixabay.com/users/soundreality-31074404/",
+            author: "loswin23",
+            authorUrl: "https://pixabay.com/users/loswin23-15879800/
+",
             sourceUrl: "https://pixabay.com/"
         }
     ]
