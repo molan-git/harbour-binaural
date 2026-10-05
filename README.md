@@ -41,6 +41,11 @@ Translations are managed with [Hosted Weblate](https://hosted.weblate.org/projec
 
 TBA
 
+## Credits
+
+Binaural was inspired by [Metiq](https://github.com/metiq-xyz/android-app).
+Color noise sound files were generated using the [Metiq colored noise generator](https://github.com/metiq-xyz/colored-noise-generator).
+
 ## License
 
 Licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html).
