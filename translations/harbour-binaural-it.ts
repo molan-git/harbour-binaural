@@ -61,11 +61,11 @@
     </message>
     <message>
         <source>Support</source>
-        <translation type="unfinished"></translation>
+        <translation>Supporto</translation>
     </message>
     <message>
         <source>For small tips to support the project.</source>
-        <translation type="unfinished"></translation>
+        <translation>Per sostenere il progetto con una piccola donazione.</translation>
     </message>
 </context>
 <context>
