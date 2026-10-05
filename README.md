@@ -1,10 +1,20 @@
 # Binaural <img width="50" title="Page Home" src="https://github.com/molan-git/harbour-binaural/blob/main/icons/172x172/harbour-binaural.png">
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G7W527ZZR9)
+
 ## About
 
 Binaural is a simple sound app for [Sailfish OS](https://sailfishos.org) designed for relaxation, focus, sleep, and meditation. Create your own listening experience with binaural beats, colored noise, and ambient sounds. Mix different sounds together, adjust their levels, and find the combination that works best for you.
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G7W527ZZR9)
+### How binaural beats are generated
+
+The `AudioEngine` generates two sine waves at a fixed carrier frequency of **200 Hz**. The left channel plays the carrier frequency, while the right channel plays the carrier frequency plus the selected beat frequency.
+
+For example, with the **Alpha** setting, the engine generates **200 Hz on the left** and **210 Hz on the right**, producing a perceived **10 Hz binaural beat**.
+
+The sine waves are generated sample-by-sample as stereo 16-bit PCM audio and streamed directly to the device using `QAudioOutput`. The sample rate is adjusted to match the audio device, keeping the generated frequencies accurate.
+
+The ambience and colored-noise sounds are handled separately through `QMediaPlayer` and are mixed by the audio system with the binaural signal.
 
 ## Features
 
@@ -40,16 +50,6 @@ Translations are managed with [Hosted Weblate](https://hosted.weblate.org/projec
 ## Screenshots
 
 TBA
-
-### How binaural beats are generated
-
-The `AudioEngine` generates two sine waves at a fixed carrier frequency of **200 Hz**. The left channel plays the carrier frequency, while the right channel plays the carrier frequency plus the selected beat frequency.
-
-For example, with the **Alpha** setting, the engine generates **200 Hz on the left** and **210 Hz on the right**, producing a perceived **10 Hz binaural beat**.
-
-The sine waves are generated sample-by-sample as stereo 16-bit PCM audio and streamed directly to the device using `QAudioOutput`. The sample rate is adjusted to match the audio device, keeping the generated frequencies accurate.
-
-The ambience and colored-noise sounds are handled separately through `QMediaPlayer` and are mixed by the audio system with the binaural signal.
 
 ## Credits
 
