@@ -54,6 +54,11 @@
         <translation>Die Audiodateien für die farbigen Rauschgeräusche wurden generiert durch den</translation>
     </message>
     <message>
+        <location filename="../qml/pages/AboutPage.qml" line="187"/>
+        <source>Asset credits</source>
+        <translation type="unfinished">Quellenangaben</translation>
+    </message>
+    <message>
         <location filename="../qml/pages/AboutPage.qml" line="195"/>
         <source>Data protection</source>
         <translation>Datenschutz</translation>

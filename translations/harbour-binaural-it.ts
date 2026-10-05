@@ -55,6 +55,10 @@
         <source>Color noise sound files were generated using the</source>
         <translation>I file audio dei rumori colorati sono stati generati utilizzando il</translation>
     </message>
+    <message>
+        <source>Asset credits</source>
+        <translation type="unfinished">Riconoscimenti delle risorse</translation>
+    </message>
 </context>
 <context>
     <name>CoverPage</name>

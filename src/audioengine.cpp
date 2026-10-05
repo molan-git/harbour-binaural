@@ -17,16 +17,20 @@ namespace
     const double CarrierFrequency = 200.0;
     const double Amplitude = 16000.0;
 
-    const int BinauralFadeInDuration = 500;
+    const int BinauralFadeInDuration = 0;
 
     const int AmbienceFadeInDuration = 1000;
     const int AmbienceCrossfadeDuration = 8000;
 
-    const int ColoredNoiseFadeInDuration = 1000;
+    const int ColoredNoiseFadeInDuration = 0;
     const int ColoredNoiseCrossfadeDuration = 4000;
 
     const int FadeInterval = 15;
     const int ColoredNoiseWatchdogInterval = 2000;
+
+    const int BinauralFadeOutDuration = 500;
+    const int AmbienceFadeOutDuration = 500;
+    const int ColoredNoiseFadeOutDuration = 500;
 }
 
 class AudioGenerator : public QIODevice
@@ -144,6 +148,9 @@ AudioEngine::AudioEngine(QObject *parent)
       m_coloredNoiseFadeInTimer(new QTimer(this)),
       m_coloredNoiseCrossfadeTimer(new QTimer(this)),
       m_coloredNoiseWatchdogTimer(new QTimer(this)),
+      m_binauralFadeOutTimer(new QTimer(this)),
+      m_ambienceFadeOutTimer(new QTimer(this)),
+      m_coloredNoiseFadeOutTimer(new QTimer(this)),
       m_activeAmbiencePlayer(nullptr),
       m_fadingAmbiencePlayer(nullptr),
       m_activeColoredNoisePlayer(nullptr),
@@ -160,7 +167,12 @@ AudioEngine::AudioEngine(QObject *parent)
       m_coloredNoiseFadeInPosition(0),
       m_coloredNoiseCrossfadePosition(0),
       m_coloredNoiseCrossfadeDuration(
-          ColoredNoiseCrossfadeDuration)
+          ColoredNoiseCrossfadeDuration),
+      m_binauralFadeOutStartVolume(0.0),
+      m_ambienceFadeOutActiveVolume(0),
+      m_ambienceFadeOutFadingVolume(0),
+      m_coloredNoiseFadeOutActiveVolume(0),
+      m_coloredNoiseFadeOutFadingVolume(0)
 {
     m_binauralFadeTimer->setInterval(
         FadeInterval);
@@ -179,6 +191,15 @@ AudioEngine::AudioEngine(QObject *parent)
 
     m_coloredNoiseWatchdogTimer->setInterval(
         ColoredNoiseWatchdogInterval);
+
+    m_binauralFadeOutTimer->setInterval(
+        FadeInterval);
+
+    m_ambienceFadeOutTimer->setInterval(
+        FadeInterval);
+
+    m_coloredNoiseFadeOutTimer->setInterval(
+        FadeInterval);
 
     connectAmbiencePlayer(m_ambiencePlayerA);
     connectAmbiencePlayer(m_ambiencePlayerB);
@@ -239,6 +260,33 @@ AudioEngine::AudioEngine(QObject *parent)
             updateColoredNoiseWatchdog();
         });
 
+    connect(
+        m_binauralFadeOutTimer,
+        &QTimer::timeout,
+        this,
+        [this]()
+        {
+            updateBinauralFadeOut();
+        });
+
+    connect(
+        m_ambienceFadeOutTimer,
+        &QTimer::timeout,
+        this,
+        [this]()
+        {
+            updateAmbienceFadeOut();
+        });
+
+    connect(
+        m_coloredNoiseFadeOutTimer,
+        &QTimer::timeout,
+        this,
+        [this]()
+        {
+            updateColoredNoiseFadeOut();
+        });
+
     m_ambiencePlayerA->setVolume(0);
     m_ambiencePlayerB->setVolume(0);
 
@@ -248,9 +296,10 @@ AudioEngine::AudioEngine(QObject *parent)
 
 AudioEngine::~AudioEngine()
 {
-    stop();
-    stopAmbience();
-    stopColoredNoise();
+    // The destructor cannot wait for fade-out timers.
+    stopBinauralImmediately();
+    stopAmbienceImmediately();
+    stopColoredNoiseImmediately();
 }
 
 void AudioEngine::connectAmbiencePlayer(
@@ -313,6 +362,9 @@ void AudioEngine::connectAmbiencePlayer(
 
             if (m_ambienceCrossfadeTimer->isActive())
                 return; // crossfade owns the volume right now
+
+            if (m_ambienceFadeOutTimer->isActive())
+                return; // fade-out owns the volume right now
 
             if (AmbienceFadeInDuration > 0
                 && m_ambienceFadeInTimer->isActive())
@@ -381,6 +433,9 @@ void AudioEngine::connectColoredNoisePlayer(
             if (m_coloredNoiseCrossfadeTimer->isActive())
                 return; // crossfade owns the volume right now
 
+            if (m_coloredNoiseFadeOutTimer->isActive())
+                return; // fade-out owns the volume right now
+
             if (ColoredNoiseFadeInDuration > 0
                 && m_coloredNoiseFadeInTimer->isActive())
                 return; // fade-in owns the volume right now
@@ -428,7 +483,8 @@ void AudioEngine::setBinauralVolume(int volume)
     m_binauralVolume = volume;
 
     if (m_audioOutput &&
-        !m_binauralFadeTimer->isActive())
+        !m_binauralFadeTimer->isActive() &&
+        !m_binauralFadeOutTimer->isActive())
     {
         m_audioOutput->setVolume(
             m_binauralVolume / 100.0);
@@ -443,7 +499,8 @@ void AudioEngine::setAmbienceVolume(int volume)
 
     if (m_activeAmbiencePlayer &&
         !m_ambienceFadeInTimer->isActive() &&
-        !m_ambienceCrossfadeTimer->isActive())
+        !m_ambienceCrossfadeTimer->isActive() &&
+        !m_ambienceFadeOutTimer->isActive())
     {
         m_activeAmbiencePlayer->setVolume(
             ambienceTargetVolume());
@@ -458,7 +515,8 @@ void AudioEngine::setColoredNoiseVolume(int volume)
 
     if (m_activeColoredNoisePlayer &&
         !m_coloredNoiseFadeInTimer->isActive() &&
-        !m_coloredNoiseCrossfadeTimer->isActive())
+        !m_coloredNoiseCrossfadeTimer->isActive() &&
+        !m_coloredNoiseFadeOutTimer->isActive())
     {
         m_activeColoredNoisePlayer->setVolume(
             coloredNoiseTargetVolume());
@@ -497,7 +555,9 @@ void AudioEngine::setAmbience(
     else
         return;
 
-    stopAmbience();
+    // Switching ambience: immediate stop, the new ambience has its own
+    // fade-in. A graceful fade-out happens in stopAmbience().
+    stopAmbienceImmediately();
 
     m_activeAmbiencePlayer =
         m_ambiencePlayerA;
@@ -516,8 +576,37 @@ void AudioEngine::setAmbience(
 
 void AudioEngine::stopAmbience()
 {
+    if (!m_activeAmbiencePlayer)
+    {
+        stopAmbienceImmediately();
+        return;
+    }
+
+    if (m_ambienceFadeOutTimer->isActive())
+        return; // already fading out
+
     m_ambienceFadeInTimer->stop();
     m_ambienceCrossfadeTimer->stop();
+
+    // If a crossfade was running, both players are faded out together.
+    m_ambienceFadeOutActiveVolume =
+        m_activeAmbiencePlayer->volume();
+
+    m_ambienceFadeOutFadingVolume =
+        m_fadingAmbiencePlayer
+            ? m_fadingAmbiencePlayer->volume()
+            : 0;
+
+    m_ambienceFadeOutElapsed.start();
+
+    m_ambienceFadeOutTimer->start();
+}
+
+void AudioEngine::stopAmbienceImmediately()
+{
+    m_ambienceFadeInTimer->stop();
+    m_ambienceCrossfadeTimer->stop();
+    m_ambienceFadeOutTimer->stop();
 
     m_ambiencePlayerA->stop();
     m_ambiencePlayerB->stop();
@@ -530,6 +619,52 @@ void AudioEngine::stopAmbience()
 
     m_ambienceFadeInPosition = 0;
     m_ambienceCrossfadePosition = 0;
+
+    m_ambienceFadeOutActiveVolume = 0;
+    m_ambienceFadeOutFadingVolume = 0;
+}
+
+void AudioEngine::updateAmbienceFadeOut()
+{
+    if (!m_activeAmbiencePlayer)
+    {
+        m_ambienceFadeOutTimer->stop();
+        return;
+    }
+
+    // Already gone (error/end of file) -> nothing left to fade.
+    if (m_activeAmbiencePlayer->state() !=
+        QMediaPlayer::PlayingState)
+    {
+        stopAmbienceImmediately();
+        return;
+    }
+
+    const double progress =
+        AmbienceFadeOutDuration > 0
+            ? qMin(
+                  1.0,
+                  static_cast<double>(
+                      m_ambienceFadeOutElapsed.elapsed())
+                      / static_cast<double>(
+                          AmbienceFadeOutDuration))
+            : 1.0;
+
+    m_activeAmbiencePlayer->setVolume(
+        qRound(
+            m_ambienceFadeOutActiveVolume *
+            (1.0 - progress)));
+
+    if (m_fadingAmbiencePlayer)
+    {
+        m_fadingAmbiencePlayer->setVolume(
+            qRound(
+                m_ambienceFadeOutFadingVolume *
+                (1.0 - progress)));
+    }
+
+    if (progress >= 1.0)
+        stopAmbienceImmediately();
 }
 
 void AudioEngine::setColoredNoise(
@@ -552,7 +687,9 @@ void AudioEngine::setColoredNoise(
     else
         return;
 
-    stopColoredNoise();
+    // Switching noise color: immediate stop, the new color has its own
+    // fade-in. A graceful fade-out happens in stopColoredNoise().
+    stopColoredNoiseImmediately();
 
     m_activeColoredNoisePlayer =
         m_coloredNoisePlayerA;
@@ -576,9 +713,38 @@ void AudioEngine::setColoredNoise(
 
 void AudioEngine::stopColoredNoise()
 {
+    if (!m_activeColoredNoisePlayer)
+    {
+        stopColoredNoiseImmediately();
+        return;
+    }
+
+    if (m_coloredNoiseFadeOutTimer->isActive())
+        return; // already fading out
+
+    m_coloredNoiseFadeInTimer->stop();
+    m_coloredNoiseCrossfadeTimer->stop();
+
+    // If a crossfade was running, both players are faded out together.
+    m_coloredNoiseFadeOutActiveVolume =
+        m_activeColoredNoisePlayer->volume();
+
+    m_coloredNoiseFadeOutFadingVolume =
+        m_fadingColoredNoisePlayer
+            ? m_fadingColoredNoisePlayer->volume()
+            : 0;
+
+    m_coloredNoiseFadeOutElapsed.start();
+
+    m_coloredNoiseFadeOutTimer->start();
+}
+
+void AudioEngine::stopColoredNoiseImmediately()
+{
     m_coloredNoiseFadeInTimer->stop();
     m_coloredNoiseCrossfadeTimer->stop();
     m_coloredNoiseWatchdogTimer->stop();
+    m_coloredNoiseFadeOutTimer->stop();
 
     m_coloredNoisePlayerA->stop();
     m_coloredNoisePlayerB->stop();
@@ -591,6 +757,52 @@ void AudioEngine::stopColoredNoise()
 
     m_coloredNoiseFadeInPosition = 0;
     m_coloredNoiseCrossfadePosition = 0;
+
+    m_coloredNoiseFadeOutActiveVolume = 0;
+    m_coloredNoiseFadeOutFadingVolume = 0;
+}
+
+void AudioEngine::updateColoredNoiseFadeOut()
+{
+    if (!m_activeColoredNoisePlayer)
+    {
+        m_coloredNoiseFadeOutTimer->stop();
+        return;
+    }
+
+    // Already gone (error/end of file) -> nothing left to fade.
+    if (m_activeColoredNoisePlayer->state() !=
+        QMediaPlayer::PlayingState)
+    {
+        stopColoredNoiseImmediately();
+        return;
+    }
+
+    const double progress =
+        ColoredNoiseFadeOutDuration > 0
+            ? qMin(
+                  1.0,
+                  static_cast<double>(
+                      m_coloredNoiseFadeOutElapsed.elapsed())
+                      / static_cast<double>(
+                          ColoredNoiseFadeOutDuration))
+            : 1.0;
+
+    m_activeColoredNoisePlayer->setVolume(
+        qRound(
+            m_coloredNoiseFadeOutActiveVolume *
+            (1.0 - progress)));
+
+    if (m_fadingColoredNoisePlayer)
+    {
+        m_fadingColoredNoisePlayer->setVolume(
+            qRound(
+                m_coloredNoiseFadeOutFadingVolume *
+                (1.0 - progress)));
+    }
+
+    if (progress >= 1.0)
+        stopColoredNoiseImmediately();
 }
 
 void AudioEngine::updateBinauralFadeIn()
@@ -674,6 +886,9 @@ void AudioEngine::checkAmbienceCrossfade(
         return;
 
     if (player != m_activeAmbiencePlayer)
+        return;
+
+    if (m_ambienceFadeOutTimer->isActive())
         return;
 
     if (m_fadingAmbiencePlayer)
@@ -823,6 +1038,14 @@ void AudioEngine::handleAmbienceEndOfMedia(
     // complete the handover now.
     if (player == m_fadingAmbiencePlayer)
     {
+        if (m_ambienceFadeOutTimer->isActive())
+        {
+            // We are shutting down anyway: just retire this player.
+            player->setVolume(0);
+            m_fadingAmbiencePlayer = nullptr;
+            return;
+        }
+
         finishAmbienceCrossfade();
         return;
     }
@@ -832,6 +1055,12 @@ void AudioEngine::handleAmbienceEndOfMedia(
     // positionChanged on Qt 5.6): hard restart instead of silence.
     if (player == m_activeAmbiencePlayer)
     {
+        if (m_ambienceFadeOutTimer->isActive())
+        {
+            stopAmbienceImmediately();
+            return;
+        }
+
         player->setPosition(0);
         player->play();
     }
@@ -888,6 +1117,9 @@ void AudioEngine::checkColoredNoiseCrossfade(
         return;
 
     if (player != m_activeColoredNoisePlayer)
+        return;
+
+    if (m_coloredNoiseFadeOutTimer->isActive())
         return;
 
     if (m_fadingColoredNoisePlayer)
@@ -1040,6 +1272,14 @@ void AudioEngine::handleColoredNoiseEndOfMedia(
     // complete the handover now.
     if (player == m_fadingColoredNoisePlayer)
     {
+        if (m_coloredNoiseFadeOutTimer->isActive())
+        {
+            // We are shutting down anyway: just retire this player.
+            player->setVolume(0);
+            m_fadingColoredNoisePlayer = nullptr;
+            return;
+        }
+
         finishColoredNoiseCrossfade();
         return;
     }
@@ -1049,6 +1289,12 @@ void AudioEngine::handleColoredNoiseEndOfMedia(
     // positionChanged on Qt 5.6): hard restart instead of silence.
     if (player == m_activeColoredNoisePlayer)
     {
+        if (m_coloredNoiseFadeOutTimer->isActive())
+        {
+            stopColoredNoiseImmediately();
+            return;
+        }
+
         player->setPosition(0);
         player->play();
     }
@@ -1061,6 +1307,10 @@ void AudioEngine::updateColoredNoiseWatchdog()
         m_coloredNoiseWatchdogTimer->stop();
         return;
     }
+
+    // No restarts while we are shutting the noise down.
+    if (m_coloredNoiseFadeOutTimer->isActive())
+        return;
 
     // Only restart a player that has actually fallen back to
     // StoppedState. A paused player is left alone: on SFOS the audio
@@ -1077,7 +1327,18 @@ void AudioEngine::updateColoredNoiseWatchdog()
 void AudioEngine::start()
 {
     if (m_audioOutput)
+    {
+        // Toggled back on while a fade-out was still running:
+        // cancel it and restore the volume.
+        if (m_binauralFadeOutTimer->isActive())
+        {
+            m_binauralFadeOutTimer->stop();
+            m_audioOutput->setVolume(
+                m_binauralVolume / 100.0);
+        }
+
         return;
+    }
 
     QAudioFormat format;
 
@@ -1126,7 +1387,52 @@ void AudioEngine::start()
 
 void AudioEngine::stop()
 {
+    if (!m_audioOutput)
+        return;
+
+    if (m_binauralFadeOutTimer->isActive())
+        return; // already fading out
+
     m_binauralFadeTimer->stop();
+
+    m_binauralFadeOutStartVolume =
+        m_audioOutput->volume();
+
+    m_binauralFadeOutElapsed.start();
+
+    m_binauralFadeOutTimer->start();
+}
+
+void AudioEngine::updateBinauralFadeOut()
+{
+    if (!m_audioOutput)
+    {
+        m_binauralFadeOutTimer->stop();
+        return;
+    }
+
+    const double progress =
+        BinauralFadeOutDuration > 0
+            ? qMin(
+                  1.0,
+                  static_cast<double>(
+                      m_binauralFadeOutElapsed.elapsed())
+                      / static_cast<double>(
+                          BinauralFadeOutDuration))
+            : 1.0;
+
+    m_audioOutput->setVolume(
+        m_binauralFadeOutStartVolume *
+        (1.0 - progress));
+
+    if (progress >= 1.0)
+        stopBinauralImmediately();
+}
+
+void AudioEngine::stopBinauralImmediately()
+{
+    m_binauralFadeTimer->stop();
+    m_binauralFadeOutTimer->stop();
 
     if (!m_audioOutput)
         return;
@@ -1145,4 +1451,5 @@ void AudioEngine::stop()
     }
 
     m_binauralFadeInPosition = 0;
+    m_binauralFadeOutStartVolume = 0.0;
 }

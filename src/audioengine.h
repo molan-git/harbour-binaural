@@ -34,6 +34,8 @@ public:
 
 private:
     void updateBinauralFadeIn();
+    void updateBinauralFadeOut();
+    void stopBinauralImmediately();
 
     void updateAmbienceFadeIn();
     void checkAmbienceCrossfade(QMediaPlayer *player);
@@ -41,6 +43,8 @@ private:
     void updateAmbienceCrossfade();
     void finishAmbienceCrossfade();
     void handleAmbienceEndOfMedia(QMediaPlayer *player);
+    void updateAmbienceFadeOut();
+    void stopAmbienceImmediately();
 
     void updateColoredNoiseFadeIn();
     void checkColoredNoiseCrossfade(QMediaPlayer *player);
@@ -48,6 +52,8 @@ private:
     void updateColoredNoiseCrossfade();
     void finishColoredNoiseCrossfade();
     void handleColoredNoiseEndOfMedia(QMediaPlayer *player);
+    void updateColoredNoiseFadeOut();
+    void stopColoredNoiseImmediately();
     void updateColoredNoiseWatchdog();
 
     int ambienceTargetVolume() const;
@@ -74,6 +80,10 @@ private:
     QTimer *m_coloredNoiseCrossfadeTimer;
     QTimer *m_coloredNoiseWatchdogTimer;
 
+    QTimer *m_binauralFadeOutTimer;
+    QTimer *m_ambienceFadeOutTimer;
+    QTimer *m_coloredNoiseFadeOutTimer;
+
     QMediaPlayer *m_activeAmbiencePlayer;
     QMediaPlayer *m_fadingAmbiencePlayer;
 
@@ -82,6 +92,10 @@ private:
 
     QElapsedTimer m_ambienceCrossfadeElapsed;
     QElapsedTimer m_coloredNoiseCrossfadeElapsed;
+
+    QElapsedTimer m_binauralFadeOutElapsed;
+    QElapsedTimer m_ambienceFadeOutElapsed;
+    QElapsedTimer m_coloredNoiseFadeOutElapsed;
 
     double m_beatFrequency;
 
@@ -98,6 +112,14 @@ private:
     int m_coloredNoiseFadeInPosition;
     int m_coloredNoiseCrossfadePosition;
     int m_coloredNoiseCrossfadeDuration;
+
+    double m_binauralFadeOutStartVolume;
+
+    int m_ambienceFadeOutActiveVolume;
+    int m_ambienceFadeOutFadingVolume;
+
+    int m_coloredNoiseFadeOutActiveVolume;
+    int m_coloredNoiseFadeOutFadingVolume;
 };
 
 #endif
