@@ -4,8 +4,6 @@
 
 Binaural is a simple sound app for [Sailfish OS](https://sailfishos.org) designed for relaxation, focus, sleep, and meditation. Create your own listening experience with binaural beats, colored noise, and ambient sounds. Mix different sounds together, adjust their levels, and find the combination that works best for you.
 
-Binaural is currently in development and has not been released yet.
-
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G7W527ZZR9)
 
 ## Features
