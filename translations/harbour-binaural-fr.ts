@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="fr">
+<context>
+    <name>AboutPage</name>
+    <message>
+        <source>About</source>
+        <translation>À propos</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Version</translation>
+    </message>
+    <message>
+        <source>Development</source>
+        <translation>Développement</translation>
+    </message>
+    <message>
+        <source>Source code on</source>
+        <translation>Code source sur</translation>
+    </message>
+    <message>
+        <source>Translations</source>
+        <translation>Traductions</translation>
+    </message>
+    <message>
+        <source>Help translate the application into your language.</source>
+        <translation>Aide à traduire l’application dans ta langue.</translation>
+    </message>
+    <message>
+        <source>Data protection</source>
+        <translation>Protection des données</translation>
+    </message>
+    <message>
+        <source>This application works exclusively offline and requires permission to output audio. No data is collected.</source>
+        <translation>Cette application fonctionne exclusivement hors ligne et nécessite l’autorisation de diffuser du son. Aucune donnée n’est collectée.</translation>
+    </message>
+    <message>
+        <source>License</source>
+        <translation>Licence</translation>
+    </message>
+    <message>
+        <source>Credits</source>
+        <translation>Crédits</translation>
+    </message>
+    <message>
+        <source>Application for playing binaural beats, colored noises and ambient sounds.</source>
+        <translation>Application permettant de diffuser des battements binauraux, des bruits colorés et des sons d’ambiance.</translation>
+    </message>
+    <message>
+        <source>Binaural was inspired by</source>
+        <translation>Binaural a été inspiré par</translation>
+    </message>
+    <message>
+        <source>Color noise sound files were generated using the</source>
+        <translation>Les fichiers audio de bruits colorés ont été générés à l’aide du</translation>
+    </message>
+</context>
+<context>
+    <name>CoverPage</name>
+    <message>
+        <source>Playing:</source>
+        <translation>Lecture&#xa0;:</translation>
+    </message>
+    <message>
+        <source>Start your sound mix</source>
+        <translation>Démarre ton mixage sonore</translation>
+    </message>
+</context>
+<context>
+    <name>CreditPage</name>
+    <message>
+        <source>Wind</source>
+        <translation>Vent</translation>
+    </message>
+    <message>
+        <source>Rain</source>
+        <translation>Pluie</translation>
+    </message>
+    <message>
+        <source>Crickets</source>
+        <translation>Grillons</translation>
+    </message>
+    <message>
+        <source>Waves</source>
+        <translation>Vagues</translation>
+    </message>
+    <message>
+        <source>Birds</source>
+        <translation>Oiseaux</translation>
+    </message>
+    <message>
+        <source>Fire</source>
+        <translation>Feu</translation>
+    </message>
+    <message>
+        <source>Chimes</source>
+        <translation>Carillon</translation>
+    </message>
+    <message>
+        <source>Stream</source>
+        <translation>Ruisseau</translation>
+    </message>
+    <message>
+        <source>Asset credits</source>
+        <translation>Crédits des ressources</translation>
+    </message>
+    <message>
+        <source>Audio files</source>
+        <translation>Fichiers audio</translation>
+    </message>
+    <message>
+        <source>Files have been manually edited for use in this app under the</source>
+        <translation>Les fichiers ont été modifiés manuellement pour être utilisés dans cette application conformément à la</translation>
+    </message>
+    <message>
+        <source>Pixabay Content License</source>
+        <translation>Licence de contenu Pixabay</translation>
+    </message>
+    <message>
+        <source>sound by</source>
+        <translation>son par</translation>
+    </message>
+    <message>
+        <source>from</source>
+        <translation>de</translation>
+    </message>
+    <message>
+        <source>Images</source>
+        <translation>Images</translation>
+    </message>
+    <message>
+        <source>Binaural graph image modified for use in</source>
+        <translation>Image du graphique binaural modifiée pour être utilisée dans</translation>
+    </message>
+    <message>
+        <source>Based on</source>
+        <translation>Basé sur</translation>
+    </message>
+    <message>
+        <source>by</source>
+        <translation>par</translation>
+    </message>
+    <message>
+        <source>Licensed under</source>
+        <translation>Sous licence</translation>
+    </message>
+    <message>
+        <source>Original source</source>
+        <translation>Source originale</translation>
+    </message>
+</context>
+<context>
+    <name>InfoBinauralPage</name>
+    <message>
+        <source>Binaural Beats</source>
+        <translation>Battements binauraux</translation>
+    </message>
+    <message>
+        <source>Choose from:</source>
+        <translation>Choisissez parmi&#xa0;:</translation>
+    </message>
+    <message>
+        <source>Are created by playing two slightly different tones, one in each ear. The brain processes the difference as a rhythmic beat. Different beat frequencies can be used to support focus, relaxation, meditation, or sleep.</source>
+        <translation>Ils sont créés en diffusant deux sons légèrement différents, un dans chaque oreille. Le cerveau traite cette différence comme un battement rythmique. Différentes fréquences de battement peuvent être utilisées pour favoriser la concentration, la relaxation, la méditation ou le sommeil.</translation>
+    </message>
+    <message>
+        <source>Individual experiences may vary.</source>
+        <translation>Les effets peuvent varier d’une personne à l’autre.</translation>
+    </message>
+    <message>
+        <source>Delta 2 Hz</source>
+        <translation>Delta 2 Hz</translation>
+    </message>
+    <message>
+        <source>Delta/Theta 4 Hz</source>
+        <translation>Delta/Thêta 4 Hz</translation>
+    </message>
+    <message>
+        <source>Theta 6 Hz</source>
+        <translation>Thêta 6 Hz</translation>
+    </message>
+    <message>
+        <source>Alpha 10 Hz</source>
+        <translation>Alpha 10 Hz</translation>
+    </message>
+    <message>
+        <source>Beta 20 Hz</source>
+        <translation>Bêta 20 Hz</translation>
+    </message>
+    <message>
+        <source>Gamma 40 Hz</source>
+        <translation>Gamma 40 Hz</translation>
+    </message>
+    <message>
+        <source>Deep sleep, rest</source>
+        <translation>Sommeil profond, repos</translation>
+    </message>
+    <message>
+        <source>Deep relaxation, sleep</source>
+        <translation>Relaxation profonde, sommeil</translation>
+    </message>
+    <message>
+        <source>Meditation and relaxation</source>
+        <translation>Méditation et relaxation</translation>
+    </message>
+    <message>
+        <source>Calm and relaxed wakefulness</source>
+        <translation>Éveil calme et détendu</translation>
+    </message>
+    <message>
+        <source>Alertness and focus</source>
+        <translation>Vigilance et concentration</translation>
+    </message>
+    <message>
+        <source>Complex thinking and information processing</source>
+        <translation>Réflexion complexe et traitement de l’information</translation>
+    </message>
+</context>
+<context>
+    <name>InfoColoredPage</name>
+    <message>
+        <source>Choose from:</source>
+        <translation>Choisissez parmi&#xa0;:</translation>
+    </message>
+    <message>
+        <source>Sound with different amounts of energy at different frequencies. Each color has a different character and is commonly used for different purposes.</source>
+        <translation>Son dont la répartition de l’énergie varie selon les fréquences. Chaque couleur possède un caractère différent et est couramment utilisée à des fins différentes.</translation>
+    </message>
+    <message>
+        <source>White</source>
+        <translation>Blanc</translation>
+    </message>
+    <message>
+        <source>Pink</source>
+        <translation>Rose</translation>
+    </message>
+    <message>
+        <source>Brown</source>
+        <translation>Brun</translation>
+    </message>
+    <message>
+        <source>Grey</source>
+        <translation>Gris</translation>
+    </message>
+    <message>
+        <source>Individual experiences may vary.</source>
+        <translation>Les effets peuvent varier d’une personne à l’autre.</translation>
+    </message>
+    <message>
+        <source>Focus, sleep and background noise masking</source>
+        <translation>Concentration, sommeil et masquage des bruits de fond</translation>
+    </message>
+    <message>
+        <source>Relaxation, sleep and concentration</source>
+        <translation>Relaxation, sommeil et concentration</translation>
+    </message>
+    <message>
+        <source>Relaxation, sleep and reducing distracting sounds</source>
+        <translation>Relaxation, sommeil et réduction des sons distrayants</translation>
+    </message>
+    <message>
+        <source>Sound masking and general listening</source>
+        <translation>Masquage sonore et écoute générale</translation>
+    </message>
+    <message>
+        <source>Colored Noise</source>
+        <translation>Bruit coloré</translation>
+    </message>
+</context>
+<context>
+    <name>MainPage</name>
+    <message>
+        <source>Wind</source>
+        <translation>Vent</translation>
+    </message>
+    <message>
+        <source>Crickets</source>
+        <translation>Grillons</translation>
+    </message>
+    <message>
+        <source>Stream</source>
+        <translation>Ruisseau</translation>
+    </message>
+    <message>
+        <source>Rain</source>
+        <translation>Pluie</translation>
+    </message>
+    <message>
+        <source>Birds</source>
+        <translation>Oiseaux</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>À propos</translation>
+    </message>
+    <message>
+        <source>White</source>
+        <translation>Blanc</translation>
+    </message>
+    <message>
+        <source>Pink</source>
+        <translation>Rose</translation>
+    </message>
+    <message>
+        <source>Brown</source>
+        <translation>Brun</translation>
+    </message>
+    <message>
+        <source>Grey</source>
+        <translation>Gris</translation>
+    </message>
+    <message>
+        <source>Choose an ambient sound</source>
+        <translation>Choisissez un son d’ambiance</translation>
+    </message>
+    <message>
+        <source>Binaural Beats</source>
+        <translation>Battements binauraux</translation>
+    </message>
+    <message>
+        <source>Ambient Sound</source>
+        <translation>Son d’ambiance</translation>
+    </message>
+    <message>
+        <source>Colored Noise</source>
+        <translation>Bruit coloré</translation>
+    </message>
+    <message>
+        <source>Fire</source>
+        <translation>Feu</translation>
+    </message>
+    <message>
+        <source>Chimes</source>
+        <translation>Carillon</translation>
+    </message>
+    <message>
+        <source>Waves</source>
+        <translation>Vagues</translation>
+    </message>
+    <message>
+        <source>Deselect all sounds</source>
+        <translation>Désélectionner tous les sons</translation>
+    </message>
+    <message>
+        <source>To be used with</source>
+        <translation>À utiliser avec</translation>
+    </message>
+</context>
+<context>
+    <name>harbour-binaural</name>
+    <message>
+        <source>Start your sound mix</source>
+        <translation>Démarre ton mixage sonore</translation>
+    </message>
+</context>
+</TS>
