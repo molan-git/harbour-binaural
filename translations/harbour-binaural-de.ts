@@ -16,7 +16,7 @@
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="58"/>
         <source>Application for playing binaural beats, colored noises and ambient sounds.</source>
-        <translation>Anwendung zum Abspielen binauraler Beats, farbiger Geräusche und Umgebungsgeräusche.</translation>
+        <translation>Anwendung zum Abspielen binauraler Beats, farbiger Rauschgeräusche und von Umgebungsgeräuschen.</translation>
     </message>
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="67"/>
@@ -46,12 +46,12 @@
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="144"/>
         <source>Binaural was inspired by</source>
-        <translation>Binaural wurde inspiriert von</translation>
+        <translation>Binaural wurde inspiriert durch</translation>
     </message>
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="168"/>
         <source>Color noise sound files were generated using the</source>
-        <translation>Die Audiodateien für die farbigen Geräusche wurden mit dem</translation>
+        <translation>Die Audiodateien für die farbigen Rauschgeräusche wurden generiert durch den</translation>
     </message>
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="195"/>
@@ -117,7 +117,7 @@
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="47"/>
         <source>Chimes</source>
-        <translation>Klangspiele</translation>
+        <translation>Windspiel</translation>
     </message>
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="53"/>
@@ -265,7 +265,7 @@
     <message>
         <location filename="../qml/pages/components/InfoBinauralPage.qml" line="243"/>
         <source>Individual experiences may vary.</source>
-        <translation>Die individuellen Erfahrungen können variieren.</translation>
+        <translation>Individuelle Erfahrungen können variieren.</translation>
     </message>
 </context>
 <context>
@@ -278,7 +278,7 @@
     <message>
         <location filename="../qml/pages/components/InfoColoredPage.qml" line="63"/>
         <source>Sound with different amounts of energy at different frequencies. Each color has a different character and is commonly used for different purposes.</source>
-        <translation>Geräusch mit unterschiedlichen Energiemengen bei verschiedenen Frequenzen. Jede Farbe hat einen eigenen Charakter und wird üblicherweise für unterschiedliche Zwecke verwendet.</translation>
+        <translation>Geräusch mit unterschiedlichen Energiemengen bei verschiedenen Frequenzen. Jede Farbe hat einen eigenen Charakter und wird für unterschiedliche Zwecke verwendet.</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/InfoColoredPage.qml" line="105"/>
@@ -328,7 +328,7 @@
     <message>
         <location filename="../qml/pages/components/InfoColoredPage.qml" line="235"/>
         <source>Individual experiences may vary.</source>
-        <translation>Die individuellen Erfahrungen können variieren.</translation>
+        <translation>Individuellen Erfahrungen können variieren.</translation>
     </message>
 </context>
 <context>
@@ -379,7 +379,7 @@
         <location filename="../qml/pages/MainPage.qml" line="106"/>
         <location filename="../qml/pages/MainPage.qml" line="203"/>
         <source>Chimes</source>
-        <translation>Klangspiele</translation>
+        <translation>Windspiel</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="352"/>
@@ -389,7 +389,7 @@
     <message>
         <location filename="../qml/pages/MainPage.qml" line="362"/>
         <source>Deselect all sounds</source>
-        <translation>Alle Klänge abwählen</translation>
+        <translation>Alle Klänge deaktivieren</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="401"/>
