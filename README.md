@@ -24,6 +24,11 @@ The `AudioEngine` generates binaural beats in real time, sample-by-sample, using
 
 Colored noise (**white, pink, brown, and grey**) and ambient sounds are provided as audio files and played using **`QMediaPlayer`**. They can be combined with the binaural signal, with ambient sounds supporting fade-in, fade-out, and crossfading.
 
+## Requirements
+
+- Sailfish OS 4.6 or newer
+- Sailfish OS 4.6 SDK build target or newer
+
 ## Build
 
 Clone or download this repository and import it into your Sailfish OS IDE using the `harbour-binaural.pro` project file. No additional configuration is required.
