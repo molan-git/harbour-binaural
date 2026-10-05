@@ -22,7 +22,7 @@ Available on [OpenRepos.net](https://openrepos.net/content/molan/binaural)
 
 The `AudioEngine` generates binaural beats using two sine waves: a fixed **200 Hz** tone on the left channel and a slightly higher frequency on the right. The frequency difference creates the perceived binaural beat. The generated stereo PCM audio is streamed through **`QAudioOutput`**.
 
-Colored noise (**white, pink, brown, and grey**) and ambient sounds such as **rain, wind, waves, birds, and fire** are provided as audio files and played using **`QMediaPlayer`**. This allows them to be played alongside the binaural signal and combined into the overall listening experience.
+Colored noise (**white, pink, brown, and grey**) and ambient sounds are provided as audio files and played using **`QMediaPlayer`**. 
 
 ## Build
 
