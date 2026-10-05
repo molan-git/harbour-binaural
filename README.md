@@ -41,6 +41,16 @@ Translations are managed with [Hosted Weblate](https://hosted.weblate.org/projec
 
 TBA
 
+### How binaural beats are generated
+
+The `AudioEngine` generates two sine waves at a fixed carrier frequency of **200 Hz**. The left channel plays the carrier frequency, while the right channel plays the carrier frequency plus the selected beat frequency.
+
+For example, with the **Alpha** setting, the engine generates **200 Hz on the left** and **210 Hz on the right**, producing a perceived **10 Hz binaural beat**.
+
+The sine waves are generated sample-by-sample as stereo 16-bit PCM audio and streamed directly to the device using `QAudioOutput`. The sample rate is adjusted to match the audio device, keeping the generated frequencies accurate.
+
+The ambience and colored-noise sounds are handled separately through `QMediaPlayer` and are mixed by the audio system with the binaural signal.
+
 ## Credits
 
 * Inspired by [Metiq](https://github.com/metiq-xyz/android-app)
