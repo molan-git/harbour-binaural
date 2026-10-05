@@ -15,12 +15,12 @@ namespace
     const double CarrierFrequency = 200.0;
     const double Amplitude = 16000.0;
 
-    const int BinauralFadeInDuration = 1000;
+    const int BinauralFadeInDuration = 0;
 
     const int AmbienceFadeInDuration = 1000;
     const int AmbienceCrossfadeDuration = 8000;
 
-    const int ColoredNoiseFadeInDuration = 1000;
+    const int ColoredNoiseFadeInDuration = 0;
     const int ColoredNoiseCrossfadeDuration = 4000;
 
     const int FadeInterval = 15;

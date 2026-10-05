@@ -72,6 +72,8 @@ CONFIG += sailfishapp_i18n \
 
 # German translation is enabled as an example.
 TRANSLATIONS += translations/harbour-binaural-de.ts
+TRANSLATIONS += translations/harbour-binaural-fr.ts
+TRANSLATIONS += translations/harbour-binaural-it.ts
 
 
 HEADERS += \
