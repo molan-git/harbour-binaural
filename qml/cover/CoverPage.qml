@@ -10,6 +10,7 @@ CoverBackground {
     property string activeAmbience: ""
     property string activeNoise: ""
     property bool isPlaying: false
+    property bool isPaused: false
 
     signal playPauseClicked()
 
@@ -24,6 +25,19 @@ CoverBackground {
         height: parent.height * 0.45
 
         z: 0
+
+        // Dim the cover art while the system has stopped the sound.
+        opacity: isPlaying || (activeBand === "" &&
+                              activeAmbience === "" &&
+                              activeNoise === "")
+                 ? 1.0
+                 : 0.6
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: 250
+            }
+        }
 
         Image {
             id: coverBackgroundImage
@@ -69,14 +83,20 @@ CoverBackground {
 
             text: (activeBand === "" && activeAmbience === "" && activeNoise === "")
                   ? qsTr("Start your sound mix")
-                  : qsTr("Playing:")
+                  : isPlaying
+                    ? qsTr("Playing:")
+                    : qsTr("Paused:")
         }
 
         Label {
             width: parent.width
 
             horizontalAlignment: Text.AlignHCenter
-            color: Theme.highlightColor
+            // Selected but not playing (system suspend): muted color,
+            // full highlight only while actually playing.
+            color: isPlaying
+                   ? Theme.highlightColor
+                   : Theme.secondaryHighlightColor
             font.pixelSize: Theme.fontSizeMedium
             wrapMode: Text.WordWrap
 

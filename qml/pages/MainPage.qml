@@ -11,9 +11,17 @@ Page {
     property string activeAmbience: ""
     property string activeNoise: ""
 
-    property bool bandPlaying: false
-    property bool ambiencePlaying: false
-    property bool noisePlaying: false
+    // Single source of truth: these are bindings to the AudioEngine
+    // properties. The engine reflects system-initiated suspends
+    // (headset plug/unplug, calls, audio policy) automatically, so
+    // the UI always shows the real playback state.
+    property bool bandPlaying: audioEngine.binauralPlaying
+    property bool ambiencePlaying: audioEngine.ambiencePlaying
+    property bool noisePlaying: audioEngine.coloredNoisePlaying
+
+    property bool bandPaused: audioEngine.binauralPaused
+    property bool ambiencePaused: audioEngine.ambiencePaused
+    property bool noisePaused: audioEngine.coloredNoisePaused
 
     property bool isPlaying: bandPlaying ||
                              ambiencePlaying ||
@@ -21,14 +29,39 @@ Page {
 
     AudioEngine {
         id: audioEngine
-
-        property bool bandPlaying: false
-        property bool ambiencePlaying: false
-        property bool noisePlaying: false
     }
 
     onIsPlayingChanged: {
         appWindow.isPlaying = isPlaying
+    }
+
+    // Resume the selected sounds after a system-initiated pause.
+    // play()/resume() continues where the stream was suspended;
+    // a sound that was fully stopped by the system is restarted.
+    function resumeAll() {
+        if (activeBand !== "") {
+            if (audioEngine.binauralPaused) {
+                audioEngine.resumeBinaural()
+            } else if (!audioEngine.binauralPlaying) {
+                audioEngine.start()
+            }
+        }
+
+        if (activeAmbience !== "") {
+            if (audioEngine.ambiencePaused) {
+                audioEngine.resumeAmbience()
+            } else if (!audioEngine.ambiencePlaying) {
+                audioEngine.setAmbience(activeAmbience)
+            }
+        }
+
+        if (activeNoise !== "") {
+            if (audioEngine.coloredNoisePaused) {
+                audioEngine.resumeColoredNoise()
+            } else if (!audioEngine.coloredNoisePlaying) {
+                audioEngine.setColoredNoise(activeNoise)
+            }
+        }
     }
 
     function togglePlayback() {
@@ -36,33 +69,8 @@ Page {
             audioEngine.stop()
             audioEngine.stopAmbience()
             audioEngine.stopColoredNoise()
-
-            bandPlaying = false
-            ambiencePlaying = false
-            noisePlaying = false
-
-            audioEngine.bandPlaying = false
-            audioEngine.ambiencePlaying = false
-            audioEngine.noisePlaying = false
         } else {
-            if (activeBand !== "") {
-                audioEngine.setFrequencyBand(activeBand)
-                audioEngine.start()
-                bandPlaying = true
-                audioEngine.bandPlaying = true
-            }
-
-            if (activeAmbience !== "") {
-                audioEngine.setAmbience(activeAmbience)
-                ambiencePlaying = true
-                audioEngine.ambiencePlaying = true
-            }
-
-            if (activeNoise !== "") {
-                audioEngine.setColoredNoise(activeNoise)
-                noisePlaying = true
-                audioEngine.noisePlaying = true
-            }
+            resumeAll()
         }
     }
 
@@ -74,14 +82,6 @@ Page {
         page.activeBand = ""
         page.activeAmbience = ""
         page.activeNoise = ""
-
-        page.bandPlaying = false
-        page.ambiencePlaying = false
-        page.noisePlaying = false
-
-        audioEngine.bandPlaying = false
-        audioEngine.ambiencePlaying = false
-        audioEngine.noisePlaying = false
 
         ambienceDrawer.open = false
     }
@@ -238,17 +238,18 @@ Page {
                             text: modelData.label
                             highlighted: page.activeAmbience === modelData.key
 
+                            // Visual hint when the system has paused
+                            // this stream while it stays selected.
+                            opacity: highlighted && !page.ambiencePlaying
+                                      ? 0.6 : 1.0
+
                             onClicked: {
                                 if (ambienceDrawerButton.highlighted) {
                                     page.activeAmbience = ""
                                     audioEngine.stopAmbience()
-                                    page.ambiencePlaying = false
-                                    audioEngine.ambiencePlaying = false
                                 } else {
                                     page.activeAmbience = modelData.key
                                     audioEngine.setAmbience(modelData.key)
-                                    page.ambiencePlaying = true
-                                    audioEngine.ambiencePlaying = true
                                 }
                             }
 
@@ -256,7 +257,9 @@ Page {
                                 anchors.centerIn: parent
                                 text: parent.text
                                 color: ambienceDrawerButton.highlighted
-                                       ? Theme.highlightColor
+                                       ? (page.ambiencePlaying
+                                          ? Theme.highlightColor
+                                          : Theme.secondaryHighlightColor)
                                        : Theme.primaryColor
                             }
                         }
@@ -504,20 +507,26 @@ Page {
                                 text: modelData
                                 highlighted: page.activeBand === modelData
 
+                                // Visual hint when the system has paused
+                                // this stream while it stays selected.
+                                opacity: highlighted && !page.bandPlaying
+                                          ? 0.6 : 1.0
+
                                 onClicked: {
                                     if (frequencyButton.highlighted) {
                                         page.activeBand = ""
                                         audioEngine.stop()
-                                        page.bandPlaying = false
-                                        audioEngine.bandPlaying = false
                                     } else {
                                         page.activeBand = modelData
                                         audioEngine.setFrequencyBand(
                                             modelData
                                         )
-                                        audioEngine.start()
-                                        page.bandPlaying = true
-                                        audioEngine.bandPlaying = true
+
+                                        if (audioEngine.binauralPaused) {
+                                            audioEngine.resumeBinaural()
+                                        } else {
+                                            audioEngine.start()
+                                        }
                                     }
                                 }
 
@@ -525,7 +534,9 @@ Page {
                                     anchors.centerIn: parent
                                     text: parent.text
                                     color: frequencyButton.highlighted
-                                           ? Theme.highlightColor
+                                           ? (page.bandPlaying
+                                              ? Theme.highlightColor
+                                              : Theme.secondaryHighlightColor)
                                            : Theme.primaryColor
                                 }
                             }
@@ -679,19 +690,25 @@ Page {
                                 text: modelData.label
                                 highlighted: page.activeNoise === modelData.key
 
+                                // Visual hint when the system has paused
+                                // this stream while it stays selected.
+                                opacity: highlighted && !page.noisePlaying
+                                          ? 0.6 : 1.0
+
                                 onClicked: {
                                     if (coloredNoiseButton.highlighted) {
                                         page.activeNoise = ""
                                         audioEngine.stopColoredNoise()
-                                        page.noisePlaying = false
-                                        audioEngine.noisePlaying = false
                                     } else {
                                         page.activeNoise = modelData.key
-                                        audioEngine.setColoredNoise(
-                                            modelData.key
-                                        )
-                                        page.noisePlaying = true
-                                        audioEngine.noisePlaying = true
+
+                                        if (audioEngine.coloredNoisePaused) {
+                                            audioEngine.resumeColoredNoise()
+                                        } else {
+                                            audioEngine.setColoredNoise(
+                                                modelData.key
+                                            )
+                                        }
                                     }
                                 }
 
@@ -699,7 +716,9 @@ Page {
                                     anchors.centerIn: parent
                                     text: parent.text
                                     color: coloredNoiseButton.highlighted
-                                           ? Theme.highlightColor
+                                           ? (page.noisePlaying
+                                              ? Theme.highlightColor
+                                              : Theme.secondaryHighlightColor)
                                            : Theme.primaryColor
                                 }
                             }
@@ -840,15 +859,28 @@ Page {
 
                             highlighted: page.activeAmbience !== ""
 
+                            opacity: page.ambiencePlaying ? 1.0
+                                     : page.activeAmbience !== "" ? 0.6
+                                     : 1.0
+
                             onClicked: {
-                                ambienceDrawer.open = true
+                                if (page.activeAmbience !== ""
+                                    && audioEngine.ambiencePaused) {
+                                    // Tapping the paused ambience resumes
+                                    // instead of opening the drawer.
+                                    audioEngine.resumeAmbience()
+                                } else {
+                                    ambienceDrawer.open = true
+                                }
                             }
 
                             Label {
                                 anchors.centerIn: parent
                                 text: parent.text
                                 color: ambienceButton.highlighted
-                                       ? Theme.highlightColor
+                                       ? (page.ambiencePlaying
+                                          ? Theme.highlightColor
+                                          : Theme.secondaryHighlightColor)
                                        : Theme.primaryColor
                             }
                         }

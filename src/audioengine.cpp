@@ -20,18 +20,18 @@ namespace
 
     const int BinauralFadeInDuration = 0;
 
-    const int AmbienceFadeInDuration = 200;
+    const int AmbienceFadeInDuration = 1000;
     const int AmbienceCrossfadeDuration = 8000;
 
-    const int ColoredNoiseFadeInDuration = 200;
+    const int ColoredNoiseFadeInDuration = 0;
     const int ColoredNoiseCrossfadeDuration = 4000;
 
     const int FadeInterval = 15;
     const int ColoredNoiseWatchdogInterval = 2000;
 
-    const int BinauralFadeOutDuration = 0;
-    const int AmbienceFadeOutDuration = 200;
-    const int ColoredNoiseFadeOutDuration = 200;
+    const int BinauralFadeOutDuration = 500;
+    const int AmbienceFadeOutDuration = 1000;
+    const int ColoredNoiseFadeOutDuration = 1000;
 
     // Rapid setVolume() calls in a row (slider drags) can stall the
     // GStreamer pipeline on SFOS 4.6 / Qt 5.6. Coalesce them: one real
@@ -388,6 +388,10 @@ void AudioEngine::connectAmbiencePlayer(
         this,
         [this, player](QMediaPlayer::State state)
         {
+            // Always notify QML first: a system-initiated pause or
+            // stop must be reflected by the UI immediately.
+            updatePlayingState();
+
             if (state != QMediaPlayer::PlayingState)
                 return;
 
@@ -483,6 +487,10 @@ void AudioEngine::connectColoredNoisePlayer(
         this,
         [this, player](QMediaPlayer::State state)
         {
+            // Always notify QML first: a system-initiated pause or
+            // stop must be reflected by the UI immediately.
+            updatePlayingState();
+
             if (state != QMediaPlayer::PlayingState)
                 return;
 
@@ -511,6 +519,74 @@ int AudioEngine::ambienceTargetVolume() const
 int AudioEngine::coloredNoiseTargetVolume() const
 {
     return qRound(m_coloredNoiseVolume * 0.3);
+}
+
+// --- Playback state reporting (system-initiated suspends) ---
+
+bool AudioEngine::isBinauralPlaying() const
+{
+    return m_audioOutput
+        && m_audioOutput->state() == QAudio::ActiveState;
+}
+
+bool AudioEngine::isBinauralPaused() const
+{
+    return m_audioOutput
+        && m_audioOutput->state() == QAudio::SuspendedState;
+}
+
+bool AudioEngine::isAmbiencePlaying() const
+{
+    return m_activeAmbiencePlayer
+        && m_activeAmbiencePlayer->state()
+            == QMediaPlayer::PlayingState;
+}
+
+bool AudioEngine::isAmbiencePaused() const
+{
+    return m_activeAmbiencePlayer
+        && m_activeAmbiencePlayer->state()
+            == QMediaPlayer::PausedState;
+}
+
+bool AudioEngine::isColoredNoisePlaying() const
+{
+    return m_activeColoredNoisePlayer
+        && m_activeColoredNoisePlayer->state()
+            == QMediaPlayer::PlayingState;
+}
+
+bool AudioEngine::isColoredNoisePaused() const
+{
+    return m_activeColoredNoisePlayer
+        && m_activeColoredNoisePlayer->state()
+            == QMediaPlayer::PausedState;
+}
+
+void AudioEngine::updatePlayingState()
+{
+    emit playingChanged();
+}
+
+// Resume after a system-initiated pause (headset, call, audio policy).
+// play() on a paused QMediaPlayer continues at the paused position.
+
+void AudioEngine::resumeBinaural()
+{
+    if (isBinauralPaused())
+        m_audioOutput->resume();
+}
+
+void AudioEngine::resumeAmbience()
+{
+    if (isAmbiencePaused())
+        m_activeAmbiencePlayer->play();
+}
+
+void AudioEngine::resumeColoredNoise()
+{
+    if (isColoredNoisePaused())
+        m_activeColoredNoisePlayer->play();
 }
 
 void AudioEngine::setFrequencyBand(const QString &band)
@@ -696,6 +772,8 @@ void AudioEngine::stopAmbienceImmediately()
 
     m_ambienceFadeOutActiveVolume = 0;
     m_ambienceFadeOutFadingVolume = 0;
+
+    updatePlayingState();
 }
 
 void AudioEngine::updateAmbienceFadeOut()
@@ -748,16 +826,16 @@ void AudioEngine::setColoredNoise(
 
     if (noise == "White")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/white.wav");
+            "file:///usr/share/harbour-binaural/sounds/white.mp3");
     else if (noise == "Pink")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/pink.wav");
+            "file:///usr/share/harbour-binaural/sounds/pink.mp3");
     else if (noise == "Brown")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/brown.wav");
+            "file:///usr/share/harbour-binaural/sounds/brown.mp3");
     else if (noise == "Grey")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/grey.wav");
+            "file:///usr/share/harbour-binaural/sounds/grey.mp3");
     else
         return;
 
@@ -835,6 +913,8 @@ void AudioEngine::stopColoredNoiseImmediately()
 
     m_coloredNoiseFadeOutActiveVolume = 0;
     m_coloredNoiseFadeOutFadingVolume = 0;
+
+    updatePlayingState();
 }
 
 void AudioEngine::updateColoredNoiseFadeOut()
@@ -1396,6 +1476,10 @@ void AudioEngine::updateColoredNoiseWatchdog()
     {
         m_activeColoredNoisePlayer->setPosition(0);
         m_activeColoredNoisePlayer->play();
+
+        // The stateChanged handler notifies QML anyway; this is just a
+        // safety net for backends that do not emit the signal on restart.
+        updatePlayingState();
     }
 }
 
@@ -1458,6 +1542,19 @@ void AudioEngine::start()
 
     m_audioOutput->start(
         m_generator);
+
+    // Report suspend/resume of the binaural stream to QML (headset
+    // plug/unplug, audio policy takeovers).
+    connect(
+        m_audioOutput,
+        &QAudioOutput::stateChanged,
+        this,
+        [this](QAudio::State)
+        {
+            updatePlayingState();
+        });
+
+    updatePlayingState();
 }
 
 void AudioEngine::stop()
@@ -1527,4 +1624,6 @@ void AudioEngine::stopBinauralImmediately()
 
     m_binauralFadeInPosition = 0;
     m_binauralFadeOutStartVolume = 0.0;
+
+    updatePlayingState();
 }

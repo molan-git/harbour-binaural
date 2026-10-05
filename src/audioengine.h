@@ -17,22 +17,48 @@ public:
     explicit AudioEngine(QObject *parent = nullptr);
     ~AudioEngine();
 
+    // Actual playback state, follows system-initiated suspends (headset
+    // plug/unplug, calls, etc) automatically.
+    Q_PROPERTY(bool binauralPlaying READ isBinauralPlaying NOTIFY playingChanged)
+    Q_PROPERTY(bool ambiencePlaying READ isAmbiencePlaying NOTIFY playingChanged)
+    Q_PROPERTY(bool coloredNoisePlaying READ isColoredNoisePlaying NOTIFY playingChanged)
+
+    Q_PROPERTY(bool binauralPaused READ isBinauralPaused NOTIFY playingChanged)
+    Q_PROPERTY(bool ambiencePaused READ isAmbiencePaused NOTIFY playingChanged)
+    Q_PROPERTY(bool coloredNoisePaused READ isColoredNoisePaused NOTIFY playingChanged)
+
+    bool isBinauralPlaying() const;
+    bool isAmbiencePlaying() const;
+    bool isColoredNoisePlaying() const;
+
+    bool isBinauralPaused() const;
+    bool isAmbiencePaused() const;
+    bool isColoredNoisePaused() const;
+
     Q_INVOKABLE void start();
     Q_INVOKABLE void stop();
+    Q_INVOKABLE void resumeBinaural();
 
     Q_INVOKABLE void setFrequencyBand(const QString &band);
 
     Q_INVOKABLE void setAmbience(const QString &ambience);
     Q_INVOKABLE void stopAmbience();
+    Q_INVOKABLE void resumeAmbience();
 
     Q_INVOKABLE void setColoredNoise(const QString &noise);
     Q_INVOKABLE void stopColoredNoise();
+    Q_INVOKABLE void resumeColoredNoise();
 
     Q_INVOKABLE void setBinauralVolume(int volume);
     Q_INVOKABLE void setAmbienceVolume(int volume);
     Q_INVOKABLE void setColoredNoiseVolume(int volume);
 
+signals:
+    void playingChanged();
+
 private:
+    void updatePlayingState();
+
     void updateBinauralFadeIn();
     void updateBinauralFadeOut();
     void stopBinauralImmediately();
