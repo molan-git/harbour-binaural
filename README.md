@@ -6,26 +6,23 @@
 
 Binaural is a simple sound app for [Sailfish OS](https://sailfishos.org) designed for relaxation, focus, sleep, and meditation. Create your own listening experience with binaural beats, colored noise, and ambient sounds. Mix different sounds together, adjust their levels, and find the combination that works best for you.
 
-### How this app generates binaural beats
-
-The `AudioEngine` generates two sine waves at a fixed carrier frequency of **200 Hz**. The left channel plays the carrier frequency, while the right channel plays the carrier frequency plus the selected beat frequency.
-
-For example, with the **Alpha** setting, the engine generates **200 Hz on the left** and **210 Hz on the right**, producing a perceived **10 Hz binaural beat**.
-
-The sine waves are generated sample-by-sample as stereo 16-bit PCM audio and streamed directly to the device using `QAudioOutput`. The sample rate is adjusted to match the audio device, keeping the generated frequencies accurate.
-
-The ambience and colored-noise sounds are handled separately through `QMediaPlayer` and are mixed by the audio system with the binaural signal.
-
 ## Features
 
 - Binaural beats with selectable frequency bands
 - Colored noise: white, pink, brown, and grey
 - Ambient sounds
-- Mix binaural beats, noise, and ambience
+- Mix binaural beats, noise, and ambient sounds
+- Sleep timer (WIP)
 
 ## Download
 
 Available on [OpenRepos.net](https://openrepos.net/content/molan/binaural)
+
+## Audio Engine
+
+The `AudioEngine` generates binaural beats using two sine waves: a fixed **200 Hz** tone on the left channel and a slightly higher frequency on the right. The frequency difference creates the perceived binaural beat. The generated stereo PCM audio is streamed through **`QAudioOutput`**.
+
+Colored noise (**white, pink, brown, and grey**) and ambient sounds such as **rain, wind, waves, birds, and fire** are provided as audio files and played using **`QMediaPlayer`**. This allows them to be played alongside the binaural signal and combined into the overall listening experience.
 
 ## Build
 
@@ -38,7 +35,6 @@ Clone or download this repository and import it into your Sailfish OS IDE using 
 ## Contributions
 
 Contributions to this project are very welcome. If you already know what you want to add or fix, please open a Pull Request (PR) with your proposal.
-
 Please include an explanation of the changes or a brief changelog summary. PRs will be reviewed before they are merged.
 
 ## Translations
