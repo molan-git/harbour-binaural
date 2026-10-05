@@ -36,6 +36,7 @@ Clone or download this repository and import it into your Sailfish OS IDE using 
 ## Repository branches
 
 - `master`: Release branch containing the current version of Binaural.
+- `feature-*`: Branches used for testing features under development. 
 
 ## Contributions
 
