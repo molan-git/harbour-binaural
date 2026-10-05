@@ -19,7 +19,7 @@ namespace
 
     const int BinauralFadeInDuration = 0;
 
-    const int AmbienceFadeInDuration = 1000;
+    const int AmbienceFadeInDuration = 200;
     const int AmbienceCrossfadeDuration = 8000;
 
     const int ColoredNoiseFadeInDuration = 0;
@@ -28,9 +28,9 @@ namespace
     const int FadeInterval = 15;
     const int ColoredNoiseWatchdogInterval = 2000;
 
-    const int BinauralFadeOutDuration = 500;
-    const int AmbienceFadeOutDuration = 500;
-    const int ColoredNoiseFadeOutDuration = 500;
+    const int BinauralFadeOutDuration = 0;
+    const int AmbienceFadeOutDuration = 200;
+    const int ColoredNoiseFadeOutDuration = 200;
 }
 
 class AudioGenerator : public QIODevice

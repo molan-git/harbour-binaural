@@ -434,7 +434,6 @@ Page {
                                     fillMode: Image.PreserveAspectFit
                                     smooth: true
                                     visible: false
-                                    opacity: 0.8
                                 }
 
                                 ColorOverlay {
@@ -442,10 +441,11 @@ Page {
 
                                     source: headsetImage
                                     color: Theme.secondaryHighlightColor
+                                    opacity: 0.8
                                 }
 
                                 anchors.verticalCenter: parent.verticalCenter
-                                anchors.verticalCenterOffset: Theme.paddingSmall / 1.8
+                                anchors.verticalCenterOffset: Theme.paddingSmall / 1.5
                             }
                         }
                     }
