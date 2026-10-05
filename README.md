@@ -39,8 +39,9 @@ Clone or download this repository and import it into your Sailfish OS IDE using 
 
 ## Contributions
 
-Contributions to this project are very welcome. If you already know what you want to add or fix, please open a Pull Request (PR) with your proposal.
-Please include an explanation of the changes or a brief changelog summary. PRs will be reviewed before they are merged.
+Contributions to this project are very welcome. If you already know what you want to add or fix, please open a `Pull Request` with your proposal. You can also use `Discussions` to propose features or changes.
+
+Please include an explanation of the changes or a brief changelog summary. Pull requests will be reviewed before they are merged. **Please note that not all contributions may be accepted if they conflict with the project's philosophy, simplicity, or overall direction.**
 
 ## Translations
 
