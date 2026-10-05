@@ -20,7 +20,7 @@ namespace
 
     const int BinauralFadeInDuration = 0;
 
-    const int AmbienceFadeInDuration = 1000;
+    const int AmbienceFadeInDuration = 200;
     const int AmbienceCrossfadeDuration = 8000;
 
     const int ColoredNoiseFadeInDuration = 0;
@@ -29,9 +29,9 @@ namespace
     const int FadeInterval = 15;
     const int ColoredNoiseWatchdogInterval = 2000;
 
-    const int BinauralFadeOutDuration = 500;
-    const int AmbienceFadeOutDuration = 1000;
-    const int ColoredNoiseFadeOutDuration = 1000;
+    const int BinauralFadeOutDuration = 0;
+    const int AmbienceFadeOutDuration = 200;
+    const int ColoredNoiseFadeOutDuration = 200;
 
     // Rapid setVolume() calls in a row (slider drags) can stall the
     // GStreamer pipeline on SFOS 4.6 / Qt 5.6. Coalesce them: one real
@@ -826,16 +826,16 @@ void AudioEngine::setColoredNoise(
 
     if (noise == "White")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/white.mp3");
+            "file:///usr/share/harbour-binaural/sounds/white.wav");
     else if (noise == "Pink")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/pink.mp3");
+            "file:///usr/share/harbour-binaural/sounds/pink.wav");
     else if (noise == "Brown")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/brown.mp3");
+            "file:///usr/share/harbour-binaural/sounds/brown.wav");
     else if (noise == "Grey")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/grey.mp3");
+            "file:///usr/share/harbour-binaural/sounds/grey.wav");
     else
         return;
 
