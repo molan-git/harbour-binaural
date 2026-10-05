@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1">
+<TS version="2.1" language="de">
 <context>
     <name>AboutPage</name>
     <message>
@@ -69,7 +69,6 @@
         <translation>Lizenz</translation>
     </message>
 </context>
-
 <context>
     <name>CoverPage</name>
     <message>
@@ -83,7 +82,6 @@
         <translation>Wiedergabe:</translation>
     </message>
 </context>
-
 <context>
     <name>CreditPage</name>
     <message>
@@ -187,7 +185,6 @@
         <translation>Originalquelle</translation>
     </message>
 </context>
-
 <context>
     <name>InfoBinauralPage</name>
     <message>
@@ -271,7 +268,6 @@
         <translation>Die individuellen Erfahrungen können variieren.</translation>
     </message>
 </context>
-
 <context>
     <name>InfoColoredPage</name>
     <message>
@@ -335,7 +331,6 @@
         <translation>Die individuellen Erfahrungen können variieren.</translation>
     </message>
 </context>
-
 <context>
     <name>MainPage</name>
     <message>
@@ -442,7 +437,6 @@
         <translation>Wähle ein Umgebungsgeräusch</translation>
     </message>
 </context>
-
 <context>
     <name>harbour-binaural</name>
     <message>
