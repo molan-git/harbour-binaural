@@ -36,10 +36,6 @@ DISTFILES += qml/harbour-binaural.qml \
     rpm/harbour-binaural.changes.in \
     rpm/harbour-binaural.changes.run.in \
     rpm/harbour-binaural.spec \
-    sounds/brown.wav \
-    sounds/grey.wav \
-    sounds/pink.wav \
-    sounds/white.wav \
     qml/images/binaural-cover.svg \
     qml/images/icon-s-volume-1.svg \
     qml/images/icon-s-volume-2.svg \
@@ -50,6 +46,10 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/images/image-colornoise-graph.svg \
     translations/*.ts \
     harbour-binaural.desktop \
+    sounds/brown.wav \
+    sounds/grey.wav \
+    sounds/pink.wav \
+    sounds/white.wav \
     sounds/wind.mp3 \
     sounds/crickets.mp3 \
     sounds/stream.mp3 \
