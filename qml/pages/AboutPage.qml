@@ -184,7 +184,7 @@ Page {
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                text: "Asset credits"
+                text: qsTr("Asset credits")
 
                 onClicked: {
                     pageStack.animatorPush(Qt.resolvedUrl("CreditPage.qml"))

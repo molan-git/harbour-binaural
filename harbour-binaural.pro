@@ -66,8 +66,7 @@ SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 
 # To disable building translations every time, comment out the
 # following CONFIG line.
-CONFIG += sailfishapp_i18n \
-          sailfishapp_i18n_idbased
+CONFIG += sailfishapp_i18n
 
 
 # German translation is enabled as an example.

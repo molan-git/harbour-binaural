@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QAudioOutput>
+#include <QElapsedTimer>
 #include <QMediaPlayer>
 #include <QTimer>
 
@@ -38,11 +39,22 @@ private:
     void checkAmbienceCrossfade(QMediaPlayer *player);
     void startAmbienceCrossfade(QMediaPlayer *fadingPlayer);
     void updateAmbienceCrossfade();
+    void finishAmbienceCrossfade();
+    void handleAmbienceEndOfMedia(QMediaPlayer *player);
 
     void updateColoredNoiseFadeIn();
     void checkColoredNoiseCrossfade(QMediaPlayer *player);
     void startColoredNoiseCrossfade(QMediaPlayer *fadingPlayer);
     void updateColoredNoiseCrossfade();
+    void finishColoredNoiseCrossfade();
+    void handleColoredNoiseEndOfMedia(QMediaPlayer *player);
+    void updateColoredNoiseWatchdog();
+
+    int ambienceTargetVolume() const;
+    int coloredNoiseTargetVolume() const;
+
+    void connectAmbiencePlayer(QMediaPlayer *player);
+    void connectColoredNoisePlayer(QMediaPlayer *player);
 
     QAudioOutput *m_audioOutput;
     AudioGenerator *m_generator;
@@ -60,12 +72,16 @@ private:
 
     QTimer *m_coloredNoiseFadeInTimer;
     QTimer *m_coloredNoiseCrossfadeTimer;
+    QTimer *m_coloredNoiseWatchdogTimer;
 
     QMediaPlayer *m_activeAmbiencePlayer;
     QMediaPlayer *m_fadingAmbiencePlayer;
 
     QMediaPlayer *m_activeColoredNoisePlayer;
     QMediaPlayer *m_fadingColoredNoisePlayer;
+
+    QElapsedTimer m_ambienceCrossfadeElapsed;
+    QElapsedTimer m_coloredNoiseCrossfadeElapsed;
 
     double m_beatFrequency;
 

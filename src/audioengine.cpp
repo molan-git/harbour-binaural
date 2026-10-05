@@ -6,24 +6,27 @@
 #include <QUrl>
 #include <QtMath>
 
+#include <cstring>
+
 namespace
 {
-    const int SampleRate = 48000;
+    const int DefaultSampleRate = 48000;
     const int ChannelCount = 2;
     const int SampleSize = 16;
 
     const double CarrierFrequency = 200.0;
     const double Amplitude = 16000.0;
 
-    const int BinauralFadeInDuration = 0;
+    const int BinauralFadeInDuration = 500;
 
     const int AmbienceFadeInDuration = 1000;
     const int AmbienceCrossfadeDuration = 8000;
 
-    const int ColoredNoiseFadeInDuration = 0;
+    const int ColoredNoiseFadeInDuration = 1000;
     const int ColoredNoiseCrossfadeDuration = 4000;
 
     const int FadeInterval = 15;
+    const int ColoredNoiseWatchdogInterval = 2000;
 }
 
 class AudioGenerator : public QIODevice
@@ -31,6 +34,7 @@ class AudioGenerator : public QIODevice
 public:
     explicit AudioGenerator(QObject *parent = nullptr)
         : QIODevice(parent),
+          m_sampleRate(DefaultSampleRate),
           m_leftPhase(0.0),
           m_rightPhase(0.0),
           m_beatFrequency(10.0)
@@ -54,20 +58,25 @@ public:
         m_beatFrequency = frequency;
     }
 
+    // SFOS 4.6: if the device hands back a different format (e.g. 44100 Hz)
+    // via nearestFormat(), the generator must follow, otherwise the carrier
+    // and beat frequency detune.
+    void setSampleRate(int sampleRate)
+    {
+        if (sampleRate > 0)
+            m_sampleRate = static_cast<double>(sampleRate);
+    }
+
 protected:
     qint64 readData(char *data, qint64 maxlen) override
     {
-        const int bytesPerFrame = 4;
+        const int bytesPerFrame = 4; // stereo, 16 bit signed PCM
         const qint64 frameCount = maxlen / bytesPerFrame;
 
-        qint16 *samples =
-            reinterpret_cast<qint16 *>(data);
+        qint16 *samples = reinterpret_cast<qint16 *>(data);
 
-        const double leftFrequency =
-            CarrierFrequency;
-
-        const double rightFrequency =
-            CarrierFrequency + m_beatFrequency;
+        const double leftFrequency = CarrierFrequency;
+        const double rightFrequency = CarrierFrequency + m_beatFrequency;
 
         for (qint64 frame = 0; frame < frameCount; ++frame)
         {
@@ -86,10 +95,10 @@ protected:
                     rightValue * Amplitude);
 
             m_leftPhase +=
-                leftFrequency / SampleRate;
+                leftFrequency / m_sampleRate;
 
             m_rightPhase +=
-                rightFrequency / SampleRate;
+                rightFrequency / m_sampleRate;
 
             if (m_leftPhase >= 1.0)
                 m_leftPhase -= 1.0;
@@ -98,7 +107,15 @@ protected:
                 m_rightPhase -= 1.0;
         }
 
-        return frameCount * bytesPerFrame;
+        // Zero-fill a trailing partial frame instead of dropping it.
+        const qint64 remainder =
+            maxlen - frameCount * bytesPerFrame;
+
+        if (remainder > 0)
+            std::memset(data + frameCount * bytesPerFrame, 0,
+                        static_cast<size_t>(remainder));
+
+        return maxlen;
     }
 
     qint64 writeData(const char *, qint64) override
@@ -107,6 +124,7 @@ protected:
     }
 
 private:
+    double m_sampleRate;
     double m_leftPhase;
     double m_rightPhase;
     double m_beatFrequency;
@@ -125,6 +143,7 @@ AudioEngine::AudioEngine(QObject *parent)
       m_ambienceCrossfadeTimer(new QTimer(this)),
       m_coloredNoiseFadeInTimer(new QTimer(this)),
       m_coloredNoiseCrossfadeTimer(new QTimer(this)),
+      m_coloredNoiseWatchdogTimer(new QTimer(this)),
       m_activeAmbiencePlayer(nullptr),
       m_fadingAmbiencePlayer(nullptr),
       m_activeColoredNoisePlayer(nullptr),
@@ -158,25 +177,13 @@ AudioEngine::AudioEngine(QObject *parent)
     m_coloredNoiseCrossfadeTimer->setInterval(
         FadeInterval);
 
-    connect(
-        m_ambiencePlayerA,
-        &QMediaPlayer::positionChanged,
-        this,
-        [this](qint64)
-        {
-            checkAmbienceCrossfade(
-                m_ambiencePlayerA);
-        });
+    m_coloredNoiseWatchdogTimer->setInterval(
+        ColoredNoiseWatchdogInterval);
 
-    connect(
-        m_ambiencePlayerB,
-        &QMediaPlayer::positionChanged,
-        this,
-        [this](qint64)
-        {
-            checkAmbienceCrossfade(
-                m_ambiencePlayerB);
-        });
+    connectAmbiencePlayer(m_ambiencePlayerA);
+    connectAmbiencePlayer(m_ambiencePlayerB);
+    connectColoredNoisePlayer(m_coloredNoisePlayerA);
+    connectColoredNoisePlayer(m_coloredNoisePlayerB);
 
     connect(
         m_binauralFadeTimer,
@@ -215,32 +222,21 @@ AudioEngine::AudioEngine(QObject *parent)
         });
 
     connect(
-        m_coloredNoisePlayerA,
-        &QMediaPlayer::positionChanged,
-        this,
-        [this](qint64)
-        {
-            checkColoredNoiseCrossfade(
-                m_coloredNoisePlayerA);
-        });
-
-    connect(
-        m_coloredNoisePlayerB,
-        &QMediaPlayer::positionChanged,
-        this,
-        [this](qint64)
-        {
-            checkColoredNoiseCrossfade(
-                m_coloredNoisePlayerB);
-        });
-
-    connect(
         m_coloredNoiseCrossfadeTimer,
         &QTimer::timeout,
         this,
         [this]()
         {
             updateColoredNoiseCrossfade();
+        });
+
+    connect(
+        m_coloredNoiseWatchdogTimer,
+        &QTimer::timeout,
+        this,
+        [this]()
+        {
+            updateColoredNoiseWatchdog();
         });
 
     m_ambiencePlayerA->setVolume(0);
@@ -255,6 +251,152 @@ AudioEngine::~AudioEngine()
     stop();
     stopAmbience();
     stopColoredNoise();
+}
+
+void AudioEngine::connectAmbiencePlayer(
+    QMediaPlayer *player)
+{
+    connect(
+        player,
+        &QMediaPlayer::positionChanged,
+        this,
+        [this, player](qint64)
+        {
+            checkAmbienceCrossfade(player);
+        });
+
+    // Recovery + diagnostics: without this, EndOfMedia or a GStreamer
+    // error leaves the engine bookkeeping intact but produces silence.
+    connect(
+        player,
+        &QMediaPlayer::mediaStatusChanged,
+        this,
+        [this, player](QMediaPlayer::MediaStatus status)
+        {
+            if (status == QMediaPlayer::EndOfMedia)
+            {
+                handleAmbienceEndOfMedia(player);
+            }
+            else if (status == QMediaPlayer::InvalidMedia)
+            {
+                qWarning() << "AudioEngine: ambience media invalid:"
+                           << player->media().canonicalUrl().toString();
+            }
+        });
+
+    connect(
+        player,
+        static_cast<void (QMediaPlayer::*)(QMediaPlayer::Error)>(
+            &QMediaPlayer::error),
+        this,
+        [player](QMediaPlayer::Error error)
+        {
+            qWarning() << "AudioEngine: ambience player error:"
+                       << error
+                       << player->errorString();
+        });
+
+    // Qt 5.6 (SFOS): setVolume() calls made around play() can get lost in
+    // the GStreamer backend. Re-apply the target volume once the player is
+    // actually running.
+    connect(
+        player,
+        &QMediaPlayer::stateChanged,
+        this,
+        [this, player](QMediaPlayer::State state)
+        {
+            if (state != QMediaPlayer::PlayingState)
+                return;
+
+            if (player != m_activeAmbiencePlayer)
+                return;
+
+            if (m_ambienceCrossfadeTimer->isActive())
+                return; // crossfade owns the volume right now
+
+            if (AmbienceFadeInDuration > 0
+                && m_ambienceFadeInTimer->isActive())
+                return; // fade-in owns the volume right now
+
+            player->setVolume(ambienceTargetVolume());
+        });
+}
+
+void AudioEngine::connectColoredNoisePlayer(
+    QMediaPlayer *player)
+{
+    connect(
+        player,
+        &QMediaPlayer::positionChanged,
+        this,
+        [this, player](qint64)
+        {
+            checkColoredNoiseCrossfade(player);
+        });
+
+    connect(
+        player,
+        &QMediaPlayer::mediaStatusChanged,
+        this,
+        [this, player](QMediaPlayer::MediaStatus status)
+        {
+            if (status == QMediaPlayer::EndOfMedia)
+            {
+                handleColoredNoiseEndOfMedia(player);
+            }
+            else if (status == QMediaPlayer::InvalidMedia)
+            {
+                qWarning() << "AudioEngine: colored noise media invalid:"
+                           << player->media().canonicalUrl().toString();
+            }
+        });
+
+    connect(
+        player,
+        static_cast<void (QMediaPlayer::*)(QMediaPlayer::Error)>(
+            &QMediaPlayer::error),
+        this,
+        [player](QMediaPlayer::Error error)
+        {
+            qWarning() << "AudioEngine: colored noise player error:"
+                       << error
+                       << player->errorString();
+        });
+
+    // Qt 5.6 (SFOS): setVolume() calls made around play() can get lost in
+    // the GStreamer backend. Re-apply the target volume once the player is
+    // actually running.
+    connect(
+        player,
+        &QMediaPlayer::stateChanged,
+        this,
+        [this, player](QMediaPlayer::State state)
+        {
+            if (state != QMediaPlayer::PlayingState)
+                return;
+
+            if (player != m_activeColoredNoisePlayer)
+                return;
+
+            if (m_coloredNoiseCrossfadeTimer->isActive())
+                return; // crossfade owns the volume right now
+
+            if (ColoredNoiseFadeInDuration > 0
+                && m_coloredNoiseFadeInTimer->isActive())
+                return; // fade-in owns the volume right now
+
+            player->setVolume(coloredNoiseTargetVolume());
+        });
+}
+
+int AudioEngine::ambienceTargetVolume() const
+{
+    return qRound(m_ambienceVolume * 0.6);
+}
+
+int AudioEngine::coloredNoiseTargetVolume() const
+{
+    return qRound(m_coloredNoiseVolume * 0.3);
 }
 
 void AudioEngine::setFrequencyBand(const QString &band)
@@ -304,7 +446,7 @@ void AudioEngine::setAmbienceVolume(int volume)
         !m_ambienceCrossfadeTimer->isActive())
     {
         m_activeAmbiencePlayer->setVolume(
-            qRound(m_ambienceVolume * 0.6));
+            ambienceTargetVolume());
     }
 }
 
@@ -314,15 +456,12 @@ void AudioEngine::setColoredNoiseVolume(int volume)
 
     m_coloredNoiseVolume = volume;
 
-    const int actualVolume =
-        qRound(m_coloredNoiseVolume * 0.3);
-
     if (m_activeColoredNoisePlayer &&
         !m_coloredNoiseFadeInTimer->isActive() &&
         !m_coloredNoiseCrossfadeTimer->isActive())
     {
         m_activeColoredNoisePlayer->setVolume(
-            actualVolume);
+            coloredNoiseTargetVolume());
     }
 }
 
@@ -431,12 +570,15 @@ void AudioEngine::setColoredNoise(
     m_activeColoredNoisePlayer->play();
 
     m_coloredNoiseFadeInTimer->start();
+
+    m_coloredNoiseWatchdogTimer->start();
 }
 
 void AudioEngine::stopColoredNoise()
 {
     m_coloredNoiseFadeInTimer->stop();
     m_coloredNoiseCrossfadeTimer->stop();
+    m_coloredNoiseWatchdogTimer->stop();
 
     m_coloredNoisePlayerA->stop();
     m_coloredNoisePlayerB->stop();
@@ -463,12 +605,14 @@ void AudioEngine::updateBinauralFadeIn()
         FadeInterval;
 
     const double progress =
-        qMin(
-            1.0,
-            static_cast<double>(
-                m_binauralFadeInPosition)
-            / static_cast<double>(
-                BinauralFadeInDuration));
+        BinauralFadeInDuration > 0
+            ? qMin(
+                  1.0,
+                  static_cast<double>(
+                      m_binauralFadeInPosition)
+                      / static_cast<double>(
+                          BinauralFadeInDuration))
+            : 1.0;
 
     m_audioOutput->setVolume(
         (m_binauralVolume / 100.0) *
@@ -496,15 +640,17 @@ void AudioEngine::updateAmbienceFadeIn()
         FadeInterval;
 
     const double progress =
-        qMin(
-            1.0,
-            static_cast<double>(
-                m_ambienceFadeInPosition)
-            / static_cast<double>(
-                AmbienceFadeInDuration));
+        AmbienceFadeInDuration > 0
+            ? qMin(
+                  1.0,
+                  static_cast<double>(
+                      m_ambienceFadeInPosition)
+                      / static_cast<double>(
+                          AmbienceFadeInDuration))
+            : 1.0;
 
     const int maximumVolume =
-        qRound(m_ambienceVolume * 0.6);
+        ambienceTargetVolume();
 
     m_activeAmbiencePlayer->setVolume(
         qRound(
@@ -586,6 +732,11 @@ void AudioEngine::startAmbienceCrossfade(
     nextPlayer->play();
 
     m_ambienceFadeInTimer->stop();
+
+    // Elapsed-time based progress: robust against skipped timer ticks
+    // (display off, CPU throttling) on older devices.
+    m_ambienceCrossfadeElapsed.start();
+
     m_ambienceCrossfadeTimer->start();
 }
 
@@ -595,22 +746,36 @@ void AudioEngine::updateAmbienceCrossfade()
         !m_fadingAmbiencePlayer)
     {
         m_ambienceCrossfadeTimer->stop();
+        m_ambienceCrossfadePosition = 0;
         return;
     }
 
-    m_ambienceCrossfadePosition +=
-        FadeInterval;
+    // The fading player already reached its end (or was interrupted):
+    // complete the handover immediately instead of continuing to fade
+    // against a dead player.
+    if (m_fadingAmbiencePlayer->state() !=
+        QMediaPlayer::PlayingState)
+    {
+        finishAmbienceCrossfade();
+        return;
+    }
+
+    m_ambienceCrossfadePosition =
+        static_cast<int>(
+            m_ambienceCrossfadeElapsed.elapsed());
 
     const double progress =
-        qMin(
-            1.0,
-            static_cast<double>(
-                m_ambienceCrossfadePosition)
-            / static_cast<double>(
-                m_ambienceCrossfadeDuration));
+        m_ambienceCrossfadeDuration > 0
+            ? qMin(
+                  1.0,
+                  static_cast<double>(
+                      m_ambienceCrossfadePosition)
+                      / static_cast<double>(
+                          m_ambienceCrossfadeDuration))
+            : 1.0;
 
     const int maximumVolume =
-        qRound(m_ambienceVolume * 0.6);
+        ambienceTargetVolume();
 
     const int oldVolume =
         qRound(
@@ -629,17 +794,46 @@ void AudioEngine::updateAmbienceCrossfade()
         newVolume);
 
     if (progress >= 1.0)
-    {
-        m_activeAmbiencePlayer->setVolume(
-            maximumVolume);
+        finishAmbienceCrossfade();
+}
 
+void AudioEngine::finishAmbienceCrossfade()
+{
+    m_ambienceCrossfadeTimer->stop();
+    m_ambienceCrossfadePosition = 0;
+
+    if (m_fadingAmbiencePlayer)
+    {
         m_fadingAmbiencePlayer->stop();
         m_fadingAmbiencePlayer->setVolume(0);
-
         m_fadingAmbiencePlayer = nullptr;
+    }
 
-        m_ambienceCrossfadeTimer->stop();
-        m_ambienceCrossfadePosition = 0;
+    if (m_activeAmbiencePlayer)
+    {
+        m_activeAmbiencePlayer->setVolume(
+            ambienceTargetVolume());
+    }
+}
+
+void AudioEngine::handleAmbienceEndOfMedia(
+    QMediaPlayer *player)
+{
+    // The fading player reached its end before the crossfade finished:
+    // complete the handover now.
+    if (player == m_fadingAmbiencePlayer)
+    {
+        finishAmbienceCrossfade();
+        return;
+    }
+
+    // The active player reached its end without the crossfade window
+    // having been detected (e.g. duration() == 0 or sparse
+    // positionChanged on Qt 5.6): hard restart instead of silence.
+    if (player == m_activeAmbiencePlayer)
+    {
+        player->setPosition(0);
+        player->play();
     }
 }
 
@@ -655,12 +849,14 @@ void AudioEngine::updateColoredNoiseFadeIn()
         FadeInterval;
 
     const double progress =
-        qMin(
-            1.0,
-            static_cast<double>(
-                m_coloredNoiseFadeInPosition)
-            / static_cast<double>(
-                ColoredNoiseFadeInDuration));
+        ColoredNoiseFadeInDuration > 0
+            ? qMin(
+                  1.0,
+                  static_cast<double>(
+                      m_coloredNoiseFadeInPosition)
+                      / static_cast<double>(
+                          ColoredNoiseFadeInDuration))
+            : 1.0;
 
     const double easedProgress =
         1.0 - qPow(
@@ -668,7 +864,7 @@ void AudioEngine::updateColoredNoiseFadeIn()
             2.0);
 
     const int maximumVolume =
-        qRound(m_coloredNoiseVolume * 0.3);
+        coloredNoiseTargetVolume();
 
     m_activeColoredNoisePlayer->setVolume(
         qRound(
@@ -750,6 +946,11 @@ void AudioEngine::startColoredNoiseCrossfade(
     nextPlayer->play();
 
     m_coloredNoiseFadeInTimer->stop();
+
+    // Elapsed-time based progress: robust against skipped timer ticks
+    // (display off, CPU throttling) on older devices.
+    m_coloredNoiseCrossfadeElapsed.start();
+
     m_coloredNoiseCrossfadeTimer->start();
 }
 
@@ -759,22 +960,36 @@ void AudioEngine::updateColoredNoiseCrossfade()
         !m_fadingColoredNoisePlayer)
     {
         m_coloredNoiseCrossfadeTimer->stop();
+        m_coloredNoiseCrossfadePosition = 0;
         return;
     }
 
-    m_coloredNoiseCrossfadePosition +=
-        FadeInterval;
+    // The fading player already reached its end (or was interrupted):
+    // complete the handover immediately instead of continuing to fade
+    // against a dead player.
+    if (m_fadingColoredNoisePlayer->state() !=
+        QMediaPlayer::PlayingState)
+    {
+        finishColoredNoiseCrossfade();
+        return;
+    }
+
+    m_coloredNoiseCrossfadePosition =
+        static_cast<int>(
+            m_coloredNoiseCrossfadeElapsed.elapsed());
 
     const double progress =
-        qMin(
-            1.0,
-            static_cast<double>(
-                m_coloredNoiseCrossfadePosition)
-            / static_cast<double>(
-                m_coloredNoiseCrossfadeDuration));
+        m_coloredNoiseCrossfadeDuration > 0
+            ? qMin(
+                  1.0,
+                  static_cast<double>(
+                      m_coloredNoiseCrossfadePosition)
+                      / static_cast<double>(
+                          m_coloredNoiseCrossfadeDuration))
+            : 1.0;
 
     const int maximumVolume =
-        qRound(m_coloredNoiseVolume * 0.3);
+        coloredNoiseTargetVolume();
 
     const double angle =
         progress * M_PI_2;
@@ -796,17 +1011,66 @@ void AudioEngine::updateColoredNoiseCrossfade()
         newVolume);
 
     if (progress >= 1.0)
+        finishColoredNoiseCrossfade();
+}
+
+void AudioEngine::finishColoredNoiseCrossfade()
+{
+    m_coloredNoiseCrossfadeTimer->stop();
+    m_coloredNoiseCrossfadePosition = 0;
+
+    if (m_fadingColoredNoisePlayer)
     {
         m_fadingColoredNoisePlayer->stop();
         m_fadingColoredNoisePlayer->setVolume(0);
-
         m_fadingColoredNoisePlayer = nullptr;
+    }
 
+    if (m_activeColoredNoisePlayer)
+    {
         m_activeColoredNoisePlayer->setVolume(
-            maximumVolume);
+            coloredNoiseTargetVolume());
+    }
+}
 
-        m_coloredNoiseCrossfadeTimer->stop();
-        m_coloredNoiseCrossfadePosition = 0;
+void AudioEngine::handleColoredNoiseEndOfMedia(
+    QMediaPlayer *player)
+{
+    // The fading player reached its end before the crossfade finished:
+    // complete the handover now.
+    if (player == m_fadingColoredNoisePlayer)
+    {
+        finishColoredNoiseCrossfade();
+        return;
+    }
+
+    // The active player reached its end without the crossfade window
+    // having been detected (e.g. duration() == 0 or sparse
+    // positionChanged on Qt 5.6): hard restart instead of silence.
+    if (player == m_activeColoredNoisePlayer)
+    {
+        player->setPosition(0);
+        player->play();
+    }
+}
+
+void AudioEngine::updateColoredNoiseWatchdog()
+{
+    if (!m_activeColoredNoisePlayer)
+    {
+        m_coloredNoiseWatchdogTimer->stop();
+        return;
+    }
+
+    // Only restart a player that has actually fallen back to
+    // StoppedState. A paused player is left alone: on SFOS the audio
+    // policy pauses streams during calls/ringtones, and fighting that
+    // would be wrong.
+    if (m_activeColoredNoisePlayer->state() ==
+        QMediaPlayer::StoppedState)
+    {
+        m_activeColoredNoisePlayer->setPosition(0);
+        m_activeColoredNoisePlayer->play();
     }
 }
 
@@ -817,7 +1081,7 @@ void AudioEngine::start()
 
     QAudioFormat format;
 
-    format.setSampleRate(SampleRate);
+    format.setSampleRate(DefaultSampleRate);
     format.setChannelCount(ChannelCount);
     format.setSampleSize(SampleSize);
     format.setCodec("audio/pcm");
@@ -838,6 +1102,12 @@ void AudioEngine::start()
 
     m_generator->setBeatFrequency(
         m_beatFrequency);
+
+    // Follow the format the device actually gave us, otherwise the
+    // carrier and beat frequency detune on devices that hand back
+    // e.g. 44100 Hz.
+    m_generator->setSampleRate(
+        format.sampleRate());
 
     m_generator->start();
 
