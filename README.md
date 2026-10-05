@@ -43,8 +43,11 @@ TBA
 
 ## Credits
 
-Binaural was inspired by [Metiq](https://github.com/metiq-xyz/android-app).
-Color noise sound files were generated using the [Metiq colored noise generator](https://github.com/metiq-xyz/colored-noise-generator).
+## Credits
+
+* Inspired by [Metiq](https://github.com/metiq-xyz/android-app)
+* Colored noise generated with the [Metiq colored noise generator](https://github.com/metiq-xyz/colored-noise-generator)
+* Audio and image asset credits: see [CREDITS.md](CREDITS.md)
 
 ## License
 
