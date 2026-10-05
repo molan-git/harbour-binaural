@@ -57,7 +57,7 @@
     </message>
     <message>
         <source>Asset credits</source>
-        <translation type="unfinished">Riconoscimenti delle risorse</translation>
+        <translation>Riconoscimenti delle risorse</translation>
     </message>
 </context>
 <context>

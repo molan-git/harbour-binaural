@@ -56,7 +56,7 @@
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="187"/>
         <source>Asset credits</source>
-        <translation type="unfinished">Quellenangaben</translation>
+        <translation>Quellenangaben</translation>
     </message>
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="195"/>
