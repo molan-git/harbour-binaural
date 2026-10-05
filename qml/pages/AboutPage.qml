@@ -102,7 +102,6 @@ Page {
                 }
             }
 
-            /*
             SectionHeader {
                 text: qsTr("Support")
             }
@@ -121,13 +120,12 @@ Page {
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                text: "liberapay"
+                text: "Ko-fi"
 
                 onClicked: {
-                    Qt.openUrlExternally("https://liberapay.com/molan-git/donate")
+                    Qt.openUrlExternally("https://ko-fi.com/molangit")
                 }
             }
-            */
 
             SectionHeader {
                 text: qsTr("Credits")

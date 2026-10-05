@@ -39,37 +39,47 @@
         <translation>Hilf dabei, die Anwendung in deine Sprache zu übersetzen.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="133"/>
+        <location filename="../qml/pages/AboutPage.qml" line="106"/>
+        <source>Support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/AboutPage.qml" line="113"/>
+        <source>For small tips to support the project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/AboutPage.qml" line="131"/>
         <source>Credits</source>
         <translation>Danksagungen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="144"/>
+        <location filename="../qml/pages/AboutPage.qml" line="142"/>
         <source>Binaural was inspired by</source>
         <translation>Binaural wurde inspiriert durch</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="168"/>
+        <location filename="../qml/pages/AboutPage.qml" line="166"/>
         <source>Color noise sound files were generated using the</source>
         <translation>Die Audiodateien für die farbigen Rauschgeräusche wurden generiert durch den</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="187"/>
+        <location filename="../qml/pages/AboutPage.qml" line="185"/>
         <source>Asset credits</source>
         <translation>Quellenangaben</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="195"/>
+        <location filename="../qml/pages/AboutPage.qml" line="193"/>
         <source>Data protection</source>
         <translation>Datenschutz</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="202"/>
+        <location filename="../qml/pages/AboutPage.qml" line="200"/>
         <source>This application works exclusively offline and requires permission to output audio. No data is collected.</source>
         <translation>Diese Anwendung funktioniert ausschließlich offline und benötigt die Berechtigung zur Audioausgabe. Es werden keine Daten gesammelt.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="210"/>
+        <location filename="../qml/pages/AboutPage.qml" line="208"/>
         <source>License</source>
         <translation>Lizenz</translation>
     </message>

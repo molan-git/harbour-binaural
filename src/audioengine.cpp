@@ -3,6 +3,7 @@
 #include <QAudioDeviceInfo>
 #include <QAudioFormat>
 #include <QDebug>
+#include <QMediaContent>
 #include <QUrl>
 #include <QtMath>
 
@@ -22,7 +23,7 @@ namespace
     const int AmbienceFadeInDuration = 200;
     const int AmbienceCrossfadeDuration = 8000;
 
-    const int ColoredNoiseFadeInDuration = 0;
+    const int ColoredNoiseFadeInDuration = 200;
     const int ColoredNoiseCrossfadeDuration = 4000;
 
     const int FadeInterval = 15;
@@ -31,6 +32,11 @@ namespace
     const int BinauralFadeOutDuration = 0;
     const int AmbienceFadeOutDuration = 200;
     const int ColoredNoiseFadeOutDuration = 200;
+
+    // Rapid setVolume() calls in a row (slider drags) can stall the
+    // GStreamer pipeline on SFOS 4.6 / Qt 5.6. Coalesce them: one real
+    // update per interval, the newest value wins.
+    const int VolumeUpdateInterval = 50;
 }
 
 class AudioGenerator : public QIODevice
@@ -151,6 +157,8 @@ AudioEngine::AudioEngine(QObject *parent)
       m_binauralFadeOutTimer(new QTimer(this)),
       m_ambienceFadeOutTimer(new QTimer(this)),
       m_coloredNoiseFadeOutTimer(new QTimer(this)),
+      m_ambienceVolumeTimer(new QTimer(this)),
+      m_coloredNoiseVolumeTimer(new QTimer(this)),
       m_activeAmbiencePlayer(nullptr),
       m_fadingAmbiencePlayer(nullptr),
       m_activeColoredNoisePlayer(nullptr),
@@ -200,6 +208,14 @@ AudioEngine::AudioEngine(QObject *parent)
 
     m_coloredNoiseFadeOutTimer->setInterval(
         FadeInterval);
+
+    m_ambienceVolumeTimer->setInterval(
+        VolumeUpdateInterval);
+    m_ambienceVolumeTimer->setSingleShot(true);
+
+    m_coloredNoiseVolumeTimer->setInterval(
+        VolumeUpdateInterval);
+    m_coloredNoiseVolumeTimer->setSingleShot(true);
 
     connectAmbiencePlayer(m_ambiencePlayerA);
     connectAmbiencePlayer(m_ambiencePlayerB);
@@ -285,6 +301,24 @@ AudioEngine::AudioEngine(QObject *parent)
         [this]()
         {
             updateColoredNoiseFadeOut();
+        });
+
+    connect(
+        m_ambienceVolumeTimer,
+        &QTimer::timeout,
+        this,
+        [this]()
+        {
+            applyPendingAmbienceVolume();
+        });
+
+    connect(
+        m_coloredNoiseVolumeTimer,
+        &QTimer::timeout,
+        this,
+        [this]()
+        {
+            applyPendingColoredNoiseVolume();
         });
 
     m_ambiencePlayerA->setVolume(0);
@@ -408,11 +442,36 @@ void AudioEngine::connectColoredNoisePlayer(
         static_cast<void (QMediaPlayer::*)(QMediaPlayer::Error)>(
             &QMediaPlayer::error),
         this,
-        [player](QMediaPlayer::Error error)
+        [this, player](QMediaPlayer::Error error)
         {
             qWarning() << "AudioEngine: colored noise player error:"
                        << error
                        << player->errorString();
+
+            // A failed pipeline will not come back on its own. Restart
+            // it immediately (the watchdog covers the StoppedState case).
+            if (player != m_activeColoredNoisePlayer)
+                return;
+
+            if (m_coloredNoiseFadeOutTimer->isActive())
+                return;
+
+            // Qt 5.6 error enum: ResourceError, FormatError, NetworkError,
+            // AccessDeniedError, ServiceMissingError, MediaIsPlaylist.
+            // Restart on everything where a retry can help; FormatError
+            // would just fail again, so do not loop on it.
+            if (error == QMediaPlayer::ResourceError ||
+                error == QMediaPlayer::NetworkError ||
+                error == QMediaPlayer::AccessDeniedError ||
+                error == QMediaPlayer::ServiceMissingError)
+            {
+                const QMediaContent media = player->media();
+
+                player->setMedia(media);
+                player->setPosition(0);
+                player->setVolume(coloredNoiseTargetVolume());
+                player->play();
+            }
         });
 
     // Qt 5.6 (SFOS): setVolume() calls made around play() can get lost in
@@ -497,6 +556,13 @@ void AudioEngine::setAmbienceVolume(int volume)
 
     m_ambienceVolume = volume;
 
+    // Coalesce rapid updates: only the newest value is actually applied,
+    // at most one real setVolume() every VolumeUpdateInterval ms.
+    m_ambienceVolumeTimer->start();
+}
+
+void AudioEngine::applyPendingAmbienceVolume()
+{
     if (m_activeAmbiencePlayer &&
         !m_ambienceFadeInTimer->isActive() &&
         !m_ambienceCrossfadeTimer->isActive() &&
@@ -513,6 +579,13 @@ void AudioEngine::setColoredNoiseVolume(int volume)
 
     m_coloredNoiseVolume = volume;
 
+    // Coalesce rapid updates: only the newest value is actually applied,
+    // at most one real setVolume() every VolumeUpdateInterval ms.
+    m_coloredNoiseVolumeTimer->start();
+}
+
+void AudioEngine::applyPendingColoredNoiseVolume()
+{
     if (m_activeColoredNoisePlayer &&
         !m_coloredNoiseFadeInTimer->isActive() &&
         !m_coloredNoiseCrossfadeTimer->isActive() &&
@@ -607,6 +680,7 @@ void AudioEngine::stopAmbienceImmediately()
     m_ambienceFadeInTimer->stop();
     m_ambienceCrossfadeTimer->stop();
     m_ambienceFadeOutTimer->stop();
+    m_ambienceVolumeTimer->stop();
 
     m_ambiencePlayerA->stop();
     m_ambiencePlayerB->stop();
@@ -674,16 +748,16 @@ void AudioEngine::setColoredNoise(
 
     if (noise == "White")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/white.mp3");
+            "file:///usr/share/harbour-binaural/sounds/white.wav");
     else if (noise == "Pink")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/pink.mp3");
+            "file:///usr/share/harbour-binaural/sounds/pink.wav");
     else if (noise == "Brown")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/brown.mp3");
+            "file:///usr/share/harbour-binaural/sounds/brown.wav");
     else if (noise == "Grey")
         mediaUrl = QUrl(
-            "file:///usr/share/harbour-binaural/sounds/grey.mp3");
+            "file:///usr/share/harbour-binaural/sounds/grey.wav");
     else
         return;
 
@@ -745,6 +819,7 @@ void AudioEngine::stopColoredNoiseImmediately()
     m_coloredNoiseCrossfadeTimer->stop();
     m_coloredNoiseWatchdogTimer->stop();
     m_coloredNoiseFadeOutTimer->stop();
+    m_coloredNoiseVolumeTimer->stop();
 
     m_coloredNoisePlayerA->stop();
     m_coloredNoisePlayerB->stop();

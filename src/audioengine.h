@@ -55,6 +55,8 @@ private:
     void updateColoredNoiseFadeOut();
     void stopColoredNoiseImmediately();
     void updateColoredNoiseWatchdog();
+    void applyPendingAmbienceVolume();
+    void applyPendingColoredNoiseVolume();
 
     int ambienceTargetVolume() const;
     int coloredNoiseTargetVolume() const;
@@ -83,6 +85,11 @@ private:
     QTimer *m_binauralFadeOutTimer;
     QTimer *m_ambienceFadeOutTimer;
     QTimer *m_coloredNoiseFadeOutTimer;
+
+    // Coalesce rapid volume changes (slider drags): the SFOS GStreamer
+    // backend can stall its pipeline when hammered with setVolume() calls.
+    QTimer *m_ambienceVolumeTimer;
+    QTimer *m_coloredNoiseVolumeTimer;
 
     QMediaPlayer *m_activeAmbiencePlayer;
     QMediaPlayer *m_fadingAmbiencePlayer;

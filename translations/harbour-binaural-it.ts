@@ -59,6 +59,14 @@
         <source>Asset credits</source>
         <translation>Riconoscimenti delle risorse</translation>
     </message>
+    <message>
+        <source>Support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>For small tips to support the project.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CoverPage</name>
