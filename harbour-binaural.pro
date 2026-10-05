@@ -33,7 +33,7 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/pages/AboutPage.qml \
     qml/pages/components/InfoBinauralPage.qml \
     qml/pages/components/InfoColoredPage.qml \
-    rpm/harbour-binaural.changes.in \
+    rpm/harbour-binaural.changes \
     rpm/harbour-binaural.changes.run.in \
     rpm/harbour-binaural.spec \
     qml/images/binaural-cover.svg \
