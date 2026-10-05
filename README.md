@@ -6,6 +6,8 @@ Binaural is a simple sound app for [Sailfish OS](https://sailfishos.org) designe
 
 Binaural is currently in development and has not been released yet.
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G7W527ZZR9)
+
 ## Features
 
 - Binaural beats with selectable frequency bands
