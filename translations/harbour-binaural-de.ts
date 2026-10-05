@@ -41,12 +41,12 @@
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="106"/>
         <source>Support</source>
-        <translation type="unfinished"></translation>
+        <translation>Unterstützung</translation>
     </message>
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="113"/>
         <source>For small tips to support the project.</source>
-        <translation type="unfinished"></translation>
+        <translation>Für ein kleines Trinkgeld um das Projekt zu unterstützen.</translation>
     </message>
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="131"/>
