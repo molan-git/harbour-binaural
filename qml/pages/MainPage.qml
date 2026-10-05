@@ -11,10 +11,6 @@ Page {
     property string activeAmbience: ""
     property string activeNoise: ""
 
-    // Single source of truth: these are bindings to the AudioEngine
-    // properties. The engine reflects system-initiated suspends
-    // (headset plug/unplug, calls, audio policy) automatically, so
-    // the UI always shows the real playback state.
     property bool bandPlaying: audioEngine.binauralPlaying
     property bool ambiencePlaying: audioEngine.ambiencePlaying
     property bool noisePlaying: audioEngine.coloredNoisePlaying
@@ -119,7 +115,7 @@ Page {
         InfoColoredPage { }
     }
 
-    // Drawer to open Ambience sounds - opens above playbackBar
+    // Drawer to open Ambience sounds which opens above playbackBar.
     Drawer {
         id: ambienceDrawer
 
@@ -147,7 +143,7 @@ Page {
                 )
             }
 
-            // Swipe down action to close Drawer
+            // Swipe down action to close ambienceDrawer.
             MouseArea {
                 id: drawerSwipeArea
 
@@ -180,7 +176,7 @@ Page {
                     height: Theme.paddingLarge
                 }
 
-                // Ambience selection
+                // Ambience selection grid.
                 SilicaGridView {
                     id: ambienceDrawerGrid
 
@@ -238,8 +234,7 @@ Page {
                             text: modelData.label
                             highlighted: page.activeAmbience === modelData.key
 
-                            // Visual hint when the system has paused
-                            // this stream while it stays selected.
+                            // Visual hint when the system has paused.
                             opacity: highlighted && !page.ambiencePlaying
                                       ? 0.6 : 1.0
 
@@ -399,12 +394,12 @@ Page {
                         height: Theme.paddingLarge
                     }
 
-                    // Binaural frequency selection
+                    // Binaural frequency selection grid.
                     SectionHeader {
                         text: qsTr("Binaural Beats")
                     }
 
-                    // info text about headphones with image
+                    // Info text about headphones with image.
                     Item {
                         width: parent.width - 2 * Theme.horizontalPageMargin
                         x: Theme.horizontalPageMargin
@@ -507,8 +502,7 @@ Page {
                                 text: modelData
                                 highlighted: page.activeBand === modelData
 
-                                // Visual hint when the system has paused
-                                // this stream while it stays selected.
+                                // Visual hint when the system has paused.
                                 opacity: highlighted && !page.bandPlaying
                                           ? 0.6 : 1.0
 
@@ -574,7 +568,7 @@ Page {
                             height: Theme.iconSizeSmall * 1.6
 
                             anchors.top: binauralVolumeSlider.bottom
-                            // moves icon closer to volume slider
+                            // Moves icon closer to volume slider.
                             anchors.topMargin: -Theme.paddingLarge
                             anchors.horizontalCenter: binauralVolumeSlider.horizontalCenter
                             anchors.horizontalCenterOffset: Theme.paddingSmall
@@ -633,7 +627,7 @@ Page {
                         }
                     }
 
-                    // Colored Noise selection
+                    // Colored Noise selection grid.
                     SectionHeader {
                         text: qsTr("Colored Noise")
                     }
@@ -690,8 +684,7 @@ Page {
                                 text: modelData.label
                                 highlighted: page.activeNoise === modelData.key
 
-                                // Visual hint when the system has paused
-                                // this stream while it stays selected.
+                                // Visual hint when the system has paused.
                                 opacity: highlighted && !page.noisePlaying
                                           ? 0.6 : 1.0
 
@@ -756,7 +749,7 @@ Page {
                             height: Theme.iconSizeSmall * 1.6
 
                             anchors.top: coloredNoiseVolumeSlider.bottom
-                            // moves icon closer to volume slider
+                            // Moves icon closer to volume slider.
                             anchors.topMargin: -Theme.paddingLarge
                             anchors.horizontalCenter: coloredNoiseVolumeSlider.horizontalCenter
                             anchors.horizontalCenterOffset: Theme.paddingSmall
@@ -815,7 +808,7 @@ Page {
                         }
                     }
 
-                    // Ambience selection with button that opens Drawer
+                    // Ambience selection with button that opens drawer.
                     SectionHeader {
                         text: qsTr("Ambient Sound")
                     }
@@ -866,8 +859,7 @@ Page {
                             onClicked: {
                                 if (page.activeAmbience !== ""
                                     && audioEngine.ambiencePaused) {
-                                    // Tapping the paused ambience resumes
-                                    // instead of opening the drawer.
+                                    // Tapping the paused ambience resumes instead of opening the drawer.
                                     audioEngine.resumeAmbience()
                                 } else {
                                     ambienceDrawer.open = true
