@@ -347,7 +347,12 @@ private:
      * WHITE NOISE
      * ================================================================
      *
-     * Approximately flat power spectral density.
+     * Starts from a raw pseudo-random source and applies
+     * lightweight smoothing to reduce the aggressive character
+     * of unfiltered white noise.
+     *
+     * The result remains broadband but is intentionally softened
+     * for more comfortable long-duration listening.
      */
     double nextRawWhite(int channel)
     {
@@ -396,7 +401,8 @@ private:
      *
      * Roughly -3 dB per octave.
      *
-     * Paul Kellet style filter.
+     * Uses a Paul Kellet-style filter built from the smoothed
+     * white-noise source to produce a stable pink-noise approximation.
      */
     double nextPink(int channel)
     {
@@ -457,6 +463,11 @@ private:
      * Approximately 1/f^2 power spectrum.
      *
      * Roughly -6 dB per octave.
+     *
+     * Uses leaky integration of a raw white-noise source to create
+     * smooth low-frequency variations while preventing excessive
+     * DC drift. The internal output is gain-compensated for perceived
+     * loudness before the final output calibration.
      */
     double nextBrown(int channel)
     {
@@ -497,8 +508,13 @@ private:
      * Grey noise is psychoacoustic rather than having
      * one universally fixed mathematical spectrum.
      *
-     * This is a stable approximation which shapes
-     * white noise towards a smoother perceived spectrum.
+     * This implementation starts from pink noise and applies
+     * separate low-, mid-, and high-frequency shaping to create
+     * a smoother, more perceptually balanced approximation.
+     *
+     * The result is intended as a practical approximation of
+     * equal-loudness-oriented grey noise rather than an exact
+     * reproduction of a specific psychoacoustic standard.
      */
     double nextGrey(int channel)
     {
