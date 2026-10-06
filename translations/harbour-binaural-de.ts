@@ -409,7 +409,7 @@
     <message>
         <location filename="../qml/pages/MainPage.qml" line="406"/>
         <source>Timer</source>
-        <translation type="unfinished"></translation>
+        <translation>Timer</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="450"/>
@@ -462,7 +462,7 @@
     <message>
         <location filename="../qml/pages/TimerPage.qml" line="32"/>
         <source>Timer</source>
-        <translation type="unfinished"></translation>
+        <translation>Timer</translation>
     </message>
 </context>
 <context>
@@ -470,7 +470,7 @@
     <message>
         <location filename="../qml/harbour-binaural.qml" line="225"/>
         <source>Start your sound mix</source>
-        <translation type="unfinished">Starte deinen Klangmix</translation>
+        <translation>Starte deinen Klangmix</translation>
     </message>
 </context>
 </TS>
