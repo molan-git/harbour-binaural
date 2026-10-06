@@ -155,30 +155,6 @@ Page {
                 }
             }
 
-            Label {
-                width: parent.width - 2 * Theme.horizontalPageMargin
-                x: Theme.horizontalPageMargin
-
-                property string noiseGeneratorUrl: "https://github.com/metiq-xyz/colored-noise-generator"
-
-                textFormat: Text.StyledText
-
-                text: qsTr("Color noise sound files were generated using the") +
-                      " " +
-                      "<a href=\"" + noiseGeneratorUrl + "\">" +
-                      "Metiq colored noise generator" +
-                      "</a>."
-
-                color: Theme.primaryColor
-                linkColor: Theme.highlightColor
-                font.pixelSize: Theme.fontSizeSmall
-                wrapMode: Text.WordWrap
-
-                onLinkActivated: {
-                    Qt.openUrlExternally(link)
-                }
-            }
-
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
 

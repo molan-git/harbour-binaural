@@ -52,10 +52,6 @@
         <translation>Binaural inspirerades av</translation>
     </message>
     <message>
-        <source>Color noise sound files were generated using the</source>
-        <translation>Ljudfiler med färgat brus genererades med hjälp av</translation>
-    </message>
-    <message>
         <source>Asset credits</source>
         <translation>Tredjepartstillgångar</translation>
     </message>
