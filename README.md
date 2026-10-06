@@ -22,7 +22,7 @@ Available on [OpenRepos.net](https://openrepos.net/content/molan/binaural)
 
 The `AudioEngine` generates binaural beats in real time, sample-by-sample, using two sine waves: a fixed 200 Hz tone on the left channel and a slightly higher frequency on the right. The frequency difference creates the perceived binaural beat. The generated stereo 16-bit PCM audio is streamed through **`QAudioOutput`**, with the sample rate adapted to the audio device.
 
-Colored noise (**white, pink, brown, and grey**) and ambient sounds are provided as audio files and played using **`QMediaPlayer`**. They can be combined with the binaural signal, with ambient sounds supporting fade-in, fade-out, and crossfading.
+Colored noise and ambient sounds are provided as audio files and played using **`QMediaPlayer`**. They can be combined with the binaural signal, with ambient sounds supporting fade-in, fade-out, and crossfading.
 
 ## Requirements
 
