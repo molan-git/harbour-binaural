@@ -58,6 +58,10 @@ Page {
         }
     }
 
+    function fadeOutForSleepTimer() {
+        audioEngine.fadeOutForSleepTimer()
+    }
+
     function resumeAll() {
         if (activeBand !== "") {
             if (audioEngine.binauralPaused) {
@@ -399,7 +403,11 @@ Page {
                     }
 
                     MenuItem {
-                        text: qsTr("Sleep Timer")
+                        text: qsTr("Timer")
+
+                        enabled: page.activeBand !== "" ||
+                                 page.activeAmbience !== "" ||
+                                 page.activeNoise !== ""
 
                         onClicked: {
                             pageStack.push(

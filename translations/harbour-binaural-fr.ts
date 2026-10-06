@@ -359,22 +359,14 @@
         <translation>À utiliser avec</translation>
     </message>
     <message>
-        <source>Sleep Timer</source>
+        <source>Timer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>TimerPage</name>
     <message>
-        <source>Sleep Timer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Start</source>
+        <source>Timer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -382,7 +374,7 @@
     <name>harbour-binaural</name>
     <message>
         <source>Start your sound mix</source>
-        <translation>Démarre ton mixage sonore</translation>
+        <translation type="unfinished">Démarre ton mixage sonore</translation>
     </message>
 </context>
 </TS>

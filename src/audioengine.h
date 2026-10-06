@@ -51,6 +51,8 @@ public:
     bool isAmbiencePaused() const;
     bool isColoredNoisePaused() const;
 
+    Q_INVOKABLE void fadeOutForSleepTimer();
+
     Q_INVOKABLE void start();
     Q_INVOKABLE void stop();
     Q_INVOKABLE void resumeBinaural();
@@ -100,6 +102,14 @@ private:
 
     int ambienceTargetVolume() const;
     int coloredNoiseTargetVolume() const;
+
+    // SleepTimer FadeOut
+    QTimer *m_sleepTimerFadeTimer;
+    QElapsedTimer m_sleepTimerFadeElapsed;
+
+    double m_sleepTimerBinauralStartVolume;
+    double m_sleepTimerAmbienceStartVolume;
+    double m_sleepTimerColoredNoiseStartVolume;
 
 private:
     QAudioOutput *m_audioOutput;

@@ -65,8 +65,10 @@ ApplicationWindow {
                 appWindow.sleepTimerRemainingSeconds = 0
                 appWindow.sleepTimerDurationSeconds = 0
 
-                if (appWindow.mainPage)
-                    appWindow.mainPage.deselectAllSounds()
+                if (appWindow.mainPage) {
+                    console.log("SLEEP TIMER: calling fadeOutForSleepTimer")
+                    appWindow.mainPage.fadeOutForSleepTimer()
+                }
             }
         }
     }
@@ -97,6 +99,9 @@ ApplicationWindow {
             activeNoise: appWindow.activeNoise
             isPlaying: appWindow.isPlaying
             isPaused: appWindow.pausedMode
+
+            sleepTimerRunning: appWindow.sleepTimerRunning
+            sleepTimerRemainingSeconds: appWindow.sleepTimerRemainingSeconds
 
             onPlayPauseClicked: {
                 if (appWindow.mainPage) {
@@ -182,11 +187,24 @@ ApplicationWindow {
         }
 
         Label {
+            id: soundLabel
+
             anchors.left: playbackButton.right
             anchors.leftMargin: Theme.paddingLarge
             anchors.right: parent.right
             anchors.rightMargin: Theme.horizontalPageMargin
             anchors.verticalCenter: parent.verticalCenter
+
+            anchors.verticalCenterOffset: appWindow.sleepTimerRunning
+                                          ? -Theme.paddingMedium * 1.5
+                                          : 0
+
+            Behavior on anchors.verticalCenterOffset {
+                NumberAnimation {
+                    duration: 350
+                    easing.type: Easing.Linear
+                }
+            }
 
             // Full highlight only while actually playing; selected
             // but paused stays secondary.
@@ -221,6 +239,98 @@ ApplicationWindow {
                      (appWindow.activeAmbience !== ""
                       ? appWindow.activeAmbience
                       : ""))
+        }
+
+        Item {
+            id: sleepTimerRow
+
+            anchors.left: playbackButton.right
+            anchors.leftMargin: Theme.paddingLarge
+            anchors.right: parent.right
+            anchors.rightMargin: Theme.horizontalPageMargin
+
+            anchors.top: soundLabel.bottom
+            anchors.topMargin: 0
+
+            height: Theme.iconSizeSmall
+
+            opacity: 0.0
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 250
+                    easing.type: Easing.InOutQuad
+                }
+            }
+
+            Image {
+                id: sleepTimerIcon
+
+                anchors.left: parent.left
+                anchors.verticalCenter: sleepTimerLabel.verticalCenter
+                anchors.verticalCenterOffset: Theme.paddingSmall / 3
+
+                width: Theme.iconSizeSmall * 0.88
+                height: Theme.iconSizeSmall * 0.88
+
+                source: "image://theme/icon-s-timer?" +
+                        Theme.secondaryColor
+
+                sourceSize: Qt.size(
+                    width,
+                    height
+                )
+            }
+
+            Label {
+                id: sleepTimerLabel
+
+                anchors.left: sleepTimerIcon.right
+                anchors.leftMargin: Theme.paddingSmall
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+
+                text: {
+                    var seconds = appWindow.sleepTimerRemainingSeconds
+                    var hours = Math.floor(seconds / 3600)
+                    var minutes = Math.floor((seconds % 3600) / 60)
+                    var secs = seconds % 60
+
+                    return (hours > 0
+                            ? (hours < 10 ? "0" : "") + hours + ":"
+                            : "") +
+                           (minutes < 10 ? "0" : "") + minutes + ":" +
+                           (secs < 10 ? "0" : "") + secs
+                }
+
+                color: Theme.secondaryColor
+                font.pixelSize: Theme.fontSizeSmall
+            }
+        }
+
+        Timer {
+            id: sleepTimerLabelDelay
+
+            interval: 150
+            repeat: false
+
+            onTriggered: {
+                if (appWindow.sleepTimerRunning)
+                    sleepTimerRow.opacity = 1.0
+            }
+        }
+
+        Connections {
+            target: appWindow
+
+            onSleepTimerRunningChanged: {
+                if (appWindow.sleepTimerRunning) {
+                    sleepTimerLabelDelay.restart()
+                } else {
+                    sleepTimerLabelDelay.stop()
+                    sleepTimerRow.opacity = 0.0
+                }
+            }
         }
     }
 

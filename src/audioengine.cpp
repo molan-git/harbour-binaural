@@ -17,19 +17,21 @@ namespace
 
     const double CarrierFrequency = 200.0;
     const double BinauralAmplitude = 16000.0;
+    const double ColoredNoiseAmplitude = 15000.0;
 
     const int BinauralFadeInDuration = 0;
+    const int BinauralFadeOutDuration = 0;
+
     const int AmbienceFadeInDuration = 200;
     const int AmbienceCrossfadeDuration = 8000;
-
-    const int BinauralFadeOutDuration = 0;
     const int AmbienceFadeOutDuration = 200;
+
     const int ColoredNoiseFadeOutDuration = 200;
+
+    const int SleepTimerFadeOutDuration = 5000;
 
     const int FadeInterval = 15;
     const int VolumeUpdateInterval = 50;
-
-    const double ColoredNoiseAmplitude = 15000.0;
 }
 
 
@@ -294,7 +296,7 @@ private:
         switch (m_noiseType)
         {
         case WhiteNoise:
-            return 0.50;
+            return 0.40;
 
         case PinkNoise:
             return 1.00;
@@ -633,6 +635,7 @@ AudioEngine::AudioEngine(QObject *parent)
       m_binauralFadeOutTimer(new QTimer(this)),
       m_ambienceFadeOutTimer(new QTimer(this)),
       m_coloredNoiseFadeOutTimer(new QTimer(this)),
+      m_sleepTimerFadeTimer(new QTimer(this)),
 
       m_ambienceVolumeTimer(new QTimer(this)),
       m_coloredNoiseVolumeTimer(new QTimer(this)),
@@ -656,6 +659,10 @@ AudioEngine::AudioEngine(QObject *parent)
       m_binauralFadeOutStartVolume(0.0),
       m_coloredNoiseFadeOutStartVolume(0.0),
 
+      m_sleepTimerBinauralStartVolume(0.0),
+      m_sleepTimerAmbienceStartVolume(0.0),
+      m_sleepTimerColoredNoiseStartVolume(0.0),
+
       m_ambienceFadeOutActiveVolume(0),
       m_ambienceFadeOutFadingVolume(0)
 {
@@ -666,6 +673,7 @@ AudioEngine::AudioEngine(QObject *parent)
     m_binauralFadeOutTimer->setInterval(FadeInterval);
     m_ambienceFadeOutTimer->setInterval(FadeInterval);
     m_coloredNoiseFadeOutTimer->setInterval(FadeInterval);
+    m_sleepTimerFadeTimer->setInterval(FadeInterval);
 
     m_ambienceVolumeTimer->setInterval(
         VolumeUpdateInterval);
@@ -725,6 +733,51 @@ AudioEngine::AudioEngine(QObject *parent)
             {
                 updateColoredNoiseFadeOut();
             });
+
+    connect(m_sleepTimerFadeTimer, &QTimer::timeout, this, [this]()
+    {
+        const double progress =
+            qMin(
+                1.0,
+                static_cast<double>(
+                    m_sleepTimerFadeElapsed.elapsed())
+                    / SleepTimerFadeOutDuration);
+
+        const double factor = 1.0 - progress;
+
+        if (m_audioOutput)
+        {
+            m_audioOutput->setVolume(
+                m_sleepTimerBinauralStartVolume * factor);
+        }
+
+        if (m_activeAmbiencePlayer)
+        {
+            m_activeAmbiencePlayer->setVolume(
+                static_cast<int>(
+                    m_sleepTimerAmbienceStartVolume * factor));
+        }
+
+        if (m_fadingAmbiencePlayer)
+        {
+            m_fadingAmbiencePlayer->setVolume(0);
+        }
+
+        if (m_coloredNoiseOutput)
+        {
+            m_coloredNoiseOutput->setVolume(
+                m_sleepTimerColoredNoiseStartVolume * factor);
+        }
+
+        if (progress >= 1.0)
+        {
+            m_sleepTimerFadeTimer->stop();
+
+            stopBinauralImmediately();
+            stopAmbienceImmediately();
+            stopColoredNoiseImmediately();
+        }
+    });
 
     connect(m_ambienceVolumeTimer,
             &QTimer::timeout,
@@ -1637,6 +1690,29 @@ void AudioEngine::start()
     m_audioOutput->start(m_generator);
 
     updatePlayingState();
+}
+
+void AudioEngine::fadeOutForSleepTimer()
+{
+    m_sleepTimerFadeTimer->stop();
+
+    m_sleepTimerBinauralStartVolume =
+        m_audioOutput
+            ? m_audioOutput->volume()
+            : 0.0;
+
+    m_sleepTimerAmbienceStartVolume =
+        m_activeAmbiencePlayer
+            ? m_activeAmbiencePlayer->volume()
+            : 0.0;
+
+    m_sleepTimerColoredNoiseStartVolume =
+        m_coloredNoiseOutput
+            ? m_coloredNoiseOutput->volume()
+            : 0.0;
+
+    m_sleepTimerFadeElapsed.start();
+    m_sleepTimerFadeTimer->start();
 }
 
 void AudioEngine::stop()

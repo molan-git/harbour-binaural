@@ -29,7 +29,7 @@ Page {
     }
 
     PageHeader {
-        title: qsTr("Sleep Timer")
+        title: qsTr("Timer")
     }
 
     TimePicker {
@@ -55,9 +55,22 @@ Page {
             verticalCenter: timerPicker.verticalCenter
         }
 
-        text: page.formatTime(
-                  timerPicker.hour,
-                  timerPicker.minute)
+        text: timerPicker.hour > 0
+              ? (timerPicker.hour < 10 ? "0" : "") +
+                timerPicker.hour +
+                ":" +
+                (timerPicker.minute < 10 ? "0" : "") +
+                timerPicker.minute +
+                "<font color=\"" +
+                Theme.rgba(Theme.secondaryColor, 0.7) +
+                "\">:00</font>"
+              : (timerPicker.minute < 10 ? "0" : "") +
+                timerPicker.minute +
+                "<font color=\"" +
+                Theme.rgba(Theme.secondaryColor, 0.7) +
+                "\">:00</font>"
+
+        textFormat: Text.StyledText
 
         color: Theme.primaryColor
         font.pixelSize: Theme.fontSizeLarge
@@ -150,12 +163,12 @@ Page {
             text: page.formatRemainingTime(
                       page.appWindow.sleepTimerRemainingSeconds)
 
-            color: Theme.primaryColor
+            color: Theme.highlightColor
             font.pixelSize: Theme.fontSizeLarge
         }
     }
 
-    Button {
+    IconButton {
         anchors {
             horizontalCenter: parent.horizontalCenter
 
@@ -163,12 +176,13 @@ Page {
                  ? timerDisplay.bottom
                  : timerPicker.bottom
 
-            topMargin: Theme.paddingLarge * 2
+            topMargin: Theme.paddingLarge * 1.5
         }
 
-        text: page.appWindow.sleepTimerRunning
-              ? qsTr("Cancel")
-              : qsTr("Start")
+        icon.source: page.appWindow.sleepTimerRunning
+                    ? "image://theme/icon-l-clear?" +
+                      Theme.secondaryHighlightColor
+                    : "image://theme/icon-l-add"
 
         enabled: page.appWindow.sleepTimerRunning ||
                  (page.selectedDurationSeconds() > 0 &&
