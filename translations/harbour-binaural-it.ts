@@ -80,7 +80,7 @@
     </message>
     <message>
         <source>Paused:</source>
-        <translation type="unfinished"></translation>
+        <translation>In pausa:</translation>
     </message>
 </context>
 <context>
