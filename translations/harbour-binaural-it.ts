@@ -360,21 +360,21 @@
     </message>
     <message>
         <source>Timer</source>
-        <translation type="unfinished"></translation>
+        <translation>Timer</translation>
     </message>
 </context>
 <context>
     <name>TimerPage</name>
     <message>
         <source>Timer</source>
-        <translation type="unfinished"></translation>
+        <translation>Timer</translation>
     </message>
 </context>
 <context>
     <name>harbour-binaural</name>
     <message>
         <source>Start your sound mix</source>
-        <translation type="unfinished">Avvia il tuo mix sonoro</translation>
+        <translation>Avvia il tuo mix sonoro</translation>
     </message>
 </context>
 </TS>
