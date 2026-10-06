@@ -99,7 +99,7 @@
     <message>
         <location filename="../qml/cover/CoverPage.qml" line="88"/>
         <source>Paused:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pausiert:</translation>
     </message>
 </context>
 <context>
