@@ -12,6 +12,11 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Tue Oct 06 2026 0.7
+- [add] timer (via pulley menu) to stop all sounds after desired timer
+- [add] new colored noise generator, replaces wav files
+- [fix] play issues with colored noise on older sfos versions
+
 * Tue Oct 06 2026 0.6
 - [fix] UI did not react when the system paused/stopped app audio
 - [enhancement] UI better play/pause logic
