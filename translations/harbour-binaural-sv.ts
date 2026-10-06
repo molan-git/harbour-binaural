@@ -76,7 +76,7 @@
     </message>
     <message>
         <source>Paused:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pausad:</translation>
     </message>
 </context>
 <context>
