@@ -59,7 +59,6 @@ TBA
 ## Credits
 
 * Inspired by [Metiq](https://github.com/metiq-xyz/android-app) for Android
-* Colored noise generated with the [Metiq colored noise generator](https://github.com/metiq-xyz/colored-noise-generator)
 * Audio and image asset credits: see [CREDITS.md](CREDITS.md)
 
 ## License
