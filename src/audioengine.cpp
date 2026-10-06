@@ -259,9 +259,9 @@ protected:
                 /*
                  * Final safety limiter.
                  */
-                value = qBound(-1.0, value, 1.0);
-
                 value *= noiseGain();
+
+                value = qBound(-1.0, value, 1.0);
 
                 samples[
                     frame * m_channelCount + channel
@@ -296,7 +296,7 @@ private:
             return 1.00;
 
         case BrownNoise:
-            return 1.30;
+            return 1.00;
 
         case GreyNoise:
             return 0.80;
@@ -349,7 +349,7 @@ private:
      *
      * Approximately flat power spectral density.
      */
-    double nextWhite(int channel)
+    double nextRawWhite(int channel)
     {
         /*
          * 32-bit linear congruential generator.
@@ -366,26 +366,24 @@ private:
          * Convert unsigned 32-bit value to
          * approximately [-1.0, +1.0].
          */
-        const double white =
+        return
             (static_cast<double>(randomValue) /
              2147483648.0) - 1.0;
+    }
+
+    double nextWhite(int channel)
+    {
+        const double white =
+            nextRawWhite(channel);
 
         /*
-         * Smooth the white noise slightly.
-         *
-         * This removes some of the very aggressive
-         * high-frequency character while keeping it
-         * recognisably white/noise-like.
-         *
-         * 0.18 = fairly gentle filtering.
+         * Smooth the White noise to reduce the
+         * aggressive high-frequency character.
          */
         m_whiteFiltered[channel] =
             m_whiteFiltered[channel] * 0.82
             + white * 0.18;
 
-        /*
-         * Slightly reduce the output level as well.
-         */
         return m_whiteFiltered[channel] * 0.82;
     }
 
@@ -462,40 +460,33 @@ private:
      */
     double nextBrown(int channel)
     {
-        /*
-         * Brown noise is created by integrating white noise.
-         *
-         * A slightly stronger leak and a softer input
-         * keep the result smooth and prevent excessive
-         * low-frequency wandering.
-         */
         const double white =
-            nextWhite(channel);
+            nextRawWhite(channel);
 
         double &state =
             m_brownState[channel];
 
         /*
-         * Smooth Brownian integration.
+         * Leaky integration of raw white noise.
          *
-         * The leak prevents DC drift.
-         * The small input step keeps the movement
-         * slow and natural.
+         * The leakage prevents unlimited DC drift while
+         * retaining the characteristic slow movement of
+         * Brown noise.
          */
         state =
-            state * 0.9992
-            + white * 0.012;
+            state * 0.995
+            + white * 0.018;
 
         /*
-         * Keep the internal state bounded.
+         * Keep the internal state within a safe range.
          */
         state =
             qBound(-1.0, state, 1.0);
 
         /*
-         * Output gain.
+         * Perceived loudness compensation.
          */
-        return state * 2.0;
+        return state * 2.8;
     }
 
     /*
@@ -511,8 +502,14 @@ private:
      */
     double nextGrey(int channel)
     {
-        const double white =
-            nextWhite(channel);
+        /*
+         * Start from Pink noise.
+         *
+         * Grey noise is commonly described as a noise signal
+         * shaped according to human hearing sensitivity.
+         */
+        const double pink =
+            nextPink(channel);
 
         double &low =
             m_greyLow[channel];
@@ -525,34 +522,48 @@ private:
 
         /*
          * Low-frequency component.
+         *
+         * Slow component retains some of the lower-frequency
+         * energy of Pink noise.
          */
         low =
-            low * 0.995
-            + white * 0.035;
+            low * 0.985
+            + pink * 0.015;
 
         /*
          * Mid-frequency component.
+         *
+         * This region is deliberately given more weight,
+         * reflecting the greater sensitivity of human hearing
+         * in the mid-frequency range.
          */
         mid =
-            mid * 0.92
-            + white * 0.08;
+            mid * 0.80
+            + pink * 0.20;
 
         /*
          * High-frequency component.
+         *
+         * Faster response keeps the high-frequency contribution
+         * controlled without making Grey sound harsh.
          */
         high =
-            high * 0.55
-            + white * 0.45;
+            high * 0.45
+            + pink * 0.55;
 
         /*
-         * Combine the frequency regions.
+         * Psychoacoustic weighting.
+         *
+         * Keep the low frequencies restrained, emphasize the
+         * useful midrange, and retain a smaller high-frequency
+         * contribution.
          */
         const double grey =
-            low * 0.45 +
-            mid * 0.40 +
-            high * 0.15;
+            low * 0.25
+            + mid * 0.60
+            + high * 0.15;
 
-        return grey * 2.2;
+        return grey * 2.4;
     }
 
 private:

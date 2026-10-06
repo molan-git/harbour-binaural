@@ -59,27 +59,22 @@
         <translation>Binaural wurde inspiriert durch</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="166"/>
-        <source>Color noise sound files were generated using the</source>
-        <translation>Die Audiodateien für die farbigen Rauschgeräusche wurden generiert durch den</translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/AboutPage.qml" line="185"/>
+        <location filename="../qml/pages/AboutPage.qml" line="161"/>
         <source>Asset credits</source>
         <translation>Quellenangaben</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="193"/>
+        <location filename="../qml/pages/AboutPage.qml" line="169"/>
         <source>Data protection</source>
         <translation>Datenschutz</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="200"/>
+        <location filename="../qml/pages/AboutPage.qml" line="176"/>
         <source>This application works exclusively offline and requires permission to output audio. No data is collected.</source>
         <translation>Diese Anwendung funktioniert ausschließlich offline und benötigt die Berechtigung zur Audioausgabe. Es werden keine Daten gesammelt.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AboutPage.qml" line="208"/>
+        <location filename="../qml/pages/AboutPage.qml" line="184"/>
         <source>License</source>
         <translation>Lizenz</translation>
     </message>
