@@ -24,6 +24,13 @@ ApplicationWindow {
                              ? mainPage.isPlaying
                              : false
 
+    // Something selected but not playing (system suspend or manual
+    // stop): dimmed hint state of the playback bar.
+    property bool pausedMode: !isPlaying &&
+                              (activeBand !== "" ||
+                               activeAmbience !== "" ||
+                               activeNoise !== "")
+
     bottomMargin: playbackBar.height
 
     initialPage: Component {
@@ -42,6 +49,7 @@ ApplicationWindow {
             activeAmbience: appWindow.activeAmbience
             activeNoise: appWindow.activeNoise
             isPlaying: appWindow.isPlaying
+            isPaused: appWindow.pausedMode
 
             onPlayPauseClicked: {
                 if (appWindow.mainPage) {
@@ -67,10 +75,25 @@ ApplicationWindow {
         Rectangle {
             anchors.fill: parent
 
-            color: Theme.rgba(
-                Theme.highlightDimmerColor,
-                0.5
-            )
+            // Background always stays the dimmed pause color.
+            color: Theme.rgba(Theme.highlightDimmerColor, 0.5)
+
+            // Subtle highlight tint on top while playing. Fades in
+            // and out via opacity, which avoids any color-flash.
+            Rectangle {
+                anchors.fill: parent
+
+                color: Theme.rgba(Theme.highlightColor, 0.1)
+
+                opacity: appWindow.isPlaying ? 1.0 : 0.0
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 300
+                        easing.type: Easing.OutQuad
+                    }
+                }
+            }
 
             MouseArea {
                 anchors.fill: parent
@@ -118,11 +141,15 @@ ApplicationWindow {
             anchors.rightMargin: Theme.horizontalPageMargin
             anchors.verticalCenter: parent.verticalCenter
 
+            // Full highlight only while actually playing; selected
+            // but paused stays secondary.
             color: (appWindow.activeBand === "" &&
                     appWindow.activeNoise === "" &&
                     appWindow.activeAmbience === "")
                    ? Theme.secondaryColor
-                   : Theme.highlightColor
+                   : appWindow.isPlaying
+                     ? Theme.highlightColor
+                     : Theme.secondaryHighlightColor
 
             font.pixelSize: Theme.fontSizeMedium
             elide: Text.ElideRight

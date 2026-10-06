@@ -23,6 +23,11 @@ Page {
                              ambiencePlaying ||
                              noisePlaying
 
+    property bool pausedMode: !isPlaying &&
+                              (activeBand !== "" ||
+                               activeAmbience !== "" ||
+                               activeNoise !== "")
+
     AudioEngine {
         id: audioEngine
     }
@@ -31,9 +36,6 @@ Page {
         appWindow.isPlaying = isPlaying
     }
 
-    // Resume the selected sounds after a system-initiated pause.
-    // play()/resume() continues where the stream was suspended;
-    // a sound that was fully stopped by the system is restarted.
     function resumeAll() {
         if (activeBand !== "") {
             if (audioEngine.binauralPaused) {
@@ -181,8 +183,7 @@ Page {
                     id: ambienceDrawerGrid
 
                     x: Theme.horizontalPageMargin
-                    width: parent.width -
-                           2 * Theme.horizontalPageMargin
+                    width: parent.width - 2 * Theme.horizontalPageMargin
                     height: Math.ceil(model.length / 2) *
                             Theme.itemSizeMedium
                     cellWidth: width / 2
@@ -190,7 +191,7 @@ Page {
 
                     model: [
                         { key: "Wind",      label: qsTr("Wind") },
-                        { key: "Waves", label: qsTr("Waves") },
+                        { key: "Waves",     label: qsTr("Waves") },
                         { key: "Crickets",  label: qsTr("Crickets") },
                         { key: "Stream",    label: qsTr("Stream") },
                         { key: "Rain",      label: qsTr("Rain") },
@@ -234,17 +235,24 @@ Page {
                             text: modelData.label
                             highlighted: page.activeAmbience === modelData.key
 
-                            // Visual hint when the system has paused.
+                            // Visual hint when nothing is playing.
                             opacity: highlighted && !page.ambiencePlaying
                                       ? 0.6 : 1.0
 
                             onClicked: {
                                 if (ambienceDrawerButton.highlighted) {
+                                    // Deselect.
                                     page.activeAmbience = ""
                                     audioEngine.stopAmbience()
-                                } else {
+                                } else if (!page.pausedMode) {
+                                    // Playing, or no selection at all
+                                    // (fresh start): switch immediately.
                                     page.activeAmbience = modelData.key
                                     audioEngine.setAmbience(modelData.key)
+                                } else {
+                                    // Paused mode: selection only.
+                                    audioEngine.stopAmbience()
+                                    page.activeAmbience = modelData.key
                                 }
                             }
 
@@ -443,7 +451,7 @@ Page {
                                 }
 
                                 anchors.verticalCenter: parent.verticalCenter
-                                anchors.verticalCenterOffset: Theme.paddingSmall / 1.5
+                                anchors.verticalCenterOffset: Theme.paddingSmall / 3
                             }
                         }
                     }
@@ -502,25 +510,30 @@ Page {
                                 text: modelData
                                 highlighted: page.activeBand === modelData
 
-                                // Visual hint when the system has paused.
+                                // Visual hint when nothing is playing.
                                 opacity: highlighted && !page.bandPlaying
                                           ? 0.6 : 1.0
 
                                 onClicked: {
                                     if (frequencyButton.highlighted) {
+                                        // Deselect.
                                         page.activeBand = ""
                                         audioEngine.stop()
-                                    } else {
+                                    } else if (!page.pausedMode) {
+                                        // Playing, or no selection at all
+                                        // (fresh start): start immediately.
                                         page.activeBand = modelData
                                         audioEngine.setFrequencyBand(
                                             modelData
                                         )
-
-                                        if (audioEngine.binauralPaused) {
-                                            audioEngine.resumeBinaural()
-                                        } else {
-                                            audioEngine.start()
-                                        }
+                                        audioEngine.start()
+                                    } else {
+                                        // Paused mode: selection only.
+                                        audioEngine.stop()
+                                        page.activeBand = modelData
+                                        audioEngine.setFrequencyBand(
+                                            modelData
+                                        )
                                     }
                                 }
 
@@ -684,24 +697,26 @@ Page {
                                 text: modelData.label
                                 highlighted: page.activeNoise === modelData.key
 
-                                // Visual hint when the system has paused.
+                                // Visual hint when nothing is playing.
                                 opacity: highlighted && !page.noisePlaying
                                           ? 0.6 : 1.0
 
                                 onClicked: {
                                     if (coloredNoiseButton.highlighted) {
+                                        // Deselect.
                                         page.activeNoise = ""
                                         audioEngine.stopColoredNoise()
-                                    } else {
+                                    } else if (!page.pausedMode) {
+                                        // Playing, or no selection at all
+                                        // (fresh start): start immediately.
                                         page.activeNoise = modelData.key
-
-                                        if (audioEngine.coloredNoisePaused) {
-                                            audioEngine.resumeColoredNoise()
-                                        } else {
-                                            audioEngine.setColoredNoise(
-                                                modelData.key
-                                            )
-                                        }
+                                        audioEngine.setColoredNoise(
+                                            modelData.key
+                                        )
+                                    } else {
+                                        // Paused mode: selection only.
+                                        audioEngine.stopColoredNoise()
+                                        page.activeNoise = modelData.key
                                     }
                                 }
 
@@ -857,13 +872,7 @@ Page {
                                      : 1.0
 
                             onClicked: {
-                                if (page.activeAmbience !== ""
-                                    && audioEngine.ambiencePaused) {
-                                    // Tapping the paused ambience resumes instead of opening the drawer.
-                                    audioEngine.resumeAmbience()
-                                } else {
-                                    ambienceDrawer.open = true
-                                }
+                                ambienceDrawer.open = true
                             }
 
                             Label {
