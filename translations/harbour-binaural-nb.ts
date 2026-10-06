@@ -37,7 +37,7 @@
     </message>
     <message>
         <source>License</source>
-        <translation type="unfinished"></translation>
+        <translation>Lisens</translation>
     </message>
     <message>
         <source>Credits</source>
@@ -49,7 +49,7 @@
     </message>
     <message>
         <source>Binaural was inspired by</source>
-        <translation type="unfinished"></translation>
+        <translation>Binaural er inspirert av</translation>
     </message>
     <message>
         <source>Color noise sound files were generated using the</source>
@@ -87,11 +87,11 @@
     <name>CreditPage</name>
     <message>
         <source>Wind</source>
-        <translation type="unfinished"></translation>
+        <translation>Vind</translation>
     </message>
     <message>
         <source>Rain</source>
-        <translation type="unfinished"></translation>
+        <translation>Regn</translation>
     </message>
     <message>
         <source>Crickets</source>
@@ -99,11 +99,11 @@
     </message>
     <message>
         <source>Waves</source>
-        <translation type="unfinished"></translation>
+        <translation>Bølger</translation>
     </message>
     <message>
         <source>Birds</source>
-        <translation type="unfinished"></translation>
+        <translation>Fugler</translation>
     </message>
     <message>
         <source>Fire</source>
@@ -123,7 +123,7 @@
     </message>
     <message>
         <source>Audio files</source>
-        <translation type="unfinished"></translation>
+        <translation>Lydfiler</translation>
     </message>
     <message>
         <source>Files have been manually edited for use in this app under the</source>
@@ -139,11 +139,11 @@
     </message>
     <message>
         <source>from</source>
-        <translation type="unfinished"></translation>
+        <translation>fra</translation>
     </message>
     <message>
         <source>Images</source>
-        <translation type="unfinished"></translation>
+        <translation>bilder</translation>
     </message>
     <message>
         <source>Binaural graph image modified for use in</source>
