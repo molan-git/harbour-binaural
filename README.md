@@ -16,7 +16,7 @@ Binaural is a sound app for [Sailfish OS](https://sailfishos.org) designed for r
 
 ## Download
 
-Available on [OpenRepos.net](https://openrepos.net/content/molan/binaural)
+The latest release is available on [OpenRepos.net](https://openrepos.net/content/molan/binaural)
 
 ## Audio Engine
 
