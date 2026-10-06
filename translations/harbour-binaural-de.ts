@@ -157,7 +157,7 @@
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="80"/>
         <source>Files have been manually edited for use in this app under the</source>
-        <translation>Die Dateien wurden für die Verwendung in dieser App manuell bearbeitet und unter der</translation>
+        <translation>Die Dateien wurden für die Verwendung in dieser App manuell bearbeitet unter der</translation>
     </message>
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="83"/>
