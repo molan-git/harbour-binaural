@@ -87,14 +87,19 @@
 <context>
     <name>CoverPage</name>
     <message>
-        <location filename="../qml/cover/CoverPage.qml" line="71"/>
+        <location filename="../qml/cover/CoverPage.qml" line="85"/>
         <source>Start your sound mix</source>
         <translation>Starte deinen Klangmix</translation>
     </message>
     <message>
-        <location filename="../qml/cover/CoverPage.qml" line="72"/>
+        <location filename="../qml/cover/CoverPage.qml" line="87"/>
         <source>Playing:</source>
         <translation>Wiedergabe:</translation>
+    </message>
+    <message>
+        <location filename="../qml/cover/CoverPage.qml" line="88"/>
+        <source>Paused:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -349,105 +354,105 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="92"/>
-        <location filename="../qml/pages/MainPage.qml" line="196"/>
+        <location filename="../qml/pages/MainPage.qml" line="90"/>
+        <location filename="../qml/pages/MainPage.qml" line="193"/>
         <source>Wind</source>
         <translation>Wind</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="94"/>
-        <location filename="../qml/pages/MainPage.qml" line="197"/>
+        <location filename="../qml/pages/MainPage.qml" line="92"/>
+        <location filename="../qml/pages/MainPage.qml" line="194"/>
         <source>Waves</source>
         <translation>Wellen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="96"/>
-        <location filename="../qml/pages/MainPage.qml" line="198"/>
+        <location filename="../qml/pages/MainPage.qml" line="94"/>
+        <location filename="../qml/pages/MainPage.qml" line="195"/>
         <source>Crickets</source>
         <translation>Grillen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="98"/>
-        <location filename="../qml/pages/MainPage.qml" line="199"/>
+        <location filename="../qml/pages/MainPage.qml" line="96"/>
+        <location filename="../qml/pages/MainPage.qml" line="196"/>
         <source>Stream</source>
         <translation>Bach</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="100"/>
-        <location filename="../qml/pages/MainPage.qml" line="200"/>
+        <location filename="../qml/pages/MainPage.qml" line="98"/>
+        <location filename="../qml/pages/MainPage.qml" line="197"/>
         <source>Rain</source>
         <translation>Regen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="102"/>
-        <location filename="../qml/pages/MainPage.qml" line="201"/>
+        <location filename="../qml/pages/MainPage.qml" line="100"/>
+        <location filename="../qml/pages/MainPage.qml" line="198"/>
         <source>Birds</source>
         <translation>Vögel</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="104"/>
-        <location filename="../qml/pages/MainPage.qml" line="202"/>
+        <location filename="../qml/pages/MainPage.qml" line="102"/>
+        <location filename="../qml/pages/MainPage.qml" line="199"/>
         <source>Fire</source>
         <translation>Feuer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="106"/>
-        <location filename="../qml/pages/MainPage.qml" line="203"/>
+        <location filename="../qml/pages/MainPage.qml" line="104"/>
+        <location filename="../qml/pages/MainPage.qml" line="200"/>
         <source>Chimes</source>
         <translation>Windspiel</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="352"/>
+        <location filename="../qml/pages/MainPage.qml" line="358"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="362"/>
+        <location filename="../qml/pages/MainPage.qml" line="368"/>
         <source>Deselect all sounds</source>
         <translation>Alle Klänge deaktivieren</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="401"/>
+        <location filename="../qml/pages/MainPage.qml" line="407"/>
         <source>Binaural Beats</source>
         <translation>Binaurale Beats</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="416"/>
+        <location filename="../qml/pages/MainPage.qml" line="422"/>
         <source>To be used with</source>
         <translation>Zu verwenden mit</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="627"/>
+        <location filename="../qml/pages/MainPage.qml" line="645"/>
         <source>Colored Noise</source>
         <translation>Farbiges Rauschen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="641"/>
+        <location filename="../qml/pages/MainPage.qml" line="659"/>
         <source>White</source>
         <translation>Weiß</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="642"/>
+        <location filename="../qml/pages/MainPage.qml" line="660"/>
         <source>Pink</source>
         <translation>Rosa</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="643"/>
+        <location filename="../qml/pages/MainPage.qml" line="661"/>
         <source>Brown</source>
         <translation>Braun</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="644"/>
+        <location filename="../qml/pages/MainPage.qml" line="662"/>
         <source>Grey</source>
         <translation>Grau</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="801"/>
+        <location filename="../qml/pages/MainPage.qml" line="828"/>
         <source>Ambient Sound</source>
         <translation>Umgebungsgeräusche</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="836"/>
+        <location filename="../qml/pages/MainPage.qml" line="863"/>
         <source>Choose an ambient sound</source>
         <translation>Wähle ein Umgebungsgeräusch</translation>
     </message>
@@ -455,7 +460,7 @@
 <context>
     <name>harbour-binaural</name>
     <message>
-        <location filename="../qml/harbour-binaural.qml" line="133"/>
+        <location filename="../qml/harbour-binaural.qml" line="160"/>
         <source>Start your sound mix</source>
         <translation>Starte deinen Klangmix</translation>
     </message>

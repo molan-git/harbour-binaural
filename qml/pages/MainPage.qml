@@ -11,24 +11,55 @@ Page {
     property string activeAmbience: ""
     property string activeNoise: ""
 
-    property bool bandPlaying: false
-    property bool ambiencePlaying: false
-    property bool noisePlaying: false
+    property bool bandPlaying: audioEngine.binauralPlaying
+    property bool ambiencePlaying: audioEngine.ambiencePlaying
+    property bool noisePlaying: audioEngine.coloredNoisePlaying
+
+    property bool bandPaused: audioEngine.binauralPaused
+    property bool ambiencePaused: audioEngine.ambiencePaused
+    property bool noisePaused: audioEngine.coloredNoisePaused
 
     property bool isPlaying: bandPlaying ||
                              ambiencePlaying ||
                              noisePlaying
 
+    property bool pausedMode: !isPlaying &&
+                              (activeBand !== "" ||
+                               activeAmbience !== "" ||
+                               activeNoise !== "")
+
     AudioEngine {
         id: audioEngine
-
-        property bool bandPlaying: false
-        property bool ambiencePlaying: false
-        property bool noisePlaying: false
     }
 
     onIsPlayingChanged: {
         appWindow.isPlaying = isPlaying
+    }
+
+    function resumeAll() {
+        if (activeBand !== "") {
+            if (audioEngine.binauralPaused) {
+                audioEngine.resumeBinaural()
+            } else if (!audioEngine.binauralPlaying) {
+                audioEngine.start()
+            }
+        }
+
+        if (activeAmbience !== "") {
+            if (audioEngine.ambiencePaused) {
+                audioEngine.resumeAmbience()
+            } else if (!audioEngine.ambiencePlaying) {
+                audioEngine.setAmbience(activeAmbience)
+            }
+        }
+
+        if (activeNoise !== "") {
+            if (audioEngine.coloredNoisePaused) {
+                audioEngine.resumeColoredNoise()
+            } else if (!audioEngine.coloredNoisePlaying) {
+                audioEngine.setColoredNoise(activeNoise)
+            }
+        }
     }
 
     function togglePlayback() {
@@ -36,33 +67,8 @@ Page {
             audioEngine.stop()
             audioEngine.stopAmbience()
             audioEngine.stopColoredNoise()
-
-            bandPlaying = false
-            ambiencePlaying = false
-            noisePlaying = false
-
-            audioEngine.bandPlaying = false
-            audioEngine.ambiencePlaying = false
-            audioEngine.noisePlaying = false
         } else {
-            if (activeBand !== "") {
-                audioEngine.setFrequencyBand(activeBand)
-                audioEngine.start()
-                bandPlaying = true
-                audioEngine.bandPlaying = true
-            }
-
-            if (activeAmbience !== "") {
-                audioEngine.setAmbience(activeAmbience)
-                ambiencePlaying = true
-                audioEngine.ambiencePlaying = true
-            }
-
-            if (activeNoise !== "") {
-                audioEngine.setColoredNoise(activeNoise)
-                noisePlaying = true
-                audioEngine.noisePlaying = true
-            }
+            resumeAll()
         }
     }
 
@@ -74,14 +80,6 @@ Page {
         page.activeBand = ""
         page.activeAmbience = ""
         page.activeNoise = ""
-
-        page.bandPlaying = false
-        page.ambiencePlaying = false
-        page.noisePlaying = false
-
-        audioEngine.bandPlaying = false
-        audioEngine.ambiencePlaying = false
-        audioEngine.noisePlaying = false
 
         ambienceDrawer.open = false
     }
@@ -119,7 +117,7 @@ Page {
         InfoColoredPage { }
     }
 
-    // Drawer to open Ambience sounds - opens above playbackBar
+    // Drawer to open Ambience sounds which opens above playbackBar.
     Drawer {
         id: ambienceDrawer
 
@@ -147,7 +145,7 @@ Page {
                 )
             }
 
-            // Swipe down action to close Drawer
+            // Swipe down action to close ambienceDrawer.
             MouseArea {
                 id: drawerSwipeArea
 
@@ -180,13 +178,12 @@ Page {
                     height: Theme.paddingLarge
                 }
 
-                // Ambience selection
+                // Ambience selection grid.
                 SilicaGridView {
                     id: ambienceDrawerGrid
 
                     x: Theme.horizontalPageMargin
-                    width: parent.width -
-                           2 * Theme.horizontalPageMargin
+                    width: parent.width - 2 * Theme.horizontalPageMargin
                     height: Math.ceil(model.length / 2) *
                             Theme.itemSizeMedium
                     cellWidth: width / 2
@@ -194,7 +191,7 @@ Page {
 
                     model: [
                         { key: "Wind",      label: qsTr("Wind") },
-                        { key: "Waves", label: qsTr("Waves") },
+                        { key: "Waves",     label: qsTr("Waves") },
                         { key: "Crickets",  label: qsTr("Crickets") },
                         { key: "Stream",    label: qsTr("Stream") },
                         { key: "Rain",      label: qsTr("Rain") },
@@ -238,17 +235,24 @@ Page {
                             text: modelData.label
                             highlighted: page.activeAmbience === modelData.key
 
+                            // Visual hint when nothing is playing.
+                            opacity: highlighted && !page.ambiencePlaying
+                                      ? 0.6 : 1.0
+
                             onClicked: {
                                 if (ambienceDrawerButton.highlighted) {
+                                    // Deselect.
                                     page.activeAmbience = ""
                                     audioEngine.stopAmbience()
-                                    page.ambiencePlaying = false
-                                    audioEngine.ambiencePlaying = false
-                                } else {
+                                } else if (!page.pausedMode) {
+                                    // Playing, or no selection at all
+                                    // (fresh start): switch immediately.
                                     page.activeAmbience = modelData.key
                                     audioEngine.setAmbience(modelData.key)
-                                    page.ambiencePlaying = true
-                                    audioEngine.ambiencePlaying = true
+                                } else {
+                                    // Paused mode: selection only.
+                                    audioEngine.stopAmbience()
+                                    page.activeAmbience = modelData.key
                                 }
                             }
 
@@ -256,7 +260,9 @@ Page {
                                 anchors.centerIn: parent
                                 text: parent.text
                                 color: ambienceDrawerButton.highlighted
-                                       ? Theme.highlightColor
+                                       ? (page.ambiencePlaying
+                                          ? Theme.highlightColor
+                                          : Theme.secondaryHighlightColor)
                                        : Theme.primaryColor
                             }
                         }
@@ -396,12 +402,12 @@ Page {
                         height: Theme.paddingLarge
                     }
 
-                    // Binaural frequency selection
+                    // Binaural frequency selection grid.
                     SectionHeader {
                         text: qsTr("Binaural Beats")
                     }
 
-                    // info text about headphones with image
+                    // Info text about headphones with image.
                     Item {
                         width: parent.width - 2 * Theme.horizontalPageMargin
                         x: Theme.horizontalPageMargin
@@ -445,7 +451,7 @@ Page {
                                 }
 
                                 anchors.verticalCenter: parent.verticalCenter
-                                anchors.verticalCenterOffset: Theme.paddingSmall / 1.5
+                                anchors.verticalCenterOffset: Theme.paddingSmall / 3
                             }
                         }
                     }
@@ -504,20 +510,30 @@ Page {
                                 text: modelData
                                 highlighted: page.activeBand === modelData
 
+                                // Visual hint when nothing is playing.
+                                opacity: highlighted && !page.bandPlaying
+                                          ? 0.6 : 1.0
+
                                 onClicked: {
                                     if (frequencyButton.highlighted) {
+                                        // Deselect.
                                         page.activeBand = ""
                                         audioEngine.stop()
-                                        page.bandPlaying = false
-                                        audioEngine.bandPlaying = false
-                                    } else {
+                                    } else if (!page.pausedMode) {
+                                        // Playing, or no selection at all
+                                        // (fresh start): start immediately.
                                         page.activeBand = modelData
                                         audioEngine.setFrequencyBand(
                                             modelData
                                         )
                                         audioEngine.start()
-                                        page.bandPlaying = true
-                                        audioEngine.bandPlaying = true
+                                    } else {
+                                        // Paused mode: selection only.
+                                        audioEngine.stop()
+                                        page.activeBand = modelData
+                                        audioEngine.setFrequencyBand(
+                                            modelData
+                                        )
                                     }
                                 }
 
@@ -525,7 +541,9 @@ Page {
                                     anchors.centerIn: parent
                                     text: parent.text
                                     color: frequencyButton.highlighted
-                                           ? Theme.highlightColor
+                                           ? (page.bandPlaying
+                                              ? Theme.highlightColor
+                                              : Theme.secondaryHighlightColor)
                                            : Theme.primaryColor
                                 }
                             }
@@ -563,7 +581,7 @@ Page {
                             height: Theme.iconSizeSmall * 1.6
 
                             anchors.top: binauralVolumeSlider.bottom
-                            // moves icon closer to volume slider
+                            // Moves icon closer to volume slider.
                             anchors.topMargin: -Theme.paddingLarge
                             anchors.horizontalCenter: binauralVolumeSlider.horizontalCenter
                             anchors.horizontalCenterOffset: Theme.paddingSmall
@@ -622,7 +640,7 @@ Page {
                         }
                     }
 
-                    // Colored Noise selection
+                    // Colored Noise selection grid.
                     SectionHeader {
                         text: qsTr("Colored Noise")
                     }
@@ -679,19 +697,26 @@ Page {
                                 text: modelData.label
                                 highlighted: page.activeNoise === modelData.key
 
+                                // Visual hint when nothing is playing.
+                                opacity: highlighted && !page.noisePlaying
+                                          ? 0.6 : 1.0
+
                                 onClicked: {
                                     if (coloredNoiseButton.highlighted) {
+                                        // Deselect.
                                         page.activeNoise = ""
                                         audioEngine.stopColoredNoise()
-                                        page.noisePlaying = false
-                                        audioEngine.noisePlaying = false
-                                    } else {
+                                    } else if (!page.pausedMode) {
+                                        // Playing, or no selection at all
+                                        // (fresh start): start immediately.
                                         page.activeNoise = modelData.key
                                         audioEngine.setColoredNoise(
                                             modelData.key
                                         )
-                                        page.noisePlaying = true
-                                        audioEngine.noisePlaying = true
+                                    } else {
+                                        // Paused mode: selection only.
+                                        audioEngine.stopColoredNoise()
+                                        page.activeNoise = modelData.key
                                     }
                                 }
 
@@ -699,7 +724,9 @@ Page {
                                     anchors.centerIn: parent
                                     text: parent.text
                                     color: coloredNoiseButton.highlighted
-                                           ? Theme.highlightColor
+                                           ? (page.noisePlaying
+                                              ? Theme.highlightColor
+                                              : Theme.secondaryHighlightColor)
                                            : Theme.primaryColor
                                 }
                             }
@@ -737,7 +764,7 @@ Page {
                             height: Theme.iconSizeSmall * 1.6
 
                             anchors.top: coloredNoiseVolumeSlider.bottom
-                            // moves icon closer to volume slider
+                            // Moves icon closer to volume slider.
                             anchors.topMargin: -Theme.paddingLarge
                             anchors.horizontalCenter: coloredNoiseVolumeSlider.horizontalCenter
                             anchors.horizontalCenterOffset: Theme.paddingSmall
@@ -796,7 +823,7 @@ Page {
                         }
                     }
 
-                    // Ambience selection with button that opens Drawer
+                    // Ambience selection with button that opens drawer.
                     SectionHeader {
                         text: qsTr("Ambient Sound")
                     }
@@ -840,6 +867,10 @@ Page {
 
                             highlighted: page.activeAmbience !== ""
 
+                            opacity: page.ambiencePlaying ? 1.0
+                                     : page.activeAmbience !== "" ? 0.6
+                                     : 1.0
+
                             onClicked: {
                                 ambienceDrawer.open = true
                             }
@@ -848,7 +879,9 @@ Page {
                                 anchors.centerIn: parent
                                 text: parent.text
                                 color: ambienceButton.highlighted
-                                       ? Theme.highlightColor
+                                       ? (page.ambiencePlaying
+                                          ? Theme.highlightColor
+                                          : Theme.secondaryHighlightColor)
                                        : Theme.primaryColor
                             }
                         }

@@ -78,6 +78,10 @@
         <source>Start your sound mix</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Paused:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CreditPage</name>
