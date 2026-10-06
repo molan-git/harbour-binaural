@@ -28,7 +28,6 @@ Ambient sounds are provided as audio files and played using `QMediaPlayer`. They
 
 ## Requirements
 
-- Sailfish OS 4.6 or newer
 - Sailfish OS 4.6 SDK build target or newer
 
 ## Build
