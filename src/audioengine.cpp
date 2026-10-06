@@ -282,8 +282,12 @@ protected:
 private:
 
     /*
-     * used to adjust volume levels
-     * of each color noise
+     * Per-noise-type loudness calibration.
+     *
+     * Different noise colors produce different perceived loudness
+     * at the same numerical signal level. These fixed gains provide
+     * a practical balance between the four noise types without
+     * requiring real-time loudness normalization.
      */
     double noiseGain() const
     {
@@ -353,6 +357,14 @@ private:
      *
      * The result remains broadband but is intentionally softened
      * for more comfortable long-duration listening.
+     */
+
+    /*
+     * Raw white-noise source.
+     *
+     * Provides an unsmoothed random signal for algorithms such as
+     * Brown noise that require direct integration of white noise.
+     * A deterministic, independent state is maintained per channel.
      */
     double nextRawWhite(int channel)
     {
