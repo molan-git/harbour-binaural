@@ -24,6 +24,53 @@ ApplicationWindow {
                              ? mainPage.isPlaying
                              : false
 
+    // Sleep Timer
+    property bool sleepTimerRunning: false
+    property int sleepTimerRemainingSeconds: 0
+    property int sleepTimerDurationSeconds: 0
+
+    function startSleepTimer(seconds) {
+        if (seconds <= 0)
+            return
+
+        appWindow.sleepTimerDurationSeconds = seconds
+        appWindow.sleepTimerRemainingSeconds = seconds
+        appWindow.sleepTimerRunning = true
+
+        sleepTimer.start()
+    }
+
+    function cancelSleepTimer() {
+        sleepTimer.stop()
+
+        appWindow.sleepTimerRunning = false
+        appWindow.sleepTimerRemainingSeconds = 0
+        appWindow.sleepTimerDurationSeconds = 0
+    }
+
+    Timer {
+        id: sleepTimer
+
+        interval: 1000
+        repeat: true
+
+        onTriggered: {
+            if (appWindow.sleepTimerRemainingSeconds > 0)
+                appWindow.sleepTimerRemainingSeconds--
+
+            if (appWindow.sleepTimerRemainingSeconds <= 0) {
+                sleepTimer.stop()
+
+                appWindow.sleepTimerRunning = false
+                appWindow.sleepTimerRemainingSeconds = 0
+                appWindow.sleepTimerDurationSeconds = 0
+
+                if (appWindow.mainPage)
+                    appWindow.mainPage.deselectAllSounds()
+            }
+        }
+    }
+
     // Something selected but not playing (system suspend or manual
     // stop): dimmed hint state of the playback bar.
     property bool pausedMode: !isPlaying &&
