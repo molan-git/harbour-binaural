@@ -73,6 +73,7 @@ CONFIG += sailfishapp_i18n
 TRANSLATIONS += translations/harbour-binaural-de.ts
 TRANSLATIONS += translations/harbour-binaural-fr.ts
 TRANSLATIONS += translations/harbour-binaural-it.ts
+TRANSLATIONS += translations/harbour-binaural-sv.ts
 
 
 HEADERS += \

@@ -12,6 +12,11 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Tue Oct 06 2026 0.6
+- [fix] UI did not react when the system paused/stopped app audio
+- [enhancement] UI better play/pause logic
+- [translations] improvements and added Swedish (thanks to Å. Engelbrektson)
+
 * Mon Oct 05 2026 0.5
 - [fix] missing sound file
 
