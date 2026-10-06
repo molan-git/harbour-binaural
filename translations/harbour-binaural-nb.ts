@@ -5,31 +5,31 @@
     <name>AboutPage</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Om</translation>
     </message>
     <message>
         <source>Version</source>
-        <translation type="unfinished"></translation>
+        <translation>Versjon</translation>
     </message>
     <message>
         <source>Development</source>
-        <translation type="unfinished"></translation>
+        <translation>Utvikling</translation>
     </message>
     <message>
         <source>Source code on</source>
-        <translation type="unfinished"></translation>
+        <translation>Kildekode på</translation>
     </message>
     <message>
         <source>Translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Oversettelser</translation>
     </message>
     <message>
         <source>Help translate the application into your language.</source>
-        <translation type="unfinished"></translation>
+        <translation>Hjelp til med å oversette applikasjonen til ditt språk.</translation>
     </message>
     <message>
         <source>Data protection</source>
-        <translation type="unfinished"></translation>
+        <translation>Databeskyttelse</translation>
     </message>
     <message>
         <source>This application works exclusively offline and requires permission to output audio. No data is collected.</source>
