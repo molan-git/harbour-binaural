@@ -6,26 +6,42 @@
 #include <QElapsedTimer>
 #include <QMediaPlayer>
 #include <QTimer>
+#include <QString>
 
 class AudioGenerator;
+class ColoredNoiseGenerator;
 
 class AudioEngine : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(bool binauralPlaying
+               READ isBinauralPlaying
+               NOTIFY playingChanged)
+
+    Q_PROPERTY(bool ambiencePlaying
+               READ isAmbiencePlaying
+               NOTIFY playingChanged)
+
+    Q_PROPERTY(bool coloredNoisePlaying
+               READ isColoredNoisePlaying
+               NOTIFY playingChanged)
+
+    Q_PROPERTY(bool binauralPaused
+               READ isBinauralPaused
+               NOTIFY playingChanged)
+
+    Q_PROPERTY(bool ambiencePaused
+               READ isAmbiencePaused
+               NOTIFY playingChanged)
+
+    Q_PROPERTY(bool coloredNoisePaused
+               READ isColoredNoisePaused
+               NOTIFY playingChanged)
+
 public:
     explicit AudioEngine(QObject *parent = nullptr);
     ~AudioEngine();
-
-    // Actual playback state, follows system-initiated suspends (headset
-    // plug/unplug, calls, etc) automatically.
-    Q_PROPERTY(bool binauralPlaying READ isBinauralPlaying NOTIFY playingChanged)
-    Q_PROPERTY(bool ambiencePlaying READ isAmbiencePlaying NOTIFY playingChanged)
-    Q_PROPERTY(bool coloredNoisePlaying READ isColoredNoisePlaying NOTIFY playingChanged)
-
-    Q_PROPERTY(bool binauralPaused READ isBinauralPaused NOTIFY playingChanged)
-    Q_PROPERTY(bool ambiencePaused READ isAmbiencePaused NOTIFY playingChanged)
-    Q_PROPERTY(bool coloredNoisePaused READ isColoredNoisePaused NOTIFY playingChanged)
 
     bool isBinauralPlaying() const;
     bool isAmbiencePlaying() const;
@@ -38,7 +54,6 @@ public:
     Q_INVOKABLE void start();
     Q_INVOKABLE void stop();
     Q_INVOKABLE void resumeBinaural();
-
     Q_INVOKABLE void setFrequencyBand(const QString &band);
 
     Q_INVOKABLE void setAmbience(const QString &ambience);
@@ -59,10 +74,13 @@ signals:
 private:
     void updatePlayingState();
 
+    // Binaural
     void updateBinauralFadeIn();
     void updateBinauralFadeOut();
     void stopBinauralImmediately();
 
+    // Ambience
+    void connectAmbiencePlayer(QMediaPlayer *player);
     void updateAmbienceFadeIn();
     void checkAmbienceCrossfade(QMediaPlayer *player);
     void startAmbienceCrossfade(QMediaPlayer *fadingPlayer);
@@ -72,60 +90,42 @@ private:
     void updateAmbienceFadeOut();
     void stopAmbienceImmediately();
 
-    void updateColoredNoiseFadeIn();
-    void checkColoredNoiseCrossfade(QMediaPlayer *player);
-    void startColoredNoiseCrossfade(QMediaPlayer *fadingPlayer);
-    void updateColoredNoiseCrossfade();
-    void finishColoredNoiseCrossfade();
-    void handleColoredNoiseEndOfMedia(QMediaPlayer *player);
+    // Colored noise
     void updateColoredNoiseFadeOut();
     void stopColoredNoiseImmediately();
-    void updateColoredNoiseWatchdog();
+
+    // Volume
     void applyPendingAmbienceVolume();
     void applyPendingColoredNoiseVolume();
 
     int ambienceTargetVolume() const;
     int coloredNoiseTargetVolume() const;
 
-    void connectAmbiencePlayer(QMediaPlayer *player);
-    void connectColoredNoisePlayer(QMediaPlayer *player);
-
+private:
     QAudioOutput *m_audioOutput;
     AudioGenerator *m_generator;
 
     QMediaPlayer *m_ambiencePlayerA;
     QMediaPlayer *m_ambiencePlayerB;
 
-    QMediaPlayer *m_coloredNoisePlayerA;
-    QMediaPlayer *m_coloredNoisePlayerB;
+    QAudioOutput *m_coloredNoiseOutput;
+    ColoredNoiseGenerator *m_coloredNoiseGenerator;
 
     QTimer *m_binauralFadeTimer;
-
     QTimer *m_ambienceFadeInTimer;
     QTimer *m_ambienceCrossfadeTimer;
-
-    QTimer *m_coloredNoiseFadeInTimer;
-    QTimer *m_coloredNoiseCrossfadeTimer;
-    QTimer *m_coloredNoiseWatchdogTimer;
 
     QTimer *m_binauralFadeOutTimer;
     QTimer *m_ambienceFadeOutTimer;
     QTimer *m_coloredNoiseFadeOutTimer;
 
-    // Coalesce rapid volume changes (slider drags): the SFOS GStreamer
-    // backend can stall its pipeline when hammered with setVolume() calls.
     QTimer *m_ambienceVolumeTimer;
     QTimer *m_coloredNoiseVolumeTimer;
 
     QMediaPlayer *m_activeAmbiencePlayer;
     QMediaPlayer *m_fadingAmbiencePlayer;
 
-    QMediaPlayer *m_activeColoredNoisePlayer;
-    QMediaPlayer *m_fadingColoredNoisePlayer;
-
     QElapsedTimer m_ambienceCrossfadeElapsed;
-    QElapsedTimer m_coloredNoiseCrossfadeElapsed;
-
     QElapsedTimer m_binauralFadeOutElapsed;
     QElapsedTimer m_ambienceFadeOutElapsed;
     QElapsedTimer m_coloredNoiseFadeOutElapsed;
@@ -137,22 +137,18 @@ private:
     int m_coloredNoiseVolume;
 
     int m_binauralFadeInPosition;
-
     int m_ambienceFadeInPosition;
     int m_ambienceCrossfadePosition;
+
     int m_ambienceCrossfadeDuration;
 
-    int m_coloredNoiseFadeInPosition;
-    int m_coloredNoiseCrossfadePosition;
-    int m_coloredNoiseCrossfadeDuration;
-
     double m_binauralFadeOutStartVolume;
+    double m_coloredNoiseFadeOutStartVolume;
 
     int m_ambienceFadeOutActiveVolume;
     int m_ambienceFadeOutFadingVolume;
 
-    int m_coloredNoiseFadeOutActiveVolume;
-    int m_coloredNoiseFadeOutFadingVolume;
+    QString m_currentColoredNoise;
 };
 
 #endif

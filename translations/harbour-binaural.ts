@@ -52,10 +52,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Color noise sound files were generated using the</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Asset credits</source>
         <translation type="unfinished"></translation>
     </message>
