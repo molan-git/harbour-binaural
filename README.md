@@ -12,7 +12,7 @@ Binaural is a sound app for [Sailfish OS](https://sailfishos.org) designed for r
 - Colored noise: white, pink, brown, and grey
 - Ambient sounds
 - Mix binaural beats, noise, and ambient sounds
-- Sleep timer (WIP)
+- Sleep timer
 
 ## Download
 
@@ -54,7 +54,10 @@ Translations are managed with [Hosted Weblate](https://hosted.weblate.org/projec
 
 ## Screenshots
 
-TBA
+<img width="250" alt="grafik" src="https://github.com/user-attachments/assets/17449c02-07e1-450f-8063-c20f12c9072f" /> <img width="250" alt="grafik" src="https://github.com/user-attachments/assets/44ddcd5f-b23e-47fc-9772-c06bb5abfb66" /> <img width="250" alt="grafik" src="https://github.com/user-attachments/assets/ccfc6b48-a6bc-4cc9-9375-e954bad6c2f7" />
+
+
+
 
 ## Credits
 
