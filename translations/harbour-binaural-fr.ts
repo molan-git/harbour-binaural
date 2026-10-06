@@ -358,12 +358,23 @@
         <source>To be used with</source>
         <translation>À utiliser avec</translation>
     </message>
+    <message>
+        <source>Timer</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimerPage</name>
+    <message>
+        <source>Timer</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>harbour-binaural</name>
     <message>
         <source>Start your sound mix</source>
-        <translation>Démarre ton mixage sonore</translation>
+        <translation type="unfinished">Démarre ton mixage sonore</translation>
     </message>
 </context>
 </TS>

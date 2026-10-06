@@ -36,6 +36,32 @@ Page {
         appWindow.isPlaying = isPlaying
     }
 
+    // effects on timer when activeBand is changed
+    onActiveBandChanged: {
+        checkSleepTimer()
+    }
+
+    onActiveAmbienceChanged: {
+        checkSleepTimer()
+    }
+
+    onActiveNoiseChanged: {
+        checkSleepTimer()
+    }
+
+    function checkSleepTimer() {
+        if (appWindow.sleepTimerRunning &&
+            page.activeBand === "" &&
+            page.activeAmbience === "" &&
+            page.activeNoise === "") {
+            appWindow.cancelSleepTimer()
+        }
+    }
+
+    function fadeOutForSleepTimer() {
+        audioEngine.fadeOutForSleepTimer()
+    }
+
     function resumeAll() {
         if (activeBand !== "") {
             if (audioEngine.binauralPaused) {
@@ -373,6 +399,23 @@ Page {
 
                         onClicked: {
                             page.deselectAllSounds()
+                        }
+                    }
+
+                    MenuItem {
+                        text: qsTr("Timer")
+
+                        enabled: page.activeBand !== "" ||
+                                 page.activeAmbience !== "" ||
+                                 page.activeNoise !== ""
+
+                        onClicked: {
+                            pageStack.push(
+                                Qt.resolvedUrl("TimerPage.qml"),
+                                {
+                                    appWindow: appWindow
+                                }
+                            )
                         }
                     }
 

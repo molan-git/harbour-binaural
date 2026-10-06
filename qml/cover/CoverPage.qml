@@ -2,7 +2,6 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import QtGraphicalEffects 1.0
 
-
 CoverBackground {
     id: cover
 
@@ -12,7 +11,22 @@ CoverBackground {
     property bool isPlaying: false
     property bool isPaused: false
 
+    property bool sleepTimerRunning: false
+    property int sleepTimerRemainingSeconds: 0
+
     signal playPauseClicked()
+
+    function formatRemainingTime(seconds) {
+        var hours = Math.floor(seconds / 3600)
+        var minutes = Math.floor((seconds % 3600) / 60)
+        var secs = seconds % 60
+
+        return (hours > 0
+                ? (hours < 10 ? "0" : "") + hours + ":"
+                : "") +
+               (minutes < 10 ? "0" : "") + minutes + ":" +
+               (secs < 10 ? "0" : "") + secs
+    }
 
     Item {
         id: coverBackgroundIcon
@@ -45,6 +59,7 @@ CoverBackground {
             anchors.fill: parent
 
             source: "../images/binaural-cover.svg"
+
             sourceSize: Qt.size(
                 width * 2,
                 height * 2
@@ -67,43 +82,102 @@ CoverBackground {
         id: coverLabels
 
         anchors.top: coverBackgroundIcon.bottom
-        anchors.topMargin: -Theme.paddingLarge
+        anchors.topMargin: -Theme.paddingLarge * 0.8
         anchors.left: parent.left
         anchors.right: parent.right
 
         spacing: Theme.paddingSmall
 
-        Label {
+        // Timer status
+        Item {
             width: parent.width
 
-            horizontalAlignment: Text.AlignHCenter
-            color: Theme.secondaryColor
-            font.pixelSize: Theme.fontSizeMedium
-            wrapMode: Text.WordWrap
+            height: sleepTimerRunning
+                    ? coverSleepTimerLabel.implicitHeight
+                    : coverStatusLabel.implicitHeight
 
-            text: (activeBand === "" && activeAmbience === "" && activeNoise === "")
-                  ? qsTr("Start your sound mix")
-                  : isPlaying
-                    ? qsTr("Playing:")
-                    : qsTr("Paused:")
+            Row {
+                visible: sleepTimerRunning
+
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+
+                spacing: Theme.paddingSmall
+
+                Image {
+                    id: coverSleepTimerIcon
+
+                    width: Theme.iconSizeSmall * 0.8
+                    height: Theme.iconSizeSmall * 0.8
+
+                    anchors.verticalCenter: coverSleepTimerLabel.verticalCenter
+                    anchors.verticalCenterOffset: Theme.paddingSmall / 3
+
+                    source: "image://theme/icon-s-timer?" +
+                            Theme.secondaryColor
+
+                    sourceSize: Qt.size(
+                        width,
+                        height
+                    )
+                }
+
+                Label {
+                    id: coverSleepTimerLabel
+
+                    color: Theme.secondaryColor
+                    font.pixelSize: Theme.fontSizeSmall
+
+                    text: formatRemainingTime(
+                              sleepTimerRemainingSeconds)
+                }
+            }
+
+            // Normal status text
+            Label {
+                id: coverStatusLabel
+
+                visible: !sleepTimerRunning
+
+                width: parent.width
+
+                horizontalAlignment: Text.AlignHCenter
+
+                color: Theme.secondaryColor
+                font.pixelSize: Theme.fontSizeSmall
+                wrapMode: Text.WordWrap
+
+                text: (activeBand === "" &&
+                       activeAmbience === "" &&
+                       activeNoise === "")
+                      ? qsTr("Start your sound mix")
+                      : isPlaying
+                        ? qsTr("Playing:")
+                        : qsTr("Paused:")
+            }
         }
 
         Label {
             width: parent.width
 
             horizontalAlignment: Text.AlignHCenter
+
             // Selected but not playing (system suspend): muted color,
             // full highlight only while actually playing.
             color: isPlaying
                    ? Theme.highlightColor
                    : Theme.secondaryHighlightColor
+
             font.pixelSize: Theme.fontSizeMedium
             wrapMode: Text.WordWrap
 
             text: (activeBand !== "" ? activeBand : "") +
-                  (activeBand !== "" && (activeNoise !== "" || activeAmbience !== "") ? "\n" : "") +
+                  (activeBand !== "" &&
+                   (activeNoise !== "" || activeAmbience !== "")
+                   ? "\n" : "") +
                   (activeNoise !== "" ? activeNoise : "") +
-                  (activeNoise !== "" && activeAmbience !== "" ? "\n" : "") +
+                  (activeNoise !== "" && activeAmbience !== ""
+                   ? "\n" : "") +
                   (activeAmbience !== "" ? activeAmbience : "")
         }
     }

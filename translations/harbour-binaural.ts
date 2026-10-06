@@ -358,6 +358,17 @@
         <source>To be used with</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Timer</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TimerPage</name>
+    <message>
+        <source>Timer</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>harbour-binaural</name>
