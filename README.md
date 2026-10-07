@@ -37,7 +37,8 @@ Clone or download this repository and import it into your Sailfish OS IDE using 
 ## Repository branches
 
 - `master`: Release branch containing the current version of Binaural.
-- `feature-*`: Branches used for testing features under development. 
+- `feature-*`: Branches used for testing features under development.
+- `weblate-harbour-binaural-*`: Translation branch pushed by Weblate.  
 
 ## Contributions
 
