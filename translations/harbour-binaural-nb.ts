@@ -33,7 +33,7 @@
     </message>
     <message>
         <source>This application works exclusively offline and requires permission to output audio. No data is collected.</source>
-        <translation type="unfinished"></translation>
+        <translation>Denne applikasjonen fungerer utelukkende frakoblet og krever tillatelse til å spille av lyd. Ingen data blir samlet inn.</translation>
     </message>
     <message>
         <source>License</source>
@@ -41,11 +41,11 @@
     </message>
     <message>
         <source>Credits</source>
-        <translation type="unfinished"></translation>
+        <translation>Takk til</translation>
     </message>
     <message>
         <source>Application for playing binaural beats, colored noises and ambient sounds.</source>
-        <translation type="unfinished"></translation>
+        <translation>Applikasjon for avspilling av binaurale rytmer, farget støy og omgivelseslyder.</translation>
     </message>
     <message>
         <source>Binaural was inspired by</source>
@@ -53,11 +53,11 @@
     </message>
     <message>
         <source>Color noise sound files were generated using the</source>
-        <translation type="unfinished"></translation>
+        <translation>Fargestøyfiler ble generert ved hjelp av</translation>
     </message>
     <message>
         <source>Asset credits</source>
-        <translation type="unfinished"></translation>
+        <translation>Rettigheter for mediefiler</translation>
     </message>
     <message>
         <source>Support</source>
@@ -65,22 +65,22 @@
     </message>
     <message>
         <source>For small tips to support the project.</source>
-        <translation type="unfinished"></translation>
+        <translation>For små bidrag for å støtte prosjektet.</translation>
     </message>
 </context>
 <context>
     <name>CoverPage</name>
     <message>
         <source>Playing:</source>
-        <translation type="unfinished"></translation>
+        <translation>Spiller:</translation>
     </message>
     <message>
         <source>Start your sound mix</source>
-        <translation type="unfinished"></translation>
+        <translation>Start lydmiksen din</translation>
     </message>
     <message>
         <source>Paused:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pauset:</translation>
     </message>
 </context>
 <context>
@@ -95,7 +95,7 @@
     </message>
     <message>
         <source>Crickets</source>
-        <translation type="unfinished"></translation>
+        <translation>Sirisser</translation>
     </message>
     <message>
         <source>Waves</source>
@@ -107,15 +107,15 @@
     </message>
     <message>
         <source>Fire</source>
-        <translation type="unfinished"></translation>
+        <translation>Ild</translation>
     </message>
     <message>
         <source>Chimes</source>
-        <translation type="unfinished"></translation>
+        <translation>Vindspill</translation>
     </message>
     <message>
         <source>Stream</source>
-        <translation type="unfinished"></translation>
+        <translation>Bekk</translation>
     </message>
     <message>
         <source>Asset credits</source>
@@ -151,19 +151,19 @@
     </message>
     <message>
         <source>Based on</source>
-        <translation type="unfinished"></translation>
+        <translation>Basert på</translation>
     </message>
     <message>
         <source>by</source>
-        <translation type="unfinished"></translation>
+        <translation>av</translation>
     </message>
     <message>
         <source>Licensed under</source>
-        <translation type="unfinished"></translation>
+        <translation>Lisensiert under</translation>
     </message>
     <message>
         <source>Original source</source>
-        <translation type="unfinished"></translation>
+        <translation>Opprinnelig kilde</translation>
     </message>
 </context>
 <context>
@@ -174,7 +174,7 @@
     </message>
     <message>
         <source>Choose from:</source>
-        <translation type="unfinished"></translation>
+        <translation>Velg fra:</translation>
     </message>
     <message>
         <source>Are created by playing two slightly different tones, one in each ear. The brain processes the difference as a rhythmic beat. Different beat frequencies can be used to support focus, relaxation, meditation, or sleep.</source>
@@ -186,27 +186,27 @@
     </message>
     <message>
         <source>Delta 2 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>Delta 2 Hz</translation>
     </message>
     <message>
         <source>Delta/Theta 4 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>Delta/Theta 4 Hz</translation>
     </message>
     <message>
         <source>Theta 6 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>Theta 6 Hz</translation>
     </message>
     <message>
         <source>Alpha 10 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>Alpha 10 Hz</translation>
     </message>
     <message>
         <source>Beta 20 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>Beta 20 Hz</translation>
     </message>
     <message>
         <source>Gamma 40 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>Gamma 40 Hz</translation>
     </message>
     <message>
         <source>Deep sleep, rest</source>
@@ -218,15 +218,15 @@
     </message>
     <message>
         <source>Meditation and relaxation</source>
-        <translation type="unfinished"></translation>
+        <translation>Meditasjon og avslapping</translation>
     </message>
     <message>
         <source>Calm and relaxed wakefulness</source>
-        <translation type="unfinished"></translation>
+        <translation>Rolig og avslappet våkenhet</translation>
     </message>
     <message>
         <source>Alertness and focus</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktiv oppmerksomhet og fokus</translation>
     </message>
     <message>
         <source>Complex thinking and information processing</source>
@@ -237,7 +237,7 @@
     <name>InfoColoredPage</name>
     <message>
         <source>Choose from:</source>
-        <translation type="unfinished"></translation>
+        <translation>Velg fra:</translation>
     </message>
     <message>
         <source>Sound with different amounts of energy at different frequencies. Each color has a different character and is commonly used for different purposes.</source>
@@ -245,19 +245,19 @@
     </message>
     <message>
         <source>White</source>
-        <translation type="unfinished"></translation>
+        <translation>Hvit</translation>
     </message>
     <message>
         <source>Pink</source>
-        <translation type="unfinished"></translation>
+        <translation>Rosa</translation>
     </message>
     <message>
         <source>Brown</source>
-        <translation type="unfinished"></translation>
+        <translation>Brun</translation>
     </message>
     <message>
         <source>Grey</source>
-        <translation type="unfinished"></translation>
+        <translation>Grå</translation>
     </message>
     <message>
         <source>Individual experiences may vary.</source>
@@ -281,18 +281,18 @@
     </message>
     <message>
         <source>Colored Noise</source>
-        <translation type="unfinished"></translation>
+        <translation>Farget støy</translation>
     </message>
 </context>
 <context>
     <name>MainPage</name>
     <message>
         <source>Wind</source>
-        <translation type="unfinished"></translation>
+        <translation>Vind</translation>
     </message>
     <message>
         <source>Crickets</source>
-        <translation type="unfinished"></translation>
+        <translation>Sirisser</translation>
     </message>
     <message>
         <source>Stream</source>
@@ -312,19 +312,19 @@
     </message>
     <message>
         <source>White</source>
-        <translation type="unfinished"></translation>
+        <translation>Hvit</translation>
     </message>
     <message>
         <source>Pink</source>
-        <translation type="unfinished"></translation>
+        <translation>Rosa</translation>
     </message>
     <message>
         <source>Brown</source>
-        <translation type="unfinished"></translation>
+        <translation>Brun</translation>
     </message>
     <message>
         <source>Grey</source>
-        <translation type="unfinished"></translation>
+        <translation>Grå</translation>
     </message>
     <message>
         <source>Choose an ambient sound</source>
@@ -340,19 +340,19 @@
     </message>
     <message>
         <source>Colored Noise</source>
-        <translation type="unfinished"></translation>
+        <translation>Farget støy</translation>
     </message>
     <message>
         <source>Fire</source>
-        <translation type="unfinished"></translation>
+        <translation>Ild</translation>
     </message>
     <message>
         <source>Chimes</source>
-        <translation type="unfinished"></translation>
+        <translation>Vindspill</translation>
     </message>
     <message>
         <source>Waves</source>
-        <translation type="unfinished"></translation>
+        <translation>Bølger</translation>
     </message>
     <message>
         <source>Deselect all sounds</source>
@@ -367,7 +367,7 @@
     <name>harbour-binaural</name>
     <message>
         <source>Start your sound mix</source>
-        <translation type="unfinished"></translation>
+        <translation>Start lydmiksen din</translation>
     </message>
 </context>
 </TS>
