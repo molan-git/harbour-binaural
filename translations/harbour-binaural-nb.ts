@@ -61,7 +61,7 @@
     </message>
     <message>
         <source>Support</source>
-        <translation type="unfinished"></translation>
+        <translation>Støtte</translation>
     </message>
     <message>
         <source>For small tips to support the project.</source>
@@ -119,7 +119,7 @@
     </message>
     <message>
         <source>Asset credits</source>
-        <translation type="unfinished"></translation>
+        <translation>Rettigheter for mediefiler</translation>
     </message>
     <message>
         <source>Audio files</source>
@@ -127,15 +127,15 @@
     </message>
     <message>
         <source>Files have been manually edited for use in this app under the</source>
-        <translation type="unfinished"></translation>
+        <translation>Filene har blitt manuelt redigert for bruk i denne appen under</translation>
     </message>
     <message>
         <source>Pixabay Content License</source>
-        <translation type="unfinished"></translation>
+        <translation>Pixabays innholdslisens</translation>
     </message>
     <message>
         <source>sound by</source>
-        <translation type="unfinished"></translation>
+        <translation>lyd av</translation>
     </message>
     <message>
         <source>from</source>
@@ -147,7 +147,7 @@
     </message>
     <message>
         <source>Binaural graph image modified for use in</source>
-        <translation type="unfinished"></translation>
+        <translation>Binauralt grafbilde modifisert for bruk i</translation>
     </message>
     <message>
         <source>Based on</source>
@@ -170,7 +170,7 @@
     <name>InfoBinauralPage</name>
     <message>
         <source>Binaural Beats</source>
-        <translation type="unfinished"></translation>
+        <translation>Binaurale beats</translation>
     </message>
     <message>
         <source>Choose from:</source>
@@ -178,11 +178,11 @@
     </message>
     <message>
         <source>Are created by playing two slightly different tones, one in each ear. The brain processes the difference as a rhythmic beat. Different beat frequencies can be used to support focus, relaxation, meditation, or sleep.</source>
-        <translation type="unfinished"></translation>
+        <translation>Skapes ved å spille av to litt forskjellige toner, én i hvert øre. Hjernen behandler forskjellen som en rytmisk puls. Forskjellige frekvenser kan brukes til å støtte fokus, avslapning, meditasjon eller søvn.</translation>
     </message>
     <message>
         <source>Individual experiences may vary.</source>
-        <translation type="unfinished"></translation>
+        <translation>Individuelle opplevelser kan variere.</translation>
     </message>
     <message>
         <source>Delta 2 Hz</source>
@@ -210,11 +210,11 @@
     </message>
     <message>
         <source>Deep sleep, rest</source>
-        <translation type="unfinished"></translation>
+        <translation>Dyp søvn, hvile</translation>
     </message>
     <message>
         <source>Deep relaxation, sleep</source>
-        <translation type="unfinished"></translation>
+        <translation>Dyp avkobling, søvn</translation>
     </message>
     <message>
         <source>Meditation and relaxation</source>
@@ -230,7 +230,7 @@
     </message>
     <message>
         <source>Complex thinking and information processing</source>
-        <translation type="unfinished"></translation>
+        <translation>Kompleks tenkning og informasjonsbehandling</translation>
     </message>
 </context>
 <context>
@@ -241,7 +241,7 @@
     </message>
     <message>
         <source>Sound with different amounts of energy at different frequencies. Each color has a different character and is commonly used for different purposes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Lyd med ulik mengde energi ved forskjellige frekvenser. Hver farge har sine egne kjennetegn og brukes vanligvis til ulike formål.</translation>
     </message>
     <message>
         <source>White</source>
@@ -261,23 +261,23 @@
     </message>
     <message>
         <source>Individual experiences may vary.</source>
-        <translation type="unfinished"></translation>
+        <translation>Individuelle opplevelser kan variere.</translation>
     </message>
     <message>
         <source>Focus, sleep and background noise masking</source>
-        <translation type="unfinished"></translation>
+        <translation>Fokus, søvn og maskering av bakgrunnsstøy</translation>
     </message>
     <message>
         <source>Relaxation, sleep and concentration</source>
-        <translation type="unfinished"></translation>
+        <translation>Avslapning, søvn og konsentrasjon</translation>
     </message>
     <message>
         <source>Relaxation, sleep and reducing distracting sounds</source>
-        <translation type="unfinished"></translation>
+        <translation>Avslapning, søvn og reduksjon av forstyrrende lyder</translation>
     </message>
     <message>
         <source>Sound masking and general listening</source>
-        <translation type="unfinished"></translation>
+        <translation>Støymaskering og generell lytting</translation>
     </message>
     <message>
         <source>Colored Noise</source>
@@ -296,19 +296,19 @@
     </message>
     <message>
         <source>Stream</source>
-        <translation type="unfinished"></translation>
+        <translation>Strøm</translation>
     </message>
     <message>
         <source>Rain</source>
-        <translation type="unfinished"></translation>
+        <translation>Regn</translation>
     </message>
     <message>
         <source>Birds</source>
-        <translation type="unfinished"></translation>
+        <translation>Fugler</translation>
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Om</translation>
     </message>
     <message>
         <source>White</source>
@@ -328,15 +328,15 @@
     </message>
     <message>
         <source>Choose an ambient sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Velg en bakgrunnslyd</translation>
     </message>
     <message>
         <source>Binaural Beats</source>
-        <translation type="unfinished"></translation>
+        <translation>Binaurale beats</translation>
     </message>
     <message>
         <source>Ambient Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Bakgrunnslyd</translation>
     </message>
     <message>
         <source>Colored Noise</source>
@@ -356,11 +356,11 @@
     </message>
     <message>
         <source>Deselect all sounds</source>
-        <translation type="unfinished"></translation>
+        <translation>Fjern markering for alle lyder</translation>
     </message>
     <message>
         <source>To be used with</source>
-        <translation type="unfinished"></translation>
+        <translation>Bruk med</translation>
     </message>
 </context>
 <context>
