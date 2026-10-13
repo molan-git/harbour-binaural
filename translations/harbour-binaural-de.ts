@@ -112,7 +112,7 @@
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="81"/>
         <source>Files have been manually edited for use in this app under</source>
-        <translation type="unfinished"></translation>
+        <translation>Die Dateien wurden für die Verwendung in dieser App manuell bearbeitet unter der</translation>
     </message>
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="84"/>
@@ -304,92 +304,92 @@
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="17"/>
         <source>Delta</source>
-        <translation type="unfinished"></translation>
+        <translation>Delta</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="18"/>
         <source>Delta/Theta</source>
-        <translation type="unfinished"></translation>
+        <translation>Delta/Theta</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="19"/>
         <source>Theta</source>
-        <translation type="unfinished"></translation>
+        <translation>Theta</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="20"/>
         <source>Alpha</source>
-        <translation type="unfinished"></translation>
+        <translation>Alpha</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="21"/>
         <source>Beta</source>
-        <translation type="unfinished"></translation>
+        <translation>Beta</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="22"/>
         <source>Gamma</source>
-        <translation type="unfinished"></translation>
+        <translation>Gamma</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="25"/>
         <source>White</source>
-        <translation type="unfinished">Weiß</translation>
+        <translation>Weiß</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="26"/>
         <source>Pink</source>
-        <translation type="unfinished">Rosa</translation>
+        <translation>Rosa</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="27"/>
         <source>Brown</source>
-        <translation type="unfinished">Braun</translation>
+        <translation>Braun</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="28"/>
         <source>Grey</source>
-        <translation type="unfinished">Grau</translation>
+        <translation>Grau</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="31"/>
         <source>Wind</source>
-        <translation type="unfinished">Wind</translation>
+        <translation>Wind</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="32"/>
         <source>Waves</source>
-        <translation type="unfinished">Wellen</translation>
+        <translation>Wellen</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="33"/>
         <source>Crickets</source>
-        <translation type="unfinished">Grillen</translation>
+        <translation>Grillen</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="34"/>
         <source>Stream</source>
-        <translation type="unfinished">Bach</translation>
+        <translation>Bach</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="35"/>
         <source>Rain</source>
-        <translation type="unfinished">Regen</translation>
+        <translation>Regen</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="36"/>
         <source>Birds</source>
-        <translation type="unfinished">Vögel</translation>
+        <translation>Vögel</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="37"/>
         <source>Fire</source>
-        <translation type="unfinished">Feuer</translation>
+        <translation>Feuer</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="38"/>
         <source>Chimes</source>
-        <translation type="unfinished">Windspiel</translation>
+        <translation>Windspiel</translation>
     </message>
 </context>
 <context>
