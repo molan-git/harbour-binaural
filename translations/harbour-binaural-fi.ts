@@ -5,35 +5,35 @@
     <name>AboutPage</name>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Tietoja</translation>
     </message>
     <message>
         <source>Version</source>
-        <translation type="unfinished"></translation>
+        <translation>Versio</translation>
     </message>
     <message>
         <source>Development</source>
-        <translation type="unfinished"></translation>
+        <translation>Kehitys</translation>
     </message>
     <message>
         <source>Source code on</source>
-        <translation type="unfinished"></translation>
+        <translation>Lähdekoodi on</translation>
     </message>
     <message>
         <source>Translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Käännökset</translation>
     </message>
     <message>
         <source>Help translate the application into your language.</source>
-        <translation type="unfinished"></translation>
+        <translation>Auta kääntämään sovellus omalle kielellesi.</translation>
     </message>
     <message>
         <source>Data protection</source>
-        <translation type="unfinished"></translation>
+        <translation>Tietosuoja</translation>
     </message>
     <message>
         <source>This application works exclusively offline and requires permission to output audio. No data is collected.</source>
-        <translation type="unfinished"></translation>
+        <translation>Tämä sovellus toimii täysin offline-tilassa ja tarvitsee luvan äänen toistamiseen. Mitään tietoja ei kerätä.</translation>
     </message>
     <message>
         <source>License</source>
