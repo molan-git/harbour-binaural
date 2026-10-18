@@ -106,16 +106,16 @@ void Settings::Reset() {
   memcpy(&data_, &kInitSettings, sizeof(SettingsData));
   data_.magic_byte = 'M';
 }
-/*
-void Settings::Save() {
+
+/*void Settings::Save() {
   data_.magic_byte = 'M';
   storage.ParsimoniousSave(data_, &version_token_);
   CheckPaques();
-}
+}*/
 void Settings::CheckPaques() {
   paques_ = !strcmp(data_.marquee_text, "49");
 }
-*/
+
 const char* const boolean_values[] = { "OFF ", "ON " };
 const char* const intensity_values[] = {
     "OFF ",

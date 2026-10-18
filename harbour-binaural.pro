@@ -73,6 +73,7 @@ SOURCES += src/binaural.cpp \
     src/braids/quantizer.cc  \
     src/braids/resources.cc  \
     src/braids/settings.cc   \
+    src/stmlib/utils/random.cc
 
 
 DISTFILES += qml/harbour-binaural.qml \
