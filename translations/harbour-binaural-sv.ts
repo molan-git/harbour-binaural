@@ -229,7 +229,7 @@
     <name>PlaybackBar</name>
     <message>
         <source>Start your sound mix</source>
-        <translation type="unfinished">Starta din ljudmix</translation>
+        <translation>Starta din ljudmix</translation>
     </message>
 </context>
 <context>
