@@ -282,7 +282,7 @@
         <location filename="../qml/pages/components/PlaybackBar.qml" line="117"/>
         <location filename="../qml/pages/components/PlaybackBar.qml" line="133"/>
         <source>Start your sound mix</source>
-        <translation type="unfinished">Starte deinen Klangmix</translation>
+        <translation>Starte deinen Klangmix</translation>
     </message>
 </context>
 <context>
