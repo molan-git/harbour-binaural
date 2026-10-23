@@ -49,7 +49,7 @@
     </message>
     <message>
         <source>Source code</source>
-        <translation type="unfinished"></translation>
+        <translation>Codice sorgente</translation>
     </message>
 </context>
 <context>
