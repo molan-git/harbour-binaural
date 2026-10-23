@@ -46,7 +46,7 @@
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="86"/>
         <source>Source code</source>
-        <translation type="unfinished"></translation>
+        <translation>Quellcode</translation>
     </message>
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="153"/>
@@ -77,38 +77,38 @@
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="14"/>
         <source>Norwegian</source>
-        <translation type="unfinished"></translation>
+        <translation>Norwegisch</translation>
     </message>
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="18"/>
         <source>Swedish</source>
-        <translation type="unfinished"></translation>
+        <translation>Schwedisch</translation>
     </message>
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="22"/>
         <source>Dutch</source>
-        <translation type="unfinished"></translation>
+        <translation>Niederländisch</translation>
     </message>
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="26"/>
         <source>Slovenian</source>
-        <translation type="unfinished"></translation>
+        <translation>Slowenisch</translation>
     </message>
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="130"/>
         <source>Credits</source>
-        <translation type="unfinished">Danksagungen</translation>
+        <translation>Danksagungen</translation>
     </message>
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="142"/>
         <source>Binaural was inspired by</source>
         <extracomment>Full sentence: &quot;Binaural was inspired by Metiq.&quot;</extracomment>
-        <translation type="unfinished">Binaural wurde inspiriert durch</translation>
+        <translation>Binaural wurde inspiriert durch</translation>
     </message>
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="159"/>
         <source>Translations</source>
-        <translation type="unfinished">Übersetzungen</translation>
+        <translation>Übersetzungen</translation>
     </message>
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="208"/>
@@ -134,7 +134,7 @@
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="324"/>
         <source>Images have been manually modified for use in this app:</source>
-        <translation type="unfinished"></translation>
+        <translation>Folgende Bilder wurden für die Verwendung in dieser App manuell bearbeitet:</translation>
     </message>
 </context>
 <context>
