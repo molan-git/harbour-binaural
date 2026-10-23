@@ -64,6 +64,10 @@
         <source>For small tips to support the project.</source>
         <translation>Voit tukea projektia antamalla pienen lahjoituksen.</translation>
     </message>
+    <message>
+        <source>Source code</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CoverPage</name>
@@ -88,15 +92,15 @@
     </message>
     <message>
         <source>Audio files</source>
-        <translation>Äänitiedostot</translation>
+        <translation type="unfinished">Äänitiedostot</translation>
     </message>
     <message>
         <source>Pixabay Content License</source>
-        <translation>Pixabay-sisältölisenssi</translation>
+        <translation type="unfinished">Pixabay-sisältölisenssi</translation>
     </message>
     <message>
         <source>Images</source>
-        <translation>Kuvat</translation>
+        <translation type="unfinished">Kuvat</translation>
     </message>
     <message>
         <source>Binaural graph image modified for use in</source>
@@ -114,7 +118,43 @@
     <message>
         <source>Files have been manually edited for use in this app under the</source>
         <extracomment>Full sentence: &quot;Files have been manually edited for use in this app under the Pixabay Content License:&quot; Keep the sentence natural when translating; &quot;Pixabay Content License&quot; is a clickable link.</extracomment>
-        <translation>Tiedostoja on muokattu manuaalisesti tätä sovellusta varten</translation>
+        <translation type="unfinished">Tiedostoja on muokattu manuaalisesti tätä sovellusta varten</translation>
+    </message>
+    <message>
+        <source>Norwegian</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Swedish</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Binaural was inspired by</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pixabay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Credits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slovenian</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dutch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Images have been manually edited for use in this app:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -325,6 +365,13 @@
     <message>
         <source>Start your sound mix</source>
         <translation>Aloita äänimiksaus</translation>
+    </message>
+</context>
+<context>
+    <name>PlaybackBar</name>
+    <message>
+        <source>Start your sound mix</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
