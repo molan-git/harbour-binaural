@@ -3,6 +3,9 @@
 #include <QtMath>
 #include <QTimer>
 
+#include <cstring>
+#include "braids.h"
+
 namespace
 {
     const int SleepTimerFadeOutDuration = 5000;

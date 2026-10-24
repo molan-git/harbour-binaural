@@ -21,6 +21,54 @@ CONFIG += sailfishapp
 QT += multimedia
 
 
+HEADERS += \
+    src/audioengine.h 				\
+    src/ambiencechannel.h 			\
+    src/audioengine.h 				\
+    src/binauralgenerator.h 			\
+    src/colorednoisegenerator.h 		\ 				
+    src/stmlib/stmlib.h				\
+    src/stmlib/algorithms/note_stack.h		\
+    src/stmlib/algorithms/pattern_predictor.h	\
+    src/stmlib/algorithms/tiny_map.h		\
+    src/stmlib/algorithms/voice_allocator.h	\
+    src/stmlib/dsp/atan.h			\
+    src/stmlib/dsp/cosine_oscillator.h		\
+    src/stmlib/dsp/delay_line.h			\
+    src/stmlib/dsp/dsp.h			\
+    src/stmlib/dsp/filter.h			\
+    src/stmlib/dsp/hysteresis_quantizer.h	\
+    src/stmlib/dsp/limiter.h			\
+    src/stmlib/dsp/parameter_interpolator.h	\
+    src/stmlib/dsp/polyblep.h			\
+    src/stmlib/dsp/rsqrt.h			\
+    src/stmlib/dsp/sample_rate_converter.h	\
+    src/stmlib/dsp/units.h			\
+    src/stmlib/fft/shy_fft.h			\
+    src/stmlib/midi/midi.h			\
+    src/stmlib/utils/buffer_allocator.h		\
+    src/stmlib/utils/crc32.h			\
+    src/stmlib/utils/dsp.h			\
+    src/stmlib/utils/gate_flags.h		\
+    src/stmlib/utils/murmurhash3.h		\
+    src/stmlib/utils/random.h			\
+    src/stmlib/utils/ring_buffer.h		\
+    src/stmlib/utils/stream_buffer.h		\
+    src/braids/analog_oscillator.h		\
+    src/braids/envelope.h			\
+    src/braids/macro_oscillator.h		\
+    src/braids/quantizer.h			\
+    src/braids/resources.h			\
+    src/braids/signature_waveshaper.h		\
+    src/braids/vco_jitter_source.h		\
+    src/braids/digital_oscillator.h		\
+    src/braids/excitation.h			\
+    src/braids/parameter_interpolation.h	\
+    src/braids/quantizer_scales.h		\
+    src/braids/settings.h			\
+    src/braids/svf.h				\
+
+
 SOURCES += src/harbour-binaural.cpp \
     src/ambiencechannel.cpp \
     src/audioengine.cpp \
@@ -28,7 +76,14 @@ SOURCES += src/harbour-binaural.cpp \
     src/audioengine_binaural.cpp \
     src/audioengine_colorednoise.cpp \
     src/binauralgenerator.cpp \
-    src/colorednoisegenerator.cpp
+    src/colorednoisegenerator.cpp \
+    src/braids/analog_oscillator.cc \
+    src/braids/digital_oscillator.cc \
+    src/braids/macro_oscillator.cc \
+    src/braids/quantizer.cc \
+    src/braids/resources.cc \
+    src/braids/settings.cc \
+    src/stmlib/utils/random.cc
 
 
 DISTFILES += qml/harbour-binaural.qml \
@@ -83,13 +138,6 @@ TRANSLATIONS += translations/harbour-binaural-it.ts
 TRANSLATIONS += translations/harbour-binaural-sv.ts
 TRANSLATIONS += translations/harbour-binaural-nb.ts
 TRANSLATIONS += translations/harbour-binaural-nl.ts
-
-
-HEADERS += \
-    src/ambiencechannel.h \
-    src/audioengine.h \
-    src/binauralgenerator.h \
-    src/colorednoisegenerator.h
 
 
 # Install the audio files as application data.
