@@ -54,6 +54,7 @@ HEADERS += \
     src/stmlib/utils/random.h			\
     src/stmlib/utils/ring_buffer.h		\
     src/stmlib/utils/stream_buffer.h		\
+    src/braids.h				\
     src/braids/analog_oscillator.h		\
     src/braids/envelope.h			\
     src/braids/macro_oscillator.h		\

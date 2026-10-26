@@ -3,6 +3,7 @@
 
 #include <QIODevice>
 #include <QtGlobal>
+#include <QtCore/QObject>
 
 // ============================================================================
 // COLORED NOISE GENERATOR

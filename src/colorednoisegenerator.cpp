@@ -3,6 +3,8 @@
 #include <QtMath>
 #include <cstring>
 
+#include "braids.h"
+
 namespace
 {
     const int DefaultSampleRate = 48000;
@@ -60,6 +62,7 @@ ColoredNoiseGenerator::noiseType() const
 
 void ColoredNoiseGenerator::start()
 {
+    initBraids();
     resetNoiseState();
     open(QIODevice::ReadOnly);
 }
@@ -71,13 +74,76 @@ void ColoredNoiseGenerator::stop()
 
 qint64 ColoredNoiseGenerator::readData(char *data, qint64 maxlen)
 {
+    const qint64 bytesPerFrame = 4; // stereo, 16 bit
+    const qint64 frameCount = maxlen / bytesPerFrame;
+
+    qint16 *samples =
+        reinterpret_cast<qint16 *>(data);
+
+    braids::MacroOscillator *osc = inst[0].pd.osc;
+    int16_t *buffer = inst[0].pd.buffer;
+    uint8_t *sync_buffer = inst[0].pd.sync_buffer;
+
+    float morph = 0.1;
+    float timbre = 0.1;
+    int instrument = 42;
+    int pitch = 48;
+    switch (m_noiseType)
+    {
+    case WhiteNoise:
+        morph = 0.4;
+        timbre = 0.6;
+        break;
+
+    case PinkNoise:
+        morph = 0.5;
+        timbre = 0.3;
+        pitch = 36;
+        instrument = 40;
+        break;
+
+    case BrownNoise:
+        morph = 0.9;
+        timbre = 0.5;
+        instrument = 40;
+        pitch = 42;
+        break;
+
+    case GreyNoise:
+        morph = 0.5;
+        timbre = 0.7;
+        instrument = 28;
+        break;
+    }
+    updateBraidsAudio(morph,timbre, instrument, pitch);
+
+    qint64 offset = 0;
+    while (offset < frameCount)
+    {
+        const qint64 chunk = qMin<qint64>(BLOCK_SIZE, frameCount - offset);
+        osc->Render(sync_buffer, buffer, static_cast<size_t>(chunk));
+        for (qint64 i = 0; i < chunk; ++i)
+        {
+            const qint16 s = buffer[i];
+            samples[(offset + i) * 2]     = s;
+            samples[(offset + i) * 2 + 1] = s;
+        }
+        offset += chunk;
+    }
+
+    return maxlen;
+
+}
+
+/*
+qint64 ColoredNoiseGenerator::readData(char *data, qint64 maxlen)
+{
     if (!data || maxlen <= 0)
         return 0;
 
     const qint64 frameSize =
         static_cast<qint64>(m_channelCount) *
         static_cast<qint64>(sizeof(qint16));
-
     if (frameSize <= 0)
         return 0;
 
@@ -119,9 +185,7 @@ qint64 ColoredNoiseGenerator::readData(char *data, qint64 maxlen)
                 break;
             }
 
-            /*
-             * Final safety limiter.
-             */
+             // Final safety limiter.
             value *= noiseGain();
 
             value = qBound(-1.0, value, 1.0);
@@ -137,6 +201,7 @@ qint64 ColoredNoiseGenerator::readData(char *data, qint64 maxlen)
 
     return frameCount * frameSize;
 }
+            */
 
 qint64 ColoredNoiseGenerator::writeData(
     const char *, qint64)
