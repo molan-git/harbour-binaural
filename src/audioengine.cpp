@@ -8,7 +8,6 @@
 #include <QDebug>
 
 #include <cstring>
-#include "braids.h"
 
 namespace
 {

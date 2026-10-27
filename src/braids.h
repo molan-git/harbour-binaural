@@ -21,7 +21,7 @@ const uint16_t bit_reduction_masks[] = {
 };
 
 #define     MI_SAMPLERATE      96000.f
-#define     BLOCK_SIZE          32      // --> macro_oscillator.h !
+#define     BLOCK_SIZE          4096 // must be <= braids::MacroOscillator::kMaxBlockSize (scratch buffers in macro_oscillator.h)
 #define     SAMP_SCALE          (float)(1.0 / 32756.0)
 
 typedef struct
@@ -58,6 +58,7 @@ static long src_input_callback(void *cb_data, float **audio);
 
 struct Braid inst[1];
 
+int8_t renderCount = 31;
 
 int16_t pitch_fm;
 int16_t pitch_adj = 100;
@@ -72,12 +73,25 @@ void updateBraidsControl() {
 
 int pitch_in, timb_mod, timbre_in, morph_mod, morph_in, engine_in, trigger_in, harm_in;
 
-void updateBraidsAudio() {
+void updateBraidsAudio(float morph, float timbre, int instrument, int pitch) {
 
+/* for demo purposes */
 
-  int16_t *buffer = inst[0].pd.buffer;
-  uint8_t *sync_buffer = inst[0].pd.sync_buffer;
-  size_t  size = BLOCK_SIZE;
+    float morph_in = morph;
+    float trigger_in = 0.0f; //IN(5);
+    float timbre_in = timbre;
+    float timb_mod = 0.0f;
+    float morph_mod = 0.0f;
+    trigger_in = 1.0f;
+    engine_in = instrument;
+    pitch_in = pitch;
+
+    // 40 is wave paraphonic
+    // 42 is twin peaks noise
+    // 45 is particle noise
+    // 32 is struck bell
+    // 33 is struck drum
+    // 27/28 is FM
 
   braids::MacroOscillator *osc = inst[0].pd.osc;
 
@@ -86,14 +100,12 @@ void updateBraidsAudio() {
 
 
   float modulation;
-
-
   modulation = timb_mod; // timbre
-  float timbre = (timbre_in + modulation);
+  timbre = (timbre_in + modulation);
   CONSTRAIN(timbre, 0.0f, 1.0f);
 
   modulation = morph_mod; // color
-  float morph = (morph_in + modulation);
+   morph = (morph_in + modulation);
   CONSTRAIN(morph, 0.0f, 1.0f);
 
   // this is the scale used in braids
@@ -118,18 +130,14 @@ void updateBraidsAudio() {
 
   inst[0].last_trig = trigger;
 
-  // render
-  osc->Render(sync_buffer, buffer, size);
+  // we render and read buffers in the generator
+  // osc->Render(sync_buffer, buffer, size);
   // copy to output buffer
 
- /* for (int count = 0; count < 32; count++) {
-
-    int16_t sample =   (int16_t) ( (float) inst[0].pd.buffer[count] * env->process() ) ;
-    out_bufferL[count] = sample;
-
-    //out_bufferL[count] = inst[0].pd.buffer[count];
-    //out_bufferR[count] = inst[0].pd.buffer[count];
-  }*/
+//  for (int count = 0; count < 32; count++) {
+//    int16_t sample =   (int16_t)  inst[0].pd.buffer[count]  ;
+//    out_bufferL[count] = sample;
+//  }
 
 }
 
@@ -145,6 +153,7 @@ void initBraids() {
 
   inst[0].pd.osc->Init(48000.f);
   inst[0].pd.osc->set_pitch((48 << 7));
+  //inst[0].pd.osc->set_shape(braids::MACRO_OSC_SHAPE_TWIN_PEAKS_NOISE);
   inst[0].pd.osc->set_shape(braids::MACRO_OSC_SHAPE_VOWEL_FOF);
 
 
@@ -167,7 +176,7 @@ void initBraids() {
   //inst[0].envelope->Init();
 
   // get some samples initially
-  updateBraidsAudio();
+  //updateBraidsAudio();
 
   /*
     // Initialize the sample rate converter

@@ -96,11 +96,21 @@ class MacroOscillator {
   void RenderTriple(const uint8_t*, int16_t*, size_t);
   void ConfigureTriple(AnalogOscillatorShape shape);
 
+  // Maximum render block size. Hosts may call Render() with `size` up to
+  // this value (see BLOCK_SIZE in braids.h, which must be <= kMaxBlockSize).
+  // Every render path that mixes a second oscillator (RenderBuzz, RenderSub,
+  // RenderSawSquare, RenderSineTriangle, RenderDualSync, RenderTriple, ...)
+  // writes `size` samples into these scratch buffers, so they MUST be able
+  // to hold at least kMaxBlockSize samples. Sizing them smaller (e.g. [32])
+  // causes a buffer overflow that corrupts the oscillator's internal state,
+  // producing a few samples of valid audio followed by silence.
+  static const int kMaxBlockSize = 4096;
+
   int16_t parameter_[2];
   int16_t previous_parameter_[2];
   int16_t pitch_;
-  uint8_t sync_buffer_[32];     // vb, 24   must be at least BLOCK_SIZE!
-  int16_t temp_buffer_[32];     // vb, 24
+  uint8_t sync_buffer_[kMaxBlockSize];   // vb, 24   must be at least kMaxBlockSize!
+  int16_t temp_buffer_[kMaxBlockSize];   // vb, 24   must be at least kMaxBlockSize!
   int32_t lp_state_;
   
   AnalogOscillator analog_oscillator_[3];
