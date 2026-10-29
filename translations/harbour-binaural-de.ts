@@ -252,42 +252,42 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="271"/>
+        <location filename="../qml/pages/MainPage.qml" line="184"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="281"/>
+        <location filename="../qml/pages/MainPage.qml" line="194"/>
         <source>Deselect all sounds</source>
         <translation>Alle Klänge deaktivieren</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="295"/>
+        <location filename="../qml/pages/MainPage.qml" line="206"/>
         <source>Timer</source>
         <translation>Timer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="325"/>
+        <location filename="../qml/pages/MainPage.qml" line="235"/>
         <source>Binaural Beats</source>
         <translation>Binaurale Beats</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="339"/>
+        <location filename="../qml/pages/MainPage.qml" line="249"/>
         <source>To be used with</source>
         <translation>Zu verwenden mit</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="555"/>
+        <location filename="../qml/pages/MainPage.qml" line="423"/>
         <source>Colored Noise</source>
         <translation>Farbiges Rauschen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="730"/>
+        <location filename="../qml/pages/MainPage.qml" line="557"/>
         <source>Ambient Sound</source>
         <translation>Umgebungsklang</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="762"/>
+        <location filename="../qml/pages/MainPage.qml" line="586"/>
         <source>Choose ambient sounds</source>
         <translation>Umgebungsklänge auswählen</translation>
     </message>
@@ -442,6 +442,18 @@
         <location filename="../qml/pages/TimerPage.qml" line="33"/>
         <source>Timer</source>
         <translation>Timer</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/TimerPage.qml" line="75"/>
+        <source>h</source>
+        <extracomment>SI symbol for hour. Keep as-is for Latin-script locales.</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/TimerPage.qml" line="96"/>
+        <source>min</source>
+        <extracomment>SI symbol for minute. Keep as-is for Latin-script locales.</extracomment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

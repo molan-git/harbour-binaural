@@ -63,7 +63,6 @@ SilicaFlickable {
 
             MouseArea {
                 id: handleMouseArea
-
                 anchors.fill: parent
 
                 property real startY: 0
@@ -74,17 +73,15 @@ SilicaFlickable {
                     startX = mouse.x
                 }
 
-                onClicked: {
-                    ambiencePage.closeRequested()
-                }
-
                 onReleased: {
                     var deltaY = mouse.y - startY
                     var deltaX = mouse.x - startX
 
-                    // A deliberate downward swipe closes the drawer.
-                    if (deltaY > Theme.itemSizeSmall
-                            && Math.abs(deltaY) > Math.abs(deltaX)) {
+                    // Tap OR deliberate downward swipe
+                    if (Math.abs(deltaY) < 5 && Math.abs(deltaX) < 5) {
+                        ambiencePage.closeRequested()
+                    } else if (deltaY > Theme.itemSizeSmall
+                               && Math.abs(deltaY) > Math.abs(deltaX)) {
                         ambiencePage.closeRequested()
                     }
                 }
@@ -119,7 +116,6 @@ SilicaFlickable {
                 width: ambienceGrid.cellWidth
                 height: ambienceGrid.cellHeight
 
-                // Glow rectangle when sound is activated
                 Rectangle {
                     anchors.fill: ambienceButton
                     z: -1
@@ -132,9 +128,7 @@ SilicaFlickable {
                     opacity: ambienceButton.highlighted ? 0.15 : 0.0
 
                     Behavior on opacity {
-                        NumberAnimation {
-                            duration: 150
-                        }
+                        NumberAnimation { duration: 150 }
                     }
                 }
 
@@ -143,8 +137,8 @@ SilicaFlickable {
 
                     anchors.centerIn: parent
 
-                    preferredWidth: ambienceGrid.cellWidth
-                                    - Theme.paddingMedium
+                    preferredWidth: ambienceGrid.cellWidth -
+                                    Theme.paddingMedium
 
                     text: SoundNames.label(modelData)
 
@@ -152,6 +146,14 @@ SilicaFlickable {
 
                     enabled: highlighted
                              || ambiencePage.activeAmbiences.length < ambiencePage.maxAmbiences
+
+                    color: !enabled
+                           ? Theme.secondaryColor
+                           : highlighted
+                             ? (ambiencePage.ambiencePlaying
+                                ? Theme.highlightColor
+                                : Theme.secondaryHighlightColor)
+                             : Theme.primaryColor
 
                     opacity: !enabled ? 0.35
                                       : highlighted && !ambiencePage.ambiencePlaying ? 0.6
@@ -163,20 +165,6 @@ SilicaFlickable {
                         } else if (ambiencePage.activeAmbiences.length < ambiencePage.maxAmbiences) {
                             ambiencePage.ambienceSelected(modelData)
                         }
-                    }
-
-                    Label {
-                        anchors.centerIn: parent
-
-                        text: parent.text
-
-                        color: !ambienceButton.enabled
-                               ? Theme.secondaryColor
-                               : ambienceButton.highlighted
-                                 ? (ambiencePage.ambiencePlaying
-                                    ? Theme.highlightColor
-                                    : Theme.secondaryHighlightColor)
-                                 : Theme.primaryColor
                     }
                 }
             }
@@ -211,45 +199,14 @@ SilicaFlickable {
                 }
             }
 
-            Item {
+            // Uses VolumeIcon.qml component
+            VolumeIcon {
                 id: ambienceVolumeIcon
-
-                width: Theme.iconSizeSmall * 1.6
-                height: Theme.iconSizeSmall * 1.6
-
+                value: ambienceVolumeSlider.value
                 anchors.top: ambienceVolumeSlider.bottom
                 anchors.topMargin: -Theme.paddingLarge
                 anchors.horizontalCenter: ambienceVolumeSlider.horizontalCenter
-
                 opacity: ambiencePage.activeAmbiences.length > 0 ? 1.0 : 0.5
-
-                Image {
-                    id: ambienceVolumeImage
-
-                    anchors.fill: parent
-
-                    source: ambienceVolumeSlider.value === 0
-                            ? "../../images/icon-s-volume-1.svg"
-                            : ambienceVolumeSlider.value <= 33
-                              ? "../../images/icon-s-volume-2.svg"
-                              : ambienceVolumeSlider.value <= 66
-                                ? "../../images/icon-s-volume-3.svg"
-                                : "../../images/icon-s-volume-4.svg"
-
-                    sourceSize: Qt.size(
-                                    Theme.iconSizeSmall * 1.6 * 2,
-                                    Theme.iconSizeSmall * 1.6 * 2
-                                    )
-
-                    fillMode: Image.PreserveAspectFit
-                    visible: false
-                }
-
-                ColorOverlay {
-                    anchors.fill: ambienceVolumeImage
-                    source: ambienceVolumeImage
-                    color: Theme.primaryColor
-                }
             }
         }
     }

@@ -43,6 +43,7 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/pages/components/InfoColoredPage.qml \
     qml/pages/components/PlaybackBar.qml \
     qml/pages/components/SoundNames.qml \
+    qml/pages/components/VolumeIcon.qml \
     qml/pages/components/SoundPickerDrawer.qml \
     qml/pages/components/AudioFilePickerPage.qml \
     rpm/harbour-binaural.changes \

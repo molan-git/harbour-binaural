@@ -24,6 +24,7 @@ public:
 
     bool isPlaying() const;
     bool isPaused() const;
+    bool isStopping() const;
 
     QString fileName() const;
 
@@ -65,9 +66,10 @@ private:
     int m_volume;
     QString m_fileName;
 
-    int m_fadeInPosition;
-    int m_crossfadePosition;
-    int m_fadeOutPosition;
+    QElapsedTimer m_fadeInElapsed;
+    QElapsedTimer m_crossfadeElapsed;
+    qint64 m_fadeInElapsedBeforePause = 0;
+    qint64 m_crossfadeElapsedBeforePause = 0;
 
     QElapsedTimer m_fadeElapsed;
     qint64 m_fadeElapsedBeforePause = 0;
