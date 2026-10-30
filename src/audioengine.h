@@ -97,15 +97,15 @@ public:
     Q_INVOKABLE void stopColoredNoise();
     Q_INVOKABLE void resumeColoredNoise();
 
-    Q_INVOKABLE void setBinauralVolume(int volume);
-    Q_INVOKABLE void setAmbienceVolume(int volume);
-    Q_INVOKABLE void setColoredNoiseVolume(int volume);
-
     Q_INVOKABLE void startSequence(const QString &preset);
     Q_INVOKABLE void stopSequence();
     Q_INVOKABLE void pauseSequence();
     Q_INVOKABLE void resumeSequence();
     Q_INVOKABLE void setSequenceVolume(int volume);
+
+    Q_INVOKABLE void setBinauralVolume(int volume);
+    Q_INVOKABLE void setAmbienceVolume(int volume);
+    Q_INVOKABLE void setColoredNoiseVolume(int volume);
 
 signals:
     void playingChanged();

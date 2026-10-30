@@ -1,663 +1,468 @@
-#include "sbgsequence.h"
+#include "sequencegenerator.h"
 
-#include <QtGlobal>
-
-#include <algorithm>
-
-// ============================================================================
-// HELPERS
-// ============================================================================
+#include <QtMath>
+#include <cstring>
 
 namespace
 {
-    QStringList splitTokens(const QString &line)
-    {
-        QStringList tokens;
+    const int DefaultSampleRate = 48000;
 
-        const QStringList parts = line.split(QLatin1Char(' '));
+    const double TwoPi = 2.0 * M_PI;
 
-        for (int i = 0; i < parts.size(); ++i)
-        {
-            if (!parts.at(i).isEmpty())
-                tokens.append(parts.at(i));
-        }
+    // SBaGen '-SE' spin: crossfade length between tone-sets.
+    const qint64 SpinDurationMs = 10000;
 
-        return tokens;
-    }
-
-    bool parseDouble(const QString &text, double *out)
-    {
-        bool ok = false;
-
-        const double value = text.toDouble(&ok);
-
-        if (ok)
-            *out = value;
-
-        return ok;
-    }
+    // Grace period of silence after the final fade before the
+    // generator reports finished().
+    const qint64 FinishPadMs = 1000;
 
     /*
-     * "HH:MM:SS", "MM:SS" or "SS" -> milliseconds.
-     */
-    bool parseClockTimeMs(const QString &token, qint64 *out)
-    {
-        const QStringList parts =
-            token.split(QLatin1Char(':'));
-
-        if (parts.isEmpty() || parts.size() > 3)
-            return false;
-
-        double hours = 0.0;
-        double minutes = 0.0;
-        double seconds = 0.0;
-
-        if (parts.size() == 3)
-        {
-            if (!parseDouble(parts.at(0), &hours)
-                || !parseDouble(parts.at(1), &minutes)
-                || !parseDouble(parts.at(2), &seconds))
-                return false;
-        }
-        else if (parts.size() == 2)
-        {
-            if (!parseDouble(parts.at(0), &minutes)
-                || !parseDouble(parts.at(1), &seconds))
-                return false;
-        }
-        else
-        {
-            if (!parseDouble(parts.at(0), &seconds))
-                return false;
-        }
-
-        *out = qRound(
-            (hours * 3600.0
-             + minutes * 60.0
-             + seconds) * 1000.0);
-
-        return true;
-    }
-
-    /*
-     * "+HH:MM:SS", "+MM:SS" or "+SS" -> milliseconds offset.
-     */
-    bool parseRelativeTimeMs(const QString &token, qint64 *out)
-    {
-        if (!token.startsWith(QLatin1Char('+')))
-            return false;
-
-        return parseClockTimeMs(token.mid(1), out);
-    }
-
-    bool noiseColorFromName(const QString &name, int *out)
-    {
-        const QString lower = name.toLower();
-
-        if (lower == QLatin1String("white"))
-            *out = SbgVoice::White;
-        else if (lower == QLatin1String("pink"))
-            *out = SbgVoice::Pink;
-        else if (lower == QLatin1String("brown"))
-            *out = SbgVoice::Brown;
-        else if (lower == QLatin1String("grey")
-                 || lower == QLatin1String("gray"))
-            *out = SbgVoice::Grey;
-        else
-            return false;
-
-        return true;
-    }
-
-    /*
-     * Voice token forms:
-     *   pink/40            noise voice
-     *   100+4.5/8          tone, right channel higher
-     *   200-4/6            tone, right channel lower
-     *   300@6/10           sbagen-plus isochronic; approximated
-     *                      here as a binaural '+offset' voice
-     *   300/6              plain tone (no binaural offset)
+     * SBaGen amplitude units -> int16 sample units.
      *
-     * Amplitude defaults to 20 (a common SBaGen level) when omitted.
+     * Typical presets use amplitudes 5..40 per voice; with several
+     * voices summing, this lands in the same loudness region as
+     * the existing BinauralGenerator (13000) and
+     * ColoredNoiseGenerator (16000) masters. Single tuning point.
      */
-    bool parseVoice(const QString &token, SbgVoice *out, QString *error)
-    {
-        // Allow callers to pass a null error string.
-        QString localError;
+    const double AmplitudeScale = 400.0;
 
-        if (!error)
-            error = &localError;
-
-        // Optional "/amplitude" suffix shared by tones and noise.
-        const int slash = token.indexOf(QLatin1Char('/'));
-
-        const QString head =
-            slash >= 0 ? token.left(slash) : token;
-
-        double amplitude = 20.0;
-
-        if (slash >= 0
-            && !parseDouble(token.mid(slash + 1), &amplitude))
-        {
-            *error = QStringLiteral(
-                "bad amplitude: %1").arg(token);
-            return false;
-        }
-
-        // Noise voice: "color[/amplitude]".
-        int noiseColor = -1;
-
-        if (noiseColorFromName(head, &noiseColor))
-        {
-            out->type = SbgVoice::Noise;
-            out->noiseColor = noiseColor;
-            out->amplitude = amplitude;
-            return true;
-        }
-
-        // Tone voice: "carrier[+-@offset][/amplitude]".
-        out->type = SbgVoice::Tone;
-        out->amplitude = amplitude;
-
-        const QString &freqPart = head;
-
-        // Optional binaural offset: a single '+', '-' or '@'.
-        int signPos = -1;
-
-        for (int i = 0; i < freqPart.size(); ++i)
-        {
-            const QChar c = freqPart.at(i);
-
-            if (c == QLatin1Char('+')
-                || c == QLatin1Char('-')
-                || c == QLatin1Char('@'))
-            {
-                signPos = i;
-                break;
-            }
-        }
-
-        if (signPos < 0)
-        {
-            if (!parseDouble(freqPart, &out->carrier))
-            {
-                *error = QStringLiteral(
-                    "bad carrier frequency: %1").arg(token);
-                return false;
-            }
-
-            out->offset = 0.0;
-            return true;
-        }
-
-        if (!parseDouble(freqPart.left(signPos), &out->carrier))
-        {
-            *error = QStringLiteral(
-                "bad carrier frequency: %1").arg(token);
-            return false;
-        }
-
-        if (!parseDouble(freqPart.mid(signPos + 1), &out->offset))
-        {
-            *error = QStringLiteral(
-                "bad binaural offset: %1").arg(token);
-            return false;
-        }
-
-        // '@' (isochronic) approximates a right-higher binaural beat.
-        if (freqPart.at(signPos) == QLatin1Char('-'))
-            out->offset = -out->offset;
-
-        return true;
-    }
+    // Final limiter.
+    const double PeakSample = 32000.0;
 }
 
 // ============================================================================
-// LOOKUP
+// LIFECYCLE
 // ============================================================================
 
-const SbgToneSet *SbgSequence::toneSetByName(const QString &name) const
+SequenceGenerator::SequenceGenerator(const SbgSequence &sequence,
+                                     QObject *parent)
+    : QIODevice(parent),
+      m_sequence(sequence),
+      m_sampleRate(DefaultSampleRate),
+      m_frames(0),
+      m_segment(0),
+      m_durationMs(0),
+      m_openEnded(false)
 {
-    for (int i = 0; i < toneSets.size(); ++i)
-    {
-        if (toneSets.at(i).name == name)
-            return &toneSets.at(i);
-    }
+    buildRuntime();
 
-    return nullptr;
+    if (!m_sequence.events.isEmpty())
+    {
+        m_durationMs = m_sequence.events.last().timeMs;
+
+        // Ends silent ('off') -> the sequence finishes by itself.
+        // Ends active -> keep playing the last tone-set.
+        m_openEnded =
+            m_eventSetIndex.last() >= 0;
+    }
+}
+
+void SequenceGenerator::setSampleRate(int sampleRate)
+{
+    if (sampleRate > 0)
+        m_sampleRate = sampleRate;
+}
+
+void SequenceGenerator::start()
+{
+    open(QIODevice::ReadOnly);
 }
 
 // ============================================================================
-// PARSER
+// STATE
 // ============================================================================
 
-bool Sbg::parse(const QString &source,
-                SbgSequence *out,
-                QString *error)
+qint64 SequenceGenerator::elapsedMs() const
 {
-    if (!out)
+    if (m_sampleRate <= 0)
+        return 0;
+
+    return qRound(
+        static_cast<double>(m_frames) * 1000.0
+        / m_sampleRate);
+}
+
+qint64 SequenceGenerator::durationMs() const
+{
+    return m_durationMs;
+}
+
+bool SequenceGenerator::finished() const
+{
+    if (m_openEnded)
         return false;
 
-    out->title.clear();
-    out->durationMs = 0;
-    out->toneSets.clear();
-    out->events.clear();
+    return elapsedMs() >= m_durationMs + FinishPadMs;
+}
 
-    qint64 nowMs = 0;
+// ============================================================================
+// RENDER
+// ============================================================================
 
-    const QStringList lines = source.split(QLatin1Char('\n'));
+qint64 SequenceGenerator::readData(char *data, qint64 maxlen)
+{
+    const qint64 bytesPerFrame = 4;   // stereo, 16 bit
 
-    for (int lineNr = 0; lineNr < lines.size(); ++lineNr)
+    const qint64 frameCount = maxlen / bytesPerFrame;
+
+    qint16 *samples = reinterpret_cast<qint16 *>(data);
+
+    const int eventCount = m_sequence.events.size();
+
+    const double frameMs = 1000.0 / m_sampleRate;
+
+    double tMs = static_cast<double>(m_frames) * frameMs;
+
+    for (qint64 frame = 0; frame < frameCount; ++frame)
     {
-        QString line = lines.at(lineNr).trimmed();
-
-        if (line.isEmpty() || line.startsWith(QLatin1Char('#')))
-            continue;
-
-        /*
-         * Option lines (-SE, -S, -TS, -m ...). The sequence engine
-         * always crossfades between tone-sets, so -SE behaviour is
-         * implicit; other options are accepted and ignored.
-         */
-        if (line.startsWith(QLatin1Char('-')))
-            continue;
-
-        // Timeline: "NOW name".
-        if (line == QLatin1String("NOW")
-            || line.startsWith(QLatin1String("NOW ")))
+        // Advance the current segment across event boundaries.
+        while (m_segment + 1 < eventCount
+               && tMs >= static_cast<double>(
+                            m_sequence.events.at(m_segment + 1)
+                                .timeMs))
         {
-            SbgTimelineEvent event;
-            event.timeMs = nowMs;
-
-            if (line.size() > 4)
-                event.toneSetName = line.mid(4).trimmed();
-
-            out->events.append(event);
-            continue;
-        }
-
-        const QStringList tokens = splitTokens(line);
-
-        if (tokens.isEmpty())
-            continue;
-
-        // Timeline: "+time name ...".
-        if (tokens.at(0).startsWith(QLatin1Char('+')))
-        {
-            if (tokens.size() < 2)
-            {
-                if (error)
-                    *error = QStringLiteral(
-                        "line %1: expected '+time name'")
-                        .arg(lineNr + 1);
-                return false;
-            }
-
-            qint64 deltaMs = 0;
-
-            if (!parseRelativeTimeMs(tokens.at(0), &deltaMs))
-            {
-                if (error)
-                    *error = QStringLiteral(
-                        "line %1: bad time: %2")
-                        .arg(lineNr + 1)
-                        .arg(tokens.at(0));
-                return false;
-            }
-
-            nowMs += deltaMs;
-
-            SbgTimelineEvent event;
-            event.timeMs = nowMs;
-            event.toneSetName = tokens.at(1);
-
-            out->events.append(event);
-            continue;
+            ++m_segment;
         }
 
         /*
-         * Timeline: absolute clock-style entries ("0:00 ts" or
-         * "00:05:00 ts-focus ->"). Treated as offsets from the
-         * start of the sequence; trailing tokens such as the
-         * sbagen-plus '->' marker are ignored.
+         * Crossfade weight of the current tone-set. During the
+         * last SpinDurationMs of a segment the next tone-set
+         * blends in; before that the weight is exactly 1 and the
+         * next set is not rendered at all.
          */
-        if (tokens.at(0).at(0).isDigit())
+        double weightCurrent = 1.0;
+
+        if (m_segment + 1 < eventCount)
         {
-            if (tokens.size() < 2)
+            const qint64 boundaryMs =
+                m_sequence.events.at(m_segment + 1).timeMs;
+
+            const qint64 segmentStartMs =
+                m_sequence.events.at(m_segment).timeMs;
+
+            const qint64 fadeStartMs =
+                qMax(segmentStartMs,
+                     boundaryMs - SpinDurationMs);
+
+            if (tMs > static_cast<double>(fadeStartMs)
+                && boundaryMs > fadeStartMs)
             {
-                if (error)
-                    *error = QStringLiteral(
-                        "line %1: expected 'time name'")
-                        .arg(lineNr + 1);
-                return false;
+                weightCurrent =
+                    static_cast<double>(boundaryMs - tMs)
+                    / static_cast<double>(
+                        boundaryMs - fadeStartMs);
+
+                if (weightCurrent < 0.0)
+                    weightCurrent = 0.0;
             }
-
-            qint64 timeMs = 0;
-
-            if (!parseClockTimeMs(tokens.at(0), &timeMs))
-            {
-                if (error)
-                    *error = QStringLiteral(
-                        "line %1: bad time: %2")
-                        .arg(lineNr + 1)
-                        .arg(tokens.at(0));
-                return false;
-            }
-
-            SbgTimelineEvent event;
-            event.timeMs = timeMs;
-            event.toneSetName = tokens.at(1);
-
-            out->events.append(event);
-            continue;
         }
 
-        /*
-         * Tone-set definition: "name: voice voice ...".
-         * A leading "spin:" keyword marks a slowly spun voice
-         * set; the spin modulation is ignored, the voices render
-         * as ordinary binaural voices.
-         */
-        const int colon = line.indexOf(QLatin1Char(':'));
+        double left = 0.0;
+        double right = 0.0;
 
-        if (colon > 0)
+        renderSetFrame(m_eventSetIndex.at(m_segment),
+                       &left, &right);
+
+        if (weightCurrent < 1.0)
         {
-            SbgToneSet set;
-            set.name = line.left(colon).trimmed();
+            double nextLeft = 0.0;
+            double nextRight = 0.0;
 
-            QString voiceList = line.mid(colon + 1);
+            renderSetFrame(m_eventSetIndex.at(m_segment + 1),
+                           &nextLeft, &nextRight);
 
-            if (voiceList.trimmed().startsWith(
-                    QStringLiteral("spin:")))
+            const double weightNext = 1.0 - weightCurrent;
+
+            left = left * weightCurrent
+                + nextLeft * weightNext;
+
+            right = right * weightCurrent
+                + nextRight * weightNext;
+        }
+
+        samples[frame * 2] =
+            static_cast<qint16>(
+                qBound(-PeakSample, left, PeakSample));
+
+        samples[frame * 2 + 1] =
+            static_cast<qint16>(
+                qBound(-PeakSample, right, PeakSample));
+
+        ++m_frames;
+        tMs += frameMs;
+    }
+
+    const qint64 usedBytes = frameCount * bytesPerFrame;
+
+    if (usedBytes < maxlen)
+    {
+        std::memset(data + usedBytes,
+                    0,
+                    static_cast<size_t>(maxlen - usedBytes));
+    }
+
+    return maxlen;
+}
+
+qint64 SequenceGenerator::writeData(const char *, qint64)
+{
+    return 0;
+}
+
+// ============================================================================
+// RUNTIME SETUP
+// ============================================================================
+
+void SequenceGenerator::buildRuntime()
+{
+    m_eventSetIndex.clear();
+    m_setRuntime.clear();
+
+    // Resolve event tone-set names to indices once.
+    for (int i = 0; i < m_sequence.events.size(); ++i)
+    {
+        const QString &name =
+            m_sequence.events.at(i).toneSetName;
+
+        int index = -1;
+
+        if (name != QLatin1String("-"))
+        {
+            for (int s = 0; s < m_sequence.toneSets.size(); ++s)
             {
-                voiceList = voiceList.trimmed().mid(
-                    QStringLiteral("spin:").size());
-            }
-
-            const QStringList voices = splitTokens(voiceList);
-
-            for (int i = 0; i < voices.size(); ++i)
-            {
-                const QString &token = voices.at(i);
-
-                if (token == QLatin1String("-"))
-                    continue;   // 'off' tone-set
-
-                SbgVoice voice;
-
-                if (!parseVoice(token, &voice, error))
+                if (m_sequence.toneSets.at(s).name == name)
                 {
-                    if (error)
-                        *error = QStringLiteral(
-                            "line %1: %2")
-                            .arg(lineNr + 1)
-                            .arg(*error);
-                    return false;
+                    index = s;
+                    break;
                 }
-
-                set.voices.append(voice);
             }
-
-            out->toneSets.append(set);
-            continue;
         }
 
-        if (error)
-            *error = QStringLiteral(
-                "line %1: unsupported construct: %2")
-                .arg(lineNr + 1)
-                .arg(line);
-        return false;
+        m_eventSetIndex.append(index);
     }
 
-    if (out->events.isEmpty())
+    // Oscillator and noise state per tone-set voice.
+    for (int s = 0; s < m_sequence.toneSets.size(); ++s)
     {
-        if (error)
-            *error = QStringLiteral(
-                "no timeline events found");
-        return false;
-    }
+        const SbgToneSet &set = m_sequence.toneSets.at(s);
 
-    // Keep the timeline chronological regardless of line order.
-    std::stable_sort(
-        out->events.begin(),
-        out->events.end(),
-        [](const SbgTimelineEvent &a,
-           const SbgTimelineEvent &b)
+        SetRuntime runtime;
+
+        for (int v = 0; v < set.voices.size(); ++v)
         {
-            return a.timeMs < b.timeMs;
-        });
+            const SbgVoice &voice = set.voices.at(v);
 
-    // Resolve event tone-set references.
-    for (int i = 0; i < out->events.size(); ++i)
-    {
-        const SbgTimelineEvent &event = out->events.at(i);
+            if (voice.type == SbgVoice::Tone)
+            {
+                ToneRuntime tone;
+                tone.voiceIndex = v;
+                tone.leftPhase = 0.0;
+                tone.rightPhase = 0.0;
 
-        if (event.toneSetName == QLatin1String("-"))
-            continue;
+                runtime.tones.append(tone);
+            }
+            else
+            {
+                NoiseRuntime noise;
+                noise.voiceIndex = v;
+                noise.color = voice.noiseColor;
 
-        if (!out->toneSetByName(event.toneSetName))
-        {
-            if (error)
-                *error = QStringLiteral(
-                    "unknown tone-set: %1")
-                    .arg(event.toneSetName);
-            return false;
+                resetNoiseState(noise);
+
+                runtime.noises.append(noise);
+            }
         }
+
+        m_setRuntime.append(runtime);
     }
-
-    out->durationMs = out->events.last().timeMs;
-
-    return true;
 }
 
 // ============================================================================
-// BUILTIN PRESETS
+// PER-SET RENDERING
+// ============================================================================
+
+void SequenceGenerator::renderSetFrame(int setIndex,
+                                       double *outLeft,
+                                       double *outRight)
+{
+    double left = 0.0;
+    double right = 0.0;
+
+    if (setIndex >= 0)
+    {
+        const SbgToneSet &set = m_sequence.toneSets.at(setIndex);
+
+        SetRuntime &runtime = m_setRuntime[setIndex];
+
+        for (int i = 0; i < runtime.tones.size(); ++i)
+        {
+            ToneRuntime &tone = runtime.tones[i];
+
+            const SbgVoice &voice =
+                set.voices.at(tone.voiceIndex);
+
+            const double gain =
+                voice.amplitude * AmplitudeScale;
+
+            left += qSin(tone.leftPhase * TwoPi) * gain;
+            right += qSin(tone.rightPhase * TwoPi) * gain;
+
+            tone.leftPhase +=
+                voice.carrier / m_sampleRate;
+
+            tone.rightPhase +=
+                (voice.carrier + voice.offset) / m_sampleRate;
+
+            if (tone.leftPhase >= 1.0)
+                tone.leftPhase -= 1.0;
+
+            if (tone.rightPhase >= 1.0)
+                tone.rightPhase -= 1.0;
+        }
+
+        for (int i = 0; i < runtime.noises.size(); ++i)
+        {
+            NoiseRuntime &noise = runtime.noises[i];
+
+            const SbgVoice &voice =
+                set.voices.at(noise.voiceIndex);
+
+            const double gain =
+                voice.amplitude * AmplitudeScale;
+
+            left += nextNoiseSample(noise, 0) * gain;
+            right += nextNoiseSample(noise, 1) * gain;
+        }
+    }
+
+    *outLeft = left;
+    *outRight = right;
+}
+
+// ============================================================================
+// NOISE DSP
 // ============================================================================
 //
-// Attribution / licensing (also add to CREDITS.md):
-//
-//   The preset voice data is based on sequences published with
-//   SBaGen (Copyright (c) 1999-2007 Jim Peters, http://uazu.net/sbagen/,
-//   released under the GNU GPL v2) and the sbagen-plus example
-//   bundle (https://github.com/ruanklein/sbagen-plus, GNU GPL v2).
-//   The carrier/beat values are community measurements and are
-//   reproduced as factual data; all comment text here is written
-//   for this project, no file text is copied verbatim. Do not
-//   copy the original .sbg comments into these strings: GPLv2
-//   ("version 2" only, no "or later") text cannot be mixed into
-//   the GPLv3-licensed app.
-//
-// The Monroe 'Focus level' tone-sets are approximations based on
-// community-measured values, are not Monroe Institute products,
-//   and imply no affiliation with or endorsement by the Monroe
-//   Institute.
-//
-// The Focus-level files originally contain only a single
-// continuous tone-set ("0:00 ts"); a 30-minute session timeline
-// has been added for use as an app preset.
-//
-// sbagen-plus '@' isochronic voices are approximated as binaural
-// beats (see parseVoice).
+// Mirrors ColoredNoiseGenerator so that sequence noise voices match
+// the sound of the standalone colored-noise channel. If the two
+// implementations ever need to diverge, extract a shared
+// NoiseSource class and use it from both generators.
 
-QVector<SbgPreset> Sbg::builtinPresets()
+void SequenceGenerator::resetNoiseState(NoiseRuntime &noise)
 {
-    QVector<SbgPreset> presets;
+    for (int channel = 0; channel < 2; ++channel)
+    {
+        noise.randomState[channel] =
+            0x12345678u + channel * 0x13579BDFu;
 
-    // ------------------------------------------------------------------
-    // Monroe Institute Focus levels (community-measured tone-sets).
-    // ------------------------------------------------------------------
+        for (int i = 0; i < 7; ++i)
+            noise.pinkState[channel][i] = 0.0;
 
-    SbgPreset focus3;
-    focus3.title = QStringLiteral("Focus 3 (Sleep)");
-    focus3.source = QStringLiteral(
-        "# F3: 59[1.2]-110[1.3], 288[3.7]\n"
-        "ts: 59+1.2/10 110+1.3/10 288+3.7/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:30:00 off\n");
-    presets.append(focus3);
+        noise.brownState[channel] = 0.0;
 
-    SbgPreset focus10;
-    focus10.title = QStringLiteral("Focus 10 (Body Asleep)");
-    focus10.source = QStringLiteral(
-        "# F10 \"Brain awake, body asleep\":\n"
-        "# 100[1.5], 200[4.0], 250[4.0], 300[4.0]\n"
-        "ts: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:30:00 off\n");
-    presets.append(focus10);
+        noise.greyLow[channel] = 0.0;
+        noise.greyMid[channel] = 0.0;
+        noise.greyHigh[channel] = 0.0;
 
-    SbgPreset focus12;
-    focus12.title = QStringLiteral("Focus 12 (Expanded Awareness)");
-    focus12.source = QStringLiteral(
-        "# F12 \"Expanded consciousness\":\n"
-        "# 100[1.5], 200[4.0], 250[4.0], 300[4.0],\n"
-        "# 400[10.0], 500[10.1], 600[4.8]\n"
-        "ts: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10 "
-        "400+10.0/10 500+10.1/10 600+4.8/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:30:00 off\n");
-    presets.append(focus12);
+        noise.whiteFiltered[channel] = 0.0;
+    }
+}
 
-    SbgPreset focus15;
-    focus15.title = QStringLiteral("Focus 15 (No Time)");
-    focus15.source = QStringLiteral(
-        "# F15 \"No time -- 3 hours seems like 2 minutes\":\n"
-        "# 100[1.5], 200[4.0], 250[4.0], 300[4.0],\n"
-        "# 500[7.05], 630[7.1], 750[7.0]\n"
-        "ts: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10 "
-        "500+7.05/10 630+7.1/10 750+7.0/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:30:00 off\n");
-    presets.append(focus15);
+double SequenceGenerator::nextNoiseSample(NoiseRuntime &noise,
+                                          int channel)
+{
+    // Raw white source: 32-bit LCG.
+    auto nextRawWhite = [&noise, channel]()
+    {
+        noise.randomState[channel] =
+            1664525u * noise.randomState[channel]
+            + 1013904223u;
 
-    SbgPreset focus21;
-    focus21.title = QStringLiteral("Focus 21 (Other Energy Systems)");
-    focus21.source = QStringLiteral(
-        "# F21:\n"
-        "# 200[4.0], 250[4.0], 300[4.0],\n"
-        "# 600[16.2], 750[15.9], 900[16.2]\n"
-        "ts: 200+4.0/10 250+4.0/10 300+4.0/10 "
-        "600+16.2/10 750+15.9/10 900+16.2/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:30:00 off\n");
-    presets.append(focus21);
+        return (noise.randomState[channel]
+                / 2147483648.0) - 1.0;
+    };
 
-    // ------------------------------------------------------------------
-    // Sequences from the sbagen-plus example bundle.
-    // ------------------------------------------------------------------
+    // Smoothed white.
+    auto nextWhite = [&noise, channel, &nextRawWhite]()
+    {
+        const double white = nextRawWhite();
 
-    SbgPreset concentration;
-    concentration.title =
-        QStringLiteral("Focus & Concentration (Beta)");
-    concentration.source = QStringLiteral(
-        "# Focus and Concentration - 60 minutes\n"
-        "-SE\n"
-        "ts-start: pink/30 300@12/20\n"
-        "ts-focus: pink/30 300@15/25\n"
-        "ts-deep-focus: pink/30 300@18/20\n"
-        "ts-wind-down: pink/30 300@12/20\n"
-        "off: -\n"
-        "00:00:00 off\n"
-        "00:00:15 ts-start\n"
-        "00:10:00 ts-focus\n"
-        "00:25:00 ts-deep-focus\n"
-        "00:40:00 ts-wind-down\n"
-        "00:55:00 off\n");
-    presets.append(concentration);
+        noise.whiteFiltered[channel] =
+            noise.whiteFiltered[channel] * 0.82
+            + white * 0.18;
 
-    SbgPreset deepSleep;
-    deepSleep.title = QStringLiteral("Deep Sleep Aid");
-    deepSleep.source = QStringLiteral(
-        "# Deep Sleep Aid - 45 minutes\n"
-        "-SE\n"
-        "ts-relax: brown/60 300+10/15\n"
-        "ts-drowsy: brown/60 200+7/20\n"
-        "ts-sleep: brown/70 100+3/25\n"
-        "ts-deep-sleep: brown/70 100+1.5/20\n"
-        "off: -\n"
-        "00:00:00 off\n"
-        "00:00:15 ts-relax\n"
-        "00:10:00 ts-drowsy\n"
-        "00:20:00 ts-sleep\n"
-        "00:30:00 ts-deep-sleep\n"
-        "00:45:00 off\n");
-    presets.append(deepSleep);
+        return noise.whiteFiltered[channel] * 0.82;
+    };
 
-    SbgPreset meditation;
-    meditation.title = QStringLiteral("Simple Meditation");
-    meditation.source = QStringLiteral(
-        "# Simple 30-minute meditation sequence\n"
-        "-SE\n"
-        "ts-start: pink/40 200+10/15\n"
-        "ts-deep: pink/40 200+6/20\n"
-        "ts-end: pink/40 200+10/15\n"
-        "off: -\n"
-        "00:00:00 off\n"
-        "00:00:15 ts-start\n"
-        "00:15:00 ts-deep\n"
-        "00:25:00 ts-end\n"
-        "00:30:00 off\n");
-    presets.append(meditation);
+    double value = 0.0;
 
-    SbgPreset creativity;
-    creativity.title = QStringLiteral("Creativity Boost");
-    creativity.source = QStringLiteral(
-        "# Creativity Boost - 40 minutes\n"
-        "-SE\n"
-        "ts-relax: pink/40 200+10/20\n"
-        "ts-creative: pink/40 200+8/15 300@6/10\n"
-        "ts-deep-creative: pink/40 150+6/20 250@7/15\n"
-        "ts-return: pink/40 200+10/20\n"
-        "off: -\n"
-        "00:00:00 off\n"
-        "00:00:15 ts-relax\n"
-        "00:10:00 ts-creative\n"
-        "00:20:00 ts-deep-creative\n"
-        "00:35:00 ts-return\n"
-        "00:40:00 off\n");
-    presets.append(creativity);
+    switch (noise.color)
+    {
+    case SbgVoice::White:
+        value = nextWhite();
+        break;
 
-    SbgPreset stressRelief;
-    stressRelief.title = QStringLiteral("Stress Relief");
-    stressRelief.source = QStringLiteral(
-        "# Stress Relief - 30 minutes\n"
-        "-SE\n"
-        "ts-start: white/30 250+10/20\n"
-        "ts-relax: white/30 250+9/25\n"
-        "ts-deep-relax: white/30 250+8/20\n"
-        "ts-return: white/30 250+10/15\n"
-        "off: -\n"
-        "00:00:00 off\n"
-        "00:00:15 ts-start\n"
-        "00:05:00 ts-relax\n"
-        "00:15:00 ts-deep-relax\n"
-        "00:25:00 ts-return\n"
-        "00:30:00 off\n");
-    presets.append(stressRelief);
+    case SbgVoice::Pink:
+    {
+        const double white = nextWhite();
 
-    SbgPreset energizer;
-    energizer.title = QStringLiteral("Morning Energizer");
-    energizer.source = QStringLiteral(
-        "# Morning Energizer - 20 minutes\n"
-        "-SE\n"
-        "ts-wake: pink/30 300@10/20\n"
-        "ts-energize: pink/30 300@14/25\n"
-        "ts-alert: pink/30 300@18/20\n"
-        "ts-balanced: pink/30 300@12/15\n"
-        "off: -\n"
-        "00:00:00 off\n"
-        "00:00:15 ts-wake\n"
-        "00:05:00 ts-energize\n"
-        "00:10:00 ts-alert\n"
-        "00:15:00 ts-balanced\n"
-        "00:20:00 off\n");
-    presets.append(energizer);
+        double *state = noise.pinkState[channel];
 
-    return presets;
+        state[0] = 0.99886 * state[0] + white * 0.0555179;
+        state[1] = 0.99332 * state[1] + white * 0.0750759;
+        state[2] = 0.96900 * state[2] + white * 0.1538520;
+        state[3] = 0.86650 * state[3] + white * 0.3104856;
+        state[4] = 0.55000 * state[4] + white * 0.5329522;
+        state[5] = -0.7616 * state[5] - white * 0.0168980;
+
+        const double pink =
+            state[0] + state[1] + state[2] + state[3]
+            + state[4] + state[5] + state[6]
+            + white * 0.5362;
+
+        state[6] = white * 0.115926;
+
+        value = pink * 0.11;
+        break;
+    }
+
+    case SbgVoice::Brown:
+    {
+        const double white = nextRawWhite();
+
+        double &state = noise.brownState[channel];
+
+        state = state * 0.995 + white * 0.018;
+
+        state = qBound(-1.0, state, 1.0);
+
+        value = state * 2.8;
+        break;
+    }
+
+    case SbgVoice::Grey:
+    {
+        // Reuse the pink branch via a nested call.
+        const int savedColor = noise.color;
+        noise.color = SbgVoice::Pink;
+        const double pink = nextNoiseSample(noise, channel);
+        noise.color = savedColor;
+
+        double &low = noise.greyLow[channel];
+        double &mid = noise.greyMid[channel];
+        double &high = noise.greyHigh[channel];
+
+        low = low * 0.985 + pink * 0.015;
+        mid = mid * 0.80 + pink * 0.20;
+        high = high * 0.45 + pink * 0.55;
+
+        const double grey =
+            low * 0.25 + mid * 0.60 + high * 0.15;
+
+        value = grey * 2.4;
+        break;
+    }
+    }
+
+    return qBound(-1.0, value, 1.0);
 }
