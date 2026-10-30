@@ -9,22 +9,26 @@ Page {
 
     property string activeBand: ""
     property string activeNoise: ""
+    property string activeSequence: ""
     property var activeAmbiences: []
 
     property bool bandPlaying: audioEngine.binauralPlaying
     property bool ambiencePlaying: audioEngine.ambiencePlaying
     property bool noisePlaying: audioEngine.coloredNoisePlaying
+    property bool sequencePlaying: audioEngine.sequencePlaying
 
     property bool bandPaused: audioEngine.binauralPaused
     property bool ambiencePaused: audioEngine.ambiencePaused
     property bool noisePaused: audioEngine.coloredNoisePaused
+    property bool sequencePaused: audioEngine.sequencePaused
 
     property bool isPlaying: bandPlaying ||
                              ambiencePlaying ||
-                             noisePlaying
+                             noisePlaying ||
+                             sequencePlaying
 
     property bool pausedMode: !isPlaying &&
-        (activeBand !== "" || activeAmbiences.length > 0 || activeNoise !== "")
+        (activeBand !== "" || activeAmbiences.length > 0 || activeNoise !== "" || activeSequence !== "")
 
     AudioEngine {
         id: audioEngine
@@ -37,12 +41,15 @@ Page {
     onActiveBandChanged: checkSleepTimer()
     onActiveAmbiencesChanged: checkSleepTimer()
     onActiveNoiseChanged: checkSleepTimer()
+    onActiveSequenceChanged: checkSleepTimer()
 
     function checkSleepTimer() {
         if (appWindow.sleepTimerRunning &&
-            page.activeBand === "" &&
-            page.activeAmbiences.length === 0 &&
-            page.activeNoise === "") {
+                page.activeBand === "" &&
+                page.activeAmbiences.length === 0 &&
+                page.activeNoise === "" &&
+                page.activeSequence === "")
+        {
             appWindow.cancelSleepTimer()
         }
     }
@@ -75,6 +82,14 @@ Page {
                 audioEngine.setColoredNoise(activeNoise)
             }
         }
+
+        if (activeSequence !== "") {
+            if (audioEngine.sequencePaused) {
+                audioEngine.resumeSequence()
+            } else if (!audioEngine.sequencePlaying) {
+                audioEngine.startSequence(activeSequence)
+            }
+        }
     }
 
     function togglePlayback() {
@@ -82,6 +97,7 @@ Page {
             audioEngine.pauseBinaural()
             audioEngine.pauseAmbience()
             audioEngine.pauseColoredNoise()
+            audioEngine.pauseSequence()
             appWindow.pauseSleepTimer()
         } else {
             resumeAll()
@@ -93,12 +109,35 @@ Page {
         audioEngine.stop()
         audioEngine.stopAmbience()
         audioEngine.stopColoredNoise()
+        audioEngine.stopSequence()
 
         page.activeBand = ""
         page.activeAmbiences = []
         page.activeNoise = ""
+        page.activeSequence = ""
 
         ambienceDrawer.open = false
+    }
+
+    function selectSequence(preset) {
+        // Toggle off when tapped again.
+        if (page.activeSequence === preset) {
+            page.activeSequence = ""
+            audioEngine.stopSequence()
+            return
+        }
+
+        var wasPaused = page.pausedMode
+
+        page.activeSequence = preset
+
+        if (wasPaused) {
+            // Select but keep the paused look-and-feel.
+            audioEngine.startSequence(preset)
+            audioEngine.pauseSequence()
+        } else {
+            audioEngine.startSequence(preset)
+        }
     }
 
     Component {
@@ -548,6 +587,80 @@ Page {
 
                             onClicked: {
                                 pageStack.push(infoColoredPageComponent)
+                            }
+                        }
+                    }
+
+                    // Sequences Section
+                    SectionHeader {
+                        text: qsTr("Sequences")
+                    }
+
+                    // SBaGen preset selector
+                    ComboBox {
+                        id: sequenceCombo
+
+                        x: Theme.horizontalPageMargin
+                        width: parent.width -
+                               2 * Theme.horizontalPageMargin
+
+                        label: qsTr("Preset")
+
+                        menu: ContextMenu {
+                            Repeater {
+                                model: audioEngine.sequencePresets
+
+                                MenuItem {
+                                    text: modelData
+
+                                    onClicked:
+                                        page.selectSequence(modelData)
+                                }
+                            }
+                        }
+                    }
+
+                    // Sequence progress
+                    ProgressBar {
+                        id: sequenceProgress
+
+                        x: Theme.horizontalPageMargin
+                        width: parent.width -
+                               2 * Theme.horizontalPageMargin
+
+                        minimumValue: 0
+                        maximumValue: 1
+                        value: audioEngine.sequenceProgress
+
+                        visible: page.activeSequence !== ""
+                        opacity: page.sequencePlaying ? 1.0 : 0.6
+                    }
+
+                    // Sequence volume slider
+                    Item {
+                        width: parent.width
+
+                        height: sequenceVolumeSlider.height
+
+                        Slider {
+                            id: sequenceVolumeSlider
+
+                            anchors.left: parent.left
+                            anchors.leftMargin:
+                                Theme.horizontalPageMargin
+                            anchors.right: parent.right
+                            anchors.rightMargin:
+                                Theme.horizontalPageMargin
+
+                            minimumValue: 0
+                            maximumValue: 100
+                            value: 50
+
+                            enabled: page.activeSequence !== ""
+                            opacity: enabled ? 1.0 : 0.5
+
+                            onValueChanged: {
+                                audioEngine.setSequenceVolume(value)
                             }
                         }
                     }

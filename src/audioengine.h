@@ -11,6 +11,7 @@
 
 class BinauralGenerator;
 class ColoredNoiseGenerator;
+class SequenceGenerator;
 
 class AudioEngine : public QObject
 {
@@ -40,8 +41,25 @@ class AudioEngine : public QObject
                READ isColoredNoisePaused
                NOTIFY playingChanged)
 
+    Q_PROPERTY(bool sequencePlaying
+               READ isSequencePlaying
+               NOTIFY playingChanged)
+
+    Q_PROPERTY(bool sequencePaused
+               READ isSequencePaused
+               NOTIFY playingChanged)
+
+    Q_PROPERTY(QStringList sequencePresets
+               READ sequencePresets
+               CONSTANT)
+
+    Q_PROPERTY(double sequenceProgress
+               READ sequenceProgress
+               NOTIFY sequenceProgressChanged)
+
 public:
     static constexpr int MaxAmbienceChannels = 3;
+    static constexpr int SequencePollInterval = 250;
 
     explicit AudioEngine(QObject *parent = nullptr);
     ~AudioEngine() override;
@@ -49,6 +67,11 @@ public:
     bool isBinauralPlaying() const;
     bool isAmbiencePlaying() const;
     bool isColoredNoisePlaying() const;
+
+    bool isSequencePlaying() const;
+    bool isSequencePaused() const;
+    QStringList sequencePresets() const;
+    double sequenceProgress() const;
 
     bool isBinauralPaused() const;
     bool isAmbiencePaused() const;
@@ -78,8 +101,15 @@ public:
     Q_INVOKABLE void setAmbienceVolume(int volume);
     Q_INVOKABLE void setColoredNoiseVolume(int volume);
 
+    Q_INVOKABLE void startSequence(const QString &preset);
+    Q_INVOKABLE void stopSequence();
+    Q_INVOKABLE void pauseSequence();
+    Q_INVOKABLE void resumeSequence();
+    Q_INVOKABLE void setSequenceVolume(int volume);
+
 signals:
     void playingChanged();
+    void sequenceProgressChanged();
 
 private:
     void updatePlayingState();
@@ -91,6 +121,26 @@ private:
     // Colored-noise volume.
     void applyPendingColoredNoiseVolume();
     int coloredNoiseTargetVolume() const;
+
+    void updateSequencePoll();
+
+    // Sequence playback channel (own output, generator, fade-out).
+    PcmChannel *m_sequenceChannel;
+
+    // Sequence generator (parameter access only; owned by PcmChannel).
+    SequenceGenerator *m_sequenceGenerator;
+
+    // Publishes sequenceProgress and self-stops finished sequences.
+    QTimer *m_sequencePollTimer;
+
+    // Built-in SBaGen presets: title -> raw .sbg source.
+    QStringList m_sequencePresets;
+    QHash<QString, QString> m_sequencePresetSources;
+
+    int m_sequenceVolume;
+
+    // Sleep-timer fade-out start volume.
+    double m_sleepTimerSequenceStartVolume;
 
     // Sleep timer.
     QTimer *m_sleepTimerFadeTimer;
