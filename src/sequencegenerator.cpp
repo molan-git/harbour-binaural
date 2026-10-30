@@ -1,598 +1,663 @@
-#include "ambiencechannel.h"
+#include "sbgsequence.h"
 
-#include <QDebug>
-#include <QMediaContent>
-#include <QUrl>
-#include <QtMath>
+#include <QtGlobal>
+
+#include <algorithm>
+
+// ============================================================================
+// HELPERS
+// ============================================================================
 
 namespace
 {
-    const int FadeInDuration = 200;
-    const int FadeOutDuration = 200;
-    const int CrossfadeDuration = 8000;
+    QStringList splitTokens(const QString &line)
+    {
+        QStringList tokens;
 
-    const int FadeInterval = 15;
-    const int VolumeUpdateInterval = 50;
+        const QStringList parts = line.split(QLatin1Char(' '));
 
-    const int MasterVolumeFactorPercent = 60;
+        for (int i = 0; i < parts.size(); ++i)
+        {
+            if (!parts.at(i).isEmpty())
+                tokens.append(parts.at(i));
+        }
 
-    const QString AmbienceBasePath =
-        QStringLiteral("file:///usr/share/harbour-binaural/sounds/");
+        return tokens;
+    }
+
+    bool parseDouble(const QString &text, double *out)
+    {
+        bool ok = false;
+
+        const double value = text.toDouble(&ok);
+
+        if (ok)
+            *out = value;
+
+        return ok;
+    }
+
+    /*
+     * "HH:MM:SS", "MM:SS" or "SS" -> milliseconds.
+     */
+    bool parseClockTimeMs(const QString &token, qint64 *out)
+    {
+        const QStringList parts =
+            token.split(QLatin1Char(':'));
+
+        if (parts.isEmpty() || parts.size() > 3)
+            return false;
+
+        double hours = 0.0;
+        double minutes = 0.0;
+        double seconds = 0.0;
+
+        if (parts.size() == 3)
+        {
+            if (!parseDouble(parts.at(0), &hours)
+                || !parseDouble(parts.at(1), &minutes)
+                || !parseDouble(parts.at(2), &seconds))
+                return false;
+        }
+        else if (parts.size() == 2)
+        {
+            if (!parseDouble(parts.at(0), &minutes)
+                || !parseDouble(parts.at(1), &seconds))
+                return false;
+        }
+        else
+        {
+            if (!parseDouble(parts.at(0), &seconds))
+                return false;
+        }
+
+        *out = qRound(
+            (hours * 3600.0
+             + minutes * 60.0
+             + seconds) * 1000.0);
+
+        return true;
+    }
+
+    /*
+     * "+HH:MM:SS", "+MM:SS" or "+SS" -> milliseconds offset.
+     */
+    bool parseRelativeTimeMs(const QString &token, qint64 *out)
+    {
+        if (!token.startsWith(QLatin1Char('+')))
+            return false;
+
+        return parseClockTimeMs(token.mid(1), out);
+    }
+
+    bool noiseColorFromName(const QString &name, int *out)
+    {
+        const QString lower = name.toLower();
+
+        if (lower == QLatin1String("white"))
+            *out = SbgVoice::White;
+        else if (lower == QLatin1String("pink"))
+            *out = SbgVoice::Pink;
+        else if (lower == QLatin1String("brown"))
+            *out = SbgVoice::Brown;
+        else if (lower == QLatin1String("grey")
+                 || lower == QLatin1String("gray"))
+            *out = SbgVoice::Grey;
+        else
+            return false;
+
+        return true;
+    }
+
+    /*
+     * Voice token forms:
+     *   pink/40            noise voice
+     *   100+4.5/8          tone, right channel higher
+     *   200-4/6            tone, right channel lower
+     *   300@6/10           sbagen-plus isochronic; approximated
+     *                      here as a binaural '+offset' voice
+     *   300/6              plain tone (no binaural offset)
+     *
+     * Amplitude defaults to 20 (a common SBaGen level) when omitted.
+     */
+    bool parseVoice(const QString &token, SbgVoice *out, QString *error)
+    {
+        // Allow callers to pass a null error string.
+        QString localError;
+
+        if (!error)
+            error = &localError;
+
+        // Optional "/amplitude" suffix shared by tones and noise.
+        const int slash = token.indexOf(QLatin1Char('/'));
+
+        const QString head =
+            slash >= 0 ? token.left(slash) : token;
+
+        double amplitude = 20.0;
+
+        if (slash >= 0
+            && !parseDouble(token.mid(slash + 1), &amplitude))
+        {
+            *error = QStringLiteral(
+                "bad amplitude: %1").arg(token);
+            return false;
+        }
+
+        // Noise voice: "color[/amplitude]".
+        int noiseColor = -1;
+
+        if (noiseColorFromName(head, &noiseColor))
+        {
+            out->type = SbgVoice::Noise;
+            out->noiseColor = noiseColor;
+            out->amplitude = amplitude;
+            return true;
+        }
+
+        // Tone voice: "carrier[+-@offset][/amplitude]".
+        out->type = SbgVoice::Tone;
+        out->amplitude = amplitude;
+
+        const QString &freqPart = head;
+
+        // Optional binaural offset: a single '+', '-' or '@'.
+        int signPos = -1;
+
+        for (int i = 0; i < freqPart.size(); ++i)
+        {
+            const QChar c = freqPart.at(i);
+
+            if (c == QLatin1Char('+')
+                || c == QLatin1Char('-')
+                || c == QLatin1Char('@'))
+            {
+                signPos = i;
+                break;
+            }
+        }
+
+        if (signPos < 0)
+        {
+            if (!parseDouble(freqPart, &out->carrier))
+            {
+                *error = QStringLiteral(
+                    "bad carrier frequency: %1").arg(token);
+                return false;
+            }
+
+            out->offset = 0.0;
+            return true;
+        }
+
+        if (!parseDouble(freqPart.left(signPos), &out->carrier))
+        {
+            *error = QStringLiteral(
+                "bad carrier frequency: %1").arg(token);
+            return false;
+        }
+
+        if (!parseDouble(freqPart.mid(signPos + 1), &out->offset))
+        {
+            *error = QStringLiteral(
+                "bad binaural offset: %1").arg(token);
+            return false;
+        }
+
+        // '@' (isochronic) approximates a right-higher binaural beat.
+        if (freqPart.at(signPos) == QLatin1Char('-'))
+            out->offset = -out->offset;
+
+        return true;
+    }
 }
 
-AmbienceChannel::AmbienceChannel(QObject *parent)
-    : QObject(parent),
-      m_playerA(new QMediaPlayer(this)),
-      m_playerB(new QMediaPlayer(this)),
-      m_activePlayer(nullptr),
-      m_fadingPlayer(nullptr),
-      m_fadeInTimer(new QTimer(this)),
-      m_crossfadeTimer(new QTimer(this)),
-      m_fadeOutTimer(new QTimer(this)),
-      m_volumeTimer(new QTimer(this)),
-      m_volume(50),
-      m_fadeOutActiveVolume(0),
-      m_fadeOutFadingVolume(0),
-      m_stopping(false),
-      m_paused(false),
-      m_resumeFadeIn(false),
-      m_resumeCrossfade(false),
-      m_sleepFactor(1.0)
+// ============================================================================
+// LOOKUP
+// ============================================================================
+
+const SbgToneSet *SbgSequence::toneSetByName(const QString &name) const
 {
-    m_fadeInTimer->setInterval(FadeInterval);
-    m_crossfadeTimer->setInterval(FadeInterval);
-    m_fadeOutTimer->setInterval(FadeInterval);
+    for (int i = 0; i < toneSets.size(); ++i)
+    {
+        if (toneSets.at(i).name == name)
+            return &toneSets.at(i);
+    }
 
-    m_volumeTimer->setInterval(VolumeUpdateInterval);
-    m_volumeTimer->setSingleShot(true);
-
-    connectPlayer(m_playerA);
-    connectPlayer(m_playerB);
-
-    connect(m_fadeInTimer,
-            &QTimer::timeout,
-            this,
-            [this]() {
-                updateFadeIn();
-            });
-
-    connect(m_crossfadeTimer,
-            &QTimer::timeout,
-            this,
-            [this]() {
-                updateCrossfade();
-            });
-
-    connect(m_fadeOutTimer,
-            &QTimer::timeout,
-            this,
-            [this]() {
-                updateFadeOut();
-            });
-
-    connect(m_volumeTimer,
-            &QTimer::timeout,
-            this,
-            [this]() {
-                applyPendingVolume();
-            });
-
-    m_playerA->setVolume(0);
-    m_playerB->setVolume(0);
+    return nullptr;
 }
 
-AmbienceChannel::~AmbienceChannel()
-{
-    m_fadeInTimer->stop();
-    m_crossfadeTimer->stop();
-    m_fadeOutTimer->stop();
-    m_volumeTimer->stop();
+// ============================================================================
+// PARSER
+// ============================================================================
 
-    m_playerA->stop();
-    m_playerB->stop();
-}
-
-bool AmbienceChannel::isPlaying() const
+bool Sbg::parse(const QString &source,
+                SbgSequence *out,
+                QString *error)
 {
-    return m_activePlayer
-        && m_activePlayer->state() == QMediaPlayer::PlayingState;
-}
-
-bool AmbienceChannel::isPaused() const
-{
-    return m_paused
-        && m_activePlayer
-        && m_activePlayer->state() == QMediaPlayer::PausedState;
-}
-
-bool AmbienceChannel::isStopping() const
-{
-    return m_stopping;
-}
-
-QString AmbienceChannel::fileName() const
-{
-    return m_fileName;
-}
-
-bool AmbienceChannel::start(const QString &fileName)
-{
-    if (fileName.isEmpty())
+    if (!out)
         return false;
 
-    const QUrl mediaUrl(AmbienceBasePath + fileName);
+    out->title.clear();
+    out->durationMs = 0;
+    out->toneSets.clear();
+    out->events.clear();
 
-    if (!mediaUrl.isValid())
+    qint64 nowMs = 0;
+
+    const QStringList lines = source.split(QLatin1Char('\n'));
+
+    for (int lineNr = 0; lineNr < lines.size(); ++lineNr)
+    {
+        QString line = lines.at(lineNr).trimmed();
+
+        if (line.isEmpty() || line.startsWith(QLatin1Char('#')))
+            continue;
+
+        /*
+         * Option lines (-SE, -S, -TS, -m ...). The sequence engine
+         * always crossfades between tone-sets, so -SE behaviour is
+         * implicit; other options are accepted and ignored.
+         */
+        if (line.startsWith(QLatin1Char('-')))
+            continue;
+
+        // Timeline: "NOW name".
+        if (line == QLatin1String("NOW")
+            || line.startsWith(QLatin1String("NOW ")))
+        {
+            SbgTimelineEvent event;
+            event.timeMs = nowMs;
+
+            if (line.size() > 4)
+                event.toneSetName = line.mid(4).trimmed();
+
+            out->events.append(event);
+            continue;
+        }
+
+        const QStringList tokens = splitTokens(line);
+
+        if (tokens.isEmpty())
+            continue;
+
+        // Timeline: "+time name ...".
+        if (tokens.at(0).startsWith(QLatin1Char('+')))
+        {
+            if (tokens.size() < 2)
+            {
+                if (error)
+                    *error = QStringLiteral(
+                        "line %1: expected '+time name'")
+                        .arg(lineNr + 1);
+                return false;
+            }
+
+            qint64 deltaMs = 0;
+
+            if (!parseRelativeTimeMs(tokens.at(0), &deltaMs))
+            {
+                if (error)
+                    *error = QStringLiteral(
+                        "line %1: bad time: %2")
+                        .arg(lineNr + 1)
+                        .arg(tokens.at(0));
+                return false;
+            }
+
+            nowMs += deltaMs;
+
+            SbgTimelineEvent event;
+            event.timeMs = nowMs;
+            event.toneSetName = tokens.at(1);
+
+            out->events.append(event);
+            continue;
+        }
+
+        /*
+         * Timeline: absolute clock-style entries ("0:00 ts" or
+         * "00:05:00 ts-focus ->"). Treated as offsets from the
+         * start of the sequence; trailing tokens such as the
+         * sbagen-plus '->' marker are ignored.
+         */
+        if (tokens.at(0).at(0).isDigit())
+        {
+            if (tokens.size() < 2)
+            {
+                if (error)
+                    *error = QStringLiteral(
+                        "line %1: expected 'time name'")
+                        .arg(lineNr + 1);
+                return false;
+            }
+
+            qint64 timeMs = 0;
+
+            if (!parseClockTimeMs(tokens.at(0), &timeMs))
+            {
+                if (error)
+                    *error = QStringLiteral(
+                        "line %1: bad time: %2")
+                        .arg(lineNr + 1)
+                        .arg(tokens.at(0));
+                return false;
+            }
+
+            SbgTimelineEvent event;
+            event.timeMs = timeMs;
+            event.toneSetName = tokens.at(1);
+
+            out->events.append(event);
+            continue;
+        }
+
+        /*
+         * Tone-set definition: "name: voice voice ...".
+         * A leading "spin:" keyword marks a slowly spun voice
+         * set; the spin modulation is ignored, the voices render
+         * as ordinary binaural voices.
+         */
+        const int colon = line.indexOf(QLatin1Char(':'));
+
+        if (colon > 0)
+        {
+            SbgToneSet set;
+            set.name = line.left(colon).trimmed();
+
+            QString voiceList = line.mid(colon + 1);
+
+            if (voiceList.trimmed().startsWith(
+                    QStringLiteral("spin:")))
+            {
+                voiceList = voiceList.trimmed().mid(
+                    QStringLiteral("spin:").size());
+            }
+
+            const QStringList voices = splitTokens(voiceList);
+
+            for (int i = 0; i < voices.size(); ++i)
+            {
+                const QString &token = voices.at(i);
+
+                if (token == QLatin1String("-"))
+                    continue;   // 'off' tone-set
+
+                SbgVoice voice;
+
+                if (!parseVoice(token, &voice, error))
+                {
+                    if (error)
+                        *error = QStringLiteral(
+                            "line %1: %2")
+                            .arg(lineNr + 1)
+                            .arg(*error);
+                    return false;
+                }
+
+                set.voices.append(voice);
+            }
+
+            out->toneSets.append(set);
+            continue;
+        }
+
+        if (error)
+            *error = QStringLiteral(
+                "line %1: unsupported construct: %2")
+                .arg(lineNr + 1)
+                .arg(line);
         return false;
+    }
 
-    stopImmediately();
+    if (out->events.isEmpty())
+    {
+        if (error)
+            *error = QStringLiteral(
+                "no timeline events found");
+        return false;
+    }
 
-    m_fileName = fileName;
-    m_activePlayer = m_playerA;
-    m_activePlayer->setMedia(QMediaContent(mediaUrl));
-    m_activePlayer->setVolume(0);
+    // Keep the timeline chronological regardless of line order.
+    std::stable_sort(
+        out->events.begin(),
+        out->events.end(),
+        [](const SbgTimelineEvent &a,
+           const SbgTimelineEvent &b)
+        {
+            return a.timeMs < b.timeMs;
+        });
 
-    m_fadeInElapsedBeforePause = 0;
-    m_crossfadeElapsedBeforePause = 0;
-    m_fadeInElapsed.invalidate();
-    m_crossfadeElapsed.invalidate();
+    // Resolve event tone-set references.
+    for (int i = 0; i < out->events.size(); ++i)
+    {
+        const SbgTimelineEvent &event = out->events.at(i);
 
-    m_stopping = false;
-    m_paused = false;
-    m_sleepFactor = 1.0;
+        if (event.toneSetName == QLatin1String("-"))
+            continue;
 
-    m_resumeFadeIn = true;
-    m_resumeCrossfade = false;
+        if (!out->toneSetByName(event.toneSetName))
+        {
+            if (error)
+                *error = QStringLiteral(
+                    "unknown tone-set: %1")
+                    .arg(event.toneSetName);
+            return false;
+        }
+    }
 
-    m_activePlayer->play();
-    m_fadeInElapsed.start();
-    m_fadeInTimer->start();
-
-    emit stateChanged();
+    out->durationMs = out->events.last().timeMs;
 
     return true;
 }
 
-void AmbienceChannel::pause()
+// ============================================================================
+// BUILTIN PRESETS
+// ============================================================================
+//
+// Attribution / licensing (also add to CREDITS.md):
+//
+//   The preset voice data is based on sequences published with
+//   SBaGen (Copyright (c) 1999-2007 Jim Peters, http://uazu.net/sbagen/,
+//   released under the GNU GPL v2) and the sbagen-plus example
+//   bundle (https://github.com/ruanklein/sbagen-plus, GNU GPL v2).
+//   The carrier/beat values are community measurements and are
+//   reproduced as factual data; all comment text here is written
+//   for this project, no file text is copied verbatim. Do not
+//   copy the original .sbg comments into these strings: GPLv2
+//   ("version 2" only, no "or later") text cannot be mixed into
+//   the GPLv3-licensed app.
+//
+// The Monroe 'Focus level' tone-sets are approximations based on
+// community-measured values, are not Monroe Institute products,
+//   and imply no affiliation with or endorsement by the Monroe
+//   Institute.
+//
+// The Focus-level files originally contain only a single
+// continuous tone-set ("0:00 ts"); a 30-minute session timeline
+// has been added for use as an app preset.
+//
+// sbagen-plus '@' isochronic voices are approximated as binaural
+// beats (see parseVoice).
+
+QVector<SbgPreset> Sbg::builtinPresets()
 {
-    if (!m_activePlayer || m_paused)
-        return;
-
-    const bool activePlaying =
-        m_activePlayer->state() == QMediaPlayer::PlayingState;
-
-    const bool fadingPlaying =
-        m_fadingPlayer
-            && m_fadingPlayer->state() == QMediaPlayer::PlayingState;
-
-    if (!activePlaying && !fadingPlaying)
-        return;
-
-    m_resumeFadeIn = m_fadeInTimer->isActive();
-    m_resumeCrossfade = m_crossfadeTimer->isActive();
-
-    if (m_stopping && m_fadeElapsed.isValid()) {
-        m_fadeElapsedBeforePause += m_fadeElapsed.elapsed();
-        m_fadeElapsed.invalidate();
-    }
-
-    if (m_fadeInTimer->isActive() && m_fadeInElapsed.isValid()) {
-        m_fadeInElapsedBeforePause += m_fadeInElapsed.elapsed();
-        m_fadeInElapsed.invalidate();
-    }
-
-    if (m_crossfadeTimer->isActive() && m_crossfadeElapsed.isValid()) {
-        m_crossfadeElapsedBeforePause += m_crossfadeElapsed.elapsed();
-        m_crossfadeElapsed.invalidate();
-    }
-
-
-    m_fadeInTimer->stop();
-    m_crossfadeTimer->stop();
-    m_fadeOutTimer->stop();
-    m_volumeTimer->stop();
-
-    m_activePlayer->pause();
-
-    if (m_fadingPlayer)
-        m_fadingPlayer->pause();
-
-    m_paused = true;
-
-    emit stateChanged();
-}
-
-void AmbienceChannel::resume()
-{
-    if (!m_activePlayer || !m_paused)
-        return;
-
-    m_paused = false;
-
-    m_activePlayer->play();
-
-    if (m_fadingPlayer)
-        m_fadingPlayer->play();
-
-    if (m_stopping) {
-        m_fadeElapsed.start();
-        m_fadeOutTimer->start();
-    } else if (m_resumeCrossfade && m_fadingPlayer) {
-        m_crossfadeElapsed.start();
-        m_crossfadeTimer->start();
-    } else if (m_resumeFadeIn) {
-        m_fadeInElapsed.start();
-        m_fadeInTimer->start();
-    } else {
-        applyPendingVolume();
-    }
-
-    emit stateChanged();
-}
-
-void AmbienceChannel::stop()
-{
-    if (!m_activePlayer || m_stopping)
-        return;
-
-    m_resumeFadeIn = false;
-    m_resumeCrossfade = false;
-
-    m_fadeInTimer->stop();
-    m_crossfadeTimer->stop();
-    m_volumeTimer->stop();
-
-    m_fadeOutActiveVolume = m_activePlayer->volume();
-
-    m_fadeOutFadingVolume =
-        m_fadingPlayer ? m_fadingPlayer->volume() : 0;
-
-    m_fadeElapsedBeforePause = 0;
-    m_fadeElapsed.start();
-
-    m_stopping = true;
-    m_paused = false;
-
-    m_fadeOutTimer->start();
-}
-
-void AmbienceChannel::stopImmediately()
-{
-    m_fadeInTimer->stop();
-    m_crossfadeTimer->stop();
-    m_fadeOutTimer->stop();
-    m_volumeTimer->stop();
-
-    m_playerA->stop();
-    m_playerB->stop();
-
-    m_playerA->setVolume(0);
-    m_playerB->setVolume(0);
-
-    m_activePlayer = nullptr;
-    m_fadingPlayer = nullptr;
-
-    m_fileName.clear();
-
-    m_fadeInElapsed.invalidate();
-    m_fadeInElapsedBeforePause = 0;
-    m_crossfadeElapsed.invalidate();
-    m_crossfadeElapsedBeforePause = 0;
-
-    m_fadeElapsed.invalidate();
-    m_fadeElapsedBeforePause = 0;
-
-    m_fadeOutActiveVolume = 0;
-    m_fadeOutFadingVolume = 0;
-
-    m_stopping = false;
-    m_paused = false;
-    m_sleepFactor = 1.0;
-
-    m_resumeFadeIn = false;
-    m_resumeCrossfade = false;
-
-    emit stateChanged();
-}
-
-void AmbienceChannel::setVolume(int volume)
-{
-    m_volume = qBound(0, volume, 100);
-    m_volumeTimer->start();
-}
-
-int AmbienceChannel::currentVolume() const
-{
-    return m_activePlayer ? m_activePlayer->volume() : 0;
-}
-
-int AmbienceChannel::targetVolume() const
-{
-    return qRound(
-        m_volume * MasterVolumeFactorPercent / 100.0);
-}
-
-void AmbienceChannel::applySleepVolume(
-    int startVolume,
-    double factor)
-{
-    factor = qBound(0.0, factor, 1.0);
-    m_sleepFactor = factor;
-
-    // If a crossfade or fade-in is in progress, that fade is already
-    // updating volume every 15 ms using m_sleepFactor — don't fight it.
-    if (m_crossfadeTimer->isActive() || m_fadeInTimer->isActive())
-             return;
-
-    if (m_activePlayer) {
-        m_activePlayer->setVolume(
-            qRound(startVolume * factor));
-    }
-
-    if (m_fadingPlayer) {
-        m_fadingPlayer->setVolume(0);
-    }
-}
-
-void AmbienceChannel::applyPendingVolume()
-{
-    if (!m_activePlayer || m_stopping || m_paused)
-        return;
-
-    if (m_fadeInTimer->isActive()
-        || m_crossfadeTimer->isActive()
-        || m_fadeOutTimer->isActive()) {
-        return;
-    }
-
-    // Honor the sleep-timer factor so a pause/resume during the
-    // sleep fade-out does not jump back to full target volume.
-    m_activePlayer->setVolume(
-                qRound(targetVolume() * m_sleepFactor));
-}
-
-void AmbienceChannel::updateFadeIn()
-{
-    if (!m_activePlayer || m_paused || m_stopping) {
-        m_fadeInTimer->stop();
-        return;
-    }
-
-    const qint64 elapsed = m_fadeInElapsedBeforePause
-            + m_fadeInElapsed.elapsed();
-
-    const double progress = qMin(
-                1.0,
-                static_cast<double>(elapsed) / FadeInDuration);
-
-    // Honor the sleep-timer factor so the fade-in does not fight
-    // the global sleep fade-out.
-    const int volume = qRound(targetVolume() * m_sleepFactor);
-
-    m_activePlayer->setVolume(qRound(volume * progress));
-
-    if (progress >= 1.0) {
-        m_activePlayer->setVolume(volume);
-
-        m_fadeInElapsedBeforePause = 0;
-        m_fadeInElapsed.invalidate();
-        m_resumeFadeIn = false;
-
-        m_fadeInTimer->stop();
-    }
-}
-
-void AmbienceChannel::updateFadeOut()
-{
-    if (!m_activePlayer || !m_stopping) {
-        m_fadeOutTimer->stop();
-        return;
-    }
-
-    if (m_paused)
-        return;
-
-    const qint64 elapsed = m_fadeElapsedBeforePause
-        + m_fadeElapsed.elapsed();
-
-    const double progress = qMin(
-        1.0,
-        static_cast<double>(elapsed) / FadeOutDuration);
-
-    m_activePlayer->setVolume(
-        qRound(m_fadeOutActiveVolume * (1.0 - progress)));
-
-    if (m_fadingPlayer) {
-        m_fadingPlayer->setVolume(
-            qRound(m_fadeOutFadingVolume * (1.0 - progress)));
-    }
-
-    if (progress >= 1.0) {
-        const bool shouldEmitFinished = m_stopping;
-
-        stopImmediately();
-
-        if (shouldEmitFinished)
-            emit finished();
-    }
-}
-
-void AmbienceChannel::checkCrossfade(QMediaPlayer *player)
-{
-    if (!player
-        || player != m_activePlayer
-        || m_fadingPlayer
-        || m_stopping
-            || m_paused) {
-        return;
-    }
-
-    const qint64 duration = player->duration();
-
-    if (duration <= 0)
-        return;
-
-    // Never crossfade files that are shorter than the crossfade
-    if (duration <= CrossfadeDuration)
-        return;
-
-    if (duration - player->position() <= CrossfadeDuration)
-        startCrossfade(player);
-}
-
-void AmbienceChannel::startCrossfade(QMediaPlayer *fadingPlayer)
-{
-    if (!fadingPlayer
-            || fadingPlayer != m_activePlayer
-            || m_fadingPlayer
-            || m_stopping
-        || m_paused) {
-        return;
-    }
-
-    QMediaPlayer *nextPlayer =
-        fadingPlayer == m_playerA ? m_playerB : m_playerA;
-
-    nextPlayer->stop();
-    nextPlayer->setMedia(fadingPlayer->currentMedia());
-    nextPlayer->setPosition(0);
-    nextPlayer->setVolume(0);
-
-    m_fadingPlayer = fadingPlayer;
-    m_activePlayer = nextPlayer;
-
-    m_crossfadeElapsedBeforePause = 0;
-    m_fadeInElapsedBeforePause = 0;
-    m_fadeInElapsed.invalidate();
-
-    m_resumeFadeIn = false;
-    m_resumeCrossfade = true;
-
-    nextPlayer->play();
-
-    m_fadeInTimer->stop();
-    m_crossfadeElapsed.start();
-    m_crossfadeTimer->start();
-}
-
-void AmbienceChannel::updateCrossfade()
-{
-    if (!m_activePlayer || !m_fadingPlayer
-            || m_paused || m_stopping) {
-        m_crossfadeTimer->stop();
-        return;
-    }
-
-    const qint64 elapsed = m_crossfadeElapsedBeforePause
-            + m_crossfadeElapsed.elapsed();
-
-    const double progress = qMin(
-                1.0,
-                static_cast<double>(elapsed)
-                / CrossfadeDuration);
-
-    // Apply sleep factor so crossfade respects the fade-out.
-    const int volume = qRound(targetVolume() * m_sleepFactor);
-
-    m_fadingPlayer->setVolume(
-                qRound(volume * (1.0 - progress)));
-
-    m_activePlayer->setVolume(
-                qRound(volume * progress));
-
-    if (progress >= 1.0)
-        finishCrossfade();
-}
-
-void AmbienceChannel::finishCrossfade()
-{
-    m_crossfadeTimer->stop();
-
-    m_crossfadeElapsedBeforePause = 0;
-    m_crossfadeElapsed.invalidate();
-    m_resumeCrossfade = false;
-
-    if (m_fadingPlayer) {
-        m_fadingPlayer->stop();
-        m_fadingPlayer->setVolume(0);
-        m_fadingPlayer = nullptr;
-    }
-
-    if (m_activePlayer)
-        m_activePlayer->setVolume(
-            qRound(targetVolume() * m_sleepFactor));
-}
-
-void AmbienceChannel::handleEndOfMedia(QMediaPlayer *player)
-{
-    if (player == m_fadingPlayer) {
-        player->stop();
-        player->setVolume(0);
-        m_fadingPlayer = nullptr;
-        return;
-    }
-
-    if (player != m_activePlayer)
-        return;
-
-    if (m_stopping) {
-        const bool shouldEmitFinished = m_stopping;
-
-        stopImmediately();
-
-        if (shouldEmitFinished)
-            emit finished();
-
-        return;
-    }
-
-    if (m_paused)
-        return;
-
-    player->setPosition(0);
-    player->play();
-}
-
-void AmbienceChannel::connectPlayer(QMediaPlayer *player)
-{
-    connect(player,
-            &QMediaPlayer::positionChanged,
-            this,
-            [this, player](qint64) {
-                checkCrossfade(player);
-            });
-
-    connect(player,
-            &QMediaPlayer::mediaStatusChanged,
-            this,
-            [this, player](QMediaPlayer::MediaStatus status) {
-                if (status == QMediaPlayer::EndOfMedia) {
-                    handleEndOfMedia(player);
-                } else if (status == QMediaPlayer::InvalidMedia) {
-                    qWarning()
-                        << "AmbienceChannel: invalid media:"
-                        << player->media()
-                               .canonicalUrl()
-                               .toString();
-                }
-            });
-
-    connect(
-        player,
-        static_cast<void (QMediaPlayer::*)(
-            QMediaPlayer::Error)>(&QMediaPlayer::error),
-        this,
-        [player](QMediaPlayer::Error error) {
-            qWarning()
-                << "AmbienceChannel: player error:"
-                << error
-                << player->errorString();
-        });
-
-    connect(player,
-            &QMediaPlayer::stateChanged,
-            this,
-            [this](QMediaPlayer::State) {
-                emit stateChanged();
-            });
+    QVector<SbgPreset> presets;
+
+    // ------------------------------------------------------------------
+    // Monroe Institute Focus levels (community-measured tone-sets).
+    // ------------------------------------------------------------------
+
+    SbgPreset focus3;
+    focus3.title = QStringLiteral("Focus 3 (Sleep)");
+    focus3.source = QStringLiteral(
+        "# F3: 59[1.2]-110[1.3], 288[3.7]\n"
+        "ts: 59+1.2/10 110+1.3/10 288+3.7/10\n"
+        "off: -\n"
+        "NOW ts\n"
+        "+00:30:00 off\n");
+    presets.append(focus3);
+
+    SbgPreset focus10;
+    focus10.title = QStringLiteral("Focus 10 (Body Asleep)");
+    focus10.source = QStringLiteral(
+        "# F10 \"Brain awake, body asleep\":\n"
+        "# 100[1.5], 200[4.0], 250[4.0], 300[4.0]\n"
+        "ts: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10\n"
+        "off: -\n"
+        "NOW ts\n"
+        "+00:30:00 off\n");
+    presets.append(focus10);
+
+    SbgPreset focus12;
+    focus12.title = QStringLiteral("Focus 12 (Expanded Awareness)");
+    focus12.source = QStringLiteral(
+        "# F12 \"Expanded consciousness\":\n"
+        "# 100[1.5], 200[4.0], 250[4.0], 300[4.0],\n"
+        "# 400[10.0], 500[10.1], 600[4.8]\n"
+        "ts: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10 "
+        "400+10.0/10 500+10.1/10 600+4.8/10\n"
+        "off: -\n"
+        "NOW ts\n"
+        "+00:30:00 off\n");
+    presets.append(focus12);
+
+    SbgPreset focus15;
+    focus15.title = QStringLiteral("Focus 15 (No Time)");
+    focus15.source = QStringLiteral(
+        "# F15 \"No time -- 3 hours seems like 2 minutes\":\n"
+        "# 100[1.5], 200[4.0], 250[4.0], 300[4.0],\n"
+        "# 500[7.05], 630[7.1], 750[7.0]\n"
+        "ts: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10 "
+        "500+7.05/10 630+7.1/10 750+7.0/10\n"
+        "off: -\n"
+        "NOW ts\n"
+        "+00:30:00 off\n");
+    presets.append(focus15);
+
+    SbgPreset focus21;
+    focus21.title = QStringLiteral("Focus 21 (Other Energy Systems)");
+    focus21.source = QStringLiteral(
+        "# F21:\n"
+        "# 200[4.0], 250[4.0], 300[4.0],\n"
+        "# 600[16.2], 750[15.9], 900[16.2]\n"
+        "ts: 200+4.0/10 250+4.0/10 300+4.0/10 "
+        "600+16.2/10 750+15.9/10 900+16.2/10\n"
+        "off: -\n"
+        "NOW ts\n"
+        "+00:30:00 off\n");
+    presets.append(focus21);
+
+    // ------------------------------------------------------------------
+    // Sequences from the sbagen-plus example bundle.
+    // ------------------------------------------------------------------
+
+    SbgPreset concentration;
+    concentration.title =
+        QStringLiteral("Focus & Concentration (Beta)");
+    concentration.source = QStringLiteral(
+        "# Focus and Concentration - 60 minutes\n"
+        "-SE\n"
+        "ts-start: pink/30 300@12/20\n"
+        "ts-focus: pink/30 300@15/25\n"
+        "ts-deep-focus: pink/30 300@18/20\n"
+        "ts-wind-down: pink/30 300@12/20\n"
+        "off: -\n"
+        "00:00:00 off\n"
+        "00:00:15 ts-start\n"
+        "00:10:00 ts-focus\n"
+        "00:25:00 ts-deep-focus\n"
+        "00:40:00 ts-wind-down\n"
+        "00:55:00 off\n");
+    presets.append(concentration);
+
+    SbgPreset deepSleep;
+    deepSleep.title = QStringLiteral("Deep Sleep Aid");
+    deepSleep.source = QStringLiteral(
+        "# Deep Sleep Aid - 45 minutes\n"
+        "-SE\n"
+        "ts-relax: brown/60 300+10/15\n"
+        "ts-drowsy: brown/60 200+7/20\n"
+        "ts-sleep: brown/70 100+3/25\n"
+        "ts-deep-sleep: brown/70 100+1.5/20\n"
+        "off: -\n"
+        "00:00:00 off\n"
+        "00:00:15 ts-relax\n"
+        "00:10:00 ts-drowsy\n"
+        "00:20:00 ts-sleep\n"
+        "00:30:00 ts-deep-sleep\n"
+        "00:45:00 off\n");
+    presets.append(deepSleep);
+
+    SbgPreset meditation;
+    meditation.title = QStringLiteral("Simple Meditation");
+    meditation.source = QStringLiteral(
+        "# Simple 30-minute meditation sequence\n"
+        "-SE\n"
+        "ts-start: pink/40 200+10/15\n"
+        "ts-deep: pink/40 200+6/20\n"
+        "ts-end: pink/40 200+10/15\n"
+        "off: -\n"
+        "00:00:00 off\n"
+        "00:00:15 ts-start\n"
+        "00:15:00 ts-deep\n"
+        "00:25:00 ts-end\n"
+        "00:30:00 off\n");
+    presets.append(meditation);
+
+    SbgPreset creativity;
+    creativity.title = QStringLiteral("Creativity Boost");
+    creativity.source = QStringLiteral(
+        "# Creativity Boost - 40 minutes\n"
+        "-SE\n"
+        "ts-relax: pink/40 200+10/20\n"
+        "ts-creative: pink/40 200+8/15 300@6/10\n"
+        "ts-deep-creative: pink/40 150+6/20 250@7/15\n"
+        "ts-return: pink/40 200+10/20\n"
+        "off: -\n"
+        "00:00:00 off\n"
+        "00:00:15 ts-relax\n"
+        "00:10:00 ts-creative\n"
+        "00:20:00 ts-deep-creative\n"
+        "00:35:00 ts-return\n"
+        "00:40:00 off\n");
+    presets.append(creativity);
+
+    SbgPreset stressRelief;
+    stressRelief.title = QStringLiteral("Stress Relief");
+    stressRelief.source = QStringLiteral(
+        "# Stress Relief - 30 minutes\n"
+        "-SE\n"
+        "ts-start: white/30 250+10/20\n"
+        "ts-relax: white/30 250+9/25\n"
+        "ts-deep-relax: white/30 250+8/20\n"
+        "ts-return: white/30 250+10/15\n"
+        "off: -\n"
+        "00:00:00 off\n"
+        "00:00:15 ts-start\n"
+        "00:05:00 ts-relax\n"
+        "00:15:00 ts-deep-relax\n"
+        "00:25:00 ts-return\n"
+        "00:30:00 off\n");
+    presets.append(stressRelief);
+
+    SbgPreset energizer;
+    energizer.title = QStringLiteral("Morning Energizer");
+    energizer.source = QStringLiteral(
+        "# Morning Energizer - 20 minutes\n"
+        "-SE\n"
+        "ts-wake: pink/30 300@10/20\n"
+        "ts-energize: pink/30 300@14/25\n"
+        "ts-alert: pink/30 300@18/20\n"
+        "ts-balanced: pink/30 300@12/15\n"
+        "off: -\n"
+        "00:00:00 off\n"
+        "00:00:15 ts-wake\n"
+        "00:05:00 ts-energize\n"
+        "00:10:00 ts-alert\n"
+        "00:15:00 ts-balanced\n"
+        "00:20:00 off\n");
+    presets.append(energizer);
+
+    return presets;
 }
