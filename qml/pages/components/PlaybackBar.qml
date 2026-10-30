@@ -65,7 +65,8 @@ DockedPanel {
 
             return app.activeBand !== "" ||
                    app.activeNoise !== "" ||
-                   ambiences.length > 0
+                   ambiences.length > 0 ||
+                   page.activeSequence !== ""
         }
 
         opacity: enabled ? 1.0 : 0.5
@@ -112,7 +113,8 @@ DockedPanel {
 
             if (page.activeBand === "" &&
                     page.activeNoise === "" &&
-                    ambiences.length === 0) {
+                    ambiences.length === 0 &&
+                    page.activeSequence === "") {
                 return Theme.secondaryColor
             }
 
@@ -145,6 +147,8 @@ DockedPanel {
             } else if (ambiences.length > 1) {
                 parts.push(SoundNames.label("Ambient mix"))
             }
+            if (page.activeSequence !== "")
+                parts.push(SoundNames.label("Sequence"))
 
             return parts.length > 0
                     ? parts.join(" & ")

@@ -37,6 +37,10 @@ ApplicationWindow {
                                  ? mainPage.activeNoise
                                  : ""
 
+    property string activeSequence: mainPage
+                                   ? mainPage.activeSequence
+                                   : ""
+
     property bool isPlaying: mainPage
                              ? mainPage.isPlaying
                              : false
@@ -57,7 +61,8 @@ ApplicationWindow {
                 (current.objectName !== "AboutPage" &&
                  current.objectName !== "CreditPage" &&
                  current.objectName !== "InfoBinauralPage" &&
-                 current.objectName !== "InfoColoredPage")
+                 current.objectName !== "InfoColoredPage" &&
+                 current.objectName !== "InfoSequencePage")
     }
 
     Timer {
@@ -159,7 +164,8 @@ ApplicationWindow {
     property bool pausedMode: !isPlaying &&
                               (activeBand !== "" ||
                                activeAmbiences.length > 0 ||
-                               activeNoise !== "")
+                               activeNoise !== "" ||
+                               activeSequence !== "")
 
     initialPage: Component {
         MainPage {
@@ -177,6 +183,10 @@ ApplicationWindow {
             activeBand: appWindow.activeBand
             activeAmbiences: appWindow.activeAmbiences
             activeNoise: appWindow.activeNoise
+            activeSequence: appWindow.mainPage
+                            ? appWindow.mainPage.activeSequence
+                            : ""
+
             isPlaying: appWindow.isPlaying
             isPaused: appWindow.pausedMode
 

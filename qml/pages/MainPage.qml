@@ -120,7 +120,14 @@ Page {
     }
 
     function selectSequence(preset) {
-        // Toggle off when tapped again.
+        // None selected: stop playback.
+        if (preset === "") {
+            page.activeSequence = ""
+            audioEngine.stopSequence()
+            return
+        }
+
+        // Toggle off when the currently selected preset is tapped again.
         if (page.activeSequence === preset) {
             page.activeSequence = ""
             audioEngine.stopSequence()
@@ -140,6 +147,19 @@ Page {
         }
     }
 
+    function toggleSequencePlayback() {
+        if (page.activeSequence === "")
+            return
+
+        if (audioEngine.sequencePlaying) {
+            audioEngine.pauseSequence()
+            appWindow.pauseSleepTimer()
+        } else if (audioEngine.sequencePaused) {
+            audioEngine.resumeSequence()
+            appWindow.resumeSleepTimer()
+        }
+    }
+
     Component {
         id: infoBinauralPageComponent
         InfoBinauralPage {}
@@ -148,6 +168,11 @@ Page {
     Component {
         id: infoColoredPageComponent
         InfoColoredPage {}
+    }
+
+    Component {
+        id: infoSequencePageComponent
+        InfoSequencePage {}
     }
 
     Drawer {
@@ -620,7 +645,7 @@ Page {
                         }
                     }
 
-                    // Sequence progress
+                    // Sequence progress bar
                     ProgressBar {
                         id: sequenceProgress
 
@@ -632,25 +657,39 @@ Page {
                         maximumValue: 1
                         value: audioEngine.sequenceProgress
 
+                        valueText: Math.round(audioEngine.sequenceProgress * 100) + "%"
+
+                        // Highlight the bar only while the sequence is playing.
+                        highlighted: page.sequencePlaying
+
                         visible: page.activeSequence !== ""
                         opacity: page.sequencePlaying ? 1.0 : 0.6
+
+                        MouseArea {
+                            anchors.fill: parent
+                            enabled: page.activeSequence !== ""
+
+                            onClicked: {
+                                page.toggleSequencePlayback()
+                            }
+                        }
                     }
 
                     // Sequence volume slider
                     Item {
                         width: parent.width
 
-                        height: sequenceVolumeSlider.height
+                        height: sequenceVolumeSlider.height +
+                                sequenceVolumeIcon.height -
+                                Theme.paddingLarge
 
                         Slider {
                             id: sequenceVolumeSlider
 
                             anchors.left: parent.left
-                            anchors.leftMargin:
-                                Theme.horizontalPageMargin
-                            anchors.right: parent.right
-                            anchors.rightMargin:
-                                Theme.horizontalPageMargin
+                            anchors.leftMargin: Theme.horizontalPageMargin
+                            anchors.right: infoSequenceButton.left
+                            anchors.rightMargin: Theme.paddingLarge
 
                             minimumValue: 0
                             maximumValue: 100
@@ -661,6 +700,39 @@ Page {
 
                             onValueChanged: {
                                 audioEngine.setSequenceVolume(value)
+                            }
+                        }
+
+                        // Uses VolumeIcon.qml component
+                        VolumeIcon {
+                            id: sequenceVolumeIcon
+
+                            value: sequenceVolumeSlider.value
+
+                            anchors.top: sequenceVolumeSlider.bottom
+                            anchors.topMargin: -Theme.paddingLarge
+                            anchors.horizontalCenter: sequenceVolumeSlider.horizontalCenter
+                            anchors.horizontalCenterOffset: Theme.paddingSmall
+
+                            opacity: page.activeSequence !== "" ? 1.0 : 0.5
+                        }
+
+                        // Opens InfoSequencePage
+                        IconButton {
+                            id: infoSequenceButton
+
+                            anchors.right: parent.right
+                            anchors.rightMargin: Theme.horizontalPageMargin
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.verticalCenterOffset: Theme.paddingSmall * 1.7
+
+                            icon.source: "image://theme/icon-m-about?" +
+                                         (pressed
+                                          ? Theme.highlightColor
+                                          : Theme.primaryColor)
+
+                            onClicked: {
+                                pageStack.push(infoSequencePageComponent)
                             }
                         }
                     }

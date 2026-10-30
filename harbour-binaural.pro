@@ -45,6 +45,7 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/pages/components/AmbienceDrawer.qml \
     qml/pages/components/InfoBinauralPage.qml \
     qml/pages/components/InfoColoredPage.qml \
+    qml/pages/components/InfoSequencePage.qml \
     qml/pages/components/PlaybackBar.qml \
     qml/pages/components/SoundNames.qml \
     qml/pages/components/VolumeIcon.qml \

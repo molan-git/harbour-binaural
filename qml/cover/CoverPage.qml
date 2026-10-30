@@ -9,6 +9,7 @@ CoverBackground {
     property string activeBand: ""
     property var activeAmbiences: []
     property string activeNoise: ""
+    property string activeSequence: ""
 
     property bool isPlaying: false
     property bool isPaused: false
@@ -44,8 +45,9 @@ CoverBackground {
 
         // Dim the cover art while the system has stopped the sound.
         opacity: isPlaying || (activeBand === "" &&
-                              activeAmbiences.length === 0 &&
-                              activeNoise === "")
+                               activeAmbiences.length === 0 &&
+                               activeNoise === "" &&
+                               activeSequence === "")
                  ? 1.0
                  : 0.6
 
@@ -96,7 +98,8 @@ CoverBackground {
             visible: !sleepTimerRunning &&
                      activeBand === "" &&
                      activeAmbiences.length === 0 &&
-                     activeNoise === ""
+                     activeNoise === "" &&
+                     activeSequence === ""
 
             x: Theme.horizontalPageMargin
             width: parent.width - 2 * Theme.horizontalPageMargin
@@ -191,6 +194,9 @@ CoverBackground {
                     parts.push(SoundNames.label("Ambient mix"))
                 }
 
+                if (activeSequence !== "")
+                    parts.push(SoundNames.label("Sequence"))
+
                 return parts.join("\n")
             }
         }
@@ -202,7 +208,8 @@ CoverBackground {
 
         enabled: activeBand !== "" ||
                  activeAmbiences.length > 0 ||
-                 activeNoise !== ""
+                 activeNoise !== "" ||
+                 activeSequence !== ""
 
         CoverAction {
             iconSource: isPlaying
