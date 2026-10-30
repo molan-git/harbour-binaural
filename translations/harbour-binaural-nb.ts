@@ -107,7 +107,7 @@
     <message>
         <source>Thanks to %1 for some guidance on improving audio engine / sound generators logic.</source>
         <extracomment>%1 is a hyperlink to the GitHub profile of &quot;poetaster&quot;. &quot;audio engine&quot; and &quot;sound generators&quot; are technical terms and may be left untranslated.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Takk til %1 for veiledning om forbedring av logikken for lydmotor / lydgeneratorer.</translation>
     </message>
 </context>
 <context>
@@ -212,7 +212,7 @@
     </message>
     <message>
         <source>Choose ambient sounds</source>
-        <translation type="unfinished"></translation>
+        <translation>Velg bakgrunnslyder</translation>
     </message>
 </context>
 <context>
@@ -326,12 +326,12 @@
     <message>
         <source>h</source>
         <extracomment>SI symbol for hour. Keep as-is for Latin-script locales.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>t</translation>
     </message>
     <message>
         <source>min</source>
         <extracomment>SI symbol for minute. Keep as-is for Latin-script locales.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>min</translation>
     </message>
 </context>
 </TS>
