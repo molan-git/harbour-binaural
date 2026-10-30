@@ -256,11 +256,10 @@ Page {
 
                     MenuItem {
                         text: qsTr("Deselect all sounds")
-
                         enabled: page.activeBand !== "" ||
                                  page.activeAmbiences.length > 0 ||
-                                 page.activeNoise !== ""
-
+                                 page.activeNoise !== "" ||
+                                 page.activeSequence !== ""
                         onClicked: {
                             page.deselectAllSounds()
                         }
@@ -268,11 +267,10 @@ Page {
 
                     MenuItem {
                         text: qsTr("Timer")
-
                         enabled: page.activeBand !== "" ||
                                  page.activeAmbiences.length > 0 ||
-                                 page.activeNoise !== ""
-
+                                 page.activeNoise !== "" ||
+                                 page.activeSequence !== ""
                         onClicked: {
                             pageStack.push(
                                 Qt.resolvedUrl("TimerPage.qml"),
