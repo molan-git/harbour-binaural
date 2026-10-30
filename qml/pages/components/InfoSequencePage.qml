@@ -68,7 +68,7 @@ FullscreenContentPage {
                     width: parent.width - 2 * Theme.horizontalPageMargin
                     x: Theme.horizontalPageMargin
 
-                    text: qsTr("Are pre-programmed audio sessions that use binaural beats and changing sound frequencies to support different mental states, such as relaxation, meditation, concentration, and sleep. Each sequence gradually adjusts frequencies to create a specific listening experience.")
+                    text: qsTr("Pre-programmed audio sessions that use binaural beats and changing frequencies to support relaxation, meditation, concentration and sleep. Each sequence creates a different listening experience.")
 
                     color: Theme.primaryColor
                     font.pixelSize: Theme.fontSizeMedium
@@ -247,7 +247,7 @@ FullscreenContentPage {
                     width: parent.width - 2 * Theme.horizontalPageMargin
                     x: Theme.horizontalPageMargin
 
-                    text: qsTr("Monroe Focus Levels")
+                    text: qsTr("About SBaGen")
                     color: Theme.highlightColor
                     font.pixelSize: Theme.fontSizeMedium
                     wrapMode: Text.WordWrap
@@ -257,7 +257,7 @@ FullscreenContentPage {
                     width: parent.width - 2 * Theme.horizontalPageMargin
                     x: Theme.horizontalPageMargin
 
-                    text: qsTr("Focus 10, 12, 15 and 21 are part of the Monroe Institute's consciousness exploration system. They describe different subjective states of awareness, ranging from deep relaxation to expanded awareness. They are not scientifically defined brainwave frequencies.")
+                    text: qsTr("The sequences in this app come from SBaGen (Sequenced Binaural Beat Generator), an open-source project by Jim Peters. SBaGen uses text-based sequence files to define binaural tones, frequency changes, timing and background sounds. Some names, such as Focus 10 and Focus 12, use terminology associated with consciousness exploration, but the sequences are from SBaGen, not official Monroe Institute recordings or programmes.")
 
                     color: Theme.primaryColor
                     font.pixelSize: Theme.fontSizeMedium

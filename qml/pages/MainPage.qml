@@ -657,7 +657,14 @@ Page {
                         maximumValue: 1
                         value: audioEngine.sequenceProgress
 
-                        valueText: Math.round(audioEngine.sequenceProgress * 100) + "%"
+                        valueText: {
+                            var remaining = audioEngine.sequenceRemainingSeconds
+                            var minutes = Math.floor(remaining / 60)
+                            var seconds = remaining % 60
+
+                            return minutes + ":" +
+                                   (seconds < 10 ? "0" : "") + seconds
+                        }
 
                         // Highlight the bar only while the sequence is playing.
                         highlighted: page.sequencePlaying

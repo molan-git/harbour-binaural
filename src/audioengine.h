@@ -57,6 +57,10 @@ class AudioEngine : public QObject
                READ sequenceProgress
                NOTIFY sequenceProgressChanged)
 
+    Q_PROPERTY(int sequenceRemainingSeconds
+               READ sequenceRemainingSeconds
+               NOTIFY sequenceProgressChanged)
+
 public:
     static constexpr int MaxAmbienceChannels = 3;
     static constexpr int SequencePollInterval = 250;
@@ -72,6 +76,7 @@ public:
     bool isSequencePaused() const;
     QStringList sequencePresets() const;
     double sequenceProgress() const;
+    int sequenceRemainingSeconds() const;
 
     bool isBinauralPaused() const;
     bool isAmbiencePaused() const;

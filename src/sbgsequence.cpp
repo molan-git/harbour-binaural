@@ -473,7 +473,7 @@ QVector<SbgPreset> Sbg::builtinPresets()
     QVector<SbgPreset> presets;
 
     // ------------------------------------------------------------------
-    // Monroe Institute Focus levels (community-measured tone-sets).
+    // Focus levels (community-measured tone-sets).
     // ------------------------------------------------------------------
 
     SbgPreset focus3;
@@ -646,6 +646,69 @@ QVector<SbgPreset> Sbg::builtinPresets()
         "00:15:00 ts-balanced\n"
         "00:20:00 off\n");
     presets.append(energizer);
+
+    // ------------------------------------------------------------------
+    // Gateway Experience waves.
+    // ------------------------------------------------------------------
+
+    SbgPreset gatewayWave1;
+    gatewayWave1.title = QStringLiteral("Gateway Wave I (F10→F12)");
+    gatewayWave1.source = QStringLiteral(
+        "# Gateway Wave I - 45 minutes\n"
+        "# Focus 10 (body asleep) -> Focus 12 (expanded awareness) -> F10\n"
+        "ts-f10: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10\n"
+        "ts-f12: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10 "
+        "400+10.0/10 500+10.1/10 600+4.8/10\n"
+        "off: -\n"
+        "00:00:00 off\n"
+        "00:00:15 ts-f10\n"
+        "00:20:00 ts-f12\n"
+        "00:35:00 ts-f10\n"
+        "00:45:00 off\n");
+    presets.append(gatewayWave1);
+
+    SbgPreset gatewayWave2;
+    gatewayWave2.title = QStringLiteral("Gateway Wave II (F10→F15)");
+    gatewayWave2.source = QStringLiteral(
+        "# Gateway Wave II - 50 minutes\n"
+        "# Focus 10 -> Focus 15 (no time) -> Focus 12 -> F10\n"
+        "ts-f10: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10\n"
+        "ts-f15: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10 "
+        "500+7.05/10 630+7.1/10 750+7.0/10\n"
+        "ts-f12: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10 "
+        "400+10.0/10 500+10.1/10 600+4.8/10\n"
+        "off: -\n"
+        "00:00:00 off\n"
+        "00:00:15 ts-f10\n"
+        "00:15:00 ts-f15\n"
+        "00:30:00 ts-f12\n"
+        "00:40:00 ts-f10\n"
+        "00:50:00 off\n");
+    presets.append(gatewayWave2);
+
+    SbgPreset gatewayWave3;
+    gatewayWave3.title = QStringLiteral("Gateway Wave III (F10→F21)");
+    gatewayWave3.source = QStringLiteral(
+        "# Gateway Wave III - 60 minutes\n"
+        "# Focus 10 -> F12 -> F15 -> F21 -> F15 -> F12 -> F10\n"
+        "ts-f10: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10\n"
+        "ts-f12: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10 "
+        "400+10.0/10 500+10.1/10 600+4.8/10\n"
+        "ts-f15: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10 "
+        "500+7.05/10 630+7.1/10 750+7.0/10\n"
+        "ts-f21: 200+4.0/10 250+4.0/10 300+4.0/10 "
+        "600+16.2/10 750+15.9/10 900+16.2/10\n"
+        "off: -\n"
+        "00:00:00 off\n"
+        "00:00:15 ts-f10\n"
+        "00:10:00 ts-f12\n"
+        "00:20:00 ts-f15\n"
+        "00:30:00 ts-f21\n"
+        "00:40:00 ts-f15\n"
+        "00:50:00 ts-f12\n"
+        "00:55:00 ts-f10\n"
+        "01:00:00 off\n");
+    presets.append(gatewayWave3);
 
     return presets;
 }

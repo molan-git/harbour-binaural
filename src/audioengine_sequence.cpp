@@ -53,6 +53,20 @@ double AudioEngine::sequenceProgress() const
         1.0);
 }
 
+int AudioEngine::sequenceRemainingSeconds() const
+{
+    if (!m_sequenceGenerator)
+        return 0;
+
+    const qint64 remainingMs = qMax<qint64>(
+        0,
+        m_sequenceGenerator->durationMs() -
+        m_sequenceGenerator->elapsedMs());
+
+    // Round up so the display doesn't reach zero prematurely.
+    return static_cast<int>((remainingMs + 999) / 1000);
+}
+
 // ============================================================================
 // PRESET SELECTION
 // ============================================================================
