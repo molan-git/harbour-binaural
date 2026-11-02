@@ -20,7 +20,7 @@ SilicaFlickable {
     signal closeRequested()
 
     width: parent.width
-    height: Math.min(contentColumn.height + 2 * Theme.paddingLarge,
+    height: Math.min(contentColumn.height + Theme.paddingLarge,
                      Screen.height * 0.8)
     contentHeight: contentColumn.height + Theme.paddingLarge
     clip: true
