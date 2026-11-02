@@ -19,7 +19,7 @@ ActionDrawer {
     signal ambienceVolumeChanged(real volume)
 
     // Uncomment to add optional title in Drawer
-    // title: qsTr("Ambient Sounds")
+    // title: "Ambient Sounds")
 
     // Ambient Sound Selection grid
     SilicaGridView {
