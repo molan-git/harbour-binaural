@@ -5,10 +5,6 @@
 #include <QtGlobal>
 #include <QtCore/QObject>
 
-// ============================================================================
-// COLORED NOISE GENERATOR
-// ============================================================================
-
 class ColoredNoiseGenerator : public QIODevice
 {
 public:
@@ -32,7 +28,6 @@ public:
     NoiseType noiseType() const;
 
     void start();
-    void stop();
 
 protected:
     qint64 readData(char *data, qint64 maxlen) override;

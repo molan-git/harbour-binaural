@@ -104,6 +104,11 @@
         <source>Images have been manually edited for use in this app:</source>
         <translation>Images have been manually edited for use in this app:</translation>
     </message>
+    <message>
+        <source>Thanks to %1 for some guidance on improving audio engine / sound generators logic.</source>
+        <extracomment>%1 is a hyperlink to the GitHub profile of &quot;poetaster&quot;. &quot;audio engine&quot; and &quot;sound generators&quot; are technical terms and may be left untranslated.</extracomment>
+        <translation>Thanks to %1 for some guidance on improving audio engine / sound generators logic.</translation>
+    </message>
 </context>
 <context>
     <name>InfoBinauralPage</name>
@@ -206,8 +211,8 @@
         <translation>Ambient Sound</translation>
     </message>
     <message>
-        <source>Choose an ambient sound</source>
-        <translation>Choose an ambient sound</translation>
+        <source>Choose ambient sounds</source>
+        <translation>Choose ambient sounds</translation>
     </message>
 </context>
 <context>
@@ -311,12 +316,26 @@
         <source>Ambient mix</source>
         <translation>Ambient mix</translation>
     </message>
+    <message>
+        <source>Ambient sounds</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TimerPage</name>
     <message>
         <source>Timer</source>
         <translation>Timer</translation>
+    </message>
+    <message>
+        <source>h</source>
+        <extracomment>SI symbol for hour. Keep as-is for Latin-script locales.</extracomment>
+        <translation>h</translation>
+    </message>
+    <message>
+        <source>min</source>
+        <extracomment>SI symbol for minute. Keep as-is for Latin-script locales.</extracomment>
+        <translation>min</translation>
     </message>
 </context>
 </TS>

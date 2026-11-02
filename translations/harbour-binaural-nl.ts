@@ -49,59 +49,64 @@
     </message>
     <message>
         <source>Source code</source>
-        <translation type="unfinished"></translation>
+        <translation>Broncode</translation>
     </message>
 </context>
 <context>
     <name>CreditPage</name>
     <message>
         <source>Norwegian</source>
-        <translation type="unfinished"></translation>
+        <translation>Noors</translation>
     </message>
     <message>
         <source>Swedish</source>
-        <translation type="unfinished"></translation>
+        <translation>Zweeds</translation>
     </message>
     <message>
         <source>Dutch</source>
-        <translation type="unfinished"></translation>
+        <translation>Nederlands</translation>
     </message>
     <message>
         <source>Slovenian</source>
-        <translation type="unfinished"></translation>
+        <translation>Sloveens</translation>
     </message>
     <message>
         <source>Credits</source>
-        <translation type="unfinished">Met dank aan</translation>
+        <translation>Met dank aan</translation>
     </message>
     <message>
         <source>Binaural was inspired by</source>
         <extracomment>Full sentence: &quot;Binaural was inspired by Metiq.&quot;</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Binaural is geïnspireerd door</translation>
     </message>
     <message>
         <source>Translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Vertalingen</translation>
     </message>
     <message>
         <source>Audio files</source>
-        <translation type="unfinished"></translation>
+        <translation>Audiobestanden</translation>
     </message>
     <message>
         <source>Files have been manually edited for use in this app under the</source>
         <extracomment>Full sentence: &quot;Files have been manually edited for use in this app under the Pixabay Content License:&quot; Keep the sentence natural when translating; &quot;Pixabay Content License&quot; is a clickable link.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>De bestanden in deze app zijn handmatig bewerkt onder de</translation>
     </message>
     <message>
         <source>Pixabay Content License</source>
-        <translation type="unfinished"></translation>
+        <translation>Pixabay-inhoudlicentie</translation>
     </message>
     <message>
         <source>Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Afbeeldingen</translation>
     </message>
     <message>
         <source>Images have been manually edited for use in this app:</source>
+        <translation>Afbeeldingen zijn handmatig bewerkt voor gebruik in deze app:</translation>
+    </message>
+    <message>
+        <source>Thanks to %1 for some guidance on improving audio engine / sound generators logic.</source>
+        <extracomment>%1 is a hyperlink to the GitHub profile of &quot;poetaster&quot;. &quot;audio engine&quot; and &quot;sound generators&quot; are technical terms and may be left untranslated.</extracomment>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -206,15 +211,15 @@
         <translation>Omgevingsgeluid</translation>
     </message>
     <message>
-        <source>Choose an ambient sound</source>
-        <translation>Kies een omgevingsgeluid</translation>
+        <source>Choose ambient sounds</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>PlaybackBar</name>
     <message>
         <source>Start your sound mix</source>
-        <translation type="unfinished">Begin je geluidsmix</translation>
+        <translation>Begin je geluidsmix</translation>
     </message>
 </context>
 <context>
@@ -301,14 +306,18 @@
     </message>
     <message>
         <source>Start your sound mix</source>
-        <translation type="unfinished">Begin je geluidsmix</translation>
+        <translation>Begin je geluidsmix</translation>
     </message>
     <message>
         <source>Individual experiences may vary.</source>
-        <translation type="unfinished">De ervaring kan verschillen van persoon tot persoon.</translation>
+        <translation>De ervaring kan verschillen van persoon tot persoon.</translation>
     </message>
     <message>
         <source>Ambient mix</source>
+        <translation>Ambientmix</translation>
+    </message>
+    <message>
+        <source>Ambient sounds</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -317,6 +326,16 @@
     <message>
         <source>Timer</source>
         <translation>Timer</translation>
+    </message>
+    <message>
+        <source>h</source>
+        <extracomment>SI symbol for hour. Keep as-is for Latin-script locales.</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>min</source>
+        <extracomment>SI symbol for minute. Keep as-is for Latin-script locales.</extracomment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

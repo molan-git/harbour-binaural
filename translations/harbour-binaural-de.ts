@@ -16,7 +16,7 @@
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="57"/>
         <source>Application for playing binaural beats, colored noises and ambient sounds.</source>
-        <translation>Anwendung zum Abspielen binauraler Beats, farbiger Rauschgeräusche und von Umgebungsgeräuschen.</translation>
+        <translation>App zum Abspielen binauraler Beats, farbiger Rauschklänge und Umgebungsgeräusche.</translation>
     </message>
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="66"/>
@@ -46,7 +46,7 @@
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="84"/>
         <source>Source code</source>
-        <translation type="unfinished"></translation>
+        <translation>Quellcode</translation>
     </message>
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="151"/>
@@ -69,64 +69,70 @@
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="14"/>
         <source>Norwegian</source>
-        <translation type="unfinished"></translation>
+        <translation>Norwegisch</translation>
     </message>
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="18"/>
         <source>Swedish</source>
-        <translation type="unfinished"></translation>
+        <translation>Schwedisch</translation>
     </message>
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="22"/>
         <source>Dutch</source>
-        <translation type="unfinished"></translation>
+        <translation>Niederländisch</translation>
     </message>
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="26"/>
         <source>Slovenian</source>
-        <translation type="unfinished"></translation>
+        <translation>Slowenisch</translation>
     </message>
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="140"/>
         <source>Credits</source>
-        <translation type="unfinished">Danksagungen</translation>
+        <translation>Danksagungen</translation>
     </message>
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="150"/>
         <source>Binaural was inspired by</source>
         <extracomment>Full sentence: &quot;Binaural was inspired by Metiq.&quot;</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Binaural wurde inspiriert durch</translation>
     </message>
     <message>
-        <location filename="../qml/pages/CreditPage.qml" line="164"/>
+        <location filename="../qml/pages/CreditPage.qml" line="177"/>
+        <source>Thanks to %1 for some guidance on improving audio engine / sound generators logic.</source>
+        <extracomment>%1 is a hyperlink to the GitHub profile of &quot;poetaster&quot;. &quot;audio engine&quot; and &quot;sound generators&quot; are technical terms and may be left untranslated.</extracomment>
+        <translation>Besonderer Dank an %1 für die Unterstützung bei der Verbesserung der Audio-Engine / Sound-Generator-Logik.</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="189"/>
         <source>Translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Übersetzungen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/CreditPage.qml" line="213"/>
+        <location filename="../qml/pages/CreditPage.qml" line="238"/>
         <source>Audio files</source>
-        <translation type="unfinished"></translation>
+        <translation>Audiodateien</translation>
     </message>
     <message>
-        <location filename="../qml/pages/CreditPage.qml" line="222"/>
+        <location filename="../qml/pages/CreditPage.qml" line="247"/>
         <source>Files have been manually edited for use in this app under the</source>
         <extracomment>Full sentence: &quot;Files have been manually edited for use in this app under the Pixabay Content License:&quot; Keep the sentence natural when translating; &quot;Pixabay Content License&quot; is a clickable link.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Dateien wurden für die Verwendung in dieser Anwendung manuell angepasst unter der</translation>
     </message>
     <message>
-        <location filename="../qml/pages/CreditPage.qml" line="225"/>
+        <location filename="../qml/pages/CreditPage.qml" line="250"/>
         <source>Pixabay Content License</source>
-        <translation type="unfinished"></translation>
+        <translation>Pixabay-Inhaltslizenz</translation>
     </message>
     <message>
-        <location filename="../qml/pages/CreditPage.qml" line="299"/>
+        <location filename="../qml/pages/CreditPage.qml" line="324"/>
         <source>Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Bilder</translation>
     </message>
     <message>
-        <location filename="../qml/pages/CreditPage.qml" line="313"/>
+        <location filename="../qml/pages/CreditPage.qml" line="338"/>
         <source>Images have been manually edited for use in this app:</source>
-        <translation type="unfinished"></translation>
+        <translation>Folgende Bilder wurden für die Verwendung in dieser Anwendung manuell angepasst:</translation>
     </message>
 </context>
 <context>
@@ -197,7 +203,7 @@
     <message>
         <location filename="../qml/pages/components/InfoColoredPage.qml" line="143"/>
         <source>Focus, sleep and background noise masking</source>
-        <translation>Konzentration, Schlaf und Maskierung von Hintergrundgeräuschen</translation>
+        <translation>Für Konzentration, Schlaf und Ausblenden von Hintergrundgeräuschen.</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/InfoColoredPage.qml" line="163"/>
@@ -218,44 +224,44 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="197"/>
+        <location filename="../qml/pages/MainPage.qml" line="171"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="207"/>
+        <location filename="../qml/pages/MainPage.qml" line="181"/>
         <source>Deselect all sounds</source>
         <translation>Alle Klänge deaktivieren</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="219"/>
+        <location filename="../qml/pages/MainPage.qml" line="193"/>
         <source>Timer</source>
         <translation>Timer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="247"/>
+        <location filename="../qml/pages/MainPage.qml" line="222"/>
         <source>Binaural Beats</source>
         <translation>Binaurale Beats</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="261"/>
+        <location filename="../qml/pages/MainPage.qml" line="236"/>
         <source>To be used with</source>
         <translation>Zu verwenden mit</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="477"/>
+        <location filename="../qml/pages/MainPage.qml" line="410"/>
         <source>Colored Noise</source>
         <translation>Farbiges Rauschen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="652"/>
+        <location filename="../qml/pages/MainPage.qml" line="544"/>
         <source>Ambient Sound</source>
-        <translation>Umgebungsgeräusche</translation>
+        <translation>Umgebungsklang</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="683"/>
-        <source>Choose an ambient sound</source>
-        <translation>Wähle ein Umgebungsgeräusch</translation>
+        <location filename="../qml/pages/MainPage.qml" line="573"/>
+        <source>Choose ambient sounds</source>
+        <translation>Umgebungsklänge auswählen</translation>
     </message>
 </context>
 <context>
@@ -263,7 +269,7 @@
     <message>
         <location filename="../qml/pages/components/PlaybackBar.qml" line="131"/>
         <source>Start your sound mix</source>
-        <translation type="unfinished">Starte deinen Klangmix</translation>
+        <translation>Starte deinen Klangmix</translation>
     </message>
 </context>
 <context>
@@ -371,17 +377,22 @@
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="43"/>
         <source>Ambient mix</source>
-        <translation type="unfinished"></translation>
+        <translation>Ambient-Mix</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="44"/>
-        <source>Start your sound mix</source>
-        <translation type="unfinished">Starte deinen Klangmix</translation>
+        <source>Ambient sounds</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="45"/>
+        <source>Start your sound mix</source>
+        <translation>Starte deinen Klangmix</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/SoundNames.qml" line="46"/>
         <source>Individual experiences may vary.</source>
-        <translation type="unfinished"></translation>
+        <translation>Die Wirkung kann individuell variieren.</translation>
     </message>
 </context>
 <context>
@@ -390,6 +401,18 @@
         <location filename="../qml/pages/TimerPage.qml" line="33"/>
         <source>Timer</source>
         <translation>Timer</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/TimerPage.qml" line="75"/>
+        <source>h</source>
+        <extracomment>SI symbol for hour. Keep as-is for Latin-script locales.</extracomment>
+        <translation>h</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/TimerPage.qml" line="96"/>
+        <source>min</source>
+        <extracomment>SI symbol for minute. Keep as-is for Latin-script locales.</extracomment>
+        <translation>min</translation>
     </message>
 </context>
 </TS>

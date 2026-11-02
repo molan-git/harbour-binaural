@@ -31,15 +31,13 @@ AmbienceChannel::AmbienceChannel(QObject *parent)
       m_fadeOutTimer(new QTimer(this)),
       m_volumeTimer(new QTimer(this)),
       m_volume(50),
-      m_fadeInPosition(0),
-      m_crossfadePosition(0),
-      m_fadeOutPosition(0),
       m_fadeOutActiveVolume(0),
       m_fadeOutFadingVolume(0),
       m_stopping(false),
       m_paused(false),
       m_resumeFadeIn(false),
-      m_resumeCrossfade(false)
+      m_resumeCrossfade(false),
+      m_sleepFactor(1.0)
 {
     m_fadeInTimer->setInterval(FadeInterval);
     m_crossfadeTimer->setInterval(FadeInterval);
@@ -107,6 +105,11 @@ bool AmbienceChannel::isPaused() const
         && m_activePlayer->state() == QMediaPlayer::PausedState;
 }
 
+bool AmbienceChannel::isStopping() const
+{
+    return m_stopping;
+}
+
 QString AmbienceChannel::fileName() const
 {
     return m_fileName;
@@ -129,17 +132,20 @@ bool AmbienceChannel::start(const QString &fileName)
     m_activePlayer->setMedia(QMediaContent(mediaUrl));
     m_activePlayer->setVolume(0);
 
-    m_fadeInPosition = 0;
-    m_crossfadePosition = 0;
-    m_fadeOutPosition = 0;
+    m_fadeInElapsedBeforePause = 0;
+    m_crossfadeElapsedBeforePause = 0;
+    m_fadeInElapsed.invalidate();
+    m_crossfadeElapsed.invalidate();
 
     m_stopping = false;
     m_paused = false;
+    m_sleepFactor = 1.0;
 
     m_resumeFadeIn = true;
     m_resumeCrossfade = false;
 
     m_activePlayer->play();
+    m_fadeInElapsed.start();
     m_fadeInTimer->start();
 
     emit stateChanged();
@@ -157,13 +163,29 @@ void AmbienceChannel::pause()
 
     const bool fadingPlaying =
         m_fadingPlayer
-        && m_fadingPlayer->state() == QMediaPlayer::PlayingState;
+            && m_fadingPlayer->state() == QMediaPlayer::PlayingState;
 
     if (!activePlaying && !fadingPlaying)
         return;
 
     m_resumeFadeIn = m_fadeInTimer->isActive();
     m_resumeCrossfade = m_crossfadeTimer->isActive();
+
+    if (m_stopping && m_fadeElapsed.isValid()) {
+        m_fadeElapsedBeforePause += m_fadeElapsed.elapsed();
+        m_fadeElapsed.invalidate();
+    }
+
+    if (m_fadeInTimer->isActive() && m_fadeInElapsed.isValid()) {
+        m_fadeInElapsedBeforePause += m_fadeInElapsed.elapsed();
+        m_fadeInElapsed.invalidate();
+    }
+
+    if (m_crossfadeTimer->isActive() && m_crossfadeElapsed.isValid()) {
+        m_crossfadeElapsedBeforePause += m_crossfadeElapsed.elapsed();
+        m_crossfadeElapsed.invalidate();
+    }
+
 
     m_fadeInTimer->stop();
     m_crossfadeTimer->stop();
@@ -193,10 +215,13 @@ void AmbienceChannel::resume()
         m_fadingPlayer->play();
 
     if (m_stopping) {
+        m_fadeElapsed.start();
         m_fadeOutTimer->start();
     } else if (m_resumeCrossfade && m_fadingPlayer) {
+        m_crossfadeElapsed.start();
         m_crossfadeTimer->start();
     } else if (m_resumeFadeIn) {
+        m_fadeInElapsed.start();
         m_fadeInTimer->start();
     } else {
         applyPendingVolume();
@@ -222,7 +247,9 @@ void AmbienceChannel::stop()
     m_fadeOutFadingVolume =
         m_fadingPlayer ? m_fadingPlayer->volume() : 0;
 
-    m_fadeOutPosition = 0;
+    m_fadeElapsedBeforePause = 0;
+    m_fadeElapsed.start();
+
     m_stopping = true;
     m_paused = false;
 
@@ -247,15 +274,20 @@ void AmbienceChannel::stopImmediately()
 
     m_fileName.clear();
 
-    m_fadeInPosition = 0;
-    m_crossfadePosition = 0;
-    m_fadeOutPosition = 0;
+    m_fadeInElapsed.invalidate();
+    m_fadeInElapsedBeforePause = 0;
+    m_crossfadeElapsed.invalidate();
+    m_crossfadeElapsedBeforePause = 0;
+
+    m_fadeElapsed.invalidate();
+    m_fadeElapsedBeforePause = 0;
 
     m_fadeOutActiveVolume = 0;
     m_fadeOutFadingVolume = 0;
 
     m_stopping = false;
     m_paused = false;
+    m_sleepFactor = 1.0;
 
     m_resumeFadeIn = false;
     m_resumeCrossfade = false;
@@ -285,6 +317,12 @@ void AmbienceChannel::applySleepVolume(
     double factor)
 {
     factor = qBound(0.0, factor, 1.0);
+    m_sleepFactor = factor;
+
+    // If a crossfade or fade-in is in progress, that fade is already
+    // updating volume every 15 ms using m_sleepFactor — don't fight it.
+    if (m_crossfadeTimer->isActive() || m_fadeInTimer->isActive())
+             return;
 
     if (m_activePlayer) {
         m_activePlayer->setVolume(
@@ -307,7 +345,10 @@ void AmbienceChannel::applyPendingVolume()
         return;
     }
 
-    m_activePlayer->setVolume(targetVolume());
+    // Honor the sleep-timer factor so a pause/resume during the
+    // sleep fade-out does not jump back to full target volume.
+    m_activePlayer->setVolume(
+                qRound(targetVolume() * m_sleepFactor));
 }
 
 void AmbienceChannel::updateFadeIn()
@@ -317,19 +358,24 @@ void AmbienceChannel::updateFadeIn()
         return;
     }
 
-    m_fadeInPosition += FadeInterval;
+    const qint64 elapsed = m_fadeInElapsedBeforePause
+            + m_fadeInElapsed.elapsed();
 
     const double progress = qMin(
-        1.0,
-        static_cast<double>(m_fadeInPosition) / FadeInDuration);
+                1.0,
+                static_cast<double>(elapsed) / FadeInDuration);
 
-    m_activePlayer->setVolume(
-        qRound(targetVolume() * progress));
+    // Honor the sleep-timer factor so the fade-in does not fight
+    // the global sleep fade-out.
+    const int volume = qRound(targetVolume() * m_sleepFactor);
+
+    m_activePlayer->setVolume(qRound(volume * progress));
 
     if (progress >= 1.0) {
-        m_activePlayer->setVolume(targetVolume());
+        m_activePlayer->setVolume(volume);
 
-        m_fadeInPosition = 0;
+        m_fadeInElapsedBeforePause = 0;
+        m_fadeInElapsed.invalidate();
         m_resumeFadeIn = false;
 
         m_fadeInTimer->stop();
@@ -346,11 +392,12 @@ void AmbienceChannel::updateFadeOut()
     if (m_paused)
         return;
 
-    m_fadeOutPosition += FadeInterval;
+    const qint64 elapsed = m_fadeElapsedBeforePause
+        + m_fadeElapsed.elapsed();
 
     const double progress = qMin(
         1.0,
-        static_cast<double>(m_fadeOutPosition) / FadeOutDuration);
+        static_cast<double>(elapsed) / FadeOutDuration);
 
     m_activePlayer->setVolume(
         qRound(m_fadeOutActiveVolume * (1.0 - progress)));
@@ -361,7 +408,6 @@ void AmbienceChannel::updateFadeOut()
     }
 
     if (progress >= 1.0) {
-        // Save the intent before stopImmediately() resets the state.
         const bool shouldEmitFinished = m_stopping;
 
         stopImmediately();
@@ -377,13 +423,17 @@ void AmbienceChannel::checkCrossfade(QMediaPlayer *player)
         || player != m_activePlayer
         || m_fadingPlayer
         || m_stopping
-        || m_paused) {
+            || m_paused) {
         return;
     }
 
     const qint64 duration = player->duration();
 
     if (duration <= 0)
+        return;
+
+    // Never crossfade files that are shorter than the crossfade
+    if (duration <= CrossfadeDuration)
         return;
 
     if (duration - player->position() <= CrossfadeDuration)
@@ -393,9 +443,9 @@ void AmbienceChannel::checkCrossfade(QMediaPlayer *player)
 void AmbienceChannel::startCrossfade(QMediaPlayer *fadingPlayer)
 {
     if (!fadingPlayer
-        || fadingPlayer != m_activePlayer
-        || m_fadingPlayer
-        || m_stopping
+            || fadingPlayer != m_activePlayer
+            || m_fadingPlayer
+            || m_stopping
         || m_paused) {
         return;
     }
@@ -411,7 +461,9 @@ void AmbienceChannel::startCrossfade(QMediaPlayer *fadingPlayer)
     m_fadingPlayer = fadingPlayer;
     m_activePlayer = nextPlayer;
 
-    m_crossfadePosition = 0;
+    m_crossfadeElapsedBeforePause = 0;
+    m_fadeInElapsedBeforePause = 0;
+    m_fadeInElapsed.invalidate();
 
     m_resumeFadeIn = false;
     m_resumeCrossfade = true;
@@ -419,31 +471,34 @@ void AmbienceChannel::startCrossfade(QMediaPlayer *fadingPlayer)
     nextPlayer->play();
 
     m_fadeInTimer->stop();
+    m_crossfadeElapsed.start();
     m_crossfadeTimer->start();
 }
 
 void AmbienceChannel::updateCrossfade()
 {
     if (!m_activePlayer || !m_fadingPlayer
-        || m_paused || m_stopping) {
+            || m_paused || m_stopping) {
         m_crossfadeTimer->stop();
         return;
     }
 
-    m_crossfadePosition += FadeInterval;
+    const qint64 elapsed = m_crossfadeElapsedBeforePause
+            + m_crossfadeElapsed.elapsed();
 
     const double progress = qMin(
-        1.0,
-        static_cast<double>(m_crossfadePosition)
-            / CrossfadeDuration);
+                1.0,
+                static_cast<double>(elapsed)
+                / CrossfadeDuration);
 
-    const int volume = targetVolume();
+    // Apply sleep factor so crossfade respects the fade-out.
+    const int volume = qRound(targetVolume() * m_sleepFactor);
 
     m_fadingPlayer->setVolume(
-        qRound(volume * (1.0 - progress)));
+                qRound(volume * (1.0 - progress)));
 
     m_activePlayer->setVolume(
-        qRound(volume * progress));
+                qRound(volume * progress));
 
     if (progress >= 1.0)
         finishCrossfade();
@@ -453,7 +508,8 @@ void AmbienceChannel::finishCrossfade()
 {
     m_crossfadeTimer->stop();
 
-    m_crossfadePosition = 0;
+    m_crossfadeElapsedBeforePause = 0;
+    m_crossfadeElapsed.invalidate();
     m_resumeCrossfade = false;
 
     if (m_fadingPlayer) {
@@ -463,7 +519,8 @@ void AmbienceChannel::finishCrossfade()
     }
 
     if (m_activePlayer)
-        m_activePlayer->setVolume(targetVolume());
+        m_activePlayer->setVolume(
+            qRound(targetVolume() * m_sleepFactor));
 }
 
 void AmbienceChannel::handleEndOfMedia(QMediaPlayer *player)
@@ -492,7 +549,6 @@ void AmbienceChannel::handleEndOfMedia(QMediaPlayer *player)
     if (m_paused)
         return;
 
-    // Fallback for backends that reach the end before crossfade starts.
     player->setPosition(0);
     player->play();
 }

@@ -49,60 +49,65 @@
     </message>
     <message>
         <source>Source code</source>
-        <translation type="unfinished"></translation>
+        <translation>Källkod</translation>
     </message>
 </context>
 <context>
     <name>CreditPage</name>
     <message>
         <source>Norwegian</source>
-        <translation type="unfinished"></translation>
+        <translation>Norska</translation>
     </message>
     <message>
         <source>Swedish</source>
-        <translation type="unfinished"></translation>
+        <translation>Svenska</translation>
     </message>
     <message>
         <source>Dutch</source>
-        <translation type="unfinished"></translation>
+        <translation>Nederländska</translation>
     </message>
     <message>
         <source>Slovenian</source>
-        <translation type="unfinished"></translation>
+        <translation>Slovenska</translation>
     </message>
     <message>
         <source>Credits</source>
-        <translation type="unfinished">Medverkande</translation>
+        <translation>Medverkande</translation>
     </message>
     <message>
         <source>Binaural was inspired by</source>
         <extracomment>Full sentence: &quot;Binaural was inspired by Metiq.&quot;</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Binaural inspirerades av</translation>
     </message>
     <message>
         <source>Translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Översättningar</translation>
     </message>
     <message>
         <source>Audio files</source>
-        <translation type="unfinished"></translation>
+        <translation>Ljudfiler</translation>
     </message>
     <message>
         <source>Files have been manually edited for use in this app under the</source>
         <extracomment>Full sentence: &quot;Files have been manually edited for use in this app under the Pixabay Content License:&quot; Keep the sentence natural when translating; &quot;Pixabay Content License&quot; is a clickable link.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Filer har redigerats manuellt för användning i den här appen under</translation>
     </message>
     <message>
         <source>Pixabay Content License</source>
-        <translation type="unfinished"></translation>
+        <translation>Pixabay Content-Licensen</translation>
     </message>
     <message>
         <source>Images</source>
-        <translation type="unfinished"></translation>
+        <translation>Bilder</translation>
     </message>
     <message>
         <source>Images have been manually edited for use in this app:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bilderna har redigerats manuellt för användning i den här appen:</translation>
+    </message>
+    <message>
+        <source>Thanks to %1 for some guidance on improving audio engine / sound generators logic.</source>
+        <extracomment>%1 is a hyperlink to the GitHub profile of &quot;poetaster&quot;. &quot;audio engine&quot; and &quot;sound generators&quot; are technical terms and may be left untranslated.</extracomment>
+        <translation>Tack till %1 för vägledning kring hur logiken för ljudmotorn/ ljudgeneratorerna kan förbättras.</translation>
     </message>
 </context>
 <context>
@@ -206,15 +211,15 @@
         <translation>Omgivningsljud</translation>
     </message>
     <message>
-        <source>Choose an ambient sound</source>
-        <translation>Välj ett omgivningsljud</translation>
+        <source>Choose ambient sounds</source>
+        <translation>Välj omgivningsljud</translation>
     </message>
 </context>
 <context>
     <name>PlaybackBar</name>
     <message>
         <source>Start your sound mix</source>
-        <translation type="unfinished">Starta din ljudmix</translation>
+        <translation>Starta din ljudmix</translation>
     </message>
 </context>
 <context>
@@ -301,14 +306,18 @@
     </message>
     <message>
         <source>Start your sound mix</source>
-        <translation type="unfinished">Starta din ljudmix</translation>
+        <translation>Starta din ljudmix</translation>
     </message>
     <message>
         <source>Individual experiences may vary.</source>
-        <translation type="unfinished">Upplevelserna kan variera från person till person.</translation>
+        <translation>Upplevelserna kan variera från person till person.</translation>
     </message>
     <message>
         <source>Ambient mix</source>
+        <translation>Ambientmix</translation>
+    </message>
+    <message>
+        <source>Ambient sounds</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -317,6 +326,16 @@
     <message>
         <source>Timer</source>
         <translation>Timer</translation>
+    </message>
+    <message>
+        <source>h</source>
+        <extracomment>SI symbol for hour. Keep as-is for Latin-script locales.</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>min</source>
+        <extracomment>SI symbol for minute. Keep as-is for Latin-script locales.</extracomment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

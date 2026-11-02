@@ -160,6 +160,31 @@ Page {
                 onLinkActivated: openLink(link)
             }
 
+            Item {
+                width: 1
+                height: Theme.paddingSmall
+            }
+
+            Label {
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                x: Theme.horizontalPageMargin
+
+                textFormat: Text.StyledText
+
+                // Full sentence: Thanks to poetaster for some guidance on improving audio engine / sound generators logic.
+                //: %1 is a hyperlink to the GitHub profile of "poetaster".
+                //: "audio engine" and "sound generators" are technical terms and may be left untranslated.
+                text: qsTr("Thanks to %1 for some guidance on improving audio engine / sound generators logic.")
+                      .arg(page.link("https://github.com/poetaster", "poetaster"))
+
+                color: Theme.highlightColor
+                linkColor: Theme.primaryColor
+                font.pixelSize: Theme.fontSizeExtraSmall
+                wrapMode: Text.WordWrap
+
+                onLinkActivated: openLink(link)
+            }
+
             SectionHeader {
                 text: qsTr("Translations")
             }
@@ -313,14 +338,19 @@ Page {
                 text: qsTr("Images have been manually edited for use in this app:") +
                       "<br>" +
                       page.link("https://commons.wikimedia.org/wiki/File:Beating_Frequency.svg",
-                               "Beating_Frequency.svg") +
+                                "Beating_Frequency.svg") +
                       " - Ansgar Hellwig (Ahellwig)" +
                       "<br>" +
                       page.link("https://creativecommons.org/licenses/by-sa/3.0/",
-                               "CC BY-SA 3.0")
+                                "CC BY-SA 3.0")
 
                 onLinkActivated: openLink(link)
             }
+        }
+
+        Item {
+            width: 1
+            height: Theme.paddingMedium
         }
 
         VerticalScrollDecorator {}

@@ -26,7 +26,8 @@ HEADERS += \
     src/ambiencechannel.h 			\
     src/audioengine.h 				\
     src/binauralgenerator.h 			\
-    src/colorednoisegenerator.h 		\ 				
+    src/colorednoisegenerator.h 		\
+    src/pcmchannel.h				\ 				
     src/stmlib/stmlib.h				\
     src/stmlib/algorithms/note_stack.h		\
     src/stmlib/algorithms/pattern_predictor.h	\
@@ -78,6 +79,7 @@ SOURCES += src/harbour-binaural.cpp \
     src/audioengine_colorednoise.cpp \
     src/binauralgenerator.cpp \
     src/colorednoisegenerator.cpp \
+    src/pcmchannel.cpp \
     src/braids/analog_oscillator.cc \
     src/braids/digital_oscillator.cc \
     src/braids/macro_oscillator.cc \
@@ -94,11 +96,14 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/cover/CoverPage.qml \
     qml/pages/AboutPage.qml \
     qml/pages/TimerPage.qml \
+    qml/pages/components/ActionDrawer.qml \
     qml/pages/components/AmbienceDrawer.qml \
     qml/pages/components/InfoBinauralPage.qml \
     qml/pages/components/InfoColoredPage.qml \
+    qml/pages/components/PageDrawer.qml \
     qml/pages/components/PlaybackBar.qml \
     qml/pages/components/SoundNames.qml \
+    qml/pages/components/VolumeIcon.qml \
     rpm/harbour-binaural.changes \
     rpm/harbour-binaural.changes.run.in \
     rpm/harbour-binaural.spec \
