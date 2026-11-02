@@ -318,7 +318,7 @@
     </message>
     <message>
         <source>Ambient sounds</source>
-        <translation type="unfinished"></translation>
+        <translation>Ambient sounds</translation>
     </message>
 </context>
 <context>
