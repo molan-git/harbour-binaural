@@ -101,7 +101,7 @@
         <location filename="../qml/pages/CreditPage.qml" line="177"/>
         <source>Thanks to %1 for some guidance on improving audio engine / sound generators logic.</source>
         <extracomment>%1 is a hyperlink to the GitHub profile of &quot;poetaster&quot;. &quot;audio engine&quot; and &quot;sound generators&quot; are technical terms and may be left untranslated.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Besonderer Dank an %1 für die Unterstützung bei der Verbesserung der Audio-Engine / Sound-Generator-Logik.</translation>
     </message>
     <message>
         <location filename="../qml/pages/CreditPage.qml" line="189"/>
@@ -224,42 +224,42 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="184"/>
+        <location filename="../qml/pages/MainPage.qml" line="171"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="194"/>
+        <location filename="../qml/pages/MainPage.qml" line="181"/>
         <source>Deselect all sounds</source>
         <translation>Alle Klänge deaktivieren</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="206"/>
+        <location filename="../qml/pages/MainPage.qml" line="193"/>
         <source>Timer</source>
         <translation>Timer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="235"/>
+        <location filename="../qml/pages/MainPage.qml" line="222"/>
         <source>Binaural Beats</source>
         <translation>Binaurale Beats</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="249"/>
+        <location filename="../qml/pages/MainPage.qml" line="236"/>
         <source>To be used with</source>
         <translation>Zu verwenden mit</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="423"/>
+        <location filename="../qml/pages/MainPage.qml" line="410"/>
         <source>Colored Noise</source>
         <translation>Farbiges Rauschen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="557"/>
+        <location filename="../qml/pages/MainPage.qml" line="544"/>
         <source>Ambient Sound</source>
         <translation>Umgebungsklang</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="586"/>
+        <location filename="../qml/pages/MainPage.qml" line="573"/>
         <source>Choose ambient sounds</source>
         <translation>Umgebungsklänge auswählen</translation>
     </message>
@@ -381,11 +381,16 @@
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="44"/>
+        <source>Ambient sounds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/SoundNames.qml" line="45"/>
         <source>Start your sound mix</source>
         <translation>Starte deinen Klangmix</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="45"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="46"/>
         <source>Individual experiences may vary.</source>
         <translation>Die Wirkung kann individuell variieren.</translation>
     </message>
@@ -401,13 +406,13 @@
         <location filename="../qml/pages/TimerPage.qml" line="75"/>
         <source>h</source>
         <extracomment>SI symbol for hour. Keep as-is for Latin-script locales.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>h</translation>
     </message>
     <message>
         <location filename="../qml/pages/TimerPage.qml" line="96"/>
         <source>min</source>
         <extracomment>SI symbol for minute. Keep as-is for Latin-script locales.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>min</translation>
     </message>
 </context>
 </TS>
