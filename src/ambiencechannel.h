@@ -31,6 +31,10 @@ public:
     void setVolume(int volume);
     int currentVolume() const;
 
+    // Loudness compensation when several ambiences stack:
+    // the engine sets 1/sqrt(activeCount) on every channel.
+    void setMixScale(double scale);
+
     void applySleepVolume(int startVolume, double factor);
 
 signals:
@@ -45,9 +49,17 @@ private:
     void updateCrossfade();
 
     void checkCrossfade(QMediaPlayer *player);
-    void startCrossfade(QMediaPlayer *fadingPlayer);
+
+    // fadeMs <= 0 means "auto" (derived from the file duration)
+    void startCrossfade(QMediaPlayer *fadingPlayer,
+                        qint64 fadeMs = 0);
+
     void finishCrossfade();
     void handleEndOfMedia(QMediaPlayer *player);
+
+    // Recovers a player that was stopped externally
+    // (audio resource loss on Sailfish).
+    void restartActivePlayer();
 
     void applyPendingVolume();
     int targetVolume() const;
@@ -62,6 +74,7 @@ private:
     QTimer *m_crossfadeTimer;
     QTimer *m_fadeOutTimer;
     QTimer *m_volumeTimer;
+    QTimer *m_watchdogTimer;
 
     int m_volume;
     QString m_fileName;
@@ -84,6 +97,11 @@ private:
     bool m_resumeCrossfade;
 
     double m_sleepFactor = 1.0;
+
+    // Wwatchdog / mix balance / dynamic crossfade length
+    int m_watchdogRetries = 0;
+    double m_mixScale = 1.0;
+    qint64 m_crossfadeMs = 8000;   // ms, updated per crossfade
 };
 
 #endif
