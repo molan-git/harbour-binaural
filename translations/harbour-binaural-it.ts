@@ -242,7 +242,7 @@
     </message>
     <message>
         <source>Choose ambient sounds</source>
-        <translation type="unfinished"></translation>
+        <translation>Scegli suoni ambientali</translation>
     </message>
     <message>
         <source>Custom frequencies</source>
