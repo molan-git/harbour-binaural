@@ -316,10 +316,6 @@
         <source>Ambient mix</source>
         <translation>Mix ambient</translation>
     </message>
-    <message>
-        <source>Ambient sounds</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>TimerPage</name>
