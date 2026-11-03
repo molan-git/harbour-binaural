@@ -42,10 +42,15 @@ AudioEngine::AudioEngine(QObject *parent)
                 this,
                 &AudioEngine::updateAmbienceState);
 
+        // Rebalance the remaining channels when one ends,
+        // dies (watchdog) or is released (invalid media).
         connect(m_ambienceChannels[i],
                 &AmbienceChannel::finished,
                 this,
-                &AudioEngine::updatePlayingState);
+                [this]() {
+                    updateAmbienceMixScale();
+                    updatePlayingState();
+                });
     }
 
     m_sleepTimerFadeTimer->setInterval(FadeInterval);
