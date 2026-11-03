@@ -55,9 +55,28 @@ void AudioEngine::setFrequencyBand(const QString &band)
         return;
 
     m_beatFrequency = frequency;
+    m_carrierFrequency = 200.0;
 
     if (m_binauralGenerator)
+    {
+        m_binauralGenerator->setCarrierFrequency(
+            m_carrierFrequency);
         m_binauralGenerator->setBeatFrequency(m_beatFrequency);
+    }
+}
+
+void AudioEngine::setBinauralFrequency(double carrier,
+                                       double beat)
+{
+    m_carrierFrequency = qBound(20.0, carrier, 1000.0);
+    m_beatFrequency = qBound(0.5, beat, 40.0);
+
+    if (m_binauralGenerator)
+    {
+        m_binauralGenerator->setCarrierFrequency(
+            m_carrierFrequency);
+        m_binauralGenerator->setBeatFrequency(m_beatFrequency);
+    }
 }
 
 void AudioEngine::setBinauralVolume(int volume)

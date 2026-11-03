@@ -26,6 +26,7 @@ AudioEngine::AudioEngine(QObject *parent)
       m_noiseGenerator(nullptr),
       m_coloredNoiseVolumeTimer(new QTimer(this)),
       m_beatFrequency(10.0),
+      m_carrierFrequency(200.0),
       m_binauralVolume(50),
       m_ambienceVolume(50),
       m_coloredNoiseVolume(50)

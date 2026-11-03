@@ -41,6 +41,7 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/pages/TimerPage.qml \
     qml/pages/components/ActionDrawer.qml \
     qml/pages/components/AmbienceDrawer.qml \
+    qml/pages/components/CustomBinauralDrawer.qml \
     qml/pages/components/InfoBinauralPage.qml \
     qml/pages/components/InfoColoredPage.qml \
     qml/pages/components/PageDrawer.qml \
@@ -58,6 +59,7 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/images/icon-s-headset.svg \
     qml/images/image-binaural-graph.svg \
     qml/images/image-colornoise-graph.svg \
+    qml/images/icon-l-stop.svg \
     translations/*.ts \
     harbour-binaural.desktop \
     sounds/wind.mp3 \

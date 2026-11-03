@@ -61,6 +61,8 @@ public:
     Q_INVOKABLE void resumeBinaural();
     Q_INVOKABLE void pauseBinaural();
     Q_INVOKABLE void setFrequencyBand(const QString &band);
+    Q_INVOKABLE void setBinauralFrequency(double carrier,
+                                          double beat);
 
     // Ambience controls.
     Q_INVOKABLE void setAmbience(const QString &ambience);
@@ -117,6 +119,7 @@ private:
 
     // Audio settings.
     double m_beatFrequency;
+    double m_carrierFrequency;
 
     int m_binauralVolume;
     int m_ambienceVolume;

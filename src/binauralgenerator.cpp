@@ -7,7 +7,7 @@ namespace
 {
     const int DefaultSampleRate = 48000;
 
-    const double CarrierFrequency = 200.0;
+    const double DefaultCarrierFrequency = 200.0;
 
     // MASTER VOLUME Binaural
     const double BinauralAmplitude = 13000.0;
@@ -20,6 +20,7 @@ namespace
 BinauralGenerator::BinauralGenerator(QObject *parent)
     : QIODevice(parent),
       m_sampleRate(DefaultSampleRate),
+      m_carrierFrequency(DefaultCarrierFrequency),
       m_leftPhase(0.0),
       m_rightPhase(0.0),
       m_beatFrequency(10.0)
@@ -36,6 +37,13 @@ void BinauralGenerator::setBeatFrequency(double frequency)
     m_beatFrequency = qMax(0.0, frequency);
 }
 
+void BinauralGenerator::setCarrierFrequency(double frequency)
+{
+    // Keep the carrier in a musically and physiologically
+    // sensible range.
+    m_carrierFrequency = qBound(20.0, frequency, 1000.0);
+}
+
 void BinauralGenerator::setSampleRate(int sampleRate)
 {
     if (sampleRate > 0)
@@ -50,9 +58,9 @@ qint64 BinauralGenerator::readData(char *data, qint64 maxlen)
     qint16 *samples =
         reinterpret_cast<qint16 *>(data);
 
-    const double leftFrequency = CarrierFrequency;
+    const double leftFrequency = m_carrierFrequency;
     const double rightFrequency =
-        CarrierFrequency + m_beatFrequency;
+        m_carrierFrequency + m_beatFrequency;
 
     for (qint64 frame = 0; frame < frameCount; ++frame)
     {

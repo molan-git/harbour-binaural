@@ -111,6 +111,17 @@
     </message>
 </context>
 <context>
+    <name>CustomBinauralDrawer</name>
+    <message>
+        <source>Base frequency</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Beat frequency</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>InfoBinauralPage</name>
     <message>
         <source>Binaural Beats</source>
@@ -212,6 +223,10 @@
     </message>
     <message>
         <source>Choose ambient sounds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom frequencies</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
