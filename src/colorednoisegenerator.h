@@ -26,6 +26,14 @@ public:
     void setNoiseType(NoiseType type);
     NoiseType noiseType() const;
 
+    /*
+     * Ocean-wave swell modulation.
+     * depth:         0.0 (off) .. 1.0 (dips to silence)
+     * periodSeconds: duration of one full swell
+     */
+    void setWaveModulation(double depth,
+                           double periodSeconds);
+
     void start();
 
 protected:
@@ -46,6 +54,11 @@ private:
     int m_channelCount;
 
     NoiseType m_noiseType;
+
+    // Wave swell state (phase advances per frame, not per channel).
+    double m_waveDepth;
+    double m_wavePeriod;
+    double m_wavePhase;
 
     quint32 m_randomState[2];
 

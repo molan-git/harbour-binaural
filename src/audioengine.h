@@ -72,6 +72,9 @@ public:
     Q_INVOKABLE void resumeAmbience();
 
     Q_INVOKABLE void setColoredNoise(const QString &noise);
+    Q_INVOKABLE void setNoiseWave(bool enabled,
+                                  double depth,
+                                  double periodSeconds);
     Q_INVOKABLE void pauseColoredNoise();
     Q_INVOKABLE void stopColoredNoise();
     Q_INVOKABLE void resumeColoredNoise();
@@ -79,6 +82,10 @@ public:
     Q_INVOKABLE void setBinauralVolume(int volume);
     Q_INVOKABLE void setAmbienceVolume(int volume);
     Q_INVOKABLE void setColoredNoiseVolume(int volume);
+    // Wave swell settings for the colored-noise channel.
+    bool m_noiseWaveEnabled;
+    double m_noiseWaveDepth;
+    double m_noiseWavePeriod;
 
 signals:
     void playingChanged();

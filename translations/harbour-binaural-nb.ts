@@ -229,6 +229,21 @@
         <source>Custom frequencies</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Wave motion</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>NoiseWaveDrawer</name>
+    <message>
+        <source>Wave depth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wave length</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PlaybackBar</name>
