@@ -98,6 +98,11 @@ public:
     int customSoundVolume() const;
     bool customSoundLoop() const;
 
+    Q_INVOKABLE void setCustomSoundSource(const QUrl &source);
+    Q_INVOKABLE void setCustomSoundName(const QString &name);
+    Q_INVOKABLE void setCustomSoundVolume(int volume);
+    Q_INVOKABLE void setCustomSoundLoop(bool loop);
+
     Q_INVOKABLE void fadeOutForSleepTimer();
 
     Q_INVOKABLE void start();
@@ -136,11 +141,6 @@ public:
     Q_INVOKABLE void setBinauralVolume(int volume);
     Q_INVOKABLE void setAmbienceVolume(int volume);
     Q_INVOKABLE void setColoredNoiseVolume(int volume);
-
-    // Wave swell settings for the colored-noise channel.
-    bool m_noiseWaveEnabled;
-    double m_noiseWaveDepth;
-    double m_noiseWavePeriod;
 
 signals:
     void playingChanged();
@@ -211,6 +211,11 @@ private:
     int m_coloredNoiseVolume;
 
     QString m_currentColoredNoise;
+
+    // Wave swell settings for the colored-noise channel.
+    bool m_noiseWaveEnabled;
+    double m_noiseWaveDepth;
+    double m_noiseWavePeriod;
 };
 
 #endif

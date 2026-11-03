@@ -801,6 +801,11 @@ Page {
                                     }
                                 }
 
+                                Item {
+                                    width: parent.width
+                                    height: Theme.paddingSmall / 2
+                                }
+
                                 // Custom sound button
                                 Item {
                                     width: parent.width
@@ -826,7 +831,7 @@ Page {
                                         id: customSoundButton
 
                                         anchors.centerIn: parent
-                                        preferredWidth: Theme.buttonWidthMedium
+                                        preferredWidth: frequencyGrid.width - Theme.paddingMedium
 
                                         text: audioEngine.customSoundName !== ""
                                               ? audioEngine.customSoundName

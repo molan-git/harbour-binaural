@@ -2,6 +2,7 @@
 
 #include <QUrl>
 #include <QDebug>
+#include <QVariantMap>
 
 // ============================================================================
 // STATE

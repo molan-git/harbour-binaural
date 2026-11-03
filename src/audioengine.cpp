@@ -20,10 +20,18 @@ AudioEngine::AudioEngine(QObject *parent)
       m_sleepTimerFadeTimer(new QTimer(this)),
       m_sleepTimerBinauralStartVolume(0.0),
       m_sleepTimerColoredNoiseStartVolume(0.0),
+      m_sleepTimerCustomStartVolume(0),
       m_binauralChannel(nullptr),
       m_noiseChannel(nullptr),
       m_binauralGenerator(nullptr),
       m_noiseGenerator(nullptr),
+      m_customChannel(nullptr),
+      m_playlistIndex(0),
+      m_playlistLoop(false),
+      m_playlistActive(false),
+      m_customVolume(50),
+      m_customLoop(true),
+      m_customManualStop(false),
       m_coloredNoiseVolumeTimer(new QTimer(this)),
       m_beatFrequency(10.0),
       m_carrierFrequency(200.0),
@@ -32,15 +40,7 @@ AudioEngine::AudioEngine(QObject *parent)
       m_coloredNoiseVolume(50),
       m_noiseWaveEnabled(false),
       m_noiseWaveDepth(0.0),
-      m_noiseWavePeriod(8.0),
-      m_customChannel(nullptr),
-      m_playlistIndex(0),
-      m_playlistLoop(false),
-      m_playlistActive(false),
-      m_customVolume(50),
-      m_customLoop(true),
-      m_customManualStop(false),
-      m_sleepTimerCustomStartVolume(0)
+      m_noiseWavePeriod(8.0)
 {
     // Pre-allocate ambience channels and wire up state/finish signals.
     for (int i = 0; i < MaxAmbienceChannels; ++i) {
