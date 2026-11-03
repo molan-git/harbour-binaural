@@ -99,6 +99,7 @@ void AudioEngine::setAmbience(const QString &ambience)
                 << ambience;
         }
 
+        updateAmbienceMixScale();
         updatePlayingState();
         return;
     }
@@ -137,6 +138,7 @@ void AudioEngine::stopAmbience()
             m_ambienceChannels[i]->stop();
     }
 
+    updateAmbienceMixScale();
     updatePlayingState();
 }
 
@@ -159,6 +161,7 @@ void AudioEngine::stopAmbienceByName(const QString &ambience)
         }
     }
 
+    updateAmbienceMixScale();
     updatePlayingState();
 }
 
@@ -169,7 +172,42 @@ void AudioEngine::stopAmbiencesImmediately()
             m_ambienceChannels[i]->stopImmediately();
     }
 
+    updateAmbienceMixScale();        // NEW
     updatePlayingState();
+}
+
+// ============================================================================
+// MIX BALANCE
+// ============================================================================
+
+/*
+ * Keeps the perceived loudness of the ambience bed constant no
+ * matter how many sounds are stacked: N uncorrelated sources with
+ * 1/sqrt(N) gain sum to roughly the same loudness as one source.
+ */
+
+void AudioEngine::updateAmbienceMixScale()
+{
+    int active = 0;
+
+    for (int i = 0; i < MaxAmbienceChannels; ++i) {
+        const AmbienceChannel *channel =
+            m_ambienceChannels[i];
+
+        if (channel
+            && !channel->fileName().isEmpty()
+            && !channel->isStopping())
+            ++active;
+    }
+
+    const double scale = active > 0
+        ? 1.0 / qSqrt(static_cast<double>(active))
+        : 1.0;
+
+    for (int i = 0; i < MaxAmbienceChannels; ++i) {
+        if (m_ambienceChannels[i])
+            m_ambienceChannels[i]->setMixScale(scale);
+    }
 }
 
 // ============================================================================

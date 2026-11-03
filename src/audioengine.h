@@ -87,6 +87,7 @@ private:
     // Ambience implementation.
     void stopAmbiencesImmediately();
     void updateAmbienceState();
+    void updateAmbienceMixScale();
 
     // Colored-noise volume.
     void applyPendingColoredNoiseVolume();
