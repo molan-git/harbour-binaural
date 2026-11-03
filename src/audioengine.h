@@ -5,6 +5,9 @@
 #include <QElapsedTimer>
 #include <QTimer>
 #include <QString>
+#include <QUrl>
+#include <QVariantList>
+#include <QVector>
 
 #include "ambiencechannel.h"
 #include "pcmchannel.h"
@@ -40,6 +43,38 @@ class AudioEngine : public QObject
                READ isColoredNoisePaused
                NOTIFY playingChanged)
 
+    Q_PROPERTY(bool customSoundPlaying
+               READ isCustomSoundPlaying
+               NOTIFY customSoundChanged)
+
+    Q_PROPERTY(bool customSoundPaused
+               READ isCustomSoundPaused
+               NOTIFY customSoundChanged)
+
+    Q_PROPERTY(bool customSoundPlaylistActive
+               READ isCustomSoundPlaylistActive
+               NOTIFY customSoundChanged)
+
+    Q_PROPERTY(QUrl customSoundSource
+               READ customSoundSource
+               WRITE setCustomSoundSource
+               NOTIFY customSoundChanged)
+
+    Q_PROPERTY(QString customSoundName
+               READ customSoundName
+               WRITE setCustomSoundName
+               NOTIFY customSoundChanged)
+
+    Q_PROPERTY(int customSoundVolume
+               READ customSoundVolume
+               WRITE setCustomSoundVolume
+               NOTIFY customSoundChanged)
+
+    Q_PROPERTY(bool customSoundLoop
+               READ customSoundLoop
+               WRITE setCustomSoundLoop
+               NOTIFY customSoundChanged)
+
 public:
     static constexpr int MaxAmbienceChannels = 3;
 
@@ -53,6 +88,15 @@ public:
     bool isBinauralPaused() const;
     bool isAmbiencePaused() const;
     bool isColoredNoisePaused() const;
+
+    bool isCustomSoundPlaying() const;
+    bool isCustomSoundPaused() const;
+    bool isCustomSoundPlaylistActive() const;
+
+    QUrl customSoundSource() const;
+    QString customSoundName() const;
+    int customSoundVolume() const;
+    bool customSoundLoop() const;
 
     Q_INVOKABLE void fadeOutForSleepTimer();
 
@@ -79,9 +123,20 @@ public:
     Q_INVOKABLE void stopColoredNoise();
     Q_INVOKABLE void resumeColoredNoise();
 
+    // Custom user sound (mp3/ogg/wav) and playlist controls.
+    Q_INVOKABLE void playCustomSound();
+    Q_INVOKABLE void stopCustomSound();
+    Q_INVOKABLE void pauseCustomSound();
+    Q_INVOKABLE void resumeCustomSound();
+    Q_INVOKABLE void playNextCustomSound();
+    Q_INVOKABLE void playPreviousCustomSound();
+    Q_INVOKABLE void startCustomSoundPlaylist(const QVariantList &files,
+                                               bool loopFolder);
+
     Q_INVOKABLE void setBinauralVolume(int volume);
     Q_INVOKABLE void setAmbienceVolume(int volume);
     Q_INVOKABLE void setColoredNoiseVolume(int volume);
+
     // Wave swell settings for the colored-noise channel.
     bool m_noiseWaveEnabled;
     double m_noiseWaveDepth;
@@ -89,6 +144,7 @@ public:
 
 signals:
     void playingChanged();
+    void customSoundChanged();
 
 private:
     void updatePlayingState();
@@ -97,6 +153,10 @@ private:
     void stopAmbiencesImmediately();
     void updateAmbienceState();
     void updateAmbienceMixScale();
+
+    // Custom sound implementation.
+    void playCustomTrack(int index);
+    void handleCustomTrackFinished();
 
     // Colored-noise volume.
     void applyPendingColoredNoiseVolume();
@@ -109,6 +169,7 @@ private:
     double m_sleepTimerBinauralStartVolume;
     int m_sleepTimerAmbienceStartVolumes[MaxAmbienceChannels];
     double m_sleepTimerColoredNoiseStartVolume;
+    int m_sleepTimerCustomStartVolume;
 
     // PCM playback channels (own output, generator, fade-out).
     PcmChannel *m_binauralChannel;
@@ -120,6 +181,23 @@ private:
 
     // Three independent ambience channels.
     AmbienceChannel *m_ambienceChannels[MaxAmbienceChannels];
+
+    // Dedicated custom user sound channel.
+    AmbienceChannel *m_customChannel;
+
+    // Custom sound playlist.
+    QVector<QUrl> m_playlistUrls;
+    QVector<QString> m_playlistNames;
+    int m_playlistIndex;
+    bool m_playlistLoop;
+    bool m_playlistActive;
+
+    // Custom sound settings.
+    QUrl m_customSource;
+    QString m_customName;
+    int m_customVolume;
+    bool m_customLoop;
+    bool m_customManualStop;
 
     // Colored-noise volume debounce timer.
     QTimer *m_coloredNoiseVolumeTimer;

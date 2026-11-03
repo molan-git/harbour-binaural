@@ -13,6 +13,7 @@ ActionDrawer {
     property var activeAmbiences: []
     property bool ambiencePlaying: false
     property bool pausedMode: false
+    property bool customSoundActive: false
 
     signal ambienceSelected(string ambience)
     signal ambienceDeselected(string ambience)
@@ -62,7 +63,9 @@ ActionDrawer {
                 text: SoundNames.label(modelData)
                 highlighted: ambienceDrawer.activeAmbiences.indexOf(modelData) !== -1
                 enabled: highlighted ||
-                         ambienceDrawer.activeAmbiences.length < 3
+                         (ambienceDrawer.activeAmbiences.length
+                          + (ambienceDrawer.customSoundActive ? 1 : 0))
+                         < 3
 
                 color: !enabled ? Theme.secondaryColor
                        : highlighted
