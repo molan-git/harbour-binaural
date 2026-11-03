@@ -65,6 +65,7 @@ AudioEngine::AudioEngine(QObject *parent)
                 });
     }
 
+    // Custom sound channel: same bulletproof AmbienceChannel
     // machinery as the preset ambiences.
     m_customChannel = new AmbienceChannel(this);
     m_customChannel->setVolume(m_customVolume);
