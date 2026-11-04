@@ -56,7 +56,7 @@ SilicaFlickable {
 
     function handleFileSelected(fileUrl, fileName) {
         selectedFile = fileUrl
-        selectedFileName = fileName
+        selectedFileName = fileName.replace(/\.[^\.]+$/, "")
 
         selectedFolder = ""
         selectedFolderName = ""
@@ -67,7 +67,7 @@ SilicaFlickable {
         if (audioEngine) {
             audioEngine.stopCustomSound()
             audioEngine.customSoundSource = fileUrl
-            audioEngine.customSoundName = fileName
+            audioEngine.customSoundName = selectedFileName
             audioEngine.playCustomSound()
         }
     }
@@ -159,7 +159,7 @@ SilicaFlickable {
         audioEngine.startCustomSoundPlaylist(files, loopFolder)
 
         selectedFile = files[0].url
-        selectedFileName = files[0].name
+        selectedFileName = files[0].name.replace(/\.[^\.]+$/, "")
     }
 
     Rectangle {
@@ -219,6 +219,75 @@ SilicaFlickable {
                         page.closeRequested()
                     }
                 }
+            }
+        }
+
+        // Selected folder and current track information.
+        Item {
+            id: trackInfoContainer
+
+            x: Theme.horizontalPageMargin + Theme.paddingLarge * 2
+            width: parent.width - 2 * (Theme.horizontalPageMargin + Theme.paddingMedium)
+
+            property bool showTrackInfo:
+                selectedFolderName !== ""
+                && audioEngine !== null
+                && audioEngine.customSoundPlaylistActive
+
+            property real expandedHeight:
+                folderNameLabel.implicitHeight
+                + Theme.paddingSmall
+                + (showTrackInfo
+                   ? trackNameLabel.implicitHeight + Theme.paddingSmall
+                   : 0)
+
+            height: expandedHeight
+
+            Behavior on height {
+                NumberAnimation {
+                    duration: 300
+                    easing.type: Easing.OutCubic
+                }
+            }
+
+            Label {
+                id: folderNameLabel
+
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                }
+
+                text: selectedFolderName !== ""
+                      ? selectedFolderName
+                      : (selectedFileName !== ""
+                         ? selectedFileName
+                         : qsTr("No file selected"))
+
+                wrapMode: Text.Wrap
+                color: Theme.highlightColor
+                font.pixelSize: Theme.fontSizeMedium
+            }
+
+            Label {
+                id: trackNameLabel
+
+                anchors {
+                    top: folderNameLabel.bottom
+                    topMargin: Theme.paddingSmall
+                    left: parent.left
+                    right: parent.right
+                }
+
+                visible: trackInfoContainer.showTrackInfo
+
+                text: page.audioEngine
+                      ? page.audioEngine.customSoundName : ""
+
+                wrapMode: Text.Wrap
+                color: Theme.secondaryHighlightColor
+                font.pixelSize: Theme.fontSizeSmall
             }
         }
 
@@ -285,7 +354,7 @@ SilicaFlickable {
                     }
                 }
 
-                // Add / Clear custom sound selection.
+                // Add or Clear custom sound selection.
                 Item {
                     id: audioActionButton
 
@@ -365,8 +434,9 @@ SilicaFlickable {
                         anchors.centerIn: parent
                         width: playbackButtons.playButtonSize
                         height: playbackButtons.playButtonSize
+                        opacity: restartButton.canRestart ? 1.0 : 0.4
 
-                        source: "image://theme/icon-l-play?"
+                        source: "../../images/icon-l-restart.svg"
                                 + (restartMouseArea.pressed && restartButton.canRestart
                                    ? Theme.highlightColor
                                    : restartButton.canRestart
@@ -426,75 +496,6 @@ SilicaFlickable {
             }
         }
 
-        // Selected folder and current track information.
-        Item {
-            id: trackInfoContainer
-
-            x: Theme.horizontalPageMargin
-            width: parent.width - 2 * Theme.horizontalPageMargin
-
-            property bool showTrackInfo:
-                selectedFolderName !== ""
-                && audioEngine !== null
-                && audioEngine.customSoundPlaylistActive
-
-            property real expandedHeight:
-                folderNameLabel.implicitHeight
-                + Theme.paddingSmall
-                + (showTrackInfo
-                   ? trackNameLabel.implicitHeight + Theme.paddingSmall
-                   : 0)
-
-            height: expandedHeight
-
-            Behavior on height {
-                NumberAnimation {
-                    duration: 300
-                    easing.type: Easing.OutCubic
-                }
-            }
-
-            Label {
-                id: folderNameLabel
-
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                }
-
-                text: selectedFolderName !== ""
-                      ? selectedFolderName
-                      : (selectedFileName !== ""
-                         ? selectedFileName
-                         : qsTr("No file selected"))
-
-                wrapMode: Text.Wrap
-                color: Theme.highlightColor
-                font.pixelSize: Theme.fontSizeMedium
-            }
-
-            Label {
-                id: trackNameLabel
-
-                anchors {
-                    top: folderNameLabel.bottom
-                    topMargin: Theme.paddingSmall
-                    left: parent.left
-                    right: parent.right
-                }
-
-                visible: trackInfoContainer.showTrackInfo
-
-                text: page.audioEngine
-                      ? page.audioEngine.customSoundName : ""
-
-                wrapMode: Text.Wrap
-                color: Theme.secondaryHighlightColor
-                font.pixelSize: Theme.fontSizeSmall
-            }
-        }
-
         // Custom Sound Volume Slider + Loop Switch
         Item {
             id: customSoundControls
@@ -531,48 +532,16 @@ SilicaFlickable {
             }
 
             // Volume icon below the slider
-            Item {
+            VolumeIcon {
                 id: customSoundVolumeIcon
-
-                width: Theme.iconSizeSmall * 1.6
-                height: Theme.iconSizeSmall * 1.6
-
+                value: customSoundVolumeSlider.value
                 anchors.top: customSoundVolumeSlider.bottom
                 anchors.topMargin: -Theme.paddingLarge
                 anchors.horizontalCenter: customSoundVolumeSlider.horizontalCenter
                 anchors.horizontalCenterOffset: Theme.paddingSmall
-
                 opacity: page.audioEngine
                          && page.audioEngine.customSoundSource.toString() !== ""
                          ? 1.0 : 0.5
-
-                Image {
-                    id: customSoundVolumeImage
-
-                    anchors.fill: parent
-
-                    source: customSoundVolumeSlider.value === 0
-                            ? "../../images/icon-s-volume-1.svg"
-                            : customSoundVolumeSlider.value <= 33
-                              ? "../../images/icon-s-volume-2.svg"
-                              : customSoundVolumeSlider.value <= 66
-                                ? "../../images/icon-s-volume-3.svg"
-                                : "../../images/icon-s-volume-4.svg"
-
-                    sourceSize: Qt.size(
-                                    Theme.iconSizeSmall * 1.6 * 2,
-                                    Theme.iconSizeSmall * 1.6 * 2
-                                )
-
-                    fillMode: Image.PreserveAspectFit
-                    visible: false
-                }
-
-                ColorOverlay {
-                    anchors.fill: customSoundVolumeImage
-                    source: customSoundVolumeImage
-                    color: Theme.primaryColor
-                }
             }
 
             // Sound loop selector
