@@ -831,7 +831,7 @@ Page {
                                         id: customSoundButton
 
                                         anchors.centerIn: parent
-                                        preferredWidth: frequencyGrid.width - Theme.paddingMedium
+                                        width: frequencyGrid.width - Theme.paddingMedium
 
                                         text: audioEngine.customSoundName !== ""
                                               ? audioEngine.customSoundName
