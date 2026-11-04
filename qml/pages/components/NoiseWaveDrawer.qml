@@ -4,8 +4,8 @@ import Sailfish.Silica 1.0
 ActionDrawer {
     id: noiseWavePanel
 
-    property bool wavesActive: false   // set from MainPage
-    property bool playing: false       // set from MainPage
+    property bool wavesActive: false
+    property bool playing: false
 
     signal waveChanged(real depth, real period)
     signal enableRequested(real depth, real period)
@@ -109,8 +109,8 @@ ActionDrawer {
                 height: Theme.iconSizeLarge
 
                 source: noiseWavePanel.wavesActive
-                        ? "../../images/icon-l-stop.svg"
-                        : "image://theme/icon-l-play"
+                        ? "image://theme/icon-l-clear"
+                        : "image://theme/icon-l-add"
 
                 color: noiseWavePanel.wavesActive
                        ? (noiseWavePanel.playing

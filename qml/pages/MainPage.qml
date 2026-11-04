@@ -484,7 +484,7 @@ Page {
                                         id: customFrequenciesButton
 
                                         anchors.centerIn: parent
-                                        preferredWidth: frequencyGrid.width - Theme.paddingMedium
+                                        width: frequencyGrid.width - Theme.paddingMedium
 
                                         text: {
                                             if (page.isCustomBinaural && page.bandPlaying) {
@@ -672,7 +672,7 @@ Page {
                                         id: waveMotionButton
 
                                         anchors.centerIn: parent
-                                        preferredWidth: frequencyGrid.width - Theme.paddingMedium
+                                        width: frequencyGrid.width - Theme.paddingMedium
 
                                         text: qsTr("Wave motion")
                                         highlighted: page.noiseWavesEnabled
@@ -777,7 +777,7 @@ Page {
                                     Button {
                                         id: ambienceButton
                                         anchors.centerIn: parent
-                                        preferredWidth: frequencyGrid.width - Theme.paddingMedium
+                                        width: frequencyGrid.width - Theme.paddingMedium
 
                                         text: page.activeAmbiences.length === 0
                                               ? qsTr("Choose ambient sounds")
