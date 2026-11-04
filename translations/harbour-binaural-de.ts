@@ -136,6 +136,19 @@
     </message>
 </context>
 <context>
+    <name>CustomBinauralDrawer</name>
+    <message>
+        <location filename="../qml/pages/components/CustomBinauralDrawer.qml" line="35"/>
+        <source>Base frequency</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/CustomBinauralDrawer.qml" line="73"/>
+        <source>Beat frequency</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>InfoBinauralPage</name>
     <message>
         <location filename="../qml/pages/components/InfoBinauralPage.qml" line="61"/>
@@ -224,44 +237,67 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="171"/>
+        <location filename="../qml/pages/MainPage.qml" line="260"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="181"/>
+        <location filename="../qml/pages/MainPage.qml" line="270"/>
         <source>Deselect all sounds</source>
         <translation>Alle Klänge deaktivieren</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="193"/>
+        <location filename="../qml/pages/MainPage.qml" line="282"/>
         <source>Timer</source>
         <translation>Timer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="222"/>
+        <location filename="../qml/pages/MainPage.qml" line="311"/>
         <source>Binaural Beats</source>
         <translation>Binaurale Beats</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="236"/>
+        <location filename="../qml/pages/MainPage.qml" line="325"/>
         <source>To be used with</source>
         <translation>Zu verwenden mit</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="410"/>
+        <location filename="../qml/pages/MainPage.qml" line="475"/>
+        <source>Custom frequencies</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/MainPage.qml" line="554"/>
         <source>Colored Noise</source>
         <translation>Farbiges Rauschen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="544"/>
+        <location filename="../qml/pages/MainPage.qml" line="653"/>
+        <source>Wave motion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/MainPage.qml" line="730"/>
         <source>Ambient Sound</source>
         <translation>Umgebungsklang</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="573"/>
+        <location filename="../qml/pages/MainPage.qml" line="759"/>
         <source>Choose ambient sounds</source>
         <translation>Umgebungsklänge auswählen</translation>
+    </message>
+</context>
+<context>
+    <name>NoiseWaveDrawer</name>
+    <message>
+        <location filename="../qml/pages/components/NoiseWaveDrawer.qml" line="32"/>
+        <source>Wave depth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/NoiseWaveDrawer.qml" line="70"/>
+        <source>Wave length</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

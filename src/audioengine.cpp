@@ -26,9 +26,13 @@ AudioEngine::AudioEngine(QObject *parent)
       m_noiseGenerator(nullptr),
       m_coloredNoiseVolumeTimer(new QTimer(this)),
       m_beatFrequency(10.0),
+      m_carrierFrequency(200.0),
       m_binauralVolume(50),
       m_ambienceVolume(50),
-      m_coloredNoiseVolume(50)
+      m_coloredNoiseVolume(50),
+      m_noiseWaveEnabled(false),
+      m_noiseWaveDepth(0.0),
+      m_noiseWavePeriod(8.0)
 {
     // Pre-allocate ambience channels and wire up state/finish signals.
     for (int i = 0; i < MaxAmbienceChannels; ++i) {

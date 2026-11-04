@@ -16,7 +16,10 @@ ColoredNoiseGenerator::ColoredNoiseGenerator(QObject *parent)
     : QIODevice(parent),
       m_sampleRate(DefaultSampleRate),
       m_channelCount(2),
-      m_noiseType(WhiteNoise)
+      m_noiseType(WhiteNoise),
+      m_waveDepth(0.0),
+      m_wavePeriod(8.0),
+      m_wavePhase(0.0)
 {
     resetNoiseState();
 }
@@ -64,6 +67,21 @@ void ColoredNoiseGenerator::start()
     open(QIODevice::ReadOnly);
 }
 
+void ColoredNoiseGenerator::setWaveModulation(
+    double depth,
+    double periodSeconds)
+{
+    m_waveDepth = qBound(0.0, depth, 1.0);
+
+    if (periodSeconds >= 0.5)
+        m_wavePeriod = periodSeconds;
+
+    // depth 0 disables the swell; park the phase at the swell
+    // peak so re-enabling does not start mid-dip.
+    if (m_waveDepth <= 0.0)
+        m_wavePhase = 0.0;
+}
+
 qint64 ColoredNoiseGenerator::readData(char *data, qint64 maxlen)
 {
     if (!data || maxlen <= 0)
@@ -88,6 +106,29 @@ qint64 ColoredNoiseGenerator::readData(char *data, qint64 maxlen)
          frame < frameCount;
          ++frame)
     {
+        /*
+         * Ocean-wave swell: raised-cosine envelope over the
+         * whole frame. Range [1 - depth .. 1]; at depth = 0 the
+         * noise is unmodulated, at depth = 1 it dips to silence
+         * at the wave trough. Computed once per frame so both
+         * channels swell in perfect sync.
+         */
+        double envelope = 1.0;
+
+        if (m_waveDepth > 0.0)
+        {
+            envelope =
+                (1.0 - m_waveDepth)
+                + m_waveDepth * 0.5
+                    * (1.0 - qCos(m_wavePhase * 2.0 * M_PI));
+
+            m_wavePhase +=
+                1.0 / (m_wavePeriod * m_sampleRate);
+
+            if (m_wavePhase >= 1.0)
+                m_wavePhase -= 1.0;
+        }
+
         for (int channel = 0;
              channel < m_channelCount;
              ++channel)
@@ -117,6 +158,8 @@ qint64 ColoredNoiseGenerator::readData(char *data, qint64 maxlen)
              * Final safety limiter.
              */
             value *= noiseGain();
+
+            value *= envelope;
 
             value = qBound(-1.0, value, 1.0);
 
