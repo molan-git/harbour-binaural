@@ -9,9 +9,9 @@ Binaural is a sound app for [Sailfish OS](https://sailfishos.org) designed for r
 ## Features
 
 - Binaural beats with selectable frequency bands
-- [WIP] Custom binaural frequencies
+- Custom binaural frequencies
 - Colored noise: white, pink, brown, and grey
-- [WIP] Colored noise wave option
+- Colored noise wave option
 - Ambient sounds
 - [WIP] Custom sound playback
 - Mix sound sources simultaneously
