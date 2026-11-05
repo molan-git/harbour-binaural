@@ -114,11 +114,11 @@
     <name>CustomBinauralDrawer</name>
     <message>
         <source>Base frequency</source>
-        <translation type="unfinished"></translation>
+        <translation>Base frequency</translation>
     </message>
     <message>
         <source>Beat frequency</source>
-        <translation type="unfinished"></translation>
+        <translation>Beat frequency</translation>
     </message>
 </context>
 <context>
@@ -227,22 +227,22 @@
     </message>
     <message>
         <source>Custom frequencies</source>
-        <translation type="unfinished"></translation>
+        <translation>Custom frequencies</translation>
     </message>
     <message>
         <source>Wave motion</source>
-        <translation type="unfinished"></translation>
+        <translation>Wave motion</translation>
     </message>
 </context>
 <context>
     <name>NoiseWaveDrawer</name>
     <message>
         <source>Wave depth</source>
-        <translation type="unfinished"></translation>
+        <translation>Wave depth</translation>
     </message>
     <message>
         <source>Wave length</source>
-        <translation type="unfinished"></translation>
+        <translation>Wave length</translation>
     </message>
 </context>
 <context>
