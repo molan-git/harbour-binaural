@@ -462,7 +462,7 @@
 <context>
     <name>SoundPickerDrawer</name>
     <message>
-        <location filename="../qml/pages/components/SoundPickerDrawer.qml" line="266"/>
+        <location filename="../qml/pages/components/SoundPickerDrawer.qml" line="269"/>
         <source>No file selected</source>
         <translation type="unfinished"></translation>
     </message>

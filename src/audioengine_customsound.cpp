@@ -73,6 +73,7 @@ void AudioEngine::setCustomSoundVolume(int volume)
 void AudioEngine::setCustomSoundLoop(bool loop)
 {
     m_customLoop = loop;
+    m_playlistLoop = loop;
 
     if (m_customChannel && !m_playlistActive)
         m_customChannel->setLooping(loop);

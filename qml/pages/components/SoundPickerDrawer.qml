@@ -79,6 +79,9 @@ SilicaFlickable {
         selectedFile = ""
         selectedFileName = ""
 
+        if (audioEngine)
+            loopFolder = audioEngine.customSoundLoop
+
         startFolderPlayback()
     }
 
@@ -137,7 +140,7 @@ SilicaFlickable {
             if (fileUrl && fileName) {
                 files.push({
                     "url": fileUrl,
-                    "name": fileName
+                    "name": fileName.replace(/\.[^.]+$/, "")
                 })
             }
         }
@@ -425,25 +428,34 @@ SilicaFlickable {
                         page.selectedFile.toString() !== ""
                         || page.selectedFolder.toString() !== ""
 
-                    property bool canRestart:
-                        hasSelection
-                        && page.audioEngine
-                        && !page.audioEngine.customSoundPlaying
+                    property bool canRestart: hasSelection && page.audioEngine
 
                     Icon {
+                        id: restartIcon
+
                         anchors.centerIn: parent
                         width: playbackButtons.playButtonSize
                         height: playbackButtons.playButtonSize
-                        opacity: restartButton.canRestart ? 1.0 : 0.4
 
                         source: "../../images/icon-l-restart.svg"
-                                + (restartMouseArea.pressed && restartButton.canRestart
-                                   ? Theme.highlightColor
-                                   : restartButton.canRestart
-                                     ? Theme.primaryColor
-                                     : Theme.secondaryColor)
-
                         sourceSize: Qt.size(width * 2, height * 2)
+
+                        visible: false
+                    }
+
+                    ColorOverlay {
+                        anchors.fill: restartIcon
+
+                        source: restartIcon
+
+                        color: restartMouseArea.pressed
+                               && restartButton.canRestart
+                               ? Theme.highlightColor
+                               : restartButton.canRestart
+                                 ? Theme.primaryColor
+                                 : Theme.secondaryColor
+
+                        opacity: restartButton.canRestart ? 1.0 : 0.4
                     }
 
                     MouseArea {
@@ -455,10 +467,11 @@ SilicaFlickable {
                             if (!page.audioEngine)
                                 return
 
+                            page.audioEngine.stopCustomSound()
+
                             if (page.selectedFolder.toString() !== "") {
                                 page.startFolderPlayback()
                             } else if (page.selectedFile.toString() !== "") {
-                                page.audioEngine.stopCustomSound()
                                 page.audioEngine.customSoundSource = page.selectedFile
                                 page.audioEngine.customSoundName = page.selectedFileName
                                 page.audioEngine.playCustomSound()
@@ -560,6 +573,7 @@ SilicaFlickable {
                          : false
 
                 onCheckedChanged: {
+                    page.loopFolder = checked
                     if (page.audioEngine)
                         page.audioEngine.customSoundLoop = checked
                 }
