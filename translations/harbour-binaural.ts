@@ -56,23 +56,19 @@
     <name>AudioFilePickerPage</name>
     <message>
         <source>Music</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Use folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Music</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel</translation>
     </message>
     <message>
         <source>No audio files or folders</source>
-        <translation type="unfinished"></translation>
+        <translation>No audio files or folders</translation>
     </message>
     <message>
-        <source>Try another folder or check where your audio files are stored.</source>
-        <translation type="unfinished"></translation>
+        <source>Use Folder</source>
+        <translation>Use Folder</translation>
     </message>
 </context>
 <context>
@@ -256,10 +252,6 @@
         <source>Wave motion</source>
         <translation>Wave motion</translation>
     </message>
-    <message>
-        <source>Custom sound</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>NoiseWaveDrawer</name>
@@ -373,12 +365,16 @@
         <source>Ambient mix</source>
         <translation>Ambient mix</translation>
     </message>
+    <message>
+        <source>Custom sound</source>
+        <translation>Custom sound</translation>
+    </message>
 </context>
 <context>
     <name>SoundPickerDrawer</name>
     <message>
         <source>No file selected</source>
-        <translation type="unfinished"></translation>
+        <translation>No file selected</translation>
     </message>
 </context>
 <context>

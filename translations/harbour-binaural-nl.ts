@@ -59,10 +59,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Use folder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -71,7 +67,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Try another folder or check where your audio files are stored.</source>
+        <source>Use Folder</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -256,10 +252,6 @@
         <source>Wave motion</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Custom sound</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>NoiseWaveDrawer</name>
@@ -372,6 +364,10 @@
     <message>
         <source>Ambient mix</source>
         <translation>Ambientmix</translation>
+    </message>
+    <message>
+        <source>Custom sound</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

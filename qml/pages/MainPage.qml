@@ -1,4 +1,4 @@
-﻿import QtQuick 2.0
+import QtQuick 2.0
 import Sailfish.Silica 1.0
 import QtGraphicalEffects 1.0
 import Binaural 1.0
@@ -52,7 +52,7 @@ Page {
             parts.push(SoundNames.label("Ambient mix"))
 
         if (customSoundSelected)
-            parts.push(qsTr("Custom"))
+            parts.push(SoundNames.label("Custom sound"))
 
         return parts.join(" & ")
     }
@@ -864,7 +864,7 @@ Page {
 
                                             text: "  " + (audioEngine.customSoundName !== ""
                                                            ? audioEngine.customSoundName
-                                                           : qsTr("Custom sound")) + "  "
+                                                           : SoundNames.label("Custom sound")) + "  "
 
                                             enabled: page.activeAmbiences.length
                                                      + (page.customSoundActive ? 1 : 0)

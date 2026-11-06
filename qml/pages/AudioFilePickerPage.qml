@@ -1,4 +1,4 @@
-﻿import QtQuick 2.0
+import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Qt.labs.folderlistmodel 2.1
 
@@ -161,7 +161,6 @@ Dialog {
                 enabled: folderModel.status === FolderListModel.Ready
                          && folderModel.count === 0
                 text: qsTr("No audio files or folders")
-                hintText: qsTr("Try another folder or check where your audio files are stored.")
             }
 
             VerticalScrollDecorator {}
