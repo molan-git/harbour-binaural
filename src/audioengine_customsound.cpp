@@ -45,6 +45,11 @@ bool AudioEngine::customSoundLoop() const
     return m_customLoop;
 }
 
+bool AudioEngine::customSoundCrossfade() const
+{
+    return m_customCrossfade;
+}
+
 void AudioEngine::setCustomSoundSource(const QUrl &url)
 {
     if (m_customSource == url)
@@ -81,6 +86,19 @@ void AudioEngine::setCustomSoundLoop(bool loop)
     emit customSoundChanged();
 }
 
+void AudioEngine::setCustomSoundCrossfade(bool crossfade)
+{
+    if (m_customCrossfade == crossfade)
+        return;
+
+    m_customCrossfade = crossfade;
+
+    if (m_customChannel)
+        m_customChannel->setCrossfadeEnabled(crossfade);
+
+    emit customSoundChanged();
+}
+
 // ============================================================================
 // PLAYBACK
 // ============================================================================
@@ -109,6 +127,7 @@ void AudioEngine::playCustomTrack(int index)
     m_customManualStop = false;
 
     m_customChannel->setVolume(m_customVolume);
+    m_customChannel->setCrossfadeEnabled(m_customCrossfade);
 
     // Playlist tracks play once; the engine advances on finished().
     m_customChannel->setLooping(m_playlistActive

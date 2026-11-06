@@ -173,6 +173,11 @@ void AmbienceChannel::setLooping(bool looping)
     m_looping = looping;
 }
 
+void AmbienceChannel::setCrossfadeEnabled(bool enabled)
+{
+    m_crossfadeEnabled = enabled;
+}
+
 void AmbienceChannel::pause()
 {
     if (!m_activePlayer || m_paused)
@@ -463,7 +468,7 @@ void AmbienceChannel::checkCrossfade(QMediaPlayer *player)
 
     // Non-looping tracks must not loop-crossfade into themselves;
     // they play to their natural end instead.
-    if (!m_looping)
+    if (!m_looping || !m_crossfadeEnabled)
         return;
 
     const qint64 duration = player->duration();
@@ -625,7 +630,14 @@ void AmbienceChannel::handleEndOfMedia(QMediaPlayer *player)
      * restart, which would click.
      */
     if (!m_fadingPlayer) {
-        startCrossfade(player, 500);
+        if (m_crossfadeEnabled) {
+            startCrossfade(player, 500);
+            return;
+        }
+
+        // Crossfade disabled: hard restart at the loop point.
+        player->setPosition(0);
+        player->play();
         return;
     }
 

@@ -28,6 +28,9 @@ public:
     // (used for custom-sound playlists).
     void setLooping(bool looping);
 
+    // Loop-seam crossfade on/off (custom sounds); default true.
+    void setCrossfadeEnabled(bool enabled);
+
     void pause();
     void stop();
     void resume();
@@ -108,6 +111,7 @@ private:
     bool m_resumeCrossfade;
 
     bool m_looping = true;
+    bool m_crossfadeEnabled = true;
 
     double m_sleepFactor = 1.0;
 

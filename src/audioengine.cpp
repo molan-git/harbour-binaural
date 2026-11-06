@@ -31,6 +31,7 @@ AudioEngine::AudioEngine(QObject *parent)
       m_playlistActive(false),
       m_customVolume(50),
       m_customLoop(true),
+      m_customCrossfade(true),
       m_customManualStop(false),
       m_coloredNoiseVolumeTimer(new QTimer(this)),
       m_beatFrequency(10.0),
@@ -195,6 +196,7 @@ AudioEngine::~AudioEngine()
 void AudioEngine::updatePlayingState()
 {
     emit playingChanged();
+    emit customSoundChanged();
 }
 
 void AudioEngine::updateAmbienceState()

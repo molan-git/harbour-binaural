@@ -34,7 +34,7 @@ SilicaFlickable {
         if (audioEngine && audioEngine.customSoundSource) {
             selectedFile = audioEngine.customSoundSource
             selectedFileName = audioEngine.customSoundName
-                           ? audioEngine.customSoundName : ""
+                    ? audioEngine.customSoundName : ""
         }
     }
 
@@ -139,9 +139,9 @@ SilicaFlickable {
 
             if (fileUrl && fileName) {
                 files.push({
-                    "url": fileUrl,
-                    "name": fileName.replace(/\.[^.]+$/, "")
-                })
+                               "url": fileUrl,
+                               "name": fileName.replace(/\.[^.]+$/, "")
+                           })
             }
         }
 
@@ -517,14 +517,16 @@ SilicaFlickable {
             height: customSoundVolumeSlider.height
                     + customSoundVolumeIcon.height
                     - Theme.paddingLarge
+                    + Theme.paddingMedium
+                    + switchesRow.height
 
             Slider {
                 id: customSoundVolumeSlider
 
                 anchors.left: parent.left
                 anchors.leftMargin: Theme.horizontalPageMargin
-                anchors.right: loopButton.left
-                anchors.rightMargin: Theme.paddingLarge
+                anchors.right: parent.right
+                anchors.rightMargin: Theme.horizontalPageMargin
 
                 minimumValue: 0
                 maximumValue: 100
@@ -557,33 +559,57 @@ SilicaFlickable {
                          ? 1.0 : 0.5
             }
 
-            // Sound loop selector
-            Switch {
-                id: loopButton
+            // Loop & Crossfade switches, side by side, centered
+            Row {
+                id: switchesRow
 
-                anchors.right: parent.right
-                anchors.rightMargin: Theme.horizontalPageMargin
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.verticalCenterOffset: Theme.paddingSmall * 1.7
+                anchors.top: customSoundVolumeIcon.bottom
+                anchors.topMargin: Theme.paddingMedium
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: Theme.paddingLarge
 
-                icon.source: "image://theme/icon-m-repeat"
+                Switch {
+                    id: loopButton
 
-                checked: page.audioEngine
-                         ? page.audioEngine.customSoundLoop
-                         : false
+                    icon.source: "image://theme/icon-m-repeat"
 
-                onCheckedChanged: {
-                    page.loopFolder = checked
-                    if (page.audioEngine)
-                        page.audioEngine.customSoundLoop = checked
+                    checked: page.audioEngine
+                             ? page.audioEngine.customSoundLoop
+                             : false
+
+                    onCheckedChanged: {
+                        page.loopFolder = checked
+                        if (page.audioEngine)
+                            page.audioEngine.customSoundLoop = checked
+                    }
+
+                    opacity: page.audioEngine
+                             && page.audioEngine.customSoundSource.toString() !== ""
+                             ? 1.0 : 0.5
+
+                    enabled: page.audioEngine
+                             && page.audioEngine.customSoundSource.toString() !== ""
                 }
 
-                opacity: page.audioEngine
-                         && page.audioEngine.customSoundSource.toString() !== ""
-                         ? 1.0 : 0.5
+                Switch {
+                    id: crossfadeButton
 
-                enabled: page.audioEngine
-                         && page.audioEngine.customSoundSource.toString() !== ""
+                    icon.source: "image://theme/icon-m-transfer"
+
+                    checked: page.audioEngine
+                             ? page.audioEngine.customSoundCrossfade
+                             : true
+
+                    onCheckedChanged: {
+                        if (page.audioEngine)
+                            page.audioEngine.customSoundCrossfade = checked
+                    }
+
+                    enabled: page.audioEngine
+                             && page.audioEngine.customSoundSource.toString() !== ""
+
+                    opacity: enabled ? 1.0 : 0.5
+                }
             }
         }
     }

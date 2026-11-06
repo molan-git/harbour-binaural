@@ -75,6 +75,11 @@ class AudioEngine : public QObject
                WRITE setCustomSoundLoop
                NOTIFY customSoundChanged)
 
+    Q_PROPERTY(bool customSoundCrossfade
+               READ customSoundCrossfade
+               WRITE setCustomSoundCrossfade
+               NOTIFY customSoundChanged)
+
 public:
     static constexpr int MaxAmbienceChannels = 3;
 
@@ -97,11 +102,13 @@ public:
     QString customSoundName() const;
     int customSoundVolume() const;
     bool customSoundLoop() const;
+    bool customSoundCrossfade() const;
 
     Q_INVOKABLE void setCustomSoundSource(const QUrl &source);
     Q_INVOKABLE void setCustomSoundName(const QString &name);
     Q_INVOKABLE void setCustomSoundVolume(int volume);
     Q_INVOKABLE void setCustomSoundLoop(bool loop);
+    Q_INVOKABLE void setCustomSoundCrossfade(bool crossfade);
 
     Q_INVOKABLE void fadeOutForSleepTimer();
 
@@ -197,6 +204,7 @@ private:
     QString m_customName;
     int m_customVolume;
     bool m_customLoop;
+    bool m_customCrossfade;
     bool m_customManualStop;
 
     // Colored-noise volume debounce timer.
