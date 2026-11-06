@@ -37,6 +37,18 @@ ApplicationWindow {
                                  ? mainPage.activeNoise
                                  : ""
 
+    property bool customSoundSelected: mainPage
+                                       ? mainPage.customSoundSelected
+                                       : false
+
+    property bool customSoundActive: mainPage
+                                     ? mainPage.customSoundActive
+                                     : false
+
+    property string activeCustomName: mainPage
+                                      ? mainPage.customSoundLabel
+                                      : ""
+
     property bool isPlaying: mainPage
                              ? mainPage.isPlaying
                              : false
@@ -159,7 +171,8 @@ ApplicationWindow {
     property bool pausedMode: !isPlaying &&
                               (activeBand !== "" ||
                                activeAmbiences.length > 0 ||
-                               activeNoise !== "")
+                               activeNoise !== "" ||
+                               customSoundSelected)
 
     initialPage: Component {
         MainPage {
@@ -174,20 +187,16 @@ ApplicationWindow {
 
     cover: Component {
         CoverPage {
-            activeBand: appWindow.activeBand
-            activeAmbiences: appWindow.activeAmbiences
-            activeNoise: appWindow.activeNoise
+            mainState: appWindow.mainPage
             isPlaying: appWindow.isPlaying
-            isPaused: appWindow.pausedMode
 
             sleepTimerRunning: appWindow.sleepTimerRunning
             sleepTimerPaused: appWindow.sleepTimerPaused
             sleepTimerRemainingSeconds: appWindow.sleepTimerRemainingSeconds
 
             onPlayPauseClicked: {
-                if (appWindow.mainPage) {
+                if (appWindow.mainPage)
                     appWindow.mainPage.togglePlayback()
-                }
             }
         }
     }
