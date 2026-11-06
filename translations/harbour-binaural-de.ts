@@ -69,22 +69,22 @@
     <message>
         <location filename="../qml/pages/AudioFilePickerPage.qml" line="51"/>
         <source>Music</source>
-        <translation type="unfinished"></translation>
+        <translation>Musik</translation>
     </message>
     <message>
         <location filename="../qml/pages/AudioFilePickerPage.qml" line="70"/>
         <source>Use Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordner benutzen</translation>
     </message>
     <message>
         <location filename="../qml/pages/AudioFilePickerPage.qml" line="71"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <location filename="../qml/pages/AudioFilePickerPage.qml" line="163"/>
         <source>No audio files or folders</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine Audiodateien oder Ordner</translation>
     </message>
 </context>
 <context>
@@ -441,7 +441,7 @@
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="44"/>
         <source>Custom sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Eigener Sound</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="45"/>
@@ -459,7 +459,7 @@
     <message>
         <location filename="../qml/pages/components/SoundPickerDrawer.qml" line="275"/>
         <source>No file selected</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine Datei ausgewählt</translation>
     </message>
 </context>
 <context>
