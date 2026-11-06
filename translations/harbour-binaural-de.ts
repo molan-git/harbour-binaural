@@ -163,12 +163,12 @@
     <message>
         <location filename="../qml/pages/components/CustomBinauralDrawer.qml" line="35"/>
         <source>Base frequency</source>
-        <translation type="unfinished"></translation>
+        <translation>Basisfrequenz</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/CustomBinauralDrawer.qml" line="73"/>
         <source>Beat frequency</source>
-        <translation type="unfinished"></translation>
+        <translation>Beat-Frequenz</translation>
     </message>
 </context>
 <context>
@@ -287,7 +287,7 @@
     <message>
         <location filename="../qml/pages/MainPage.qml" line="532"/>
         <source>Custom frequencies</source>
-        <translation type="unfinished"></translation>
+        <translation>Eigene Frequenzen</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="611"/>
@@ -297,7 +297,7 @@
     <message>
         <location filename="../qml/pages/MainPage.qml" line="710"/>
         <source>Wave motion</source>
-        <translation type="unfinished"></translation>
+        <translation>Wellenbewegung</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="787"/>
@@ -315,12 +315,12 @@
     <message>
         <location filename="../qml/pages/components/NoiseWaveDrawer.qml" line="32"/>
         <source>Wave depth</source>
-        <translation type="unfinished"></translation>
+        <translation>Wellentiefe</translation>
     </message>
     <message>
         <location filename="../qml/pages/components/NoiseWaveDrawer.qml" line="70"/>
         <source>Wave length</source>
-        <translation type="unfinished"></translation>
+        <translation>Wellenlänge</translation>
     </message>
 </context>
 <context>
