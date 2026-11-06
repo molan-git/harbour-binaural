@@ -42,8 +42,7 @@ SilicaFlickable {
     function openAudioPicker() {
         var dialog = pageStack.push(
                     Qt.resolvedUrl("../AudioFilePickerPage.qml"),
-                    { "selectionMode": "file" }
-                    )
+                    { "selectionMode": "file" })
 
         dialog.fileSelected.connect(function(fileUrl, fileName) {
             page.handleFileSelected(fileUrl, fileName)
@@ -178,7 +177,7 @@ SilicaFlickable {
         width: parent.width
         spacing: Theme.paddingMedium
 
-        // Drawer handle: tap or swipe down to close.
+        // Drawer handle: tap or swipe down to close
         Item {
             width: parent.width
             height: Theme.itemSizeExtraSmall
@@ -225,12 +224,12 @@ SilicaFlickable {
             }
         }
 
-        // Selected folder and current track information.
+        // Selected folder and current track information
         Item {
             id: trackInfoContainer
 
-            x: Theme.horizontalPageMargin + Theme.paddingLarge * 2
-            width: parent.width - 2 * (Theme.horizontalPageMargin + Theme.paddingMedium)
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width * 0.7
 
             property bool showTrackInfo:
                 selectedFolderName !== ""
@@ -294,7 +293,7 @@ SilicaFlickable {
             }
         }
 
-        // Playback controls.
+        // Playback controls buttons
         Item {
             id: playbackControlsContainer
 
@@ -330,7 +329,7 @@ SilicaFlickable {
                     page.audioEngine !== null
                     && page.audioEngine.customSoundPlaylistActive
 
-                // Previous track.
+                // Previous track button
                 Item {
                     width: playbackButtons.playButtonSize
                     height: playbackButtons.playButtonSize
@@ -357,7 +356,7 @@ SilicaFlickable {
                     }
                 }
 
-                // Add or Clear custom sound selection.
+                // Add or Clear custom sound selection button
                 Item {
                     id: audioActionButton
 
@@ -385,7 +384,6 @@ SilicaFlickable {
 
                         sourceSize: Qt.size(width * 2, height * 2)
 
-                        // Glow follows the icon's shape.
                         layer.enabled: page.audioEngine
                                        && page.audioEngine.customSoundPlaying
 
@@ -417,7 +415,7 @@ SilicaFlickable {
                     }
                 }
 
-                // Restart selected custom sound.
+                // Restart selected custom sound button
                 Item {
                     id: restartButton
 
@@ -428,7 +426,11 @@ SilicaFlickable {
                         page.selectedFile.toString() !== ""
                         || page.selectedFolder.toString() !== ""
 
-                    property bool canRestart: hasSelection && page.audioEngine
+                    // Active only when a selection exists AND playback has stopped
+                    property bool canRestart:
+                        hasSelection
+                        && page.audioEngine !== null
+                        && !playbackButtons.isPlaying
 
                     Icon {
                         id: restartIcon
@@ -448,14 +450,11 @@ SilicaFlickable {
 
                         source: restartIcon
 
-                        color: restartMouseArea.pressed
-                               && restartButton.canRestart
+                        color: restartMouseArea.pressed && restartButton.canRestart
                                ? Theme.highlightColor
                                : restartButton.canRestart
                                  ? Theme.primaryColor
                                  : Theme.secondaryColor
-
-                        opacity: restartButton.canRestart ? 1.0 : 0.4
                     }
 
                     MouseArea {
@@ -466,8 +465,6 @@ SilicaFlickable {
                         onClicked: {
                             if (!page.audioEngine)
                                 return
-
-                            page.audioEngine.stopCustomSound()
 
                             if (page.selectedFolder.toString() !== "") {
                                 page.startFolderPlayback()
@@ -480,7 +477,7 @@ SilicaFlickable {
                     }
                 }
 
-                // Next track.
+                // Next track button
                 Item {
                     width: playbackButtons.playButtonSize
                     height: playbackButtons.playButtonSize
@@ -509,7 +506,7 @@ SilicaFlickable {
             }
         }
 
-        // Custom Sound Volume Slider + Loop Switch
+        // Custom Sound Volume Slider
         Item {
             id: customSoundControls
 
@@ -559,7 +556,7 @@ SilicaFlickable {
                          ? 1.0 : 0.5
             }
 
-            // Loop & Crossfade switches, side by side, centered
+            // Loop & Crossfade switches
             Row {
                 id: switchesRow
 
@@ -594,7 +591,8 @@ SilicaFlickable {
                 Switch {
                     id: crossfadeButton
 
-                    icon.source: "image://theme/icon-m-transfer"
+                    icon.source: "../../images/icon-m-crossfade.svg"
+                    icon.sourceSize: Qt.size(Theme.iconSizeMedium * 0.9, Theme.iconSizeMedium * 0.9)
 
                     checked: page.audioEngine
                              ? page.audioEngine.customSoundCrossfade
@@ -614,7 +612,7 @@ SilicaFlickable {
         }
     }
 
-    // Folder playlist loading timer.
+    // Folder playlist loading timer
     Timer {
         id: folderPlaylistTimer
 
@@ -638,14 +636,14 @@ SilicaFlickable {
                 page.stableFolderCountTicks = 0
             }
 
-            // Wait for the model to populate and stabilize.
+            // Wait for the model to populate and stabilize
             if (page.folderWaitTicks >= 5
                     && page.stableFolderCountTicks >= 3) {
                 stop()
                 page.buildFolderPlaylist()
             }
 
-            // Avoid waiting forever if the folder cannot be read.
+            // Avoid waiting forever if the folder cannot be read
             if (page.folderWaitTicks >= 50) {
                 stop()
                 page.buildFolderPlaylist()

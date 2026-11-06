@@ -4,11 +4,11 @@ import Qt.labs.folderlistmodel 2.1
 
 Dialog {
     id: picker
+
     objectName: "AudioFilePickerPage"
 
     property string selectionMode: "file"
 
-    // Start in the system Music directory, with a fallback for this device.
     property url homeFolder: StandardPaths.music !== ""
                              ? StandardPaths.music
                              : "file:///home/defaultuser/Music"
@@ -20,19 +20,17 @@ Dialog {
 
     allowedOrientations: Orientation.All
 
-    property bool atHome:
-        normalizedPath(currentFolder) === normalizedPath(homeFolder)
-
     function normalizedPath(value) {
         var path = value.toString()
-
         if (path.indexOf("file://") === 0)
             path = path.substring(7)
-
         return path.replace(/\/+$/, "") || "/"
     }
 
-    canAccept: {
+    property bool atHome:
+        normalizedPath(currentFolder) === normalizedPath(homeFolder)
+
+    property bool hasAudioFiles: {
         for (var i = 0; i < folderModel.count; ++i) {
             if (!folderModel.get(i, "fileIsDir"))
                 return true
@@ -40,20 +38,29 @@ Dialog {
         return false
     }
 
-    function selectCurrentFolder() {
-        var folderUrl = folderModel.folder
-        var path = normalizedPath(folderUrl)
-        var parts = path.split("/")
-        var folderName = parts.length > 0
-                ? parts[parts.length - 1]
-                : path
-
-        if (folderName === "")
-            folderName = qsTr("Music")
-
-        folderSelected(folderUrl, folderName)
-        accept()
+    function displayPath() {
+        var current = normalizedPath(currentFolder)
+        var music = normalizedPath(homeFolder)
+        if (current === music)
+            return "Music"
+        if (current.indexOf(music + "/") === 0)
+            return "Music" + current.substring(music.length)
+        return current
     }
+
+    function selectCurrentFolder() {
+        var path = normalizedPath(currentFolder)
+        var parts = path.split("/")
+        var name = parts.length > 0 ? parts[parts.length - 1] : path
+        if (name === "")
+            name = qsTr("Music")
+        picker.folderSelected(currentFolder, name)
+        picker.accept()
+    }
+
+    canAccept: hasAudioFiles
+
+    onAccepted: selectCurrentFolder()
 
     Column {
         anchors.fill: parent
@@ -62,7 +69,7 @@ Dialog {
         DialogHeader {
             id: dialogHeader
 
-            acceptText: qsTr("Use folder")
+            acceptText: qsTr("Use Folder")
             cancelText: qsTr("Cancel")
         }
 
@@ -79,74 +86,52 @@ Dialog {
                 width: fileList.width
                 spacing: 0
 
-                // Shows current folder
                 Label {
                     x: Theme.horizontalPageMargin
                     width: parent.width - 2 * Theme.horizontalPageMargin
-
-                    // Show Music or folder in Music (Music/folder)
-                    text: {
-                        var current = picker.normalizedPath(folderModel.folder)
-                        var music = picker.normalizedPath(picker.homeFolder)
-
-                        if (current === music)
-                            return "Music"
-
-                        if (current.indexOf(music + "/") === 0)
-                            return "Music" + current.substring(music.length)
-
-                        return current
-                    }
-
+                    text: picker.displayPath()
                     color: Theme.secondaryColor
                     font.pixelSize: Theme.fontSizeSmall
                     wrapMode: Text.WrapAnywhere
                 }
 
-                // Up button to go back to parent folder
                 ListItem {
                     width: fileList.width
                     height: Theme.itemSizeMedium
+                    visible: !picker.atHome
 
-                    Image {
+                    Icon {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.paddingLarge
                         anchors.verticalCenter: parent.verticalCenter
                         width: Theme.iconSizeMedium
                         height: Theme.iconSizeMedium
-                        source: "image://theme/icon-m-up"
-                        opacity: picker.atHome ? 0.35 : 1.0
+                        source: "../images/icon-m-file-parent.svg"
+                        color: Theme.primaryColor
                     }
 
                     onClicked: {
-                        if (!picker.atHome) {
-                            var path = picker.normalizedPath(folderModel.folder)
-                            var parentPath = path.substring(0, path.lastIndexOf("/"))
-                            picker.currentFolder = "file://" + parentPath
-                        }
+                        var path = picker.normalizedPath(picker.currentFolder)
+                        var parentPath = path.substring(0, path.lastIndexOf("/"))
+                        picker.currentFolder = "file://" + parentPath
                     }
                 }
             }
 
-            // Lists folders or audio files with an icon
             delegate: ListItem {
                 width: fileList.width
                 height: Theme.itemSizeMedium
 
                 Image {
                     id: rowIcon
-
                     anchors.left: parent.left
                     anchors.leftMargin: Theme.paddingLarge
                     anchors.verticalCenter: parent.verticalCenter
-
                     width: Theme.iconSizeMedium
                     height: Theme.iconSizeMedium
-
                     source: fileIsDir
                             ? "image://theme/icon-m-file-folder"
                             : "image://theme/icon-m-file-audio"
-
                     fillMode: Image.PreserveAspectFit
                 }
 
@@ -156,24 +141,18 @@ Dialog {
                     anchors.right: parent.right
                     anchors.rightMargin: Theme.paddingLarge
                     anchors.verticalCenter: parent.verticalCenter
-
                     text: fileName
                     font.pixelSize: Theme.fontSizeMedium
                     truncationMode: TruncationMode.Fade
-
-                    color: highlighted
-                           ? Theme.highlightColor
-                           : Theme.primaryColor
+                    color: highlighted ? Theme.highlightColor : Theme.primaryColor
                 }
 
                 onClicked: {
                     if (fileIsDir) {
-                        // In folder mode, tapping a folder navigates into it.
-                        // Use folder selection to choose the current directory.
                         picker.currentFolder = fileURL
                     } else if (picker.selectionMode === "file") {
                         picker.fileSelected(fileURL, fileName)
-                        picker.reject()
+                        picker.accept()
                     }
                 }
             }
@@ -181,11 +160,8 @@ Dialog {
             ViewPlaceholder {
                 enabled: folderModel.status === FolderListModel.Ready
                          && folderModel.count === 0
-
                 text: qsTr("No audio files or folders")
-                hintText: qsTr(
-                              "Try another folder or check where your audio files are stored."
-                              )
+                hintText: qsTr("Try another folder or check where your audio files are stored.")
             }
 
             VerticalScrollDecorator {}
@@ -194,34 +170,20 @@ Dialog {
 
     FolderListModel {
         id: folderModel
-
         folder: picker.currentFolder
-
         showDirs: true
         showFiles: true
         showHidden: false
         showOnlyReadable: true
-
         sortField: FolderListModel.Name
-
         nameFilters: [
-            "*.mp3", "*.MP3",
-            "*.wav", "*.WAV",
-            "*.ogg", "*.OGG",
-            "*.oga", "*.OGA",
-            "*.flac", "*.FLAC",
-            "*.m4a", "*.M4A",
-            "*.aac", "*.AAC",
-            "*.opus", "*.OPUS",
-            "*.wma", "*.WMA",
-            "*.aif", "*.AIF",
-            "*.aiff", "*.AIFF",
-            "*.m4b", "*.M4B",
+            "*.mp3", "*.MP3", "*.wav", "*.WAV",
+            "*.ogg", "*.OGG", "*.oga", "*.OGA",
+            "*.flac", "*.FLAC", "*.m4a", "*.M4A",
+            "*.aac", "*.AAC", "*.opus", "*.OPUS",
+            "*.wma", "*.WMA", "*.aif", "*.AIF",
+            "*.aiff", "*.AIFF", "*.m4b", "*.M4B",
             "*.3gp", "*.3GP"
         ]
-    }
-
-    onAccepted: {
-        picker.selectCurrentFolder()
     }
 }

@@ -65,6 +65,8 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/images/image-colornoise-graph.svg \
     qml/images/icon-l-stop.svg \
     qml/images/icon-l-restart.svg \
+    qml/images/icon-m-file-parent \
+    qml/images/icon-m-crossfade \
     translations/*.ts \
     harbour-binaural.desktop \
     sounds/wind.mp3 \
