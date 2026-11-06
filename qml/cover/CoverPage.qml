@@ -147,8 +147,8 @@ CoverBackground {
 
                     font.pixelSize: Theme.fontSizeSmall
 
-                    text: formatRemainingTime(
-                              sleepTimerRemainingSeconds)
+                    text: formatRemainingTime
+                          (sleepTimerRemainingSeconds)
                 }
             }
         }

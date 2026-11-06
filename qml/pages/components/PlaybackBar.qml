@@ -2,6 +2,9 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Binaural 1.0
 
+// Component which shows a playbackBar at the bottom
+// of the screen
+
 DockedPanel {
     id: playbackBar
 

@@ -25,18 +25,6 @@ ApplicationWindow {
                                 ? mainPage.activeBand
                                 : ""
 
-    property var activeAmbiences: mainPage
-                                  ? mainPage.activeAmbiences
-                                  : []
-
-    property string activeAmbience: activeAmbiences.length > 0
-                                    ? activeAmbiences[0]
-                                    : ""
-
-    property string activeNoise: mainPage
-                                 ? mainPage.activeNoise
-                                 : ""
-
     property bool customSoundSelected: mainPage
                                        ? mainPage.customSoundSelected
                                        : false

@@ -17,10 +17,6 @@ Page {
     property bool ambiencePlaying: audioEngine.ambiencePlaying
     property bool noisePlaying: audioEngine.coloredNoisePlaying
 
-    property bool bandPaused: audioEngine.binauralPaused
-    property bool ambiencePaused: audioEngine.ambiencePaused
-    property bool noisePaused: audioEngine.coloredNoisePaused
-
     property bool customSoundActive:
         audioEngine.customSoundPlaying ||
         audioEngine.customSoundPaused
@@ -866,23 +862,23 @@ Page {
                                             anchors.centerIn: parent
                                             width: frequencyGrid.width - Theme.paddingMedium
 
-                                            text: audioEngine.customSoundName !== ""
-                                                  ? audioEngine.customSoundName
-                                                  : qsTr("Custom sound")
+                                            text: "  " + (audioEngine.customSoundName !== ""
+                                                           ? audioEngine.customSoundName
+                                                           : qsTr("Custom sound")) + "  "
 
-                                            highlighted: page.customSoundActive
-
-                                            // Budget rule: with all three
-                                            // ambiences selected, no slot is free.
                                             enabled: page.activeAmbiences.length
                                                      + (page.customSoundActive ? 1 : 0)
                                                      < 3
 
-                                            color: highlighted
-                                                   ? (audioEngine.customSoundPlaying
+                                            color: page.customSoundSelected
+                                                   ? (page.customSoundPlaying
                                                       ? Theme.highlightColor
                                                       : Theme.secondaryHighlightColor)
                                                    : Theme.primaryColor
+
+                                            opacity: page.customSoundPlaying ? 1.0
+                                                                             : page.customSoundSelected ? 0.6
+                                                                                                        : 1.0
 
                                             onClicked: {
                                                 soundPickerDrawer.open = true
