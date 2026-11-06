@@ -78,7 +78,7 @@ AmbienceChannel::AmbienceChannel(QObject *parent)
                 applyPendingVolume();
             });
 
-    // NEW: external-stop watchdog (audio resource loss).
+    // External-stop watchdog (audio resource loss).
     m_watchdogTimer->setInterval(500);
     m_watchdogTimer->setSingleShot(true);
 
@@ -86,9 +86,6 @@ AmbienceChannel::AmbienceChannel(QObject *parent)
             &QTimer::timeout,
             this,
             &AmbienceChannel::restartActivePlayer);
-
-    m_playerA->setVolume(0);
-    m_playerB->setVolume(0);
 
     m_playerA->setVolume(0);
     m_playerB->setVolume(0);
@@ -134,16 +131,20 @@ bool AmbienceChannel::start(const QString &fileName)
     if (fileName.isEmpty())
         return false;
 
-    const QUrl mediaUrl(AmbienceBasePath + fileName);
+    return startUrl(QUrl(AmbienceBasePath + fileName), fileName);
+}
 
-    if (!mediaUrl.isValid())
+bool AmbienceChannel::startUrl(const QUrl &url,
+                               const QString &displayName)
+{
+    if (url.isEmpty() || !url.isValid())
         return false;
 
     stopImmediately();
 
-    m_fileName = fileName;
+    m_fileName = displayName;
     m_activePlayer = m_playerA;
-    m_activePlayer->setMedia(QMediaContent(mediaUrl));
+    m_activePlayer->setMedia(QMediaContent(url));
     m_activePlayer->setVolume(0);
 
     m_fadeInElapsedBeforePause = 0;
@@ -165,6 +166,16 @@ bool AmbienceChannel::start(const QString &fileName)
     emit stateChanged();
 
     return true;
+}
+
+void AmbienceChannel::setLooping(bool looping)
+{
+    m_looping = looping;
+}
+
+void AmbienceChannel::setCrossfadeEnabled(bool enabled)
+{
+    m_crossfadeEnabled = enabled;
 }
 
 void AmbienceChannel::pause()
@@ -199,7 +210,6 @@ void AmbienceChannel::pause()
         m_crossfadeElapsedBeforePause += m_crossfadeElapsed.elapsed();
         m_crossfadeElapsed.invalidate();
     }
-
 
     m_fadeInTimer->stop();
     m_crossfadeTimer->stop();
@@ -305,9 +315,6 @@ void AmbienceChannel::stopImmediately()
     m_paused = false;
     m_sleepFactor = 1.0;
 
-    m_watchdogTimer->stop();
-    m_watchdogRetries = 0;
-
     m_resumeFadeIn = true;
     m_resumeCrossfade = false;
 
@@ -326,7 +333,7 @@ int AmbienceChannel::currentVolume() const
 }
 
 /*
- * NEW: loudness compensation for stacked ambiences. The engine
+ * Loudness compensation for stacked ambiences. The engine
  * sets 1/sqrt(activeCount); targetVolume() feeds all fade paths,
  * so the balance flows through fade-in, crossfade and sleep fade
  * automatically.
@@ -354,7 +361,7 @@ void AmbienceChannel::applySleepVolume(
     // If a crossfade or fade-in is in progress, that fade is already
     // updating volume every 15 ms using m_sleepFactor — don't fight it.
     if (m_crossfadeTimer->isActive() || m_fadeInTimer->isActive())
-             return;
+        return;
 
     if (m_activePlayer) {
         m_activePlayer->setVolume(
@@ -428,8 +435,8 @@ void AmbienceChannel::updateFadeOut()
         + m_fadeElapsed.elapsed();
 
     const double progress = qMin(
-        1.0,
-        static_cast<double>(elapsed) / FadeOutDuration);
+                1.0,
+                static_cast<double>(elapsed) / FadeOutDuration);
 
     m_activePlayer->setVolume(
         qRound(m_fadeOutActiveVolume * (1.0 - progress)));
@@ -455,9 +462,14 @@ void AmbienceChannel::checkCrossfade(QMediaPlayer *player)
         || player != m_activePlayer
         || m_fadingPlayer
         || m_stopping
-            || m_paused) {
+        || m_paused) {
         return;
     }
+
+    // Non-looping tracks must not loop-crossfade into themselves;
+    // they play to their natural end instead.
+    if (!m_looping || !m_crossfadeEnabled)
+        return;
 
     const qint64 duration = player->duration();
 
@@ -465,7 +477,7 @@ void AmbienceChannel::checkCrossfade(QMediaPlayer *player)
         return;
 
     /*
-     * NEW: crossfade at most half the file, never longer than
+     * Crossfade at most half the file, never longer than
      * the default. Files too short to crossfade at all fall
      * through to the seamless EndOfMedia fallback.
      */
@@ -486,11 +498,11 @@ void AmbienceChannel::startCrossfade(QMediaPlayer *fadingPlayer,
             || fadingPlayer != m_activePlayer
             || m_fadingPlayer
             || m_stopping
-        || m_paused) {
+            || m_paused) {
         return;
     }
 
-    // NEW: remember the length of this crossfade
+    // Remember the length of this crossfade
     // (updateCrossfade reads m_crossfadeMs).
     m_crossfadeMs =
         fadeMs > 0 ? fadeMs : CrossfadeDuration;
@@ -540,7 +552,7 @@ void AmbienceChannel::updateCrossfade()
     const int volume = qRound(targetVolume() * m_sleepFactor);
 
     /*
-     * NEW: equal-power curves. With a linear fade the summed
+     * Equal-power curves. With a linear fade the summed
      * loudness dips ~3 dB in the middle; with uncorrelated
      * material sqrt curves keep it constant through the seam.
      */
@@ -600,14 +612,32 @@ void AmbienceChannel::handleEndOfMedia(QMediaPlayer *player)
         return;
 
     /*
+     * Non-looping track (custom sound playlist or single
+     * play with loop off): end naturally. stop() runs the
+     * short fade-out bookkeeping and emits finished() when
+     * done — the engine then advances the playlist.
+     */
+    if (!m_looping) {
+        stop();
+        return;
+    }
+
+    /*
      * EndOfMedia without a running crossfade means the
-     * position check never fired (very short file, or a backend
-     * that reports duration() == 0). Use the free player for a
-     * quick loop crossfade instead of a hard setPosition(0)
+     * position check never fired (very short file, or a
+     * backend that reports duration() == 0). Use the free player
+     * for a quick loop crossfade instead of a hard setPosition(0)
      * restart, which would click.
      */
     if (!m_fadingPlayer) {
-        startCrossfade(player, 500);
+        if (m_crossfadeEnabled) {
+            startCrossfade(player, 500);
+            return;
+        }
+
+        // Crossfade disabled: hard restart at the loop point.
+        player->setPosition(0);
+        player->play();
         return;
     }
 

@@ -20,10 +20,19 @@ AudioEngine::AudioEngine(QObject *parent)
       m_sleepTimerFadeTimer(new QTimer(this)),
       m_sleepTimerBinauralStartVolume(0.0),
       m_sleepTimerColoredNoiseStartVolume(0.0),
+      m_sleepTimerCustomStartVolume(0),
       m_binauralChannel(nullptr),
       m_noiseChannel(nullptr),
       m_binauralGenerator(nullptr),
       m_noiseGenerator(nullptr),
+      m_customChannel(nullptr),
+      m_playlistIndex(0),
+      m_playlistLoop(false),
+      m_playlistActive(false),
+      m_customVolume(50),
+      m_customLoop(true),
+      m_customCrossfade(true),
+      m_customManualStop(false),
       m_coloredNoiseVolumeTimer(new QTimer(this)),
       m_beatFrequency(10.0),
       m_carrierFrequency(200.0),
@@ -57,6 +66,23 @@ AudioEngine::AudioEngine(QObject *parent)
                 });
     }
 
+    // Custom sound channel: same bulletproof AmbienceChannel
+    // machinery as the preset ambiences.
+    m_customChannel = new AmbienceChannel(this);
+    m_customChannel->setVolume(m_customVolume);
+
+    connect(m_customChannel,
+            &AmbienceChannel::stateChanged,
+            this,
+            &AudioEngine::updatePlayingState);
+
+    connect(m_customChannel,
+            &AmbienceChannel::finished,
+            this,
+            [this]() {
+                handleCustomTrackFinished();
+            });
+
     m_sleepTimerFadeTimer->setInterval(FadeInterval);
 
     m_coloredNoiseVolumeTimer->setInterval(VolumeUpdateInterval);
@@ -87,16 +113,14 @@ AudioEngine::AudioEngine(QObject *parent)
     connect(m_binauralChannel,
             &PcmChannel::stopped,
             this,
-            [this]()
-            {
+            [this]() {
                 m_binauralGenerator = nullptr;
             });
 
     connect(m_noiseChannel,
             &PcmChannel::stopped,
             this,
-            [this]()
-            {
+            [this]() {
                 m_noiseGenerator = nullptr;
                 m_currentColoredNoise.clear();
                 m_coloredNoiseVolumeTimer->stop();
@@ -105,51 +129,57 @@ AudioEngine::AudioEngine(QObject *parent)
     connect(m_coloredNoiseVolumeTimer,
             &QTimer::timeout,
             this,
-            [this]()
-    {
-        applyPendingColoredNoiseVolume();
-    });
+            [this]() {
+                applyPendingColoredNoiseVolume();
+            });
 
     connect(m_sleepTimerFadeTimer,
             &QTimer::timeout,
             this,
-            [this]()
-    {
-        const double progress = qMin(
-                    1.0,
-                    static_cast<double>(
-                        m_sleepTimerFadeElapsed.elapsed())
-                    / SleepTimerFadeOutDuration);
+            [this]() {
+                const double progress = qMin(
+                        1.0,
+                        static_cast<double>(
+                            m_sleepTimerFadeElapsed.elapsed())
+                        / SleepTimerFadeOutDuration);
 
-        // Smoothstep (ease-in-out): zero slope at both ends,
-        // gentle for a sleep fade.
-        const double p = progress;
-        const double factor = 1.0 - (3.0 * p * p - 2.0 * p * p * p);
+                // Smoothstep (ease-in-out): zero slope at both ends,
+                // gentle for a sleep fade.
+                const double p = progress;
+                const double factor = 1.0 - (3.0 * p * p - 2.0 * p * p * p);
 
-        m_binauralChannel->setVolume(
-                    m_sleepTimerBinauralStartVolume * factor);
+                m_binauralChannel->setVolume(
+                            m_sleepTimerBinauralStartVolume * factor);
 
-        for (int i = 0; i < MaxAmbienceChannels; ++i) {
-            if (m_ambienceChannels[i]) {
-                m_ambienceChannels[i]->applySleepVolume(
-                            m_sleepTimerAmbienceStartVolumes[i],
-                            factor);
-            }
-        }
+                for (int i = 0; i < MaxAmbienceChannels; ++i) {
+                    if (m_ambienceChannels[i]) {
+                        m_ambienceChannels[i]->applySleepVolume(
+                                    m_sleepTimerAmbienceStartVolumes[i],
+                                    factor);
+                    }
+                }
 
-        m_noiseChannel->setVolume(
-                    m_sleepTimerColoredNoiseStartVolume * factor);
+                // Custom sound fades with the sleep timer too.
+                if (m_customChannel) {
+                    m_customChannel->applySleepVolume(
+                                m_sleepTimerCustomStartVolume,
+                                factor);
+                }
 
-        if (progress >= 1.0) {
-            m_sleepTimerFadeTimer->stop();
+                m_noiseChannel->setVolume(
+                            m_sleepTimerColoredNoiseStartVolume * factor);
 
-            m_binauralChannel->stopImmediately();
-            stopAmbiencesImmediately();
-            m_noiseChannel->stopImmediately();
+                if (progress >= 1.0) {
+                    m_sleepTimerFadeTimer->stop();
 
-            updatePlayingState();
-        }
-    });
+                    m_binauralChannel->stopImmediately();
+                    stopAmbiencesImmediately();
+                    m_customChannel->stopImmediately();
+                    m_noiseChannel->stopImmediately();
+
+                    updatePlayingState();
+                }
+            });
 }
 
 // Ensure all audio is stopped before the engine is torn down.
@@ -159,12 +189,14 @@ AudioEngine::~AudioEngine()
 
     m_binauralChannel->stopImmediately();
     stopAmbiencesImmediately();
+    m_customChannel->stopImmediately();
     m_noiseChannel->stopImmediately();
 }
 
 void AudioEngine::updatePlayingState()
 {
     emit playingChanged();
+    emit customSoundChanged();
 }
 
 void AudioEngine::updateAmbienceState()
@@ -190,6 +222,9 @@ void AudioEngine::fadeOutForSleepTimer()
                 ? m_ambienceChannels[i]->currentVolume()
                 : 0;
     }
+
+    m_sleepTimerCustomStartVolume =
+            m_customChannel->currentVolume();
 
     m_sleepTimerFadeElapsed.start();
     m_sleepTimerFadeTimer->start();

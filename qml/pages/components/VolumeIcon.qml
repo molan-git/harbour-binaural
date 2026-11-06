@@ -2,6 +2,9 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import QtGraphicalEffects 1.0
 
+// Component which displays volume icons depending
+// on the volume value.
+
 Item {
     property real value: 50
     property real size: Theme.iconSizeSmall * 1.6

@@ -6,6 +6,7 @@
 #include <QElapsedTimer>
 #include <QTimer>
 #include <QString>
+#include <QUrl>
 
 class AmbienceChannel : public QObject
 {
@@ -15,7 +16,20 @@ public:
     explicit AmbienceChannel(QObject *parent = nullptr);
     ~AmbienceChannel() override;
 
+    // Preset ambience: resolves the file name against the
+    // built-in sounds directory and plays it looping.
     bool start(const QString &fileName);
+
+    // Arbitrary URL (custom user sound); displayName is
+    // reported back by fileName() for occupancy checks.
+    bool startUrl(const QUrl &url, const QString &displayName);
+
+    // false = play once and emit finished() at natural end
+    // (used for custom-sound playlists).
+    void setLooping(bool looping);
+
+    // Loop-seam crossfade on/off (custom sounds); default true.
+    void setCrossfadeEnabled(bool enabled);
 
     void pause();
     void stop();
@@ -96,9 +110,12 @@ private:
     bool m_resumeFadeIn;
     bool m_resumeCrossfade;
 
+    bool m_looping = true;
+    bool m_crossfadeEnabled = true;
+
     double m_sleepFactor = 1.0;
 
-    // Wwatchdog / mix balance / dynamic crossfade length
+    // Watchdog / mix balance / dynamic crossfade length
     int m_watchdogRetries = 0;
     double m_mixScale = 1.0;
     qint64 m_crossfadeMs = 8000;   // ms, updated per crossfade
