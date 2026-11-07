@@ -56,19 +56,19 @@
     <name>AudioFilePickerPage</name>
     <message>
         <source>Music</source>
-        <translation type="unfinished"></translation>
+        <translation>Musikk</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Avbryt</translation>
     </message>
     <message>
         <source>No audio files or folders</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingen lydfiler eller mapper</translation>
     </message>
     <message>
         <source>Use Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Bruk mappe</translation>
     </message>
 </context>
 <context>
@@ -133,11 +133,11 @@
     <name>CustomBinauralDrawer</name>
     <message>
         <source>Base frequency</source>
-        <translation type="unfinished"></translation>
+        <translation>Basisfrekvens</translation>
     </message>
     <message>
         <source>Beat frequency</source>
-        <translation type="unfinished"></translation>
+        <translation>Svevningsfrekvens</translation>
     </message>
 </context>
 <context>
@@ -246,22 +246,22 @@
     </message>
     <message>
         <source>Custom frequencies</source>
-        <translation type="unfinished"></translation>
+        <translation>Egendefinerte frekvenser</translation>
     </message>
     <message>
         <source>Wave motion</source>
-        <translation type="unfinished"></translation>
+        <translation>Bølgebevegelse</translation>
     </message>
 </context>
 <context>
     <name>NoiseWaveDrawer</name>
     <message>
         <source>Wave depth</source>
-        <translation type="unfinished"></translation>
+        <translation>Bølgedybde</translation>
     </message>
     <message>
         <source>Wave length</source>
-        <translation type="unfinished"></translation>
+        <translation>Bølgelengde</translation>
     </message>
 </context>
 <context>
@@ -367,14 +367,14 @@
     </message>
     <message>
         <source>Custom sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Egendefinert lyd</translation>
     </message>
 </context>
 <context>
     <name>SoundPickerDrawer</name>
     <message>
         <source>No file selected</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingen fil er valgt</translation>
     </message>
 </context>
 <context>
