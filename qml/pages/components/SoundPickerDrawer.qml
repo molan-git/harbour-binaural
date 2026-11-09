@@ -7,6 +7,7 @@ SilicaFlickable {
     id: page
 
     property var audioEngine: null
+    property bool pausedMode: false
 
     property url selectedFile: ""
     property string selectedFileName: ""
@@ -75,7 +76,9 @@ SilicaFlickable {
             audioEngine.stopCustomSound()
             audioEngine.customSoundSource = fileUrl
             audioEngine.customSoundName = selectedFileName
-            audioEngine.playCustomSound()
+
+            if (!page.pausedMode)
+                audioEngine.playCustomSound()
         }
     }
 
@@ -165,7 +168,12 @@ SilicaFlickable {
         console.log("Folder playback: starting playlist with",
                     files.length, "tracks")
 
+        var shouldRemainPaused = page.pausedMode
+
         audioEngine.startCustomSoundPlaylist(files, loopFolder)
+
+        if (shouldRemainPaused)
+            audioEngine.pauseCustomSound()
 
         selectedFile = files[0].url
         selectedFileName = files[0].name

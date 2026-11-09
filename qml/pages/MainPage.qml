@@ -298,9 +298,10 @@ Page {
                         id: soundPickerPanel
 
                         audioEngine: audioEngine
+                        pausedMode: page.pausedMode
 
                         onCloseRequested:
-                            soundPickerDrawer.open = false
+                        soundPickerDrawer.open = false
                     }
 
                     // The container is the Drawer foreground.
