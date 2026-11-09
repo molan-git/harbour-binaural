@@ -13,7 +13,7 @@ ActionDrawer {
     property var activeAmbiences: []
     property bool ambiencePlaying: false
     property bool pausedMode: false
-    property bool customSoundActive: false
+    property bool customSoundSelected: false
 
     signal ambienceSelected(string ambience)
     signal ambienceDeselected(string ambience)
@@ -64,7 +64,7 @@ ActionDrawer {
                 highlighted: ambienceDrawer.activeAmbiences.indexOf(modelData) !== -1
                 enabled: highlighted ||
                          (ambienceDrawer.activeAmbiences.length
-                          + (ambienceDrawer.customSoundActive ? 1 : 0))
+                          + (ambienceDrawer.customSoundSelected ? 1 : 0))
                          < 3
 
                 color: !enabled ? Theme.secondaryColor
@@ -81,7 +81,8 @@ ActionDrawer {
                 onClicked: {
                     if (highlighted) {
                         ambienceDrawer.ambienceDeselected(modelData)
-                    } else if (ambienceDrawer.activeAmbiences.length < 3) {
+                    } else if (ambienceDrawer.activeAmbiences.length
+                               + (ambienceDrawer.customSoundSelected ? 1 : 0) < 3) {
                         ambienceDrawer.ambienceSelected(modelData)
                     }
                 }

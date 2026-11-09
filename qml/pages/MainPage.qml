@@ -181,20 +181,24 @@ Page {
                 activeAmbiences: page.activeAmbiences
                 ambiencePlaying: page.ambiencePlaying
                 pausedMode: page.pausedMode
+                customSoundSelected: page.customSoundSelected
 
                 onCloseRequested: ambienceDrawer.open = false
 
                 onAmbienceSelected: {
                     if (page.activeAmbiences.indexOf(ambience) !== -1)
-                    return
-                    if (page.activeAmbiences.length >= 3)
-                    return
+                        return
+
+                    if (page.activeAmbiences.length
+                            + (page.customSoundSelected ? 1 : 0) >= 3)
+                        return
 
                     var wasPaused = page.pausedMode
                     page.activeAmbiences = page.activeAmbiences.concat([ambience])
                     audioEngine.setAmbience(ambience)
+
                     if (wasPaused)
-                    audioEngine.pauseAmbience()
+                        audioEngine.pauseAmbience()
                 }
 
                 onAmbienceDeselected: {
@@ -866,19 +870,20 @@ Page {
                                                            ? audioEngine.customSoundName
                                                            : SoundNames.label("Custom sound")) + "  "
 
-                                            enabled: page.activeAmbiences.length
-                                                     + (page.customSoundActive ? 1 : 0)
-                                                     < 3
+                                            enabled: page.customSoundSelected
+                                                     || page.activeAmbiences.length < 3
 
-                                            color: page.customSoundSelected
-                                                   ? (page.customSoundPlaying
-                                                      ? Theme.highlightColor
-                                                      : Theme.secondaryHighlightColor)
-                                                   : Theme.primaryColor
+                                            color: !enabled
+                                                   ? Theme.secondaryColor
+                                                   : page.customSoundSelected
+                                                     ? (page.customSoundPlaying
+                                                        ? Theme.highlightColor
+                                                        : Theme.secondaryHighlightColor)
+                                                     : Theme.primaryColor
 
-                                            opacity: page.customSoundPlaying ? 1.0
-                                                                             : page.customSoundSelected ? 0.6
-                                                                                                        : 1.0
+                                            opacity: !enabled ? 0.35
+                                                     : page.customSoundSelected && !page.customSoundPlaying ? 0.6
+                                                     : 1.0
 
                                             onClicked: {
                                                 soundPickerDrawer.open = true

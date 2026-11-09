@@ -260,52 +260,52 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="319"/>
+        <location filename="../qml/pages/MainPage.qml" line="323"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="329"/>
+        <location filename="../qml/pages/MainPage.qml" line="333"/>
         <source>Deselect all sounds</source>
         <translation>Alle Klänge deaktivieren</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="338"/>
+        <location filename="../qml/pages/MainPage.qml" line="342"/>
         <source>Timer</source>
         <translation>Timer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="364"/>
+        <location filename="../qml/pages/MainPage.qml" line="368"/>
         <source>Binaural Beats</source>
         <translation>Binaurale Beats</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="378"/>
+        <location filename="../qml/pages/MainPage.qml" line="382"/>
         <source>To be used with</source>
         <translation>Zu verwenden mit</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="528"/>
+        <location filename="../qml/pages/MainPage.qml" line="532"/>
         <source>Custom frequencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="607"/>
+        <location filename="../qml/pages/MainPage.qml" line="611"/>
         <source>Colored Noise</source>
         <translation>Farbiges Rauschen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="706"/>
+        <location filename="../qml/pages/MainPage.qml" line="710"/>
         <source>Wave motion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="783"/>
+        <location filename="../qml/pages/MainPage.qml" line="787"/>
         <source>Ambient Sound</source>
         <translation>Umgebungsklang</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="812"/>
+        <location filename="../qml/pages/MainPage.qml" line="816"/>
         <source>Choose ambient sounds</source>
         <translation>Umgebungsklänge auswählen</translation>
     </message>
