@@ -189,32 +189,32 @@
         <translation>Wähle aus:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="140"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="143"/>
         <source>Deep sleep, rest</source>
         <translation>Tiefschlaf, Ruhe</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="157"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="163"/>
         <source>Deep relaxation, sleep</source>
         <translation>Tiefe Entspannung, Schlaf</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="174"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="183"/>
         <source>Meditation and relaxation</source>
         <translation>Meditation und Entspannung</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="191"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="203"/>
         <source>Calm and relaxed wakefulness</source>
         <translation>Ruhiges und entspanntes Wachsein</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="208"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="223"/>
         <source>Alertness and focus</source>
         <translation>Wachheit und Konzentration</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="225"/>
+        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="243"/>
         <source>Complex thinking and information processing</source>
         <translation>Komplexes Denken und Informationsverarbeitung</translation>
     </message>
@@ -262,52 +262,52 @@
     <message>
         <location filename="../qml/pages/MainPage.qml" line="323"/>
         <source>About</source>
-        <translation>Über</translation>
+        <translation type="unfinished">Über</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="333"/>
         <source>Deselect all sounds</source>
-        <translation>Alle Klänge deaktivieren</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="342"/>
         <source>Timer</source>
-        <translation>Timer</translation>
+        <translation type="unfinished">Timer</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="368"/>
         <source>Binaural Beats</source>
-        <translation>Binaurale Beats</translation>
+        <translation type="unfinished">Binaurale Beats</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="382"/>
         <source>To be used with</source>
-        <translation>Zu verwenden mit</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="532"/>
+        <location filename="../qml/pages/MainPage.qml" line="550"/>
         <source>Custom frequencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="611"/>
+        <location filename="../qml/pages/MainPage.qml" line="629"/>
         <source>Colored Noise</source>
-        <translation>Farbiges Rauschen</translation>
+        <translation type="unfinished">Farbiges Rauschen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="710"/>
+        <location filename="../qml/pages/MainPage.qml" line="728"/>
         <source>Wave motion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="787"/>
+        <location filename="../qml/pages/MainPage.qml" line="805"/>
         <source>Ambient Sound</source>
-        <translation>Umgebungsklang</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="816"/>
+        <location filename="../qml/pages/MainPage.qml" line="834"/>
         <source>Choose ambient sounds</source>
-        <translation>Umgebungsklänge auswählen</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

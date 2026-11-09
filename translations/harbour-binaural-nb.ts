@@ -214,34 +214,22 @@
     <name>MainPage</name>
     <message>
         <source>About</source>
-        <translation>Om</translation>
+        <translation type="unfinished">Om</translation>
     </message>
     <message>
         <source>Deselect all sounds</source>
-        <translation>Fjern markering for alle lyder</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Timer</source>
-        <translation>Timer</translation>
+        <translation type="unfinished">Timer</translation>
     </message>
     <message>
         <source>Binaural Beats</source>
-        <translation>Binaurale beats</translation>
+        <translation type="unfinished">Binaurale beats</translation>
     </message>
     <message>
         <source>To be used with</source>
-        <translation>Bruk med</translation>
-    </message>
-    <message>
-        <source>Colored Noise</source>
-        <translation>Farget støy</translation>
-    </message>
-    <message>
-        <source>Ambient Sound</source>
-        <translation>Bakgrunnslyd</translation>
-    </message>
-    <message>
-        <source>Choose ambient sounds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -249,7 +237,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Colored Noise</source>
+        <translation type="unfinished">Farget støy</translation>
+    </message>
+    <message>
         <source>Wave motion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ambient Sound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose ambient sounds</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

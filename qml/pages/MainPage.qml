@@ -418,21 +418,38 @@ Page {
                                         id: frequencyGrid
 
                                         x: Theme.horizontalPageMargin
-                                        width: parent.width -
-                                               2 * Theme.horizontalPageMargin
+                                        width: parent.width - 2 * Theme.horizontalPageMargin
                                         height: contentHeight
 
-                                        cellWidth: width / 2
+                                        cellWidth: width / 3
                                         cellHeight: Theme.itemSizeMedium
 
-                                        model: [
-                                            "Delta",
-                                            "Delta/Theta",
-                                            "Theta",
-                                            "Alpha",
-                                            "Beta",
-                                            "Gamma"
-                                        ]
+                                        model: ListModel {
+                                            ListElement {
+                                                bandName: "Delta"
+                                                symbol: "δ"
+                                            }
+                                            ListElement {
+                                                bandName: "Delta/Theta"
+                                                symbol: "δ/θ"
+                                            }
+                                            ListElement {
+                                                bandName: "Theta"
+                                                symbol: "θ"
+                                            }
+                                            ListElement {
+                                                bandName: "Alpha"
+                                                symbol: "α"
+                                            }
+                                            ListElement {
+                                                bandName: "Beta"
+                                                symbol: "β"
+                                            }
+                                            ListElement {
+                                                bandName: "Gamma"
+                                                symbol: "γ"
+                                            }
+                                        }
 
                                         delegate: Item {
                                             width: frequencyGrid.cellWidth
@@ -459,8 +476,10 @@ Page {
                                                 anchors.centerIn: parent
                                                 preferredWidth: frequencyGrid.cellWidth - Theme.paddingMedium
 
-                                                text: SoundNames.label(modelData)
-                                                highlighted: page.activeBand === modelData && !page.isCustomBinaural
+                                                text: symbol
+
+                                                highlighted: page.activeBand === bandName
+                                                             && !page.isCustomBinaural
 
                                                 color: highlighted
                                                        ? (page.bandPlaying
@@ -468,8 +487,7 @@ Page {
                                                           : Theme.secondaryHighlightColor)
                                                        : Theme.primaryColor
 
-                                                opacity: highlighted && !page.bandPlaying
-                                                         ? 0.6 : 1.0
+                                                opacity: highlighted && !page.bandPlaying ? 0.6 : 1.0
 
                                                 onClicked: {
                                                     if (frequencyButton.highlighted) {
@@ -477,15 +495,15 @@ Page {
                                                         page.isCustomBinaural = false
                                                         audioEngine.stop()
                                                     } else if (!page.pausedMode) {
-                                                        page.activeBand = modelData
+                                                        page.activeBand = bandName
                                                         page.isCustomBinaural = false
-                                                        audioEngine.setFrequencyBand(modelData)
+                                                        audioEngine.setFrequencyBand(bandName)
                                                         audioEngine.start()
                                                     } else {
                                                         audioEngine.stop()
-                                                        page.activeBand = modelData
+                                                        page.activeBand = bandName
                                                         page.isCustomBinaural = false
-                                                        audioEngine.setFrequencyBand(modelData)
+                                                        audioEngine.setFrequencyBand(bandName)
                                                     }
                                                 }
                                             }
@@ -813,7 +831,7 @@ Page {
                                             width: frequencyGrid.width - Theme.paddingMedium
 
                                             text: page.activeAmbiences.length === 0
-                                                  ? qsTr("Choose ambient sounds")
+                                                  ? qsTr("Ambient sounds")
                                                   : page.activeAmbiences.map(function(ambience) {
                                                       return SoundNames.label(ambience)
                                                   }).join(", ")

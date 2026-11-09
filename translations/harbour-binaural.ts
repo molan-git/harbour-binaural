@@ -214,43 +214,43 @@
     <name>MainPage</name>
     <message>
         <source>About</source>
-        <translation>About</translation>
+        <translation type="unfinished">About</translation>
     </message>
     <message>
         <source>Deselect all sounds</source>
-        <translation>Deselect all sound</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Timer</source>
-        <translation>Timer</translation>
+        <translation type="unfinished">Timer</translation>
     </message>
     <message>
         <source>Binaural Beats</source>
-        <translation>Binaural Beats</translation>
+        <translation type="unfinished">Binaural Beats</translation>
     </message>
     <message>
         <source>To be used with</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Colored Noise</source>
-        <translation>Colored Noise</translation>
-    </message>
-    <message>
-        <source>Ambient Sound</source>
-        <translation>Ambient Sound</translation>
-    </message>
-    <message>
-        <source>Choose ambient sounds</source>
-        <translation>Choose ambient sounds</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Custom frequencies</source>
-        <translation>Custom frequencies</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Colored Noise</source>
+        <translation type="unfinished">Colored Noise</translation>
     </message>
     <message>
         <source>Wave motion</source>
-        <translation>Wave motion</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ambient Sound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose ambient sounds</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
