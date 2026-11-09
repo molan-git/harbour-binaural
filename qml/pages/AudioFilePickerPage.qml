@@ -8,6 +8,7 @@ Dialog {
     objectName: "AudioFilePickerPage"
 
     property string selectionMode: "file"
+    property bool filePicked: false
 
     property url homeFolder: StandardPaths.music !== ""
                              ? StandardPaths.music
@@ -30,13 +31,7 @@ Dialog {
     property bool atHome:
         normalizedPath(currentFolder) === normalizedPath(homeFolder)
 
-    property bool hasAudioFiles: {
-        for (var i = 0; i < folderModel.count; ++i) {
-            if (!folderModel.get(i, "fileIsDir"))
-                return true
-        }
-        return false
-    }
+    property bool hasAudioFiles: folderModel.count > 0
 
     function displayPath() {
         var current = normalizedPath(currentFolder)
@@ -60,7 +55,10 @@ Dialog {
 
     canAccept: hasAudioFiles
 
-    onAccepted: selectCurrentFolder()
+    onAccepted: {
+        if (!filePicked)
+            selectCurrentFolder()
+    }
 
     Column {
         anchors.fill: parent
@@ -113,7 +111,8 @@ Dialog {
                     onClicked: {
                         var path = picker.normalizedPath(picker.currentFolder)
                         var parentPath = path.substring(0, path.lastIndexOf("/"))
-                        picker.currentFolder = "file://" + parentPath
+                        if (parentPath !== "")
+                            picker.currentFolder = "file://" + parentPath
                     }
                 }
             }
@@ -151,6 +150,7 @@ Dialog {
                     if (fileIsDir) {
                         picker.currentFolder = fileURL
                     } else if (picker.selectionMode === "file") {
+                        picker.filePicked = true
                         picker.fileSelected(fileURL, fileName)
                         picker.accept()
                     }

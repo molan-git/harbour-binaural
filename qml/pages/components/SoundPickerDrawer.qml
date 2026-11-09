@@ -31,7 +31,15 @@ SilicaFlickable {
     clip: true
 
     Component.onCompleted: {
-        if (audioEngine && audioEngine.customSoundSource) {
+        if (!audioEngine)
+            return
+
+        if (audioEngine.customSoundPlaylistActive && selectedFile.toString() === "") {
+            // Nothing to restore, but keep the label consistent
+            return
+        }
+
+        if (audioEngine.customSoundSource) {
             selectedFile = audioEngine.customSoundSource
             selectedFileName = audioEngine.customSoundName
                     ? audioEngine.customSoundName : ""
@@ -119,7 +127,6 @@ SilicaFlickable {
         stableFolderCountTicks = 0
         folderWaitTicks = 0
 
-        folderPlaylistModel.folder = selectedFolder
         folderPlaylistTimer.start()
     }
 
@@ -161,7 +168,7 @@ SilicaFlickable {
         audioEngine.startCustomSoundPlaylist(files, loopFolder)
 
         selectedFile = files[0].url
-        selectedFileName = files[0].name.replace(/\.[^\.]+$/, "")
+        selectedFileName = files[0].name
     }
 
     Rectangle {

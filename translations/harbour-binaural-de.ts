@@ -67,17 +67,17 @@
 <context>
     <name>AudioFilePickerPage</name>
     <message>
-        <location filename="../qml/pages/AudioFilePickerPage.qml" line="56"/>
+        <location filename="../qml/pages/AudioFilePickerPage.qml" line="51"/>
         <source>Music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/AudioFilePickerPage.qml" line="72"/>
+        <location filename="../qml/pages/AudioFilePickerPage.qml" line="70"/>
         <source>Use Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/AudioFilePickerPage.qml" line="73"/>
+        <location filename="../qml/pages/AudioFilePickerPage.qml" line="71"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -457,7 +457,7 @@
 <context>
     <name>SoundPickerDrawer</name>
     <message>
-        <location filename="../qml/pages/components/SoundPickerDrawer.qml" line="268"/>
+        <location filename="../qml/pages/components/SoundPickerDrawer.qml" line="275"/>
         <source>No file selected</source>
         <translation type="unfinished"></translation>
     </message>
