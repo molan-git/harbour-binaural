@@ -3,7 +3,7 @@ import Sailfish.Silica 1.0
 import QtGraphicalEffects 1.0
 import Qt.labs.folderlistmodel 2.1
 
-SilicaFlickable {
+ActionDrawer {
     id: page
 
     property var audioEngine: null
@@ -21,15 +21,6 @@ SilicaFlickable {
     property int previousFolderCount: -1
     property int stableFolderCountTicks: 0
     property int folderWaitTicks: 0
-
-    signal closeRequested()
-
-    width: parent ? parent.width : Screen.width
-    height: Math.min(contentColumn.height + Theme.paddingLarge,
-                     Screen.height * 0.8)
-
-    contentHeight: contentColumn.height + Theme.paddingLarge
-    clip: true
 
     Component.onCompleted: {
         if (!audioEngine)
@@ -64,7 +55,7 @@ SilicaFlickable {
 
     function handleFileSelected(fileUrl, fileName) {
         selectedFile = fileUrl
-        selectedFileName = fileName.replace(/\.[^\.]+$/, "")
+        selectedFileName = fileName.replace(/\.[^.]+$/, "")
 
         selectedFolder = ""
         selectedFolderName = ""
@@ -179,65 +170,11 @@ SilicaFlickable {
         selectedFileName = files[0].name
     }
 
-    Rectangle {
-        anchors.fill: parent
-        color: Theme.rgba(
-                   Theme.highlightBackgroundColor,
-                   Theme.highlightBackgroundOpacity * 0.35)
-    }
-
     Column {
         id: contentColumn
 
         width: parent.width
         spacing: Theme.paddingMedium
-
-        // Drawer handle: tap or swipe down to close
-        Item {
-            width: parent.width
-            height: Theme.itemSizeExtraSmall
-
-            Rectangle {
-                anchors.centerIn: parent
-
-                width: Theme.itemSizeExtraSmall * 2
-                height: Theme.paddingSmall
-                radius: Theme.paddingSmall
-
-                color: handleMouseArea.pressed
-                       ? Theme.secondaryHighlightColor
-                       : Theme.secondaryColor
-
-                opacity: 0.6
-            }
-
-            MouseArea {
-                id: handleMouseArea
-
-                anchors.fill: parent
-
-                property real startY: 0
-                property real startX: 0
-
-                onPressed: {
-                    startY = mouse.y
-                    startX = mouse.x
-                }
-
-                onClicked: page.closeRequested()
-
-                onReleased: {
-                    var deltaY = mouse.y - startY
-                    var deltaX = mouse.x - startX
-
-                    if (deltaY > Theme.itemSizeSmall
-                            && Math.abs(deltaY) > Math.abs(deltaX)) {
-
-                        page.closeRequested()
-                    }
-                }
-            }
-        }
 
         // Selected folder and current track information
         Item {
@@ -690,6 +627,4 @@ SilicaFlickable {
             "*.3gp", "*.3GP"
         ]
     }
-
-    VerticalScrollDecorator {}
 }
