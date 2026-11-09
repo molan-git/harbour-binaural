@@ -334,7 +334,9 @@ SilicaFlickable {
 
                 property bool hasPlaylist:
                     page.audioEngine !== null
+                    && page.selectedFolder.toString() !== ""
                     && page.audioEngine.customSoundPlaylistActive
+                    && folderPlaylistModel.count > 1
 
                 // Previous track button
                 Item {
@@ -355,6 +357,7 @@ SilicaFlickable {
                                            : Theme.secondaryColor))
 
                         enabled: playbackButtons.hasPlaylist
+                        opacity: enabled ? 1.0 : 0.5
 
                         onClicked: {
                             if (enabled && page.audioEngine)
@@ -454,6 +457,8 @@ SilicaFlickable {
                         anchors.fill: restartIcon
                         source: restartIcon
 
+                        opacity: restartButton.canRestart ? 1.0 : 0.5
+
                         color: restartMouseArea.pressed && restartButton.canRestart
                                ? Theme.highlightColor
                                : restartButton.canRestart
@@ -495,6 +500,7 @@ SilicaFlickable {
                                            : Theme.secondaryColor))
 
                         enabled: playbackButtons.hasPlaylist
+                        opacity: enabled ? 1.0 : 0.5
 
                         onClicked: {
                             if (enabled && page.audioEngine)
