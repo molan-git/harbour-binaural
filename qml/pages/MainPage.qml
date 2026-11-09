@@ -391,8 +391,6 @@ Page {
                                             height: Theme.fontSizeExtraSmall
 
                                             anchors.verticalCenter: parent.verticalCenter
-                                            anchors.verticalCenterOffset:
-                                                Theme.paddingSmall / 3
 
                                             Image {
                                                 id: headsetImage
