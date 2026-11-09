@@ -386,4 +386,23 @@
         <translation>Predvajajte svoj mix</translation>
     </message>
 </context>
+<context>
+    <name>AudioFilePickerPage</name>
+    <message>
+        <source>Music</source>
+        <translation>Glasba</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Prekliči</translation>
+    </message>
+    <message>
+        <source>Use Folder</source>
+        <translation>Uporabi mapo</translation>
+    </message>
+    <message>
+        <source>No audio files or folders</source>
+        <translation>Ni avdio datotek ali map</translation>
+    </message>
+</context>
 </TS>
