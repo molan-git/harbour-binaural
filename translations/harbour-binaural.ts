@@ -53,6 +53,25 @@
     </message>
 </context>
 <context>
+    <name>AudioFilePickerPage</name>
+    <message>
+        <source>Music</source>
+        <translation>Music</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <source>No audio files or folders</source>
+        <translation>No audio files or folders</translation>
+    </message>
+    <message>
+        <source>Use Folder</source>
+        <translation>Use Folder</translation>
+    </message>
+</context>
+<context>
     <name>CreditPage</name>
     <message>
         <source>Norwegian</source>
@@ -108,6 +127,17 @@
         <source>Thanks to %1 for some guidance on improving audio engine / sound generators logic.</source>
         <extracomment>%1 is a hyperlink to the GitHub profile of &quot;poetaster&quot;. &quot;audio engine&quot; and &quot;sound generators&quot; are technical terms and may be left untranslated.</extracomment>
         <translation>Thanks to %1 for some guidance on improving audio engine / sound generators logic.</translation>
+    </message>
+</context>
+<context>
+    <name>CustomBinauralDrawer</name>
+    <message>
+        <source>Base frequency</source>
+        <translation>Base frequency</translation>
+    </message>
+    <message>
+        <source>Beat frequency</source>
+        <translation>Beat frequency</translation>
     </message>
 </context>
 <context>
@@ -188,7 +218,7 @@
     </message>
     <message>
         <source>Deselect all sounds</source>
-        <translation>Deselect all sound</translation>
+        <translation>Deselect all sounds</translation>
     </message>
     <message>
         <source>Timer</source>
@@ -200,19 +230,38 @@
     </message>
     <message>
         <source>To be used with</source>
-        <translation></translation>
+        <translation>To be used with</translation>
+    </message>
+    <message>
+        <source>Custom frequencies</source>
+        <translation>Custom frequencies</translation>
     </message>
     <message>
         <source>Colored Noise</source>
         <translation>Colored Noise</translation>
     </message>
     <message>
-        <source>Ambient Sound</source>
-        <translation>Ambient Sound</translation>
+        <source>Wave motion</source>
+        <translation>Wave motion</translation>
     </message>
     <message>
-        <source>Choose ambient sounds</source>
-        <translation>Choose ambient sounds</translation>
+        <source>Ambient sounds</source>
+        <translation>Ambient sounds</translation>
+    </message>
+    <message>
+        <source>Ambient Sound</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>NoiseWaveDrawer</name>
+    <message>
+        <source>Wave depth</source>
+        <translation>Wave depth</translation>
+    </message>
+    <message>
+        <source>Wave length</source>
+        <translation>Wave length</translation>
     </message>
 </context>
 <context>
@@ -317,8 +366,8 @@
         <translation>Ambient mix</translation>
     </message>
     <message>
-        <source>Ambient sounds</source>
-        <translation type="unfinished"></translation>
+        <source>Custom sound</source>
+        <translation>Custom sound</translation>
     </message>
 </context>
 <context>

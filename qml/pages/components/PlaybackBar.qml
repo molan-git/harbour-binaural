@@ -2,6 +2,9 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Binaural 1.0
 
+// Component which shows a playbackBar at the bottom
+// of the screen
+
 DockedPanel {
     id: playbackBar
 
@@ -65,7 +68,8 @@ DockedPanel {
 
             return app.activeBand !== "" ||
                    app.activeNoise !== "" ||
-                   ambiences.length > 0
+                   ambiences.length > 0 ||
+                   app.customSoundSelected
         }
 
         opacity: enabled ? 1.0 : 0.5
@@ -112,7 +116,8 @@ DockedPanel {
 
             if (page.activeBand === "" &&
                     page.activeNoise === "" &&
-                    ambiences.length === 0) {
+                    ambiences.length === 0 &&
+                    !app.customSoundSelected) {
                 return Theme.secondaryColor
             }
 
@@ -145,6 +150,9 @@ DockedPanel {
             } else if (ambiences.length > 1) {
                 parts.push(SoundNames.label("Ambient mix"))
             }
+
+            if (app.customSoundSelected)
+                parts.push(SoundNames.label("Custom sound"))
 
             return parts.length > 0
                     ? parts.join(" & ")

@@ -25,17 +25,17 @@ ApplicationWindow {
                                 ? mainPage.activeBand
                                 : ""
 
-    property var activeAmbiences: mainPage
-                                  ? mainPage.activeAmbiences
-                                  : []
+    property bool customSoundSelected: mainPage
+                                       ? mainPage.customSoundSelected
+                                       : false
 
-    property string activeAmbience: activeAmbiences.length > 0
-                                    ? activeAmbiences[0]
-                                    : ""
+    property bool customSoundActive: mainPage
+                                     ? mainPage.customSoundActive
+                                     : false
 
-    property string activeNoise: mainPage
-                                 ? mainPage.activeNoise
-                                 : ""
+    property string activeCustomName: mainPage
+                                      ? mainPage.customSoundLabel
+                                      : ""
 
     property bool isPlaying: mainPage
                              ? mainPage.isPlaying
@@ -159,7 +159,8 @@ ApplicationWindow {
     property bool pausedMode: !isPlaying &&
                               (activeBand !== "" ||
                                activeAmbiences.length > 0 ||
-                               activeNoise !== "")
+                               activeNoise !== "" ||
+                               customSoundSelected)
 
     initialPage: Component {
         MainPage {
@@ -174,20 +175,16 @@ ApplicationWindow {
 
     cover: Component {
         CoverPage {
-            activeBand: appWindow.activeBand
-            activeAmbiences: appWindow.activeAmbiences
-            activeNoise: appWindow.activeNoise
+            mainState: appWindow.mainPage
             isPlaying: appWindow.isPlaying
-            isPaused: appWindow.pausedMode
 
             sleepTimerRunning: appWindow.sleepTimerRunning
             sleepTimerPaused: appWindow.sleepTimerPaused
             sleepTimerRemainingSeconds: appWindow.sleepTimerRemainingSeconds
 
             onPlayPauseClicked: {
-                if (appWindow.mainPage) {
+                if (appWindow.mainPage)
                     appWindow.mainPage.togglePlayback()
-                }
             }
         }
     }
