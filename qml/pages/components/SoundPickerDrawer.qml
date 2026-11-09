@@ -270,9 +270,7 @@ SilicaFlickable {
 
                 text: selectedFolderName !== ""
                       ? selectedFolderName
-                      : (selectedFileName !== ""
-                         ? selectedFileName
-                         : qsTr("No file selected"))
+                      : selectedFileName
 
                 wrapMode: Text.Wrap
                 color: Theme.highlightColor

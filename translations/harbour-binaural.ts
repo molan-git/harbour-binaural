@@ -371,13 +371,6 @@
     </message>
 </context>
 <context>
-    <name>SoundPickerDrawer</name>
-    <message>
-        <source>No file selected</source>
-        <translation>No file selected</translation>
-    </message>
-</context>
-<context>
     <name>TimerPage</name>
     <message>
         <source>Timer</source>
