@@ -433,11 +433,9 @@ SilicaFlickable {
                         page.selectedFile.toString() !== ""
                         || page.selectedFolder.toString() !== ""
 
-                    // Active only when a selection exists AND playback has stopped
                     property bool canRestart:
                         hasSelection
                         && page.audioEngine !== null
-                        && !playbackButtons.isPlaying
 
                     Icon {
                         id: restartIcon
@@ -454,7 +452,6 @@ SilicaFlickable {
 
                     ColorOverlay {
                         anchors.fill: restartIcon
-
                         source: restartIcon
 
                         color: restartMouseArea.pressed && restartButton.canRestart
@@ -466,6 +463,7 @@ SilicaFlickable {
 
                     MouseArea {
                         id: restartMouseArea
+
                         anchors.fill: parent
                         enabled: restartButton.canRestart
 
@@ -473,13 +471,7 @@ SilicaFlickable {
                             if (!page.audioEngine)
                                 return
 
-                            if (page.selectedFolder.toString() !== "") {
-                                page.startFolderPlayback()
-                            } else if (page.selectedFile.toString() !== "") {
-                                page.audioEngine.customSoundSource = page.selectedFile
-                                page.audioEngine.customSoundName = page.selectedFileName
-                                page.audioEngine.playCustomSound()
-                            }
+                            page.audioEngine.restartCustomSound()
                         }
                     }
                 }

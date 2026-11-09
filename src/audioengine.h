@@ -142,6 +142,7 @@ public:
     Q_INVOKABLE void resumeCustomSound();
     Q_INVOKABLE void playNextCustomSound();
     Q_INVOKABLE void playPreviousCustomSound();
+    Q_INVOKABLE void restartCustomSound();
     Q_INVOKABLE void startCustomSoundPlaylist(const QVariantList &files,
                                                bool loopFolder);
 

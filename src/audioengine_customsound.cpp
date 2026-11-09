@@ -99,6 +99,15 @@ void AudioEngine::setCustomSoundCrossfade(bool crossfade)
     emit customSoundChanged();
 }
 
+void AudioEngine::restartCustomSound()
+{
+    if (m_playlistActive && !m_playlistUrls.isEmpty()) {
+        playCustomTrack(0);
+    } else {
+        playCustomTrack(-1);
+    }
+}
+
 // ============================================================================
 // PLAYBACK
 // ============================================================================
@@ -218,13 +227,9 @@ void AudioEngine::playNextCustomSound()
     if (!m_playlistActive || m_playlistUrls.isEmpty())
         return;
 
-    int next = m_playlistIndex + 1;
+    int next = (m_playlistIndex + 1) % m_playlistUrls.size();
 
-    if (next >= m_playlistUrls.size())
-        next = m_playlistLoop ? 0 : m_playlistIndex;
-
-    if (next != m_playlistIndex)
-        playCustomTrack(next);
+    playCustomTrack(next);
 }
 
 void AudioEngine::playPreviousCustomSound()
@@ -232,15 +237,10 @@ void AudioEngine::playPreviousCustomSound()
     if (!m_playlistActive || m_playlistUrls.isEmpty())
         return;
 
-    int previous = m_playlistIndex - 1;
+    int previous = (m_playlistIndex - 1 + m_playlistUrls.size())
+                   % m_playlistUrls.size();
 
-    if (previous < 0)
-        previous = m_playlistLoop
-            ? m_playlistUrls.size() - 1
-            : m_playlistIndex;
-
-    if (previous != m_playlistIndex)
-        playCustomTrack(previous);
+    playCustomTrack(previous);
 }
 
 void AudioEngine::handleCustomTrackFinished()
