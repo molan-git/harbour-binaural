@@ -11,6 +11,7 @@ public:
     void start();
 
     void setBeatFrequency(double frequency);
+    void setCarrierFrequency(double frequency);
     void setSampleRate(int sampleRate);
 
 protected:
@@ -19,6 +20,7 @@ protected:
 
 private:
     double m_sampleRate;
+    double m_carrierFrequency;
     double m_leftPhase;
     double m_rightPhase;
     double m_beatFrequency;

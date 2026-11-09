@@ -53,6 +53,25 @@
     </message>
 </context>
 <context>
+    <name>AudioFilePickerPage</name>
+    <message>
+        <source>Music</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No audio files or folders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use Folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CreditPage</name>
     <message>
         <source>Norwegian</source>
@@ -108,6 +127,17 @@
         <source>Thanks to %1 for some guidance on improving audio engine / sound generators logic.</source>
         <extracomment>%1 is a hyperlink to the GitHub profile of &quot;poetaster&quot;. &quot;audio engine&quot; and &quot;sound generators&quot; are technical terms and may be left untranslated.</extracomment>
         <translation>Tack till %1 för vägledning kring hur logiken för ljudmotorn/ ljudgeneratorerna kan förbättras.</translation>
+    </message>
+</context>
+<context>
+    <name>CustomBinauralDrawer</name>
+    <message>
+        <source>Base frequency</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Beat frequency</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -184,35 +214,54 @@
     <name>MainPage</name>
     <message>
         <source>About</source>
-        <translation>Om</translation>
+        <translation type="unfinished">Om</translation>
     </message>
     <message>
         <source>Deselect all sounds</source>
-        <translation>Ta bort alla valda ljud</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Timer</source>
-        <translation>Timer</translation>
+        <translation type="unfinished">Timer</translation>
     </message>
     <message>
         <source>Binaural Beats</source>
-        <translation>Binaurala toner</translation>
+        <translation type="unfinished">Binaurala toner</translation>
     </message>
     <message>
         <source>To be used with</source>
-        <translation>Att användas med</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom frequencies</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Colored Noise</source>
-        <translation>Färgat brus</translation>
+        <translation type="unfinished">Färgat brus</translation>
+    </message>
+    <message>
+        <source>Wave motion</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ambient Sound</source>
-        <translation>Omgivningsljud</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Choose ambient sounds</source>
-        <translation>Välj omgivningsljud</translation>
+        <source>Ambient sounds</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>NoiseWaveDrawer</name>
+    <message>
+        <source>Wave depth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wave length</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -317,7 +366,7 @@
         <translation>Ambientmix</translation>
     </message>
     <message>
-        <source>Ambient sounds</source>
+        <source>Custom sound</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

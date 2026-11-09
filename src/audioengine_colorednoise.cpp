@@ -54,6 +54,21 @@ void AudioEngine::applyPendingColoredNoiseVolume()
             coloredNoiseTargetVolume()) / 100.0);
 }
 
+void AudioEngine::setNoiseWave(bool enabled,
+                               double depth,
+                               double periodSeconds)
+{
+    m_noiseWaveEnabled = enabled;
+    m_noiseWaveDepth =
+        enabled ? qBound(0.0, depth, 1.0) : 0.0;
+    m_noiseWavePeriod = qBound(0.5, periodSeconds, 60.0);
+
+    if (m_noiseGenerator)
+        m_noiseGenerator->setWaveModulation(
+            m_noiseWaveDepth,
+            m_noiseWavePeriod);
+}
+
 // ============================================================================
 // COLORED NOISE
 // ============================================================================
@@ -92,7 +107,11 @@ void AudioEngine::setColoredNoise(
     {
         m_noiseChannel->cancelFadeOut();
 
-        m_noiseGenerator->setNoiseType(type);
+        m_noiseGenerator->setNoiseType(type);       
+
+        m_noiseGenerator->setWaveModulation(
+            m_noiseWaveEnabled ? m_noiseWaveDepth : 0.0,
+            m_noiseWavePeriod);
 
         m_noiseChannel->setVolume(
             static_cast<qreal>(
@@ -107,6 +126,10 @@ void AudioEngine::setColoredNoise(
         new ColoredNoiseGenerator(m_noiseChannel);
 
     generator->setNoiseType(type);
+
+    generator->setWaveModulation(
+        m_noiseWaveEnabled ? m_noiseWaveDepth : 0.0,
+        m_noiseWavePeriod);
 
     m_noiseChannel->setVolume(
         static_cast<qreal>(

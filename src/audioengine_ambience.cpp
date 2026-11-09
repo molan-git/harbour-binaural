@@ -84,6 +84,34 @@ void AudioEngine::setAmbience(const QString &ambience)
             return;
     }
 
+    // Shared three-slot budget: preset ambiences and the custom
+    // sound channel draw from the same pool. When the custom sound
+    // is active, only two ambience slots remain.
+    const int allowedSlots = m_customChannel
+        && m_customChannel->isPlaying()
+        ? MaxAmbienceChannels - 1
+        : MaxAmbienceChannels;
+
+    int activeSlots = 0;
+
+    for (int i = 0; i < MaxAmbienceChannels; ++i) {
+        AmbienceChannel *channel = m_ambienceChannels[i];
+
+        if (channel
+                && !channel->fileName().isEmpty()
+                && !channel->isStopping())
+            ++activeSlots;
+    }
+
+    if (activeSlots >= allowedSlots) {
+        qWarning()
+            << "AudioEngine: maximum of"
+            << allowedSlots
+            << "simultaneous ambiences reached"
+            << "(custom sound active)";
+        return;
+    }
+
     // Find the first free channel.
     for (int i = 0; i < MaxAmbienceChannels; ++i) {
         AmbienceChannel *channel = m_ambienceChannels[i];
@@ -99,11 +127,12 @@ void AudioEngine::setAmbience(const QString &ambience)
                 << ambience;
         }
 
+        updateAmbienceMixScale();
         updatePlayingState();
         return;
     }
 
-    // All three channels are occupied. Reject the fourth sound.
+    // All allowed channels are occupied. Reject the extra sound.
     qWarning()
         << "AudioEngine: maximum of"
         << MaxAmbienceChannels
@@ -137,6 +166,7 @@ void AudioEngine::stopAmbience()
             m_ambienceChannels[i]->stop();
     }
 
+    updateAmbienceMixScale();
     updatePlayingState();
 }
 
@@ -159,6 +189,7 @@ void AudioEngine::stopAmbienceByName(const QString &ambience)
         }
     }
 
+    updateAmbienceMixScale();
     updatePlayingState();
 }
 
@@ -169,7 +200,51 @@ void AudioEngine::stopAmbiencesImmediately()
             m_ambienceChannels[i]->stopImmediately();
     }
 
+    updateAmbienceMixScale();
     updatePlayingState();
+}
+
+// ============================================================================
+// MIX BALANCE
+// ============================================================================
+
+/*
+ * Keeps the perceived loudness of the ambience bed constant no
+ * matter how many sounds are stacked: N uncorrelated sources with
+ * 1/sqrt(N) gain sum to roughly the same loudness as one source.
+ * The custom sound channel is counted as one voice of the same
+ * bed, since it draws from the same three-slot budget.
+ */
+
+void AudioEngine::updateAmbienceMixScale()
+{
+    int active = 0;
+
+    for (int i = 0; i < MaxAmbienceChannels; ++i) {
+        const AmbienceChannel *channel =
+            m_ambienceChannels[i];
+
+        if (channel
+            && !channel->fileName().isEmpty()
+            && !channel->isStopping())
+            ++active;
+    }
+
+    if (m_customChannel
+            && m_customChannel->isPlaying())
+        ++active;
+
+    const double scale = active > 0
+        ? 1.0 / qSqrt(static_cast<double>(active))
+        : 1.0;
+
+    for (int i = 0; i < MaxAmbienceChannels; ++i) {
+        if (m_ambienceChannels[i])
+            m_ambienceChannels[i]->setMixScale(scale);
+    }
+
+    if (m_customChannel)
+        m_customChannel->setMixScale(scale);
 }
 
 // ============================================================================

@@ -6,13 +6,13 @@ import Binaural 1.0
 CoverBackground {
     id: cover
 
-    property string activeBand: ""
-    property var activeAmbiences: []
-    property string activeNoise: ""
-    property string activeSequence: ""
+    property var mainState: null
+
+    property bool hasActiveSounds: mainState
+                                   ? mainState.hasActiveSounds
+                                   : false
 
     property bool isPlaying: false
-    property bool isPaused: false
 
     property bool sleepTimerRunning: false
     property bool sleepTimerPaused: false
@@ -44,12 +44,7 @@ CoverBackground {
         z: 0
 
         // Dim the cover art while the system has stopped the sound.
-        opacity: isPlaying || (activeBand === "" &&
-                               activeAmbiences.length === 0 &&
-                               activeNoise === "" &&
-                               activeSequence === "")
-                 ? 1.0
-                 : 0.6
+        opacity: isPlaying || !hasActiveSounds ? 1.0 : 0.6
 
         Behavior on opacity {
             NumberAnimation {
@@ -95,11 +90,7 @@ CoverBackground {
         Label {
             id: coverStatusLabel
 
-            visible: !sleepTimerRunning &&
-                     activeBand === "" &&
-                     activeAmbiences.length === 0 &&
-                     activeNoise === "" &&
-                     activeSequence === ""
+            visible: !sleepTimerRunning && !hasActiveSounds
 
             x: Theme.horizontalPageMargin
             width: parent.width - 2 * Theme.horizontalPageMargin
@@ -156,8 +147,8 @@ CoverBackground {
 
                     font.pixelSize: Theme.fontSizeSmall
 
-                    text: formatRemainingTime(
-                              sleepTimerRemainingSeconds)
+                    text: formatRemainingTime
+                          (sleepTimerRemainingSeconds)
                 }
             }
         }
@@ -179,26 +170,7 @@ CoverBackground {
             font.pixelSize: Theme.fontSizeSmall
             wrapMode: Text.WordWrap
 
-            text: {
-                var parts = []
-
-                if (activeBand !== "")
-                    parts.push(SoundNames.label(activeBand))
-
-                if (activeNoise !== "")
-                    parts.push(SoundNames.label(activeNoise))
-
-                if (activeAmbiences.length === 1) {
-                    parts.push(SoundNames.label(activeAmbiences[0]))
-                } else if (activeAmbiences.length > 1) {
-                    parts.push(SoundNames.label("Ambient mix"))
-                }
-
-                if (activeSequence !== "")
-                    parts.push(SoundNames.label("Sequence"))
-
-                return parts.join("\n")
-            }
+            text: mainState ? mainState.mixLabel : ""
         }
     }
 
@@ -206,10 +178,7 @@ CoverBackground {
     CoverActionList {
         id: playbackActionList
 
-        enabled: activeBand !== "" ||
-                 activeAmbiences.length > 0 ||
-                 activeNoise !== "" ||
-                 activeSequence !== ""
+        enabled: hasActiveSounds
 
         CoverAction {
             iconSource: isPlaying

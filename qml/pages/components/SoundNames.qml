@@ -42,6 +42,7 @@ QtObject {
             // General UI text
         case "Ambient mix":                 return qsTr("Ambient mix")
         case "Sequence":                    return qsTr("Sequence")
+        case "Custom sound":                 return qsTr("Custom sound")
         case "Start your sound mix": return qsTr("Start your sound mix")
         case "Individual experiences may vary.": return qsTr("Individual experiences may vary.")
 

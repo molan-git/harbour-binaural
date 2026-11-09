@@ -1,4 +1,4 @@
-# Binaural <img width="50" title="Page Home" src="https://github.com/molan-git/harbour-binaural/blob/main/icons/172x172/harbour-binaural.png">
+# Binaural <img width="60" title="Page Home" src="https://github.com/molan-git/harbour-binaural/blob/main/icons/172x172/harbour-binaural.png">
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G7W527ZZR9)
 
@@ -9,9 +9,11 @@ Binaural is a sound app for [Sailfish OS](https://sailfishos.org) designed for r
 ## Features
 
 - Binaural beats with selectable frequency bands
+- Custom binaural frequencies
 - Colored noise: white, pink, brown, and grey
+- Colored noise wave option
 - Ambient sounds
-- [WIP] Custom sound playback
+- Custom sound playback
 - Mix sound sources simultaneously
 - Sleep timer
 
@@ -86,7 +88,7 @@ Clone or download this repository and import it into your Sailfish OS IDE using 
 
 ## Repository branches
 
-* `master`: Release branch containing the current version of Binaural.
+* `main`: Release branch containing the current version of Binaural.
 * `feature-*`: Branches used for testing features under development.
 * `weblate-harbour-binaural-*`: Translation branch managed by Weblate.
 

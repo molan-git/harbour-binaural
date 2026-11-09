@@ -30,6 +30,7 @@ AmbienceChannel::AmbienceChannel(QObject *parent)
       m_crossfadeTimer(new QTimer(this)),
       m_fadeOutTimer(new QTimer(this)),
       m_volumeTimer(new QTimer(this)),
+      m_watchdogTimer(new QTimer(this)),
       m_volume(50),
       m_fadeOutActiveVolume(0),
       m_fadeOutFadingVolume(0),
@@ -77,6 +78,15 @@ AmbienceChannel::AmbienceChannel(QObject *parent)
                 applyPendingVolume();
             });
 
+    // External-stop watchdog (audio resource loss).
+    m_watchdogTimer->setInterval(500);
+    m_watchdogTimer->setSingleShot(true);
+
+    connect(m_watchdogTimer,
+            &QTimer::timeout,
+            this,
+            &AmbienceChannel::restartActivePlayer);
+
     m_playerA->setVolume(0);
     m_playerB->setVolume(0);
 }
@@ -87,6 +97,7 @@ AmbienceChannel::~AmbienceChannel()
     m_crossfadeTimer->stop();
     m_fadeOutTimer->stop();
     m_volumeTimer->stop();
+    m_watchdogTimer->stop();
 
     m_playerA->stop();
     m_playerB->stop();
@@ -120,16 +131,20 @@ bool AmbienceChannel::start(const QString &fileName)
     if (fileName.isEmpty())
         return false;
 
-    const QUrl mediaUrl(AmbienceBasePath + fileName);
+    return startUrl(QUrl(AmbienceBasePath + fileName), fileName);
+}
 
-    if (!mediaUrl.isValid())
+bool AmbienceChannel::startUrl(const QUrl &url,
+                               const QString &displayName)
+{
+    if (url.isEmpty() || !url.isValid())
         return false;
 
     stopImmediately();
 
-    m_fileName = fileName;
+    m_fileName = displayName;
     m_activePlayer = m_playerA;
-    m_activePlayer->setMedia(QMediaContent(mediaUrl));
+    m_activePlayer->setMedia(QMediaContent(url));
     m_activePlayer->setVolume(0);
 
     m_fadeInElapsedBeforePause = 0;
@@ -151,6 +166,16 @@ bool AmbienceChannel::start(const QString &fileName)
     emit stateChanged();
 
     return true;
+}
+
+void AmbienceChannel::setLooping(bool looping)
+{
+    m_looping = looping;
+}
+
+void AmbienceChannel::setCrossfadeEnabled(bool enabled)
+{
+    m_crossfadeEnabled = enabled;
 }
 
 void AmbienceChannel::pause()
@@ -185,7 +210,6 @@ void AmbienceChannel::pause()
         m_crossfadeElapsedBeforePause += m_crossfadeElapsed.elapsed();
         m_crossfadeElapsed.invalidate();
     }
-
 
     m_fadeInTimer->stop();
     m_crossfadeTimer->stop();
@@ -262,6 +286,8 @@ void AmbienceChannel::stopImmediately()
     m_crossfadeTimer->stop();
     m_fadeOutTimer->stop();
     m_volumeTimer->stop();
+    m_watchdogTimer->stop();
+    m_watchdogRetries = 0;
 
     m_playerA->stop();
     m_playerB->stop();
@@ -289,7 +315,7 @@ void AmbienceChannel::stopImmediately()
     m_paused = false;
     m_sleepFactor = 1.0;
 
-    m_resumeFadeIn = false;
+    m_resumeFadeIn = true;
     m_resumeCrossfade = false;
 
     emit stateChanged();
@@ -306,10 +332,23 @@ int AmbienceChannel::currentVolume() const
     return m_activePlayer ? m_activePlayer->volume() : 0;
 }
 
+/*
+ * Loudness compensation for stacked ambiences. The engine
+ * sets 1/sqrt(activeCount); targetVolume() feeds all fade paths,
+ * so the balance flows through fade-in, crossfade and sleep fade
+ * automatically.
+ */
+void AmbienceChannel::setMixScale(double scale)
+{
+    m_mixScale = qBound(0.1, scale, 1.0);
+    m_volumeTimer->start();      // debounced apply, like the slider
+}
+
 int AmbienceChannel::targetVolume() const
 {
     return qRound(
-        m_volume * MasterVolumeFactorPercent / 100.0);
+        m_volume * MasterVolumeFactorPercent / 100.0
+        * m_mixScale);
 }
 
 void AmbienceChannel::applySleepVolume(
@@ -322,7 +361,7 @@ void AmbienceChannel::applySleepVolume(
     // If a crossfade or fade-in is in progress, that fade is already
     // updating volume every 15 ms using m_sleepFactor — don't fight it.
     if (m_crossfadeTimer->isActive() || m_fadeInTimer->isActive())
-             return;
+        return;
 
     if (m_activePlayer) {
         m_activePlayer->setVolume(
@@ -396,8 +435,8 @@ void AmbienceChannel::updateFadeOut()
         + m_fadeElapsed.elapsed();
 
     const double progress = qMin(
-        1.0,
-        static_cast<double>(elapsed) / FadeOutDuration);
+                1.0,
+                static_cast<double>(elapsed) / FadeOutDuration);
 
     m_activePlayer->setVolume(
         qRound(m_fadeOutActiveVolume * (1.0 - progress)));
@@ -423,32 +462,50 @@ void AmbienceChannel::checkCrossfade(QMediaPlayer *player)
         || player != m_activePlayer
         || m_fadingPlayer
         || m_stopping
-            || m_paused) {
+        || m_paused) {
         return;
     }
+
+    // Non-looping tracks must not loop-crossfade into themselves;
+    // they play to their natural end instead.
+    if (!m_looping || !m_crossfadeEnabled)
+        return;
 
     const qint64 duration = player->duration();
 
     if (duration <= 0)
         return;
 
-    // Never crossfade files that are shorter than the crossfade
-    if (duration <= CrossfadeDuration)
+    /*
+     * Crossfade at most half the file, never longer than
+     * the default. Files too short to crossfade at all fall
+     * through to the seamless EndOfMedia fallback.
+     */
+    const qint64 fadeMs =
+        qMin<qint64>(CrossfadeDuration, duration / 2);
+
+    if (fadeMs < 250)
         return;
 
-    if (duration - player->position() <= CrossfadeDuration)
-        startCrossfade(player);
+    if (duration - player->position() <= fadeMs)
+        startCrossfade(player, fadeMs);
 }
 
-void AmbienceChannel::startCrossfade(QMediaPlayer *fadingPlayer)
+void AmbienceChannel::startCrossfade(QMediaPlayer *fadingPlayer,
+                                     qint64 fadeMs)
 {
     if (!fadingPlayer
             || fadingPlayer != m_activePlayer
             || m_fadingPlayer
             || m_stopping
-        || m_paused) {
+            || m_paused) {
         return;
     }
+
+    // Remember the length of this crossfade
+    // (updateCrossfade reads m_crossfadeMs).
+    m_crossfadeMs =
+        fadeMs > 0 ? fadeMs : CrossfadeDuration;
 
     QMediaPlayer *nextPlayer =
         fadingPlayer == m_playerA ? m_playerB : m_playerA;
@@ -489,16 +546,21 @@ void AmbienceChannel::updateCrossfade()
     const double progress = qMin(
                 1.0,
                 static_cast<double>(elapsed)
-                / CrossfadeDuration);
+                    / m_crossfadeMs);
 
     // Apply sleep factor so crossfade respects the fade-out.
     const int volume = qRound(targetVolume() * m_sleepFactor);
 
+    /*
+     * Equal-power curves. With a linear fade the summed
+     * loudness dips ~3 dB in the middle; with uncorrelated
+     * material sqrt curves keep it constant through the seam.
+     */
     m_fadingPlayer->setVolume(
-                qRound(volume * (1.0 - progress)));
+                qRound(volume * qSqrt(1.0 - progress)));
 
     m_activePlayer->setVolume(
-                qRound(volume * progress));
+                qRound(volume * qSqrt(progress)));
 
     if (progress >= 1.0)
         finishCrossfade();
@@ -549,6 +611,36 @@ void AmbienceChannel::handleEndOfMedia(QMediaPlayer *player)
     if (m_paused)
         return;
 
+    /*
+     * Non-looping track (custom sound playlist or single
+     * play with loop off): end naturally. stop() runs the
+     * short fade-out bookkeeping and emits finished() when
+     * done — the engine then advances the playlist.
+     */
+    if (!m_looping) {
+        stop();
+        return;
+    }
+
+    /*
+     * EndOfMedia without a running crossfade means the
+     * position check never fired (very short file, or a
+     * backend that reports duration() == 0). Use the free player
+     * for a quick loop crossfade instead of a hard setPosition(0)
+     * restart, which would click.
+     */
+    if (!m_fadingPlayer) {
+        if (m_crossfadeEnabled) {
+            startCrossfade(player, 500);
+            return;
+        }
+
+        // Crossfade disabled: hard restart at the loop point.
+        player->setPosition(0);
+        player->play();
+        return;
+    }
+
     player->setPosition(0);
     player->play();
 }
@@ -574,6 +666,12 @@ void AmbienceChannel::connectPlayer(QMediaPlayer *player)
                         << player->media()
                                .canonicalUrl()
                                .toString();
+
+                    if (player == m_activePlayer
+                        && !m_stopping) {
+                        stopImmediately();
+                        emit finished();
+                    }
                 }
             });
 
@@ -582,17 +680,64 @@ void AmbienceChannel::connectPlayer(QMediaPlayer *player)
         static_cast<void (QMediaPlayer::*)(
             QMediaPlayer::Error)>(&QMediaPlayer::error),
         this,
-        [player](QMediaPlayer::Error error) {
+        [this, player](QMediaPlayer::Error error) {
             qWarning()
                 << "AmbienceChannel: player error:"
                 << error
                 << player->errorString();
+
+            if (player == m_activePlayer
+                && error != QMediaPlayer::NoError
+                && !m_stopping) {
+                stopImmediately();
+                emit finished();
+            }
         });
 
     connect(player,
             &QMediaPlayer::stateChanged,
             this,
-            [this](QMediaPlayer::State) {
+            [this, player](QMediaPlayer::State state) {
+
+                if (state == QMediaPlayer::StoppedState
+                    && player == m_activePlayer
+                    && !m_stopping
+                    && !m_paused) {
+                    if (m_watchdogRetries < 5) {
+                        ++m_watchdogRetries;
+                        m_watchdogTimer->start();
+                    } else {
+                        stopImmediately();
+                        emit finished();
+                    }
+                }
+
+                if (state == QMediaPlayer::PlayingState) {
+                    m_watchdogTimer->stop();
+                    m_watchdogRetries = 0;
+                }
+
                 emit stateChanged();
             });
+}
+
+/*
+ * Watchdog recovery: the active player was stopped externally
+ * (audio resource seized by another app, or a backend hiccup).
+ * Try to resume playback - the stateChanged handler stops the
+ * watchdog again as soon as PlayingState is confirmed.
+ */
+void AmbienceChannel::restartActivePlayer()
+{
+    if (!m_activePlayer
+        || m_stopping
+        || m_paused
+        || m_activePlayer->state()
+               != QMediaPlayer::StoppedState)
+        return;
+
+    qWarning() << "AmbienceChannel: recovering player for"
+               << m_fileName;
+
+    m_activePlayer->play();
 }

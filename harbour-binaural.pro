@@ -28,6 +28,7 @@ SOURCES += src/harbour-binaural.cpp \
     src/audioengine_binaural.cpp \
     src/audioengine_colorednoise.cpp \
     src/audioengine_sequence.cpp \
+    src/audioengine_customsound.cpp \
     src/binauralgenerator.cpp \
     src/colorednoisegenerator.cpp \
     src/pcmchannel.cpp \
@@ -37,6 +38,7 @@ SOURCES += src/harbour-binaural.cpp \
 
 DISTFILES += qml/harbour-binaural.qml \
     icons/216x216/harbour-binaural.png \
+    qml/pages/AudioFilePickerPage.qml \
     qml/pages/CreditPage.qml \
     qml/pages/MainPage.qml \
     qml/cover/CoverPage.qml \
@@ -44,12 +46,16 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/pages/TimerPage.qml \
     qml/pages/components/ActionDrawer.qml \
     qml/pages/components/AmbienceDrawer.qml \
+    qml/pages/components/ButtonHighlight.qml \
+    qml/pages/components/CustomBinauralDrawer.qml \
     qml/pages/components/InfoBinauralPage.qml \
     qml/pages/components/InfoColoredPage.qml \
     qml/pages/components/InfoSequencePage.qml \
+    qml/pages/components/NoiseWaveDrawer.qml \
     qml/pages/components/PageDrawer.qml \
     qml/pages/components/PlaybackBar.qml \
     qml/pages/components/SoundNames.qml \
+    qml/pages/components/SoundPickerDrawer.qml \
     qml/pages/components/VolumeIcon.qml \
     rpm/harbour-binaural.changes \
     rpm/harbour-binaural.changes.run.in \
@@ -62,6 +68,10 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/images/icon-s-headset.svg \
     qml/images/image-binaural-graph.svg \
     qml/images/image-colornoise-graph.svg \
+    qml/images/icon-l-stop.svg \
+    qml/images/icon-l-restart.svg \
+    qml/images/icon-m-file-parent \
+    qml/images/icon-m-crossfade \
     translations/*.ts \
     harbour-binaural.desktop \
     sounds/wind.mp3 \
