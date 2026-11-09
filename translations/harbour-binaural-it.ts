@@ -249,7 +249,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Choose ambient sounds</source>
+        <source>Ambient sounds</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

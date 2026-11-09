@@ -285,28 +285,28 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="550"/>
+        <location filename="../qml/pages/MainPage.qml" line="527"/>
         <source>Custom frequencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="629"/>
+        <location filename="../qml/pages/MainPage.qml" line="608"/>
         <source>Colored Noise</source>
         <translation type="unfinished">Farbiges Rauschen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="728"/>
+        <location filename="../qml/pages/MainPage.qml" line="684"/>
         <source>Wave motion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="805"/>
+        <location filename="../qml/pages/MainPage.qml" line="763"/>
         <source>Ambient Sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="834"/>
-        <source>Choose ambient sounds</source>
+        <location filename="../qml/pages/MainPage.qml" line="781"/>
+        <source>Ambient sounds</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -43,6 +43,7 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/pages/TimerPage.qml \
     qml/pages/components/ActionDrawer.qml \
     qml/pages/components/AmbienceDrawer.qml \
+    qml/pages/components/ButtonHighlight.qml \
     qml/pages/components/CustomBinauralDrawer.qml \
     qml/pages/components/InfoBinauralPage.qml \
     qml/pages/components/InfoColoredPage.qml \
