@@ -26,7 +26,7 @@ Download the latest release from:
 
 ## Screenshots
 
-<img width="200" title="Screenshot1" src="https://raw.githubusercontent.com/molan-git/harbour-binaural/main/screenshots/screenshot1.jpg"> <img width="200" title="Screenshot2" src="https://raw.githubusercontent.com/molan-git/harbour-binaural/main/screenshots/screenshot2.jpg"> <img width="200" title="Screenshot3" src="https://raw.githubusercontent.com/molan-git/harbour-binaural/main/screenshots/screenshot3.jpg">
+<img width="200" title="Screenshot1" src="https://raw.githubusercontent.com/molan-git/harbour-binaural/main/screenshots/screenshot1.jpg"> <img width="200" title="Screenshot2" src="https://raw.githubusercontent.com/molan-git/harbour-binaural/main/screenshots/screenshot2.jpg"> <img width="200" title="Screenshot3" src="https://raw.githubusercontent.com/molan-git/harbour-binaural/main/screenshots/screenshot3.jpg"> <img width="200" title="Screenshot4" src="https://raw.githubusercontent.com/molan-git/harbour-binaural/main/screenshots/screenshot4.jpg">
 
 ## Translations
 
