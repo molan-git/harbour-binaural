@@ -258,54 +258,162 @@
     </message>
 </context>
 <context>
+    <name>InfoSolfeggioPage</name>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="61"/>
+        <source>Solfeggio Frequencies</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="71"/>
+        <source>Solfeggio frequencies are a collection of specific tones commonly used in meditation, relaxation and sound-based practices. Each frequency has a traditional symbolic association, ranging from grounding and transformation to awareness and unity.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="82"/>
+        <source>The nine frequencies</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="126"/>
+        <source>Grounding, safety and relaxation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="148"/>
+        <source>Restoration and renewal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="170"/>
+        <source>Releasing fear and guilt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="192"/>
+        <source>Change and transformation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="214"/>
+        <source>Love, transformation and harmony</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="236"/>
+        <source>Relationships and connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="258"/>
+        <source>Clarity, expression and intuition</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="280"/>
+        <source>Awareness and inner reflection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="302"/>
+        <source>Unity, wholeness and higher consciousness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="318"/>
+        <source>The 3–6–9 pattern</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="328"/>
+        <source>The nine frequencies form three numerical groups when their digits are added together:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="355"/>
+        <source>174, 417, 741 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="373"/>
+        <source>285, 528, 852 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="391"/>
+        <source>396, 639, 963 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="402"/>
+        <source>In numerological interpretations, 3 is associated with creation, 6 with harmony and 9 with completion or unity. This pattern is symbolic rather than a physical property of sound.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="418"/>
+        <source>How to experience Solfeggio tones</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="428"/>
+        <source>Each frequency can be listened to individually as a pure tone or combined with other frequencies to create layered soundscapes. Experiment with different tones and volume levels to find what feels comfortable for you.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="439"/>
+        <source>Unlike binaural beats, Solfeggio tones do not require different frequencies in the left and right ears. They can be played identically through both channels.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="324"/>
+        <location filename="../qml/pages/MainPage.qml" line="399"/>
         <source>About</source>
         <translation type="unfinished">Über</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="334"/>
+        <location filename="../qml/pages/MainPage.qml" line="409"/>
         <source>Deselect all sounds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="343"/>
+        <location filename="../qml/pages/MainPage.qml" line="418"/>
         <source>Timer</source>
         <translation type="unfinished">Timer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="369"/>
+        <location filename="../qml/pages/MainPage.qml" line="444"/>
         <source>Binaural Beats</source>
         <translation type="unfinished">Binaurale Beats</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="383"/>
+        <location filename="../qml/pages/MainPage.qml" line="458"/>
         <source>To be used with</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="509"/>
+        <location filename="../qml/pages/MainPage.qml" line="584"/>
         <source>Custom frequencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="535"/>
+        <location filename="../qml/pages/MainPage.qml" line="653"/>
         <source>Colored Noise</source>
         <translation type="unfinished">Farbiges Rauschen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="593"/>
+        <location filename="../qml/pages/MainPage.qml" line="711"/>
         <source>Wave motion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="618"/>
+        <location filename="../qml/pages/MainPage.qml" line="736"/>
         <source>Ambient Sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="633"/>
+        <location filename="../qml/pages/MainPage.qml" line="751"/>
         <source>Ambient sounds</source>
         <translation type="unfinished"></translation>
     </message>
@@ -326,7 +434,7 @@
 <context>
     <name>PlaybackBar</name>
     <message>
-        <location filename="../qml/pages/components/PlaybackBar.qml" line="136"/>
+        <location filename="../qml/pages/components/PlaybackBar.qml" line="138"/>
         <source>Start your sound mix</source>
         <translation>Starte deinen Klangmix</translation>
     </message>
@@ -445,11 +553,22 @@
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="45"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="46"/>
+        <source>Solfeggio frequencies</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/SoundNames.qml" line="47"/>
+        <source>Solfeggio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/SoundNames.qml" line="48"/>
         <source>Start your sound mix</source>
         <translation>Starte deinen Klangmix</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="46"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="49"/>
         <source>Individual experiences may vary.</source>
         <translation>Die Wirkung kann individuell variieren.</translation>
     </message>

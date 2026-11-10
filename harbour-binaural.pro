@@ -28,9 +28,11 @@ SOURCES += src/harbour-binaural.cpp \
     src/audioengine_binaural.cpp \
     src/audioengine_colorednoise.cpp \
     src/audioengine_customsound.cpp \
+    src/audioengine_solfeggio.cpp \
     src/binauralgenerator.cpp \
     src/colorednoisegenerator.cpp \
-    src/pcmchannel.cpp
+    src/pcmchannel.cpp \
+    src/solfeggiogenerator.cpp
 
 
 DISTFILES += qml/harbour-binaural.qml \
@@ -46,9 +48,11 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/pages/components/CustomBinauralDrawer.qml \
     qml/pages/components/InfoBinauralPage.qml \
     qml/pages/components/InfoColoredPage.qml \
+    qml/pages/components/InfoSolfeggioPage.qml \
     qml/pages/components/NoiseWaveDrawer.qml \
     qml/pages/components/PageDrawer.qml \
     qml/pages/components/PlaybackBar.qml \
+    qml/pages/components/SolfeggioDrawer.qml \
     qml/pages/components/SoundButton.qml \
     qml/pages/components/SoundNames.qml \
     qml/pages/components/SoundPickerDrawer.qml \
@@ -104,7 +108,8 @@ HEADERS += \
     src/audioengine.h \
     src/binauralgenerator.h \
     src/colorednoisegenerator.h \
-    src/pcmchannel.h
+    src/pcmchannel.h \
+    src/solfeggiogenerator.h
 
 
 # Install the audio files as application data.

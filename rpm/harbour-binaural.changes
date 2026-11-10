@@ -14,6 +14,7 @@
 
 * Tue Nov 10 2026 molan <59296158+molan-git@users.noreply.github.com> - 0.9.0-1
 - [add] Custom sounds feature
+- [add] Solfeggio frequencies feature
 - [add] Play up to 3 ambient sounds together
 - [add] Custom binaural frequencies
 - [add] Wave generator with colored noises

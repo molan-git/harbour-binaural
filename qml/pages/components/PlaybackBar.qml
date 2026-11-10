@@ -67,9 +67,10 @@ DockedPanel {
             var ambiences = page.activeAmbiences || []
 
             return app.activeBand !== "" ||
-                   app.activeNoise !== "" ||
-                   ambiences.length > 0 ||
-                   app.customSoundSelected
+                    app.activeNoise !== "" ||
+                    ambiences.length > 0 ||
+                    app.customSoundSelected ||
+                    page.activeSolfeggio.length > 0
         }
 
         opacity: enabled ? 1.0 : 0.5
@@ -117,7 +118,8 @@ DockedPanel {
             if (page.activeBand === "" &&
                     page.activeNoise === "" &&
                     ambiences.length === 0 &&
-                    !app.customSoundSelected) {
+                    !app.customSoundSelected &&
+                    page.activeSolfeggio.length === 0) {
                 return Theme.secondaryColor
             }
 
@@ -144,6 +146,9 @@ DockedPanel {
 
             if (page.activeNoise !== "")
                 parts.push(SoundNames.label(page.activeNoise))
+
+            if (page.activeSolfeggio.length > 0)
+                parts.push(SoundNames.label("Solfeggio"))
 
             if (ambiences.length === 1) {
                 parts.push(SoundNames.label(ambiences[0]))

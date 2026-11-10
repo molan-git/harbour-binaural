@@ -13,19 +13,22 @@ namespace
     const int VolumeUpdateInterval = 50;
 }
 
-// Manages all audio channels (binaural, colored noise, ambience) and
-// handles the sleep-timer fade-out.
+// Manages all audio channels (binaural, colored noise, solfeggio,
+// ambience) and handles the sleep-timer fade-out.
 AudioEngine::AudioEngine(QObject *parent)
     : QObject(parent),
+      m_binauralChannel(nullptr),
+      m_noiseChannel(nullptr),
+      m_solfeggioChannel(nullptr),
+      m_binauralGenerator(nullptr),
+      m_noiseGenerator(nullptr),
+      m_solfeggioGenerator(nullptr),
+      m_customChannel(nullptr),
       m_sleepTimerFadeTimer(new QTimer(this)),
       m_sleepTimerBinauralStartVolume(0.0),
       m_sleepTimerColoredNoiseStartVolume(0.0),
+      m_sleepTimerSolfeggioStartVolume(0.0),
       m_sleepTimerCustomStartVolume(0),
-      m_binauralChannel(nullptr),
-      m_noiseChannel(nullptr),
-      m_binauralGenerator(nullptr),
-      m_noiseGenerator(nullptr),
-      m_customChannel(nullptr),
       m_playlistIndex(0),
       m_playlistLoop(false),
       m_playlistActive(false),
@@ -39,6 +42,7 @@ AudioEngine::AudioEngine(QObject *parent)
       m_binauralVolume(50),
       m_ambienceVolume(50),
       m_coloredNoiseVolume(50),
+      m_solfeggioVolume(50),
       m_noiseWaveEnabled(false),
       m_noiseWaveDepth(0.0),
       m_noiseWavePeriod(8.0)
@@ -99,12 +103,23 @@ AudioEngine::AudioEngine(QObject *parent)
                            coloredNoiseTargetVolume()) / 100.0,
                        this);
 
+    m_solfeggioChannel =
+        new PcmChannel(QStringLiteral("solfeggio"),
+                       static_cast<qreal>(
+                           solfeggioTargetVolume()) / 100.0,
+                       this);
+
     connect(m_binauralChannel,
             &PcmChannel::stateChanged,
             this,
             &AudioEngine::updatePlayingState);
 
     connect(m_noiseChannel,
+            &PcmChannel::stateChanged,
+            this,
+            &AudioEngine::updatePlayingState);
+
+    connect(m_solfeggioChannel,
             &PcmChannel::stateChanged,
             this,
             &AudioEngine::updatePlayingState);
@@ -124,6 +139,14 @@ AudioEngine::AudioEngine(QObject *parent)
                 m_noiseGenerator = nullptr;
                 m_currentColoredNoise.clear();
                 m_coloredNoiseVolumeTimer->stop();
+            });
+
+    connect(m_solfeggioChannel,
+            &PcmChannel::stopped,
+            this,
+            [this]() {
+                m_solfeggioGenerator = nullptr;
+                m_solfeggioFrequencies.clear();
             });
 
     connect(m_coloredNoiseVolumeTimer,
@@ -169,6 +192,9 @@ AudioEngine::AudioEngine(QObject *parent)
                 m_noiseChannel->setVolume(
                             m_sleepTimerColoredNoiseStartVolume * factor);
 
+                m_solfeggioChannel->setVolume(
+                            m_sleepTimerSolfeggioStartVolume * factor);
+
                 if (progress >= 1.0) {
                     m_sleepTimerFadeTimer->stop();
 
@@ -176,6 +202,7 @@ AudioEngine::AudioEngine(QObject *parent)
                     stopAmbiencesImmediately();
                     m_customChannel->stopImmediately();
                     m_noiseChannel->stopImmediately();
+                    m_solfeggioChannel->stopImmediately();
 
                     updatePlayingState();
                 }
@@ -191,6 +218,7 @@ AudioEngine::~AudioEngine()
     stopAmbiencesImmediately();
     m_customChannel->stopImmediately();
     m_noiseChannel->stopImmediately();
+    m_solfeggioChannel->stopImmediately();
 }
 
 void AudioEngine::updatePlayingState()
@@ -215,6 +243,9 @@ void AudioEngine::fadeOutForSleepTimer()
 
     m_sleepTimerColoredNoiseStartVolume =
             m_noiseChannel->volume();
+
+    m_sleepTimerSolfeggioStartVolume =
+            m_solfeggioChannel->volume();
 
     for (int i = 0; i < MaxAmbienceChannels; ++i) {
         m_sleepTimerAmbienceStartVolumes[i] =

@@ -211,6 +211,93 @@
     </message>
 </context>
 <context>
+    <name>InfoSolfeggioPage</name>
+    <message>
+        <source>Solfeggio Frequencies</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Solfeggio frequencies are a collection of specific tones commonly used in meditation, relaxation and sound-based practices. Each frequency has a traditional symbolic association, ranging from grounding and transformation to awareness and unity.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The nine frequencies</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Grounding, safety and relaxation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restoration and renewal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Releasing fear and guilt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change and transformation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Love, transformation and harmony</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Relationships and connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clarity, expression and intuition</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Awareness and inner reflection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unity, wholeness and higher consciousness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The 3–6–9 pattern</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The nine frequencies form three numerical groups when their digits are added together:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>174, 417, 741 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>285, 528, 852 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>396, 639, 963 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>In numerological interpretations, 3 is associated with creation, 6 with harmony and 9 with completion or unity. This pattern is symbolic rather than a physical property of sound.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>How to experience Solfeggio tones</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Each frequency can be listened to individually as a pure tone or combined with other frequencies to create layered soundscapes. Experiment with different tones and volume levels to find what feels comfortable for you.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unlike binaural beats, Solfeggio tones do not require different frequencies in the left and right ears. They can be played identically through both channels.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainPage</name>
     <message>
         <source>About</source>
@@ -368,6 +455,14 @@
     <message>
         <source>Custom sound</source>
         <translation>Custom sound</translation>
+    </message>
+    <message>
+        <source>Solfeggio frequencies</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Solfeggio</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

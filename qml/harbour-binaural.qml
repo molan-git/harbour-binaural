@@ -57,7 +57,8 @@ ApplicationWindow {
                 (current.objectName !== "AboutPage" &&
                  current.objectName !== "CreditPage" &&
                  current.objectName !== "InfoBinauralPage" &&
-                 current.objectName !== "InfoColoredPage")
+                 current.objectName !== "InfoColoredPage" &&
+                 current.objectName !== "InfoSolfeggioPage")
     }
 
     Timer {

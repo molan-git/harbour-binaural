@@ -72,7 +72,7 @@ ActionDrawer {
 
                 label: qsTr("Beat frequency")
 
-                minimumValue: 0.5
+                minimumValue: 0
                 maximumValue: 40
                 value: 10
                 stepSize: 0.5

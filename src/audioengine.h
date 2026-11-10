@@ -14,6 +14,7 @@
 
 class BinauralGenerator;
 class ColoredNoiseGenerator;
+class SolfeggioGenerator;
 
 class AudioEngine : public QObject
 {
@@ -29,6 +30,14 @@ class AudioEngine : public QObject
 
     Q_PROPERTY(bool coloredNoisePlaying
                READ isColoredNoisePlaying
+               NOTIFY playingChanged)
+
+    Q_PROPERTY(bool solfeggioPlaying
+               READ isSolfeggioPlaying
+               NOTIFY playingChanged)
+
+    Q_PROPERTY(bool solfeggioPaused
+               READ isSolfeggioPaused
                NOTIFY playingChanged)
 
     Q_PROPERTY(bool binauralPaused
@@ -90,6 +99,9 @@ public:
     bool isAmbiencePlaying() const;
     bool isColoredNoisePlaying() const;
 
+    bool isSolfeggioPlaying() const;
+    bool isSolfeggioPaused() const;
+
     bool isBinauralPaused() const;
     bool isAmbiencePaused() const;
     bool isColoredNoisePaused() const;
@@ -127,6 +139,7 @@ public:
     Q_INVOKABLE void stopAmbienceByName(const QString &ambience);
     Q_INVOKABLE void resumeAmbience();
 
+    // Colored Noise controls.
     Q_INVOKABLE void setColoredNoise(const QString &noise);
     Q_INVOKABLE void setNoiseWave(bool enabled,
                                   double depth,
@@ -134,6 +147,13 @@ public:
     Q_INVOKABLE void pauseColoredNoise();
     Q_INVOKABLE void stopColoredNoise();
     Q_INVOKABLE void resumeColoredNoise();
+
+    // Solfeggio controls.
+    Q_INVOKABLE void setSolfeggio(const QVariantList &frequencies);
+    Q_INVOKABLE void pauseSolfeggio();
+    Q_INVOKABLE void resumeSolfeggio();
+    Q_INVOKABLE void stopSolfeggio();
+    Q_INVOKABLE void setSolfeggioVolume(int volume);
 
     // Custom user sound (mp3/ogg/wav) and playlist controls.
     Q_INVOKABLE void playCustomSound();
@@ -170,6 +190,25 @@ private:
     void applyPendingColoredNoiseVolume();
     int coloredNoiseTargetVolume() const;
 
+    // Solfeggio volume.
+    int solfeggioTargetVolume() const;
+
+    // PCM playback channels (own output, generator, fade-out).
+    PcmChannel *m_binauralChannel;
+    PcmChannel *m_noiseChannel;
+    PcmChannel *m_solfeggioChannel;
+
+    // Generators (parameter access only; lifetime owned by PcmChannel).
+    BinauralGenerator *m_binauralGenerator;
+    ColoredNoiseGenerator *m_noiseGenerator;
+    SolfeggioGenerator *m_solfeggioGenerator;
+
+    // Three independent ambience channels.
+    AmbienceChannel *m_ambienceChannels[MaxAmbienceChannels];
+
+    // Dedicated custom user sound channel.
+    AmbienceChannel *m_customChannel;
+
     // Sleep timer.
     QTimer *m_sleepTimerFadeTimer;
     QElapsedTimer m_sleepTimerFadeElapsed;
@@ -177,21 +216,8 @@ private:
     double m_sleepTimerBinauralStartVolume;
     int m_sleepTimerAmbienceStartVolumes[MaxAmbienceChannels];
     double m_sleepTimerColoredNoiseStartVolume;
+    double m_sleepTimerSolfeggioStartVolume;
     int m_sleepTimerCustomStartVolume;
-
-    // PCM playback channels (own output, generator, fade-out).
-    PcmChannel *m_binauralChannel;
-    PcmChannel *m_noiseChannel;
-
-    // Generators (parameter access only; lifetime owned by PcmChannel).
-    BinauralGenerator *m_binauralGenerator;
-    ColoredNoiseGenerator *m_noiseGenerator;
-
-    // Three independent ambience channels.
-    AmbienceChannel *m_ambienceChannels[MaxAmbienceChannels];
-
-    // Dedicated custom user sound channel.
-    AmbienceChannel *m_customChannel;
 
     // Custom sound playlist.
     QVector<QUrl> m_playlistUrls;
@@ -218,8 +244,12 @@ private:
     int m_binauralVolume;
     int m_ambienceVolume;
     int m_coloredNoiseVolume;
+    int m_solfeggioVolume;
 
     QString m_currentColoredNoise;
+
+    // Selected solfeggio frequencies (Hz).
+    QVector<double> m_solfeggioFrequencies;
 
     // Wave swell settings for the colored-noise channel.
     bool m_noiseWaveEnabled;
