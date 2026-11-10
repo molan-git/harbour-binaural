@@ -24,6 +24,10 @@ Download the latest release from:
 * [OpenRepos.net](https://openrepos.net/content/molan/binaural)
 * [GitHub Releases](https://github.com/molan-git/harbour-binaural/releases)
 
+## Screenshots
+
+<img width="200" title="Screenshot1" src="https://raw.githubusercontent.com/molan-git/harbour-binaural/main/screenshots/screenshot1.jpg"> <img width="200" title="Screenshot2" src="https://raw.githubusercontent.com/molan-git/harbour-binaural/main/screenshots/screenshot2.jpg"> <img width="200" title="Screenshot3" src="https://raw.githubusercontent.com/molan-git/harbour-binaural/main/screenshots/screenshot3.jpg">
+
 ## Translations
 
 Translations are managed with [Hosted Weblate](https://hosted.weblate.org/projects/harbour-binaural/harbour-binaural/). New languages can be added through `Weblate` or directly via `GitHub`. Incomplete translations may not be accepted or included in the app.
@@ -94,14 +98,10 @@ Clone or download this repository and import it into your Sailfish OS IDE using 
 
 ## Contributions
 
-Contributions to this project are very welcome!
+Contributions to this project are very welcome.
 Before implementing a new feature, please discuss your proposal with the main developer. All contributions must respect the project's existing Sailfish OS build target and compatibility requirements. 
 
 When submitting a `Pull Request`, please include a clear explanation of the changes. All `Pull Requests` will be reviewed before being merged. Please note that not all contributions may be accepted, particularly if they conflict with the project's philosophy, simplicity, compatibility requirements, or overall direction.
-
-## Screenshots
-
-<img width="250" alt="grafik" src="https://github.com/user-attachments/assets/17449c02-07e1-450f-8063-c20f12c9072f" /> <img width="250" alt="grafik" src="https://github.com/user-attachments/assets/44ddcd5f-b23e-47fc-9772-c06bb5abfb66" /> <img width="250" alt="grafik" src="https://github.com/user-attachments/assets/ccfc6b48-a6bc-4cc9-9375-e954bad6c2f7" />
 
 ## Credits
 See [CREDITS.md](CREDITS.md)
