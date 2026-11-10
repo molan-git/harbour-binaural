@@ -454,31 +454,18 @@ Page {
                                         width: frequencyGrid.cellWidth
                                         height: frequencyGrid.cellHeight
 
-                                        ButtonHighlight {
-                                            target: frequencyButton
-                                        }
-
-                                        Button {
-                                            id: frequencyButton
-
+                                        SoundButton {
                                             anchors.centerIn: parent
                                             preferredWidth: frequencyGrid.cellWidth - Theme.paddingMedium
 
                                             text: symbol
 
-                                            highlighted: page.activeBand === bandName
-                                                         && !page.isCustomBinaural
-
-                                            color: highlighted
-                                                   ? (page.bandPlaying
-                                                      ? Theme.highlightColor
-                                                      : Theme.secondaryHighlightColor)
-                                                   : Theme.primaryColor
-
-                                            opacity: highlighted && !page.bandPlaying ? 0.6 : 1.0
+                                            selected: page.activeBand === bandName
+                                                      && !page.isCustomBinaural
+                                            playing: page.bandPlaying
 
                                             onClicked: {
-                                                if (frequencyButton.highlighted) {
+                                                if (selected) {
                                                     page.activeBand = ""
                                                     page.isCustomBinaural = false
                                                     audioEngine.stop()
@@ -503,15 +490,11 @@ Page {
                                     width: parent.width
                                     height: customFrequenciesButton.height
 
-                                    ButtonHighlight {
-                                        target: customFrequenciesButton
-                                    }
-
-                                    Button {
+                                    SoundButton {
                                         id: customFrequenciesButton
 
                                         anchors.centerIn: parent
-                                        width: frequencyGrid.width - Theme.paddingMedium
+                                        preferredWidth: frequencyGrid.width - Theme.paddingMedium
 
                                         text: {
                                             if (page.isCustomBinaural) {
@@ -526,15 +509,8 @@ Page {
                                             return qsTr("Custom frequencies")
                                         }
 
-                                        highlighted: page.isCustomBinaural
-
-                                        color: highlighted
-                                               ? (page.bandPlaying
-                                                  ? Theme.highlightColor
-                                                  : Theme.secondaryHighlightColor)
-                                               : Theme.primaryColor
-
-                                        opacity: highlighted && !page.bandPlaying ? 0.6 : 1.0
+                                        selected: page.isCustomBinaural
+                                        playing: page.bandPlaying
 
                                         onClicked: {
                                             binauralDrawer.open = true
@@ -543,63 +519,15 @@ Page {
                                 }
 
                                 // Binaural Beats Volume slider
-                                Item {
-                                    width: parent.width
+                                VolumeSliderRow {
+                                    width: parent.width - 2 * Theme.horizontalPageMargin
+                                    x: Theme.horizontalPageMargin
 
-                                    height: binauralVolumeSlider.height +
-                                            binauralVolumeIcon.height -
-                                            Theme.paddingLarge
+                                    showInfoButton: true
+                                    enabled: page.activeBand !== ""
 
-                                    Slider {
-                                        id: binauralVolumeSlider
-
-                                        anchors.left: parent.left
-                                        anchors.leftMargin: Theme.horizontalPageMargin
-                                        anchors.right: infoBinauralsButton.left
-                                        anchors.rightMargin: Theme.paddingLarge
-
-                                        minimumValue: 0
-                                        maximumValue: 100
-                                        value: 50
-
-                                        enabled: page.activeBand !== ""
-                                        opacity: enabled ? 1.0 : 0.5
-
-                                        onValueChanged: {
-                                            audioEngine.setBinauralVolume(value)
-                                        }
-                                    }
-
-                                    // Uses VolumeIcon.qml component
-                                    VolumeIcon {
-                                        id: binauralVolumeIcon
-                                        value: binauralVolumeSlider.value
-                                        anchors.top: binauralVolumeSlider.bottom
-                                        anchors.topMargin: -Theme.paddingLarge
-                                        anchors.horizontalCenter: binauralVolumeSlider.horizontalCenter
-                                        anchors.horizontalCenterOffset: Theme.paddingSmall
-                                        opacity: page.activeBand !== "" ? 1.0 : 0.5
-                                    }
-
-                                    // Opens InfoBinauralPage
-                                    IconButton {
-                                        id: infoBinauralsButton
-
-                                        anchors.right: parent.right
-                                        anchors.rightMargin: Theme.horizontalPageMargin
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        anchors.verticalCenterOffset:
-                                            Theme.paddingSmall * 1.7
-
-                                        icon.source: "image://theme/icon-m-about?" +
-                                                     (pressed
-                                                      ? Theme.highlightColor
-                                                      : Theme.primaryColor)
-
-                                        onClicked: {
-                                            pageStack.push(infoBinauralPageComponent)
-                                        }
-                                    }
+                                    onValueChanged: audioEngine.setBinauralVolume(value)
+                                    onInfoClicked: pageStack.push(infoBinauralPageComponent)
                                 }
 
                                 // Colored Noise Section
@@ -625,32 +553,18 @@ Page {
                                         width: coloredNoiseGrid.cellWidth
                                         height: coloredNoiseGrid.cellHeight
 
-                                        ButtonHighlight {
-                                            target: coloredNoiseButton
-                                        }
-
-                                        Button {
-                                            id: coloredNoiseButton
-
+                                        SoundButton {
                                             anchors.centerIn: parent
-
                                             preferredWidth: coloredNoiseGrid.cellWidth -
                                                             Theme.paddingMedium
 
                                             text: SoundNames.label(modelData)
-                                            highlighted: page.activeNoise === modelData
 
-                                            color: highlighted
-                                                   ? (page.noisePlaying
-                                                      ? Theme.highlightColor
-                                                      : Theme.secondaryHighlightColor)
-                                                   : Theme.primaryColor
-
-                                            opacity: highlighted && !page.noisePlaying
-                                                     ? 0.6 : 1.0
+                                            selected: page.activeNoise === modelData
+                                            playing: page.noisePlaying
 
                                             onClicked: {
-                                                if (coloredNoiseButton.highlighted) {
+                                                if (selected) {
                                                     page.activeNoise = ""
                                                     audioEngine.stopColoredNoise()
                                                 } else if (!page.pausedMode) {
@@ -670,26 +584,16 @@ Page {
                                     width: parent.width
                                     height: waveMotionButton.height
 
-                                    ButtonHighlight {
-                                        target: waveMotionButton
-                                    }
-
-                                    Button {
+                                    SoundButton {
                                         id: waveMotionButton
 
                                         anchors.centerIn: parent
-                                        width: frequencyGrid.width - Theme.paddingMedium
+                                        preferredWidth: frequencyGrid.width - Theme.paddingMedium
 
                                         text: qsTr("Wave motion")
-                                        highlighted: page.noiseWavesEnabled
 
-                                        color: highlighted
-                                               ? (page.noisePlaying
-                                                  ? Theme.highlightColor
-                                                  : Theme.secondaryHighlightColor)
-                                               : Theme.primaryColor
-
-                                        opacity: highlighted && !page.noisePlaying ? 0.6 : 1.0
+                                        selected: page.noiseWavesEnabled
+                                        playing: page.noisePlaying
 
                                         onClicked: {
                                             noiseWaveDrawer.open = true
@@ -698,63 +602,15 @@ Page {
                                 }
 
                                 // Colored Noise Volume slider
-                                Item {
-                                    width: parent.width
+                                VolumeSliderRow {
+                                    width: parent.width - 2 * Theme.horizontalPageMargin
+                                    x: Theme.horizontalPageMargin
 
-                                    height: coloredNoiseVolumeSlider.height +
-                                            coloredNoiseVolumeIcon.height -
-                                            Theme.paddingLarge
+                                    showInfoButton: true
+                                    enabled: page.activeNoise !== ""
 
-                                    Slider {
-                                        id: coloredNoiseVolumeSlider
-
-                                        anchors.left: parent.left
-                                        anchors.leftMargin: Theme.horizontalPageMargin
-                                        anchors.right: infoColoredButton.left
-                                        anchors.rightMargin: Theme.paddingLarge
-
-                                        minimumValue: 0
-                                        maximumValue: 100
-                                        value: 50
-
-                                        enabled: page.activeNoise !== ""
-                                        opacity: enabled ? 1.0 : 0.5
-
-                                        onValueChanged: {
-                                            audioEngine.setColoredNoiseVolume(value)
-                                        }
-                                    }
-
-                                    // Uses VolumeIcon.qml component
-                                    VolumeIcon {
-                                        id: coloredNoiseVolumeIcon
-                                        value: coloredNoiseVolumeSlider.value
-                                        anchors.top: coloredNoiseVolumeSlider.bottom
-                                        anchors.topMargin: -Theme.paddingLarge
-                                        anchors.horizontalCenter: coloredNoiseVolumeSlider.horizontalCenter
-                                        anchors.horizontalCenterOffset: Theme.paddingSmall
-                                        opacity: page.activeNoise !== "" ? 1.0 : 0.5
-                                    }
-
-                                    // Opens InfoColoredPage
-                                    IconButton {
-                                        id: infoColoredButton
-
-                                        anchors.right: parent.right
-                                        anchors.rightMargin: Theme.horizontalPageMargin
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        anchors.verticalCenterOffset:
-                                            Theme.paddingSmall * 1.7
-
-                                        icon.source: "image://theme/icon-m-about?" +
-                                                     (pressed
-                                                      ? Theme.highlightColor
-                                                      : Theme.primaryColor)
-
-                                        onClicked: {
-                                            pageStack.push(infoColoredPageComponent)
-                                        }
-                                    }
+                                    onValueChanged: audioEngine.setColoredNoiseVolume(value)
+                                    onInfoClicked: pageStack.push(infoColoredPageComponent)
                                 }
 
                                 // Ambient Sound Section
@@ -767,14 +623,11 @@ Page {
                                     width: parent.width
                                     height: ambienceButton.height
 
-                                    ButtonHighlight {
-                                        target: ambienceButton
-                                    }
-
-                                    Button {
+                                    SoundButton {
                                         id: ambienceButton
+
                                         anchors.centerIn: parent
-                                        width: frequencyGrid.width - Theme.paddingMedium
+                                        preferredWidth: frequencyGrid.width - Theme.paddingMedium
 
                                         text: page.activeAmbiences.length === 0
                                               ? qsTr("Ambient sounds")
@@ -782,17 +635,8 @@ Page {
                                                   return SoundNames.label(ambience)
                                               }).join(", ")
 
-                                        highlighted: page.activeAmbiences.length > 0
-
-                                        color: highlighted
-                                               ? (page.ambiencePlaying
-                                                  ? Theme.highlightColor
-                                                  : Theme.secondaryHighlightColor)
-                                               : Theme.primaryColor
-
-                                        opacity: page.ambiencePlaying ? 1.0
-                                                                      : page.activeAmbiences.length > 0 ? 0.6
-                                                                                                        : 1.0
+                                        selected: page.activeAmbiences.length > 0
+                                        playing: page.ambiencePlaying
 
                                         onClicked: {
                                             ambienceDrawer.open = true
@@ -810,15 +654,11 @@ Page {
                                     width: parent.width
                                     height: customSoundButton.height
 
-                                    ButtonHighlight {
-                                        target: customSoundButton
-                                    }
-
-                                    Button {
+                                    SoundButton {
                                         id: customSoundButton
 
                                         anchors.centerIn: parent
-                                        width: frequencyGrid.width - Theme.paddingMedium
+                                        preferredWidth: frequencyGrid.width - Theme.paddingMedium
 
                                         // Added spaces "  " to add inside button padding
                                         // when custom sound has long file name.
@@ -829,19 +669,8 @@ Page {
                                         enabled: page.customSoundSelected
                                                  || page.activeAmbiences.length < 3
 
-                                        highlighted: page.customSoundSelected && enabled
-
-                                        color: !enabled
-                                               ? Theme.secondaryColor
-                                               : highlighted
-                                                 ? (page.customSoundPlaying
-                                                    ? Theme.highlightColor
-                                                    : Theme.secondaryHighlightColor)
-                                                 : Theme.primaryColor
-
-                                        opacity: !enabled ? 0.5
-                                                          : page.customSoundSelected && !page.customSoundPlaying ? 0.6
-                                                                                                                 : 1.0
+                                        selected: page.customSoundSelected
+                                        playing: page.customSoundPlaying
 
                                         onClicked: {
                                             soundPickerDrawer.open = true

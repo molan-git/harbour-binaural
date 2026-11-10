@@ -454,27 +454,18 @@ ActionDrawer {
             }
         }
 
-        // Custom Sound Volume Slider
-        Item {
+        // Custom Sound Volume Slider + Loop/Crossfade switches
+        Column {
             id: customSoundControls
 
             width: parent.width
-            height: customSoundVolumeSlider.height
-                    + customSoundVolumeIcon.height
-                    - Theme.paddingLarge
-                    + Theme.paddingMedium
-                    + switchesRow.height
+            spacing: Theme.paddingMedium
 
-            Slider {
-                id: customSoundVolumeSlider
+            VolumeSliderRow {
+                id: customSoundVolumeRow
 
-                anchors.left: parent.left
-                anchors.leftMargin: Theme.horizontalPageMargin
-                anchors.right: parent.right
-                anchors.rightMargin: Theme.horizontalPageMargin
-
-                minimumValue: 0
-                maximumValue: 100
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                anchors.horizontalCenter: parent.horizontalCenter
 
                 value: page.audioEngine
                        ? page.audioEngine.customSoundVolume
@@ -483,25 +474,10 @@ ActionDrawer {
                 enabled: page.audioEngine
                          && page.audioEngine.customSoundSource.toString() !== ""
 
-                opacity: enabled ? 1.0 : 0.5
-
                 onValueChanged: {
                     if (page.audioEngine)
                         page.audioEngine.customSoundVolume = value
                 }
-            }
-
-            // Volume icon below the slider
-            VolumeIcon {
-                id: customSoundVolumeIcon
-                value: customSoundVolumeSlider.value
-                anchors.top: customSoundVolumeSlider.bottom
-                anchors.topMargin: -Theme.paddingLarge
-                anchors.horizontalCenter: customSoundVolumeSlider.horizontalCenter
-                anchors.horizontalCenterOffset: Theme.paddingSmall
-                opacity: page.audioEngine
-                         && page.audioEngine.customSoundSource.toString() !== ""
-                         ? 1.0 : 0.5
             }
 
             // Loop & Crossfade switches
