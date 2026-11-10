@@ -29,6 +29,7 @@ Page {
         activeBand !== "" ||
         activeNoise !== "" ||
         activeAmbiences.length > 0 ||
+        activeSolfeggio.length > 0 ||
         customSoundSelected
 
     // Mix label ("Alpha & Custom", "Rain & White noise", ...)
