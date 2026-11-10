@@ -50,6 +50,7 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/pages/components/NoiseWaveDrawer.qml \
     qml/pages/components/PageDrawer.qml \
     qml/pages/components/PlaybackBar.qml \
+    qml/pages/components/SoundButton.qml \
     qml/pages/components/SoundNames.qml \
     qml/pages/components/SoundPickerDrawer.qml \
     qml/pages/components/VolumeIcon.qml \

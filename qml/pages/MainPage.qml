@@ -782,7 +782,9 @@ Page {
                                                   return SoundNames.label(ambience)
                                               }).join(", ")
 
-                                        color: page.activeAmbiences.length > 0
+                                        highlighted: page.activeAmbiences.length > 0
+
+                                        color: highlighted
                                                ? (page.ambiencePlaying
                                                   ? Theme.highlightColor
                                                   : Theme.secondaryHighlightColor)
@@ -827,15 +829,17 @@ Page {
                                         enabled: page.customSoundSelected
                                                  || page.activeAmbiences.length < 3
 
+                                        highlighted: page.customSoundSelected && enabled
+
                                         color: !enabled
                                                ? Theme.secondaryColor
-                                               : page.customSoundSelected
+                                               : highlighted
                                                  ? (page.customSoundPlaying
                                                     ? Theme.highlightColor
                                                     : Theme.secondaryHighlightColor)
                                                  : Theme.primaryColor
 
-                                        opacity: !enabled ? 0.35
+                                        opacity: !enabled ? 0.5
                                                           : page.customSoundSelected && !page.customSoundPlaying ? 0.6
                                                                                                                  : 1.0
 
