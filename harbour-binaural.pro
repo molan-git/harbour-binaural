@@ -28,9 +28,11 @@ SOURCES += src/harbour-binaural.cpp \
     src/audioengine_binaural.cpp \
     src/audioengine_colorednoise.cpp \
     src/audioengine_customsound.cpp \
+    src/audioengine_isochronic.cpp \
     src/audioengine_solfeggio.cpp \
     src/binauralgenerator.cpp \
     src/colorednoisegenerator.cpp \
+    src/isochronicgenerator.cpp \
     src/pcmchannel.cpp \
     src/solfeggiogenerator.cpp
 
@@ -46,8 +48,10 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/pages/components/ActionDrawer.qml \
     qml/pages/components/AmbienceDrawer.qml \
     qml/pages/components/CustomBinauralDrawer.qml \
+    qml/pages/components/CustomIsochronicDrawer.qml \
     qml/pages/components/InfoBinauralPage.qml \
     qml/pages/components/InfoColoredPage.qml \
+    qml/pages/components/InfoIsochronicPage.qml \
     qml/pages/components/InfoSolfeggioPage.qml \
     qml/pages/components/NoiseWaveDrawer.qml \
     qml/pages/components/PageDrawer.qml \
@@ -108,6 +112,7 @@ HEADERS += \
     src/audioengine.h \
     src/binauralgenerator.h \
     src/colorednoisegenerator.h \
+    src/isochronicgenerator.h \
     src/pcmchannel.h \
     src/solfeggiogenerator.h
 

@@ -70,7 +70,8 @@ DockedPanel {
                     app.activeNoise !== "" ||
                     ambiences.length > 0 ||
                     app.customSoundSelected ||
-                    page.activeSolfeggio.length > 0
+                    page.activeSolfeggio.length > 0 ||
+                    page.activeIsochronic !== ""
         }
 
         opacity: enabled ? 1.0 : 0.5
@@ -119,6 +120,7 @@ DockedPanel {
                     page.activeNoise === "" &&
                     ambiences.length === 0 &&
                     !app.customSoundSelected &&
+                    page.activeIsochronic === "" &&
                     page.activeSolfeggio.length === 0) {
                 return Theme.secondaryColor
             }
@@ -149,6 +151,9 @@ DockedPanel {
 
             if (page.activeSolfeggio.length > 0)
                 parts.push(SoundNames.label("Solfeggio"))
+
+            if (page.activeIsochronic !== "")
+                parts.push(SoundNames.label("Isochronic"))
 
             if (ambiences.length === 1) {
                 parts.push(SoundNames.label(ambiences[0]))

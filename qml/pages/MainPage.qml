@@ -11,6 +11,8 @@ Page {
     property string activeNoise: ""
     property var activeAmbiences: []
     property var activeSolfeggio: []
+    property string activeIsochronic: ""
+    property bool isCustomIsochronic: false
     property bool isCustomBinaural: false
     property bool noiseWavesEnabled: false
 
@@ -18,6 +20,7 @@ Page {
     property bool ambiencePlaying: audioEngine.ambiencePlaying
     property bool noisePlaying: audioEngine.coloredNoisePlaying
     property bool solfeggioPlaying: audioEngine.solfeggioPlaying
+    property bool isochronicPlaying: audioEngine.isochronicPlaying
 
     property bool customSoundPlaying: audioEngine.customSoundPlaying
 
@@ -30,6 +33,7 @@ Page {
         activeNoise !== "" ||
         activeAmbiences.length > 0 ||
         activeSolfeggio.length > 0 ||
+        activeIsochronic !== "" ||
         customSoundSelected
 
     // Mix label ("Alpha & Custom", "Rain & White noise", ...)
@@ -42,12 +46,20 @@ Page {
         if (activeNoise !== "")
             parts.push(SoundNames.label(activeNoise))
 
+        if (activeSolfeggio.length > 0)
+            parts.push(SoundNames.label("Solfeggio"))
+
+        /*
         if (activeSolfeggio.length > 0) {
             var freqs = []
             for (var s = 0; s < activeSolfeggio.length; ++s)
                 freqs.push(activeSolfeggio[s] + " Hz")
             parts.push(freqs.join(" + "))
         }
+        */
+
+        if (activeIsochronic !== "")
+            parts.push(SoundNames.label("Isochronic"))
 
         if (activeAmbiences.length === 1)
             parts.push(SoundNames.label(activeAmbiences[0]))
@@ -80,6 +92,7 @@ Page {
     onActiveAmbiencesChanged: checkSleepTimer()
     onActiveNoiseChanged: checkSleepTimer()
     onActiveSolfeggioChanged: checkSleepTimer()
+    onActiveIsochronicChanged: checkSleepTimer()
     onCustomSoundSelectedChanged: checkSleepTimer()
 
     function checkSleepTimer() {
@@ -131,6 +144,14 @@ Page {
                 audioEngine.setSolfeggio(activeSolfeggio)
             }
         }
+
+        if (activeIsochronic !== "") {
+            if (audioEngine.isochronicPaused) {
+                audioEngine.resumeIsochronic()
+            } else if (!audioEngine.isochronicPlaying) {
+                audioEngine.startIsochronic()
+            }
+        }
     }
 
     function togglePlayback() {
@@ -139,6 +160,7 @@ Page {
             audioEngine.pauseAmbience()
             audioEngine.pauseColoredNoise()
             audioEngine.pauseSolfeggio()
+            audioEngine.pauseIsochronic()
             audioEngine.pauseCustomSound()
             appWindow.pauseSleepTimer()
         } else {
@@ -152,15 +174,19 @@ Page {
         audioEngine.stopAmbience()
         audioEngine.stopColoredNoise()
         audioEngine.stopSolfeggio()
+        audioEngine.stopIsochronic()
         audioEngine.stopCustomSound()
         noiseWaveDrawer.open = false
         solfeggioDrawer.open = false
+        isochronicDrawer.open = false
 
         page.activeBand = ""
         page.isCustomBinaural = false
         page.activeAmbiences = []
         page.activeNoise = ""
         page.activeSolfeggio = []
+        page.activeIsochronic = ""
+        page.isCustomIsochronic = false
 
         audioEngine.customSoundSource = ""
         audioEngine.customSoundName = ""
@@ -192,6 +218,11 @@ Page {
     Component {
         id: infoSolfeggioPageComponent
         InfoSolfeggioPage {}
+    }
+
+    Component {
+        id: infoIsochronicPageComponent
+        InfoIsochronicPage {}
     }
 
     PageDrawer {
@@ -368,442 +399,578 @@ Page {
                     }
 
                     PageDrawer {
-                        id: soundPickerDrawer
+                        id: isochronicDrawer
 
-                        drawerContent: SoundPickerDrawer {
-                            id: soundPickerPanel
+                        drawerContent: CustomIsochronicDrawer {
+                            id: customIsochronicPanel
 
-                            audioEngine: audioEngine
-                            pausedMode: page.pausedMode
+                            customActive: page.isCustomIsochronic
+                            playing: page.isochronicPlaying
 
-                            onCloseRequested:
-                                soundPickerDrawer.open = false
+                            onCloseRequested: {
+                                isochronicDrawer.open = false
+                            }
+
+                            onFrequencyChanged: {
+                                if (page.isCustomIsochronic)
+                                    audioEngine.setIsochronicFrequency(carrier, pulse)
+                            }
+
+                            onStartRequested: {
+                                if (page.pausedMode) {
+                                    audioEngine.stopIsochronic()
+                                    page.activeIsochronic = "Custom"
+                                    page.isCustomIsochronic = true
+                                    audioEngine.setIsochronicFrequency(carrier, pulse)
+                                } else {
+                                    page.activeIsochronic = "Custom"
+                                    page.isCustomIsochronic = true
+                                    audioEngine.setIsochronicFrequency(carrier, pulse)
+                                    audioEngine.startIsochronic()
+                                }
+                            }
+
+                            onStopRequested: {
+                                page.activeIsochronic = ""
+                                page.isCustomIsochronic = false
+                                audioEngine.stopIsochronic()
+                            }
                         }
 
-                        // The container is the Drawer foreground.
-                        // The dimmer and click handler move with the foreground,
-                        // leaving the exposed drawer background interactive.
-                        Item {
-                            id: foregroundContent
+                        PageDrawer {
+                            id: soundPickerDrawer
 
-                            anchors.fill: parent
+                            drawerContent: SoundPickerDrawer {
+                                id: soundPickerPanel
 
-                            SilicaFlickable {
-                                id: foregroundPage
+                                audioEngine: audioEngine
+                                pausedMode: page.pausedMode
+
+                                onCloseRequested:
+                                    soundPickerDrawer.open = false
+                            }
+
+                            // The container is the Drawer foreground.
+                            // The dimmer and click handler move with the foreground,
+                            // leaving the exposed drawer background interactive.
+                            Item {
+                                id: foregroundContent
 
                                 anchors.fill: parent
-                                contentHeight: column.height + Theme.paddingLarge
-                                clip: true
 
-                                PullDownMenu {
-                                    MenuItem {
-                                        text: qsTr("About")
+                                SilicaFlickable {
+                                    id: foregroundPage
 
-                                        onClicked: {
-                                            pageStack.push(
-                                                        Qt.resolvedUrl("AboutPage.qml")
-                                                        )
+                                    anchors.fill: parent
+                                    contentHeight: column.height + Theme.paddingLarge
+                                    clip: true
+
+                                    PullDownMenu {
+                                        MenuItem {
+                                            text: qsTr("About")
+
+                                            onClicked: {
+                                                pageStack.push(
+                                                            Qt.resolvedUrl("AboutPage.qml")
+                                                            )
+                                            }
+                                        }
+
+                                        MenuItem {
+                                            text: qsTr("Deselect all sounds")
+                                            enabled: page.hasActiveSounds
+
+                                            onClicked: {
+                                                page.deselectAllSounds()
+                                            }
+                                        }
+
+                                        MenuItem {
+                                            text: qsTr("Timer")
+                                            enabled: page.hasActiveSounds
+
+                                            onClicked: {
+                                                pageStack.push(
+                                                            Qt.resolvedUrl("TimerPage.qml"),
+                                                            { appWindow: appWindow }
+                                                            )
+                                            }
                                         }
                                     }
 
-                                    MenuItem {
-                                        text: qsTr("Deselect all sounds")
-                                        enabled: page.hasActiveSounds
+                                    Column {
+                                        id: column
 
-                                        onClicked: {
-                                            page.deselectAllSounds()
-                                        }
-                                    }
-
-                                    MenuItem {
-                                        text: qsTr("Timer")
-                                        enabled: page.hasActiveSounds
-
-                                        onClicked: {
-                                            pageStack.push(
-                                                        Qt.resolvedUrl("TimerPage.qml"),
-                                                        { appWindow: appWindow }
-                                                        )
-                                        }
-                                    }
-                                }
-
-                                Column {
-                                    id: column
-
-                                    width: parent.width
-                                    spacing: Theme.paddingMedium
-
-                                    // Move slightly down for display notch on modern devices
-                                    Item {
                                         width: parent.width
-                                        height: Theme.paddingLarge
-                                    }
+                                        spacing: Theme.paddingMedium
 
-                                    // Binaural Beats Section
-                                    SectionHeader {
-                                        text: qsTr("Binaural Beats")
-                                    }
+                                        // Move slightly down for display notch on modern devices
+                                        Item {
+                                            width: parent.width
+                                            height: Theme.paddingLarge
+                                        }
 
-                                    Item {
-                                        x: Theme.horizontalPageMargin
-                                        width: parent.width -
-                                               2 * Theme.horizontalPageMargin
-                                        height: Theme.fontSizeExtraSmall
+                                        // Binaural Beats Section
+                                        SectionHeader {
+                                            text: qsTr("Binaural Beats")
+                                        }
 
-                                        Row {
-                                            anchors.right: parent.right
-                                            spacing: Theme.paddingSmall
+                                        Item {
+                                            x: Theme.horizontalPageMargin
+                                            width: parent.width -
+                                                   2 * Theme.horizontalPageMargin
+                                            height: Theme.fontSizeExtraSmall
 
-                                            Label {
-                                                text: qsTr("To be used with")
-                                                color: Theme.secondaryHighlightColor
-                                                font.pixelSize: Theme.fontSizeExtraSmall
-                                                verticalAlignment: Text.AlignVCenter
-                                            }
+                                            Row {
+                                                anchors.right: parent.right
+                                                spacing: Theme.paddingSmall
 
-                                            Item {
-                                                width: Theme.fontSizeExtraSmall
-                                                height: Theme.fontSizeExtraSmall
-
-                                                anchors.verticalCenter: parent.verticalCenter
-
-                                                Image {
-                                                    id: headsetImage
-
-                                                    anchors.fill: parent
-                                                    source: "../images/icon-s-headset.svg"
-                                                    fillMode: Image.PreserveAspectFit
-                                                    smooth: true
-                                                    visible: false
-                                                }
-
-                                                ColorOverlay {
-                                                    anchors.fill: headsetImage
-                                                    source: headsetImage
+                                                Label {
+                                                    text: qsTr("To be used with")
                                                     color: Theme.secondaryHighlightColor
-                                                    opacity: 0.8
+                                                    font.pixelSize: Theme.fontSizeExtraSmall
+                                                    verticalAlignment: Text.AlignVCenter
+                                                }
+
+                                                Item {
+                                                    width: Theme.fontSizeExtraSmall
+                                                    height: Theme.fontSizeExtraSmall
+
+                                                    anchors.verticalCenter: parent.verticalCenter
+
+                                                    Image {
+                                                        id: headsetImage
+
+                                                        anchors.fill: parent
+                                                        source: "../images/icon-s-headset.svg"
+                                                        fillMode: Image.PreserveAspectFit
+                                                        smooth: true
+                                                        visible: false
+                                                    }
+
+                                                    ColorOverlay {
+                                                        anchors.fill: headsetImage
+                                                        source: headsetImage
+                                                        color: Theme.secondaryHighlightColor
+                                                        opacity: 0.8
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
 
-                                    // Binaural Beats Selection grid
-                                    SilicaGridView {
-                                        id: frequencyGrid
+                                        // Binaural Beats Selection grid
+                                        SilicaGridView {
+                                            id: frequencyGrid
 
-                                        x: Theme.horizontalPageMargin
-                                        width: parent.width - 2 * Theme.horizontalPageMargin
-                                        height: contentHeight
+                                            x: Theme.horizontalPageMargin
+                                            width: parent.width - 2 * Theme.horizontalPageMargin
+                                            height: contentHeight
 
-                                        cellWidth: width / 3
-                                        cellHeight: Theme.itemSizeMedium
+                                            cellWidth: width / 3
+                                            cellHeight: Theme.itemSizeMedium
 
-                                        model: ListModel {
-                                            ListElement {
-                                                bandName: "Delta"
-                                                symbol: "δ"
+                                            model: ListModel {
+                                                ListElement {
+                                                    bandName: "Delta"
+                                                    symbol: "δ"
+                                                }
+                                                ListElement {
+                                                    bandName: "Delta/Theta"
+                                                    symbol: "δ / θ"
+                                                }
+                                                ListElement {
+                                                    bandName: "Theta"
+                                                    symbol: "θ"
+                                                }
+                                                ListElement {
+                                                    bandName: "Alpha"
+                                                    symbol: "α"
+                                                }
+                                                ListElement {
+                                                    bandName: "Beta"
+                                                    symbol: "β"
+                                                }
+                                                ListElement {
+                                                    bandName: "Gamma"
+                                                    symbol: "γ"
+                                                }
                                             }
-                                            ListElement {
-                                                bandName: "Delta/Theta"
-                                                symbol: "δ / θ"
-                                            }
-                                            ListElement {
-                                                bandName: "Theta"
-                                                symbol: "θ"
-                                            }
-                                            ListElement {
-                                                bandName: "Alpha"
-                                                symbol: "α"
-                                            }
-                                            ListElement {
-                                                bandName: "Beta"
-                                                symbol: "β"
-                                            }
-                                            ListElement {
-                                                bandName: "Gamma"
-                                                symbol: "γ"
+
+                                            delegate: Item {
+                                                width: frequencyGrid.cellWidth
+                                                height: frequencyGrid.cellHeight
+
+                                                SoundButton {
+                                                    anchors.centerIn: parent
+                                                    preferredWidth: frequencyGrid.cellWidth - Theme.paddingMedium
+
+                                                    text: symbol
+
+                                                    selected: page.activeBand === bandName
+                                                              && !page.isCustomBinaural
+                                                    playing: page.bandPlaying
+
+                                                    onClicked: {
+                                                        if (selected) {
+                                                            page.activeBand = ""
+                                                            page.isCustomBinaural = false
+                                                            audioEngine.stop()
+                                                        } else if (!page.pausedMode) {
+                                                            page.activeBand = bandName
+                                                            page.isCustomBinaural = false
+                                                            audioEngine.setFrequencyBand(bandName)
+                                                            audioEngine.start()
+                                                        } else {
+                                                            audioEngine.stop()
+                                                            page.activeBand = bandName
+                                                            page.isCustomBinaural = false
+                                                            audioEngine.setFrequencyBand(bandName)
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
 
-                                        delegate: Item {
-                                            width: frequencyGrid.cellWidth
-                                            height: frequencyGrid.cellHeight
+                                        // Custom frequencies button
+                                        Item {
+                                            width: parent.width
+                                            height: customFrequenciesButton.height
 
                                             SoundButton {
+                                                id: customFrequenciesButton
+
                                                 anchors.centerIn: parent
-                                                preferredWidth: frequencyGrid.cellWidth - Theme.paddingMedium
+                                                preferredWidth: frequencyGrid.width - Theme.paddingMedium
 
-                                                text: symbol
+                                                text: {
+                                                    if (page.isCustomBinaural) {
+                                                        var carrier = customBinauralPanel.carrierHz
+                                                        var beat    = customBinauralPanel.beatHz
+                                                        var label   = carrier + " Hz / " + beat.toFixed(1) + " Hz"
+                                                        var band    = page.beatBand(beat)
+                                                        if (band !== "")
+                                                            label += " - " + SoundNames.label(band)
+                                                        return label
+                                                    }
+                                                    return qsTr("Custom frequencies")
+                                                }
 
-                                                selected: page.activeBand === bandName
-                                                          && !page.isCustomBinaural
+                                                selected: page.isCustomBinaural
                                                 playing: page.bandPlaying
 
                                                 onClicked: {
-                                                    if (selected) {
-                                                        page.activeBand = ""
-                                                        page.isCustomBinaural = false
-                                                        audioEngine.stop()
-                                                    } else if (!page.pausedMode) {
-                                                        page.activeBand = bandName
-                                                        page.isCustomBinaural = false
-                                                        audioEngine.setFrequencyBand(bandName)
-                                                        audioEngine.start()
-                                                    } else {
-                                                        audioEngine.stop()
-                                                        page.activeBand = bandName
-                                                        page.isCustomBinaural = false
-                                                        audioEngine.setFrequencyBand(bandName)
+                                                    binauralDrawer.open = true
+                                                }
+                                            }
+                                        }
+
+                                        // Binaural Beats Volume slider
+                                        VolumeSliderRow {
+                                            width: parent.width - 2 * Theme.horizontalPageMargin
+                                            x: Theme.horizontalPageMargin
+
+                                            showInfoButton: true
+                                            enabled: page.activeBand !== ""
+
+                                            onValueChanged: audioEngine.setBinauralVolume(value)
+                                            onInfoClicked: pageStack.push(infoBinauralPageComponent)
+                                        }
+
+
+                                        // Solfeggio Frequencies Section
+                                        SectionHeader {
+                                            text: SoundNames.label("Solfeggio frequencies")
+                                        }
+
+                                        Item {
+                                            width: parent.width
+                                            height: solfeggioButton.height
+
+                                            SoundButton {
+                                                id: solfeggioButton
+
+                                                anchors.centerIn: parent
+                                                preferredWidth: frequencyGrid.width - Theme.paddingMedium
+
+                                                text: page.activeSolfeggio.length === 0
+                                                      ? SoundNames.label("Solfeggio frequencies")
+                                                      : page.activeSolfeggio.map(function(f) {
+                                                          return f + " Hz"
+                                                      }).join(" + ")
+
+                                                selected: page.activeSolfeggio.length > 0
+                                                playing: page.solfeggioPlaying
+
+                                                onClicked: {
+                                                    solfeggioDrawer.open = true
+                                                }
+                                            }
+                                        }
+
+                                        // Solfeggio Volume slider
+                                        VolumeSliderRow {
+                                            width: parent.width - 2 * Theme.horizontalPageMargin
+                                            x: Theme.horizontalPageMargin
+
+                                            showInfoButton: true
+                                            enabled: page.activeSolfeggio.length > 0
+
+                                            onValueChanged: audioEngine.setSolfeggioVolume(value)
+                                            onInfoClicked: pageStack.push(infoSolfeggioPageComponent)
+                                        }
+
+                                        // Isochronic Tones Section
+                                        SectionHeader {
+                                            text: SoundNames.label("Isochronic tones")
+                                        }
+
+                                        // Isochronic Tones Selection grid
+                                        SilicaGridView {
+                                            id: isochronicGrid
+
+                                            x: Theme.horizontalPageMargin
+                                            width: parent.width - 2 * Theme.horizontalPageMargin
+                                            height: contentHeight
+
+                                            cellWidth: width / 3
+                                            cellHeight: Theme.itemSizeMedium
+
+                                            model: ["1 Hz", "2 Hz", "4 Hz",
+                                                    "6 Hz", "7.83 Hz", "10 Hz", "40 Hz"]
+
+                                            delegate: Item {
+                                                width: isochronicGrid.cellWidth
+                                                height: isochronicGrid.cellHeight
+
+                                                SoundButton {
+                                                    anchors.centerIn: parent
+                                                    preferredWidth: isochronicGrid.cellWidth -
+                                                                    Theme.paddingMedium
+
+                                                    text: SoundNames.label(modelData)
+
+                                                    selected: page.activeIsochronic === modelData
+                                                    playing: page.isochronicPlaying
+
+                                                    onClicked: {
+                                                        if (selected) {
+                                                            page.activeIsochronic = ""
+                                                            page.isCustomIsochronic = false
+                                                            audioEngine.stopIsochronic()
+                                                        } else if (!page.pausedMode) {
+                                                            page.activeIsochronic = modelData
+                                                            page.isCustomIsochronic = false
+                                                            audioEngine.setIsochronicPreset(modelData)
+                                                            audioEngine.startIsochronic()
+                                                        } else {
+                                                            audioEngine.stopIsochronic()
+                                                            page.activeIsochronic = modelData
+                                                            page.isCustomIsochronic = false
+                                                            audioEngine.setIsochronicPreset(modelData)
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
-                                    }
 
-                                    // Custom frequencies button
-                                    Item {
-                                        width: parent.width
-                                        height: customFrequenciesButton.height
-
-                                        SoundButton {
-                                            id: customFrequenciesButton
-
-                                            anchors.centerIn: parent
-                                            preferredWidth: frequencyGrid.width - Theme.paddingMedium
-
-                                            text: {
-                                                if (page.isCustomBinaural) {
-                                                    var carrier = customBinauralPanel.carrierHz
-                                                    var beat    = customBinauralPanel.beatHz
-                                                    var label   = carrier + " Hz / " + beat.toFixed(1) + " Hz"
-                                                    var band    = page.beatBand(beat)
-                                                    if (band !== "")
-                                                        label += " - " + SoundNames.label(band)
-                                                    return label
-                                                }
-                                                return qsTr("Custom frequencies")
-                                            }
-
-                                            selected: page.isCustomBinaural
-                                            playing: page.bandPlaying
-
-                                            onClicked: {
-                                                binauralDrawer.open = true
-                                            }
-                                        }
-                                    }
-
-                                    // Binaural Beats Volume slider
-                                    VolumeSliderRow {
-                                        width: parent.width - 2 * Theme.horizontalPageMargin
-                                        x: Theme.horizontalPageMargin
-
-                                        showInfoButton: true
-                                        enabled: page.activeBand !== ""
-
-                                        onValueChanged: audioEngine.setBinauralVolume(value)
-                                        onInfoClicked: pageStack.push(infoBinauralPageComponent)
-                                    }
-
-
-                                    // Solfeggio Frequencies Section
-                                    SectionHeader {
-                                        text: SoundNames.label("Solfeggio frequencies")
-                                    }
-
-                                    Item {
-                                        width: parent.width
-                                        height: solfeggioButton.height
-
-                                        SoundButton {
-                                            id: solfeggioButton
-
-                                            anchors.centerIn: parent
-                                            preferredWidth: frequencyGrid.width - Theme.paddingMedium
-
-                                            text: page.activeSolfeggio.length === 0
-                                                  ? SoundNames.label("Solfeggio frequencies")
-                                                  : page.activeSolfeggio.map(function(f) {
-                                                      return f + " Hz"
-                                                  }).join(" + ")
-
-                                            selected: page.activeSolfeggio.length > 0
-                                            playing: page.solfeggioPlaying
-
-                                            onClicked: {
-                                                solfeggioDrawer.open = true
-                                            }
-                                        }
-                                    }
-
-                                    // Solfeggio Volume slider
-                                    VolumeSliderRow {
-                                        width: parent.width - 2 * Theme.horizontalPageMargin
-                                        x: Theme.horizontalPageMargin
-
-                                        showInfoButton: true
-                                        enabled: page.activeSolfeggio.length > 0
-
-                                        onValueChanged: audioEngine.setSolfeggioVolume(value)
-                                        onInfoClicked: pageStack.push(infoSolfeggioPageComponent)
-                                    }
-
-                                    // Colored Noise Section
-                                    SectionHeader {
-                                        text: qsTr("Colored Noise")
-                                    }
-
-                                    // Colored Noise Selection grid
-                                    SilicaGridView {
-                                        id: coloredNoiseGrid
-
-                                        x: Theme.horizontalPageMargin
-                                        width: parent.width -
-                                               2 * Theme.horizontalPageMargin
-                                        height: contentHeight
-
-                                        cellWidth: width / 2
-                                        cellHeight: Theme.itemSizeMedium
-
-                                        model: ["White", "Pink", "Brown", "Grey"]
-
-                                        delegate: Item {
-                                            width: coloredNoiseGrid.cellWidth
-                                            height: coloredNoiseGrid.cellHeight
+                                        // Custom isochronic frequencies button
+                                        Item {
+                                            width: parent.width
+                                            height: customIsochronicButton.height
 
                                             SoundButton {
+                                                id: customIsochronicButton
+
                                                 anchors.centerIn: parent
-                                                preferredWidth: coloredNoiseGrid.cellWidth -
-                                                                Theme.paddingMedium
+                                                preferredWidth: isochronicGrid.width - Theme.paddingMedium
 
-                                                text: SoundNames.label(modelData)
+                                                text: {
+                                                    if (page.isCustomIsochronic) {
+                                                        var carrier = customIsochronicPanel.carrierHz
+                                                        var pulse   = customIsochronicPanel.pulseHz
+                                                        return Math.round(carrier) + " Hz / " +
+                                                                pulse.toFixed(2) + " Hz"
+                                                    }
+                                                    return qsTr("Custom frequencies")
+                                                }
 
-                                                selected: page.activeNoise === modelData
+                                                selected: page.isCustomIsochronic
+                                                playing: page.isochronicPlaying
+
+                                                onClicked: {
+                                                    isochronicDrawer.open = true
+                                                }
+                                            }
+                                        }
+
+                                        // Isochronic Volume slider
+                                        VolumeSliderRow {
+                                            width: parent.width - 2 * Theme.horizontalPageMargin
+                                            x: Theme.horizontalPageMargin
+
+                                            showInfoButton: true
+                                            enabled: page.activeIsochronic !== ""
+
+                                            onValueChanged: audioEngine.setIsochronicVolume(value)
+                                            onInfoClicked: pageStack.push(infoIsochronicPageComponent)
+                                        }
+
+                                        // Colored Noise Section
+                                        SectionHeader {
+                                            text: qsTr("Colored Noise")
+                                        }
+
+                                        // Colored Noise Selection grid
+                                        SilicaGridView {
+                                            id: coloredNoiseGrid
+
+                                            x: Theme.horizontalPageMargin
+                                            width: parent.width -
+                                                   2 * Theme.horizontalPageMargin
+                                            height: contentHeight
+
+                                            cellWidth: width / 2
+                                            cellHeight: Theme.itemSizeMedium
+
+                                            model: ["White", "Pink", "Brown", "Grey"]
+
+                                            delegate: Item {
+                                                width: coloredNoiseGrid.cellWidth
+                                                height: coloredNoiseGrid.cellHeight
+
+                                                SoundButton {
+                                                    anchors.centerIn: parent
+                                                    preferredWidth: coloredNoiseGrid.cellWidth -
+                                                                    Theme.paddingMedium
+
+                                                    text: SoundNames.label(modelData)
+
+                                                    selected: page.activeNoise === modelData
+                                                    playing: page.noisePlaying
+
+                                                    onClicked: {
+                                                        if (selected) {
+                                                            page.activeNoise = ""
+                                                            audioEngine.stopColoredNoise()
+                                                        } else if (!page.pausedMode) {
+                                                            page.activeNoise = modelData
+                                                            audioEngine.setColoredNoise(modelData)
+                                                        } else {
+                                                            audioEngine.stopColoredNoise()
+                                                            page.activeNoise = modelData
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        // Wave motion button
+                                        Item {
+                                            width: parent.width
+                                            height: waveMotionButton.height
+
+                                            SoundButton {
+                                                id: waveMotionButton
+
+                                                anchors.centerIn: parent
+                                                preferredWidth: frequencyGrid.width - Theme.paddingMedium
+
+                                                text: qsTr("Wave motion")
+
+                                                selected: page.noiseWavesEnabled
                                                 playing: page.noisePlaying
 
                                                 onClicked: {
-                                                    if (selected) {
-                                                        page.activeNoise = ""
-                                                        audioEngine.stopColoredNoise()
-                                                    } else if (!page.pausedMode) {
-                                                        page.activeNoise = modelData
-                                                        audioEngine.setColoredNoise(modelData)
-                                                    } else {
-                                                        audioEngine.stopColoredNoise()
-                                                        page.activeNoise = modelData
-                                                    }
+                                                    noiseWaveDrawer.open = true
                                                 }
                                             }
                                         }
-                                    }
 
-                                    // Wave motion button
-                                    Item {
-                                        width: parent.width
-                                        height: waveMotionButton.height
+                                        // Colored Noise Volume slider
+                                        VolumeSliderRow {
+                                            width: parent.width - 2 * Theme.horizontalPageMargin
+                                            x: Theme.horizontalPageMargin
 
-                                        SoundButton {
-                                            id: waveMotionButton
+                                            showInfoButton: true
+                                            enabled: page.activeNoise !== ""
 
-                                            anchors.centerIn: parent
-                                            preferredWidth: frequencyGrid.width - Theme.paddingMedium
+                                            onValueChanged: audioEngine.setColoredNoiseVolume(value)
+                                            onInfoClicked: pageStack.push(infoColoredPageComponent)
+                                        }
 
-                                            text: qsTr("Wave motion")
+                                        // Ambient Sound Section
+                                        SectionHeader {
+                                            text: qsTr("Ambient Sound")
+                                        }
 
-                                            selected: page.noiseWavesEnabled
-                                            playing: page.noisePlaying
+                                        // AmbienceDrawer button
+                                        Item {
+                                            width: parent.width
+                                            height: ambienceButton.height
 
-                                            onClicked: {
-                                                noiseWaveDrawer.open = true
+                                            SoundButton {
+                                                id: ambienceButton
+
+                                                anchors.centerIn: parent
+                                                preferredWidth: frequencyGrid.width - Theme.paddingMedium
+
+                                                text: page.activeAmbiences.length === 0
+                                                      ? qsTr("Ambient sounds")
+                                                      : page.activeAmbiences.map(function(ambience) {
+                                                          return SoundNames.label(ambience)
+                                                      }).join(", ")
+
+                                                selected: page.activeAmbiences.length > 0
+                                                playing: page.ambiencePlaying
+
+                                                onClicked: {
+                                                    ambienceDrawer.open = true
+                                                }
                                             }
+                                        }
+
+                                        Item {
+                                            width: parent.width
+                                            height: Theme.paddingSmall / 2
+                                        }
+
+                                        // Custom sound button
+                                        Item {
+                                            width: parent.width
+                                            height: customSoundButton.height
+
+                                            SoundButton {
+                                                id: customSoundButton
+
+                                                anchors.centerIn: parent
+                                                preferredWidth: frequencyGrid.width - Theme.paddingMedium
+
+                                                // Added spaces "  " to add inside button padding
+                                                // when custom sound has long file name.
+                                                text: "  " + (audioEngine.customSoundName !== ""
+                                                              ? audioEngine.customSoundName
+                                                              : SoundNames.label("Custom sound")) + "  "
+
+                                                enabled: page.customSoundSelected
+                                                         || page.activeAmbiences.length < 3
+
+                                                selected: page.customSoundSelected
+                                                playing: page.customSoundPlaying
+
+                                                onClicked: {
+                                                    soundPickerDrawer.open = true
+                                                }
+                                            }
+                                        }
+
+                                        Item {
+                                            width: parent.width
+                                            height: Theme.itemSizeMedium
                                         }
                                     }
 
-                                    // Colored Noise Volume slider
-                                    VolumeSliderRow {
-                                        width: parent.width - 2 * Theme.horizontalPageMargin
-                                        x: Theme.horizontalPageMargin
-
-                                        showInfoButton: true
-                                        enabled: page.activeNoise !== ""
-
-                                        onValueChanged: audioEngine.setColoredNoiseVolume(value)
-                                        onInfoClicked: pageStack.push(infoColoredPageComponent)
-                                    }
-
-                                    // Ambient Sound Section
-                                    SectionHeader {
-                                        text: qsTr("Ambient Sound")
-                                    }
-
-                                    // AmbienceDrawer button
-                                    Item {
-                                        width: parent.width
-                                        height: ambienceButton.height
-
-                                        SoundButton {
-                                            id: ambienceButton
-
-                                            anchors.centerIn: parent
-                                            preferredWidth: frequencyGrid.width - Theme.paddingMedium
-
-                                            text: page.activeAmbiences.length === 0
-                                                  ? qsTr("Ambient sounds")
-                                                  : page.activeAmbiences.map(function(ambience) {
-                                                      return SoundNames.label(ambience)
-                                                  }).join(", ")
-
-                                            selected: page.activeAmbiences.length > 0
-                                            playing: page.ambiencePlaying
-
-                                            onClicked: {
-                                                ambienceDrawer.open = true
-                                            }
-                                        }
-                                    }
-
-                                    Item {
-                                        width: parent.width
-                                        height: Theme.paddingSmall / 2
-                                    }
-
-                                    // Custom sound button
-                                    Item {
-                                        width: parent.width
-                                        height: customSoundButton.height
-
-                                        SoundButton {
-                                            id: customSoundButton
-
-                                            anchors.centerIn: parent
-                                            preferredWidth: frequencyGrid.width - Theme.paddingMedium
-
-                                            // Added spaces "  " to add inside button padding
-                                            // when custom sound has long file name.
-                                            text: "  " + (audioEngine.customSoundName !== ""
-                                                          ? audioEngine.customSoundName
-                                                          : SoundNames.label("Custom sound")) + "  "
-
-                                            enabled: page.customSoundSelected
-                                                     || page.activeAmbiences.length < 3
-
-                                            selected: page.customSoundSelected
-                                            playing: page.customSoundPlaying
-
-                                            onClicked: {
-                                                soundPickerDrawer.open = true
-                                            }
-                                        }
-                                    }
-
-                                    Item {
-                                        width: parent.width
-                                        height: Theme.itemSizeMedium
-                                    }
+                                    VerticalScrollDecorator {}
                                 }
-
-                                VerticalScrollDecorator {}
                             }
                         }
                     }

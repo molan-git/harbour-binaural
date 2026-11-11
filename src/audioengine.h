@@ -15,6 +15,7 @@
 class BinauralGenerator;
 class ColoredNoiseGenerator;
 class SolfeggioGenerator;
+class IsochronicGenerator;
 
 class AudioEngine : public QObject
 {
@@ -38,6 +39,14 @@ class AudioEngine : public QObject
 
     Q_PROPERTY(bool solfeggioPaused
                READ isSolfeggioPaused
+               NOTIFY playingChanged)
+
+    Q_PROPERTY(bool isochronicPlaying
+               READ isIsochronicPlaying
+               NOTIFY playingChanged)
+
+    Q_PROPERTY(bool isochronicPaused
+               READ isIsochronicPaused
                NOTIFY playingChanged)
 
     Q_PROPERTY(bool binauralPaused
@@ -102,6 +111,9 @@ public:
     bool isSolfeggioPlaying() const;
     bool isSolfeggioPaused() const;
 
+    bool isIsochronicPlaying() const;
+    bool isIsochronicPaused() const;
+
     bool isBinauralPaused() const;
     bool isAmbiencePaused() const;
     bool isColoredNoisePaused() const;
@@ -155,6 +167,16 @@ public:
     Q_INVOKABLE void stopSolfeggio();
     Q_INVOKABLE void setSolfeggioVolume(int volume);
 
+    // Isochronic tone controls.
+    Q_INVOKABLE void setIsochronicPreset(const QString &preset);
+    Q_INVOKABLE void setIsochronicFrequency(double carrier,
+                                            double pulse);
+    Q_INVOKABLE void startIsochronic();
+    Q_INVOKABLE void pauseIsochronic();
+    Q_INVOKABLE void resumeIsochronic();
+    Q_INVOKABLE void stopIsochronic();
+    Q_INVOKABLE void setIsochronicVolume(int volume);
+
     // Custom user sound (mp3/ogg/wav) and playlist controls.
     Q_INVOKABLE void playCustomSound();
     Q_INVOKABLE void stopCustomSound();
@@ -193,15 +215,20 @@ private:
     // Solfeggio volume.
     int solfeggioTargetVolume() const;
 
+    // Isochronic volume.
+    int isochronicTargetVolume() const;
+
     // PCM playback channels (own output, generator, fade-out).
     PcmChannel *m_binauralChannel;
     PcmChannel *m_noiseChannel;
     PcmChannel *m_solfeggioChannel;
+    PcmChannel *m_isochronicChannel;
 
     // Generators (parameter access only; lifetime owned by PcmChannel).
     BinauralGenerator *m_binauralGenerator;
     ColoredNoiseGenerator *m_noiseGenerator;
     SolfeggioGenerator *m_solfeggioGenerator;
+    IsochronicGenerator *m_isochronicGenerator;
 
     // Three independent ambience channels.
     AmbienceChannel *m_ambienceChannels[MaxAmbienceChannels];
@@ -217,6 +244,7 @@ private:
     int m_sleepTimerAmbienceStartVolumes[MaxAmbienceChannels];
     double m_sleepTimerColoredNoiseStartVolume;
     double m_sleepTimerSolfeggioStartVolume;
+    double m_sleepTimerIsochronicStartVolume;
     int m_sleepTimerCustomStartVolume;
 
     // Custom sound playlist.
@@ -240,11 +268,14 @@ private:
     // Audio settings.
     double m_beatFrequency;
     double m_carrierFrequency;
+    double m_isochronicCarrierFrequency;
+    double m_isochronicPulseFrequency;
 
     int m_binauralVolume;
     int m_ambienceVolume;
     int m_coloredNoiseVolume;
     int m_solfeggioVolume;
+    int m_isochronicVolume;
 
     QString m_currentColoredNoise;
 

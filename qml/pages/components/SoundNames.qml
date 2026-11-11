@@ -13,13 +13,24 @@ import QtQuick 2.0
 QtObject {
     function label(key) {
         switch (key) {
-            // Brainwave bands
+            // Binaural beats
         case "Delta":       return qsTr("Delta")
         case "Delta/Theta": return qsTr("Delta/Theta")
         case "Theta":       return qsTr("Theta")
         case "Alpha":       return qsTr("Alpha")
         case "Beta":        return qsTr("Beta")
         case "Gamma":       return qsTr("Gamma")
+
+            // Isochronic tones
+        case "Isochronic tones": return qsTr("Isochronic tones")
+        case "Isochronic":       return qsTr("Isochronic")
+        case "1 Hz":             return qsTr("1 Hz")
+        case "2 Hz":             return qsTr("2 Hz")
+        case "4 Hz":             return qsTr("4 Hz")
+        case "6 Hz":             return qsTr("6 Hz")
+        case "7.83 Hz":          return qsTr("7.83 Hz")
+        case "10 Hz":            return qsTr("10 Hz")
+        case "40 Hz":            return qsTr("40 Hz")
 
             // Colored noise
         case "White":       return qsTr("White")

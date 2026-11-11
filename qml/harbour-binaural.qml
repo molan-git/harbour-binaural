@@ -25,6 +25,14 @@ ApplicationWindow {
                                 ? mainPage.activeBand
                                 : ""
 
+    property bool solfeggioSelected: mainPage
+                                     ? mainPage.activeSolfeggio.length > 0
+                                     : false
+
+    property bool isochronicSelected: mainPage
+                                       ? mainPage.activeIsochronic !== ""
+                                       : false
+
     property bool customSoundSelected: mainPage
                                        ? mainPage.customSoundSelected
                                        : false
@@ -58,6 +66,7 @@ ApplicationWindow {
                  current.objectName !== "CreditPage" &&
                  current.objectName !== "InfoBinauralPage" &&
                  current.objectName !== "InfoColoredPage" &&
+                 current.objectName !== "InfoIsochronicPage" &&
                  current.objectName !== "InfoSolfeggioPage")
     }
 
@@ -161,6 +170,7 @@ ApplicationWindow {
                               (activeBand !== "" ||
                                activeAmbiences.length > 0 ||
                                activeNoise !== "" ||
+                               solfeggioSelected ||
                                customSoundSelected)
 
     initialPage: Component {

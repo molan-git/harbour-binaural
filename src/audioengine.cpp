@@ -20,14 +20,17 @@ AudioEngine::AudioEngine(QObject *parent)
       m_binauralChannel(nullptr),
       m_noiseChannel(nullptr),
       m_solfeggioChannel(nullptr),
+      m_isochronicChannel(nullptr),
       m_binauralGenerator(nullptr),
       m_noiseGenerator(nullptr),
       m_solfeggioGenerator(nullptr),
+      m_isochronicGenerator(nullptr),
       m_customChannel(nullptr),
       m_sleepTimerFadeTimer(new QTimer(this)),
       m_sleepTimerBinauralStartVolume(0.0),
       m_sleepTimerColoredNoiseStartVolume(0.0),
       m_sleepTimerSolfeggioStartVolume(0.0),
+      m_sleepTimerIsochronicStartVolume(0.0),
       m_sleepTimerCustomStartVolume(0),
       m_playlistIndex(0),
       m_playlistLoop(false),
@@ -37,12 +40,15 @@ AudioEngine::AudioEngine(QObject *parent)
       m_customCrossfade(true),
       m_customManualStop(false),
       m_coloredNoiseVolumeTimer(new QTimer(this)),
-      m_beatFrequency(10.0),
       m_carrierFrequency(200.0),
+      m_beatFrequency(10.0),
+      m_isochronicCarrierFrequency(200.0),
+      m_isochronicPulseFrequency(10.0),
       m_binauralVolume(50),
       m_ambienceVolume(50),
       m_coloredNoiseVolume(50),
       m_solfeggioVolume(50),
+      m_isochronicVolume(50),
       m_noiseWaveEnabled(false),
       m_noiseWaveDepth(0.0),
       m_noiseWavePeriod(8.0)
@@ -108,6 +114,24 @@ AudioEngine::AudioEngine(QObject *parent)
                        static_cast<qreal>(
                            solfeggioTargetVolume()) / 100.0,
                        this);
+
+    m_isochronicChannel =
+        new PcmChannel(QStringLiteral("isochronic"),
+                       static_cast<qreal>(
+                           isochronicTargetVolume()) / 100.0,
+                       this);
+
+    connect(m_isochronicChannel,
+            &PcmChannel::stateChanged,
+            this,
+            &AudioEngine::updatePlayingState);
+
+    connect(m_isochronicChannel,
+            &PcmChannel::stopped,
+            this,
+            [this]() {
+                m_isochronicGenerator = nullptr;
+            });
 
     connect(m_binauralChannel,
             &PcmChannel::stateChanged,
@@ -195,6 +219,9 @@ AudioEngine::AudioEngine(QObject *parent)
                 m_solfeggioChannel->setVolume(
                             m_sleepTimerSolfeggioStartVolume * factor);
 
+                m_isochronicChannel->setVolume(
+                            m_sleepTimerIsochronicStartVolume * factor);
+
                 if (progress >= 1.0) {
                     m_sleepTimerFadeTimer->stop();
 
@@ -203,6 +230,7 @@ AudioEngine::AudioEngine(QObject *parent)
                     m_customChannel->stopImmediately();
                     m_noiseChannel->stopImmediately();
                     m_solfeggioChannel->stopImmediately();
+                    m_isochronicChannel->stopImmediately();
 
                     updatePlayingState();
                 }
@@ -219,6 +247,7 @@ AudioEngine::~AudioEngine()
     m_customChannel->stopImmediately();
     m_noiseChannel->stopImmediately();
     m_solfeggioChannel->stopImmediately();
+    m_isochronicChannel->stopImmediately();
 }
 
 void AudioEngine::updatePlayingState()
@@ -246,6 +275,9 @@ void AudioEngine::fadeOutForSleepTimer()
 
     m_sleepTimerSolfeggioStartVolume =
             m_solfeggioChannel->volume();
+
+    m_sleepTimerIsochronicStartVolume =
+            m_isochronicChannel->volume();
 
     for (int i = 0; i < MaxAmbienceChannels; ++i) {
         m_sleepTimerAmbienceStartVolumes[i] =
