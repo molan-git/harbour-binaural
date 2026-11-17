@@ -398,10 +398,6 @@
         <translation>To be used with</translation>
     </message>
     <message>
-        <source>Custom frequencies</source>
-        <translation>Custom frequencies</translation>
-    </message>
-    <message>
         <source>Colored Noise</source>
         <translation>Colored Noise</translation>
     </message>

@@ -489,11 +489,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="796"/>
-        <source>Custom frequencies</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../qml/pages/MainPage.qml" line="822"/>
         <source>Colored Noise</source>
         <translation type="unfinished">Farbiges Rauschen</translation>

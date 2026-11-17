@@ -398,10 +398,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Custom frequencies</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Colored Noise</source>
         <translation type="unfinished">Rumore colorato</translation>
     </message>

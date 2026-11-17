@@ -785,16 +785,16 @@ Page {
 
                                                 anchors.centerIn: parent
                                                 preferredWidth: isochronicGrid.width - Theme.paddingMedium
+                                                secondary: true
 
-                                                text: {
-                                                    if (page.isCustomIsochronic) {
-                                                        var carrier = customIsochronicPanel.carrierHz
-                                                        var pulse   = customIsochronicPanel.pulseHz
-                                                        return Math.round(carrier) + " Hz / " +
-                                                                pulse.toFixed(2) + " Hz"
-                                                    }
-                                                    return qsTr("Custom frequencies")
-                                                }
+                                                text: page.isCustomIsochronic
+                                                      ? Math.round(customIsochronicPanel.carrierHz) + " Hz / " +
+                                                        customIsochronicPanel.pulseHz.toFixed(2) + " Hz"
+                                                      : ""
+
+                                                iconSource: !page.isCustomIsochronic
+                                                            ? "image://theme/icon-m-setting"
+                                                            : ""
 
                                                 selected: page.isCustomIsochronic
                                                 playing: page.isochronicPlaying
