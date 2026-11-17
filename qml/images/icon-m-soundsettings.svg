@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64">
+  <!-- Generator: Adobe Illustrator 30.0.0, SVG Export Plug-In . SVG Version: 2.1.1 Build 123)  -->
+  <g id="icon-m-menu">
+    <path d="M55.463,15.185H8.537c-.757,0-1.369-.612-1.369-1.369s.612-1.369,1.369-1.369h46.926c.757,0,1.369.612,1.369,1.369s-.612,1.369-1.369,1.369Z" fill="#fff" isolation="isolate"/>
+    <path d="M55.463,33.956H8.537c-.757,0-1.369-.612-1.369-1.369s.612-1.369,1.369-1.369h46.926c.757,0,1.369.612,1.369,1.369s-.612,1.369-1.369,1.369Z" fill="#fff" isolation="isolate" opacity=".6"/>
+    <path d="M55.463,51.553H8.537c-.757,0-1.369-.612-1.369-1.369s.612-1.369,1.369-1.369h46.926c.757,0,1.369.612,1.369,1.369s-.612,1.369-1.369,1.369Z" fill="#fff" isolation="isolate" opacity=".6"/>
+    <circle cx="20.119" cy="13.816" r="5.616" fill="#fff"/>
+    <circle cx="48.349" cy="32.587" r="5.616" fill="#fff"/>
+    <circle cx="25.735" cy="50.184" r="5.616" fill="#fff"/>
+  </g>
+</svg>

@@ -74,6 +74,9 @@ Item {
 
         Icon {
             anchors.centerIn: parent
+            width: Theme.iconSizeMedium
+            height: Theme.iconSizeMedium
+            sourceSize: Qt.size(width, height)
             visible: root.iconSource !== "" && root.text === ""
             source: root.iconSource
             color: button.color
@@ -112,6 +115,9 @@ Item {
 
         Icon {
             anchors.centerIn: parent
+            width: Theme.iconSizeMedium
+            height: Theme.iconSizeMedium
+            sourceSize: Qt.size(width, height)
             visible: root.iconSource !== "" && root.text === ""
             source: root.iconSource
             color: secondaryButton.color

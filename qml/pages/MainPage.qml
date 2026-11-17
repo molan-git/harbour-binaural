@@ -594,7 +594,7 @@ Page {
                                                                           : ""
 
                                                                     iconSource: page.activeBand === ""
-                                                                                ? "image://theme/icon-m-setting"
+                                                                                ? "../../images/icon-m-soundsettings.svg"
                                                                                 : ""
 
                                                                     selected: page.isCustomBinaural && page.activeBand !== ""
@@ -672,7 +672,7 @@ Page {
                                                                     preferredWidth: frequencyGrid.width - Theme.paddingMedium
                                                                     secondary: true
                                                                     text: ""
-                                                                    iconSource: "image://theme/icon-m-setting"
+                                                                    iconSource: "../../images/icon-m-soundsettings.svg"
                                                                     selected: page.noiseWavesEnabled
                                                                     playing: page.noisePlaying
 
@@ -884,7 +884,7 @@ Page {
                                                                           : ""
 
                                                                     iconSource: !page.isCustomIsochronic
-                                                                                ? "image://theme/icon-m-setting"
+                                                                                ? "../../images/icon-m-soundsettings.svg"
                                                                                 : ""
 
                                                                     selected: page.isCustomIsochronic
