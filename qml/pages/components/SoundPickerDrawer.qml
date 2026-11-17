@@ -515,8 +515,7 @@ ActionDrawer {
                 Switch {
                     id: crossfadeButton
 
-                    icon.source: "../../images/icon-m-crossfade.svg"
-                    icon.sourceSize: Qt.size(Theme.iconSizeMedium * 0.9, Theme.iconSizeMedium * 0.9)
+                    icon.source: "image://theme/icon-m-shuffle"
 
                     checked: page.audioEngine
                              ? page.audioEngine.customSoundCrossfade

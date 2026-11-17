@@ -1,31 +1,22 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-/*
- * CustomBinauralDrawer: content-only drawer for live-editing
- * the binaural carrier / beat frequencies.
- * Uses ActionDrawer and PageDrawer.
- *
- * Moving a slider changes the running generator immediately (or stores
- * the values for the next start when nothing is playing).
- */
-
 ActionDrawer {
     id: customBinauralPanel
 
-    property real carrierHz: carrierFrequencySlider.value
+    property real carrierHz: baseFrequencySlider.value
     property real beatHz: beatFrequencySlider.value
 
     signal frequencyChanged(real carrier, real beat)
 
-    // title: "Custom Binaural"
-
-    // Called by MainPage before opening, so the sliders
-    // always show the currently playing values.
+    // Sync the sliders to the current engine values
+    // before the drawer is opened.
     function setValues(carrier, beat) {
-        carrierFrequencySlider.value = carrier
+        baseFrequencySlider.value = carrier
         beatFrequencySlider.value = beat
     }
+
+    // title: "Custom Binaural"
 
     Column {
         width: parent.width

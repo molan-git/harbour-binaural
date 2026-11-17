@@ -639,18 +639,19 @@ Page {
 
                                                 anchors.centerIn: parent
                                                 preferredWidth: frequencyGrid.width - Theme.paddingMedium
+                                                secondary: true
 
-                                                text: {
-                                                    if (page.activeBand !== "") {
-                                                        var label = Math.round(page.currentCarrier) + " Hz / " +
-                                                                    page.currentBeat.toFixed(1) + " Hz"
-                                                        var band = page.beatBand(page.currentBeat)
-                                                        if (band !== "")
-                                                            label += " - " + SoundNames.label(band)
-                                                        return label
-                                                    }
-                                                    return qsTr("Custom frequencies")
-                                                }
+                                                text: page.activeBand !== ""
+                                                      ? Math.round(page.currentCarrier) + " Hz / " +
+                                                        page.currentBeat.toFixed(1) + " Hz" +
+                                                        (page.beatBand(page.currentBeat) !== ""
+                                                         ? " - " + SoundNames.label(page.beatBand(page.currentBeat))
+                                                         : "")
+                                                      : ""
+
+                                                iconSource: page.activeBand === ""
+                                                            ? "image://theme/icon-m-setting"
+                                                            : ""
 
                                                 selected: page.isCustomBinaural
                                                           && page.activeBand !== ""
@@ -875,6 +876,7 @@ Page {
 
                                                 anchors.centerIn: parent
                                                 preferredWidth: frequencyGrid.width - Theme.paddingMedium
+                                                secondary: true
 
                                                 text: qsTr("Wave motion")
 

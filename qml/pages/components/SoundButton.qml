@@ -7,10 +7,12 @@ import Sailfish.Silica 1.0
 Item {
     id: root
 
-    property alias text: button.text
+    property string text: ""
     property real preferredWidth: -1
     property bool selected: false
     property bool playing: false
+    property string iconSource: ""
+    property bool secondary: false
 
     // 'enabled' is inherited from Item
 
@@ -38,10 +40,13 @@ Item {
         }
     }
 
+    // Primary button (native, with glass)
     Button {
         id: button
 
         anchors.centerIn: parent
+        visible: !root.secondary
+        text: root.text
 
         preferredWidth: root.preferredWidth
 
@@ -66,5 +71,50 @@ Item {
                 : 1.0
 
         onClicked: root.clicked()
+
+        Icon {
+            anchors.centerIn: parent
+            visible: root.iconSource !== "" && root.text === ""
+            source: root.iconSource
+            color: button.color
+        }
+    }
+
+    // Secondary button (native, no glass)
+    SecondaryButton {
+        id: secondaryButton
+
+        anchors.centerIn: parent
+        visible: root.secondary
+        text: root.text
+
+        preferredWidth: root.preferredWidth
+        width: root.preferredWidth > 0
+               ? root.preferredWidth
+               : implicitWidth
+
+        enabled: root.enabled
+        highlighted: root.selected
+
+        color: !enabled
+               ? Theme.secondaryColor
+               : highlighted
+                 ? (root.playing
+                    ? Theme.highlightColor
+                    : Theme.secondaryHighlightColor)
+                 : Theme.primaryColor
+
+        opacity: !enabled ? 0.35
+                : highlighted && !root.playing ? 0.6
+                : 1.0
+
+        onClicked: root.clicked()
+
+        Icon {
+            anchors.centerIn: parent
+            visible: root.iconSource !== "" && root.text === ""
+            source: root.iconSource
+            color: secondaryButton.color
+        }
     }
 }

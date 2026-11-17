@@ -161,12 +161,12 @@
 <context>
     <name>CustomBinauralDrawer</name>
     <message>
-        <location filename="../qml/pages/components/CustomBinauralDrawer.qml" line="46"/>
+        <location filename="../qml/pages/components/CustomBinauralDrawer.qml" line="37"/>
         <source>Base frequency</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/CustomBinauralDrawer.qml" line="84"/>
+        <location filename="../qml/pages/components/CustomBinauralDrawer.qml" line="75"/>
         <source>Beat frequency</source>
         <translation type="unfinished"></translation>
     </message>
@@ -489,28 +489,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="652"/>
-        <location filename="../qml/pages/MainPage.qml" line="795"/>
+        <location filename="../qml/pages/MainPage.qml" line="796"/>
         <source>Custom frequencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="821"/>
+        <location filename="../qml/pages/MainPage.qml" line="822"/>
         <source>Colored Noise</source>
         <translation type="unfinished">Farbiges Rauschen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="879"/>
+        <location filename="../qml/pages/MainPage.qml" line="881"/>
         <source>Wave motion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="904"/>
+        <location filename="../qml/pages/MainPage.qml" line="906"/>
         <source>Ambient Sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="919"/>
+        <location filename="../qml/pages/MainPage.qml" line="921"/>
         <source>Ambient sounds</source>
         <translation type="unfinished"></translation>
     </message>
