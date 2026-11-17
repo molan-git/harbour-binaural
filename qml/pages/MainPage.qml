@@ -509,48 +509,7 @@ Page {
                                             text: qsTr("Binaural Beats")
                                         }
 
-                                        Item {
-                                            x: Theme.horizontalPageMargin
-                                            width: parent.width -
-                                                   2 * Theme.horizontalPageMargin
-                                            height: Theme.fontSizeExtraSmall
-
-                                            Row {
-                                                anchors.right: parent.right
-                                                spacing: Theme.paddingSmall
-
-                                                Label {
-                                                    text: qsTr("To be used with")
-                                                    color: Theme.secondaryHighlightColor
-                                                    font.pixelSize: Theme.fontSizeExtraSmall
-                                                    verticalAlignment: Text.AlignVCenter
-                                                }
-
-                                                Item {
-                                                    width: Theme.fontSizeExtraSmall
-                                                    height: Theme.fontSizeExtraSmall
-
-                                                    anchors.verticalCenter: parent.verticalCenter
-
-                                                    Image {
-                                                        id: headsetImage
-
-                                                        anchors.fill: parent
-                                                        source: "../images/icon-s-headset.svg"
-                                                        fillMode: Image.PreserveAspectFit
-                                                        smooth: true
-                                                        visible: false
-                                                    }
-
-                                                    ColorOverlay {
-                                                        anchors.fill: headsetImage
-                                                        source: headsetImage
-                                                        color: Theme.secondaryHighlightColor
-                                                        opacity: 0.8
-                                                    }
-                                                }
-                                            }
-                                        }
+                                        HeadsetHint {}
 
                                         // Binaural Beats Selection grid
                                         SilicaGridView {
@@ -694,11 +653,15 @@ Page {
                                                 anchors.centerIn: parent
                                                 preferredWidth: frequencyGrid.width - Theme.paddingMedium
 
-                                                text: page.activeSolfeggio.length === 0
-                                                      ? SoundNames.label("Solfeggio frequencies")
-                                                      : page.activeSolfeggio.map(function(f) {
+                                                text: page.activeSolfeggio.length > 0
+                                                      ? page.activeSolfeggio.map(function(f) {
                                                           return f + " Hz"
                                                       }).join(" + ")
+                                                      : ""
+
+                                                iconSource: page.activeSolfeggio.length === 0
+                                                            ? "image://theme/icon-m-add"
+                                                            : ""
 
                                                 selected: page.activeSolfeggio.length > 0
                                                 playing: page.solfeggioPlaying
@@ -726,6 +689,8 @@ Page {
                                             text: SoundNames.label("Isochronic tones")
                                         }
 
+                                        HeadsetHint {}
+
                                         // Isochronic Tones Selection grid
                                         SilicaGridView {
                                             id: isochronicGrid
@@ -737,8 +702,7 @@ Page {
                                             cellWidth: width / 3
                                             cellHeight: Theme.itemSizeMedium
 
-                                            model: ["1 Hz", "2 Hz", "4 Hz",
-                                                    "6 Hz", "7.83 Hz", "10 Hz", "40 Hz"]
+                                            model: ["1 Hz", "2 Hz", "4 Hz", "6 Hz", "7.83 Hz", "10 Hz"]
 
                                             delegate: Item {
                                                 width: isochronicGrid.cellWidth
@@ -746,8 +710,7 @@ Page {
 
                                                 SoundButton {
                                                     anchors.centerIn: parent
-                                                    preferredWidth: isochronicGrid.cellWidth -
-                                                                    Theme.paddingMedium
+                                                    preferredWidth: isochronicGrid.cellWidth - Theme.paddingMedium
 
                                                     text: SoundNames.label(modelData)
 
@@ -866,7 +829,6 @@ Page {
                                             }
                                         }
 
-                                        // Wave motion button
                                         Item {
                                             width: parent.width
                                             height: waveMotionButton.height
@@ -878,7 +840,8 @@ Page {
                                                 preferredWidth: frequencyGrid.width - Theme.paddingMedium
                                                 secondary: true
 
-                                                text: qsTr("Wave motion")
+                                                text: ""
+                                                iconSource: "image://theme/icon-m-setting"
 
                                                 selected: page.noiseWavesEnabled
                                                 playing: page.noisePlaying

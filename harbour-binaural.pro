@@ -49,6 +49,7 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/pages/components/AmbienceDrawer.qml \
     qml/pages/components/CustomBinauralDrawer.qml \
     qml/pages/components/CustomIsochronicDrawer.qml \
+    qml/pages/components/HeadsetHint.qml \
     qml/pages/components/InfoBinauralPage.qml \
     qml/pages/components/InfoColoredPage.qml \
     qml/pages/components/InfoIsochronicPage.qml \

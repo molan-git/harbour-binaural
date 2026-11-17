@@ -152,6 +152,13 @@
     </message>
 </context>
 <context>
+    <name>HeadsetHint</name>
+    <message>
+        <source>To be used with</source>
+        <translation type="unfinished">To be used with</translation>
+    </message>
+</context>
+<context>
     <name>InfoBinauralPage</name>
     <message>
         <source>Binaural Beats</source>
@@ -394,16 +401,8 @@
         <translation>Binaural Beats</translation>
     </message>
     <message>
-        <source>To be used with</source>
-        <translation>To be used with</translation>
-    </message>
-    <message>
         <source>Colored Noise</source>
         <translation>Colored Noise</translation>
-    </message>
-    <message>
-        <source>Wave motion</source>
-        <translation>Wave motion</translation>
     </message>
     <message>
         <source>Ambient sounds</source>

@@ -185,6 +185,14 @@
     </message>
 </context>
 <context>
+    <name>HeadsetHint</name>
+    <message>
+        <location filename="../qml/pages/components/HeadsetHint.qml" line="20"/>
+        <source>To be used with</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>InfoBinauralPage</name>
     <message>
         <location filename="../qml/pages/components/InfoBinauralPage.qml" line="61"/>
@@ -484,27 +492,17 @@
         <translation type="unfinished">Binaurale Beats</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="523"/>
-        <source>To be used with</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/MainPage.qml" line="822"/>
+        <location filename="../qml/pages/MainPage.qml" line="785"/>
         <source>Colored Noise</source>
         <translation type="unfinished">Farbiges Rauschen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="881"/>
-        <source>Wave motion</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/MainPage.qml" line="906"/>
+        <location filename="../qml/pages/MainPage.qml" line="869"/>
         <source>Ambient Sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="921"/>
+        <location filename="../qml/pages/MainPage.qml" line="884"/>
         <source>Ambient sounds</source>
         <translation type="unfinished"></translation>
     </message>
