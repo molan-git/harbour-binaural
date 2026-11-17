@@ -42,7 +42,13 @@ Item {
         id: button
 
         anchors.centerIn: parent
+
         preferredWidth: root.preferredWidth
+
+        // Prevent long text from expanding the button.
+        width: root.preferredWidth > 0
+               ? root.preferredWidth
+               : implicitWidth
 
         enabled: root.enabled
         highlighted: root.selected
@@ -56,8 +62,8 @@ Item {
                  : Theme.primaryColor
 
         opacity: !enabled ? 0.35
-                 : highlighted && !root.playing ? 0.6
-                 : 1.0
+                : highlighted && !root.playing ? 0.6
+                : 1.0
 
         onClicked: root.clicked()
     }

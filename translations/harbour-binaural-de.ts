@@ -172,6 +172,19 @@
     </message>
 </context>
 <context>
+    <name>CustomIsochronicDrawer</name>
+    <message>
+        <location filename="../qml/pages/components/CustomIsochronicDrawer.qml" line="42"/>
+        <source>Carrier frequency</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/CustomIsochronicDrawer.qml" line="80"/>
+        <source>Pulse frequency</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>InfoBinauralPage</name>
     <message>
         <location filename="../qml/pages/components/InfoBinauralPage.qml" line="61"/>
@@ -255,6 +268,89 @@
         <location filename="../qml/pages/components/InfoColoredPage.qml" line="203"/>
         <source>Sound masking and general listening</source>
         <translation>Geräuschmaskierung und allgemeines Hören</translation>
+    </message>
+</context>
+<context>
+    <name>InfoIsochronicPage</name>
+    <message>
+        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="71"/>
+        <source>An isochronic tone is a sound that switches on and off at regular intervals. A continuous carrier tone is rapidly pulsed on and off; the carrier frequency is the pitch you hear, while the pulse frequency determines how quickly the sound pulses. The tones are played identically in both ears, independent of binaural beats.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="82"/>
+        <source>Choose from:</source>
+        <translation type="unfinished">Wähle aus:</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="102"/>
+        <source>1 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="112"/>
+        <source>Deep sleep, slow breathing exercises</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="122"/>
+        <source>2 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="132"/>
+        <source>Deep relaxation, sleep-oriented meditation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="142"/>
+        <source>4 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="152"/>
+        <source>Deep meditation, visualization, lucid dreaming practices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="162"/>
+        <source>6 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="172"/>
+        <source>Deep meditation, guided visualization, relaxation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="182"/>
+        <source>7.83 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="192"/>
+        <source>Deep relaxation, meditative awareness, grounding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="202"/>
+        <source>10 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="212"/>
+        <source>Relaxed wakefulness, stress management, calm concentration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="222"/>
+        <source>40 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="232"/>
+        <source>Attention and sensory processing</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -368,52 +464,53 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="400"/>
+        <location filename="../qml/pages/MainPage.qml" line="470"/>
         <source>About</source>
         <translation type="unfinished">Über</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="410"/>
+        <location filename="../qml/pages/MainPage.qml" line="480"/>
         <source>Deselect all sounds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="419"/>
+        <location filename="../qml/pages/MainPage.qml" line="489"/>
         <source>Timer</source>
         <translation type="unfinished">Timer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="445"/>
+        <location filename="../qml/pages/MainPage.qml" line="515"/>
         <source>Binaural Beats</source>
         <translation type="unfinished">Binaurale Beats</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="459"/>
+        <location filename="../qml/pages/MainPage.qml" line="529"/>
         <source>To be used with</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="585"/>
+        <location filename="../qml/pages/MainPage.qml" line="655"/>
+        <location filename="../qml/pages/MainPage.qml" line="794"/>
         <source>Custom frequencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="654"/>
+        <location filename="../qml/pages/MainPage.qml" line="820"/>
         <source>Colored Noise</source>
         <translation type="unfinished">Farbiges Rauschen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="712"/>
+        <location filename="../qml/pages/MainPage.qml" line="878"/>
         <source>Wave motion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="737"/>
+        <location filename="../qml/pages/MainPage.qml" line="903"/>
         <source>Ambient Sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="752"/>
+        <location filename="../qml/pages/MainPage.qml" line="918"/>
         <source>Ambient sounds</source>
         <translation type="unfinished"></translation>
     </message>
@@ -434,7 +531,7 @@
 <context>
     <name>PlaybackBar</name>
     <message>
-        <location filename="../qml/pages/components/PlaybackBar.qml" line="138"/>
+        <location filename="../qml/pages/components/PlaybackBar.qml" line="140"/>
         <source>Start your sound mix</source>
         <translation>Starte deinen Klangmix</translation>
     </message>
@@ -473,102 +570,147 @@
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="25"/>
+        <source>Isochronic tones</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/SoundNames.qml" line="26"/>
+        <source>Isochronic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/SoundNames.qml" line="27"/>
+        <source>1 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/SoundNames.qml" line="28"/>
+        <source>2 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/SoundNames.qml" line="29"/>
+        <source>4 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/SoundNames.qml" line="30"/>
+        <source>6 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/SoundNames.qml" line="31"/>
+        <source>7.83 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/SoundNames.qml" line="32"/>
+        <source>10 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/SoundNames.qml" line="33"/>
+        <source>40 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/SoundNames.qml" line="36"/>
         <source>White</source>
         <translation>Weiß</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="26"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="37"/>
         <source>Pink</source>
         <translation>Rosa</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="27"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="38"/>
         <source>Brown</source>
         <translation>Braun</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="28"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="39"/>
         <source>Grey</source>
         <translation>Grau</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="31"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="42"/>
         <source>Wind</source>
         <translation>Wind</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="32"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="43"/>
         <source>Waves</source>
         <translation>Wellen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="33"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="44"/>
         <source>Crickets</source>
         <translation>Grillen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="34"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="45"/>
         <source>Stream</source>
         <translation>Bach</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="35"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="46"/>
         <source>Rain</source>
         <translation>Regen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="36"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="47"/>
         <source>Birds</source>
         <translation>Vögel</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="37"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="48"/>
         <source>Fire</source>
         <translation>Feuer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="38"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="49"/>
         <source>Chimes</source>
         <translation>Windspiel</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="39"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="50"/>
         <source>Sailing</source>
         <translation>Segeln</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="40"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="51"/>
         <source>Lake</source>
         <translation>See</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="43"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="54"/>
         <source>Ambient mix</source>
         <translation>Ambient-Mix</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="44"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="55"/>
         <source>Custom sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="45"/>
-        <location filename="../qml/pages/components/SoundNames.qml" line="46"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="56"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="57"/>
         <source>Solfeggio frequencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="47"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="58"/>
         <source>Solfeggio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="48"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="59"/>
         <source>Start your sound mix</source>
         <translation>Starte deinen Klangmix</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="49"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="60"/>
         <source>Individual experiences may vary.</source>
         <translation>Die Wirkung kann individuell variieren.</translation>
     </message>

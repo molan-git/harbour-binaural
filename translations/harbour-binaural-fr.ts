@@ -141,6 +141,17 @@
     </message>
 </context>
 <context>
+    <name>CustomIsochronicDrawer</name>
+    <message>
+        <source>Carrier frequency</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pulse frequency</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>InfoBinauralPage</name>
     <message>
         <source>Binaural Beats</source>
@@ -208,6 +219,73 @@
     <message>
         <source>Colored Noise</source>
         <translation>Bruit coloré</translation>
+    </message>
+</context>
+<context>
+    <name>InfoIsochronicPage</name>
+    <message>
+        <source>An isochronic tone is a sound that switches on and off at regular intervals. A continuous carrier tone is rapidly pulsed on and off; the carrier frequency is the pitch you hear, while the pulse frequency determines how quickly the sound pulses. The tones are played identically in both ears, independent of binaural beats.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose from:</source>
+        <translation type="unfinished">Choisissez parmi :</translation>
+    </message>
+    <message>
+        <source>1 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deep sleep, slow breathing exercises</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deep relaxation, sleep-oriented meditation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deep meditation, visualization, lucid dreaming practices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>6 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deep meditation, guided visualization, relaxation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>7.83 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deep relaxation, meditative awareness, grounding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>10 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Relaxed wakefulness, stress management, calm concentration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>40 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attention and sensory processing</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -462,6 +540,42 @@
     </message>
     <message>
         <source>Solfeggio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Isochronic tones</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Isochronic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>6 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>7.83 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>10 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>40 Hz</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
