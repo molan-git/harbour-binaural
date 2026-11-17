@@ -14,6 +14,8 @@ Page {
     property string activeIsochronic: ""
     property bool isCustomIsochronic: false
     property bool isCustomBinaural: false
+    property real currentCarrier: 200
+    property real currentBeat: 10
     property bool noiseWavesEnabled: false
 
     property bool bandPlaying: audioEngine.binauralPlaying
@@ -76,6 +78,7 @@ Page {
                              ambiencePlaying ||
                              noisePlaying ||
                              solfeggioPlaying ||
+                             isochronicPlaying ||
                              customSoundPlaying
 
     property bool pausedMode: !isPlaying && hasActiveSounds
@@ -205,6 +208,16 @@ Page {
         return ""
     }
 
+    function bandBeat(band) {
+        if (band === "Delta")      return 2.0
+        if (band === "Delta/Theta") return 4.0
+        if (band === "Theta")      return 6.0
+        if (band === "Alpha")      return 10.0
+        if (band === "Beta")       return 20.0
+        if (band === "Gamma")      return 40.0
+        return 10.0
+    }
+
     Component {
         id: infoBinauralPageComponent
         InfoBinauralPage {}
@@ -277,43 +290,24 @@ Page {
             drawerContent: CustomBinauralDrawer {
                 id: customBinauralPanel
 
-                customActive: page.isCustomBinaural
-                playing: page.bandPlaying
-
                 onCloseRequested: {
                     binauralDrawer.open = false
                 }
 
                 onFrequencyChanged: {
-                    if (page.isCustomBinaural) {
-                        audioEngine.setBinauralFrequency(carrier, beat)
+                    page.currentCarrier = carrier
+                    page.currentBeat = beat
 
-                        var band = page.beatBand(beat)
+                    // Live update of the running generator
+                    // (or store for the next start).
+                    audioEngine.setBinauralFrequency(carrier, beat)
 
-                        if (band !== "")
-                            page.activeBand = band
-                    }
-                }
-
-                onStartRequested: {
-                    var band = page.beatBand(beat)
-                    if (page.pausedMode) {
-                        audioEngine.stop()
-                        page.activeBand = band
+                    if (page.activeBand !== "") {
+                        // Band buttons follow the beat live:
+                        // e.g. Alpha -> Beta starts glowing.
+                        page.activeBand = page.beatBand(beat)
                         page.isCustomBinaural = true
-                        audioEngine.setBinauralFrequency(carrier, beat)
-                    } else {
-                        page.activeBand = band
-                        page.isCustomBinaural = true
-                        audioEngine.setBinauralFrequency(carrier, beat)
-                        audioEngine.start()
                     }
-                }
-
-                onStopRequested: {
-                    page.activeBand = ""
-                    page.isCustomBinaural = false
-                    audioEngine.stop()
                 }
             }
 
@@ -602,12 +596,12 @@ Page {
 
                                                 SoundButton {
                                                     anchors.centerIn: parent
-                                                    preferredWidth: frequencyGrid.cellWidth - Theme.paddingMedium
+                                                    preferredWidth: frequencyGrid.cellWidth -
+                                                                    Theme.paddingMedium
 
                                                     text: symbol
 
                                                     selected: page.activeBand === bandName
-                                                              && !page.isCustomBinaural
                                                     playing: page.bandPlaying
 
                                                     onClicked: {
@@ -618,12 +612,16 @@ Page {
                                                         } else if (!page.pausedMode) {
                                                             page.activeBand = bandName
                                                             page.isCustomBinaural = false
+                                                            page.currentCarrier = 200
+                                                            page.currentBeat = page.bandBeat(bandName)
                                                             audioEngine.setFrequencyBand(bandName)
                                                             audioEngine.start()
                                                         } else {
                                                             audioEngine.stop()
                                                             page.activeBand = bandName
                                                             page.isCustomBinaural = false
+                                                            page.currentCarrier = 200
+                                                            page.currentBeat = page.bandBeat(bandName)
                                                             audioEngine.setFrequencyBand(bandName)
                                                         }
                                                     }
@@ -643,11 +641,10 @@ Page {
                                                 preferredWidth: frequencyGrid.width - Theme.paddingMedium
 
                                                 text: {
-                                                    if (page.isCustomBinaural) {
-                                                        var carrier = customBinauralPanel.carrierHz
-                                                        var beat    = customBinauralPanel.beatHz
-                                                        var label   = carrier + " Hz / " + beat.toFixed(1) + " Hz"
-                                                        var band    = page.beatBand(beat)
+                                                    if (page.activeBand !== "") {
+                                                        var label = Math.round(page.currentCarrier) + " Hz / " +
+                                                                    page.currentBeat.toFixed(1) + " Hz"
+                                                        var band = page.beatBand(page.currentBeat)
                                                         if (band !== "")
                                                             label += " - " + SoundNames.label(band)
                                                         return label
@@ -656,9 +653,13 @@ Page {
                                                 }
 
                                                 selected: page.isCustomBinaural
+                                                          && page.activeBand !== ""
                                                 playing: page.bandPlaying
 
                                                 onClicked: {
+                                                    customBinauralPanel.setValues(
+                                                                page.currentCarrier,
+                                                                page.currentBeat)
                                                     binauralDrawer.open = true
                                                 }
                                             }

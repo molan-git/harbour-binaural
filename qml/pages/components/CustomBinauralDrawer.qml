@@ -1,20 +1,31 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
+/*
+ * CustomBinauralDrawer: content-only drawer for live-editing
+ * the binaural carrier / beat frequencies.
+ * Uses ActionDrawer and PageDrawer.
+ *
+ * Moving a slider changes the running generator immediately (or stores
+ * the values for the next start when nothing is playing).
+ */
+
 ActionDrawer {
     id: customBinauralPanel
 
-    property bool customActive: false
-    property bool playing: false
-
-    property real carrierHz: baseFrequencySlider.value
+    property real carrierHz: carrierFrequencySlider.value
     property real beatHz: beatFrequencySlider.value
 
     signal frequencyChanged(real carrier, real beat)
-    signal startRequested(real carrier, real beat)
-    signal stopRequested()
 
     // title: "Custom Binaural"
+
+    // Called by MainPage before opening, so the sliders
+    // always show the currently playing values.
+    function setValues(carrier, beat) {
+        carrierFrequencySlider.value = carrier
+        beatFrequencySlider.value = beat
+    }
 
     Column {
         width: parent.width
@@ -72,7 +83,7 @@ ActionDrawer {
 
                 label: qsTr("Beat frequency")
 
-                minimumValue: 0
+                minimumValue: 0.5
                 maximumValue: 40
                 value: 10
                 stepSize: 0.5
@@ -93,43 +104,6 @@ ActionDrawer {
                 text: beatFrequencySlider.value.toFixed(1) + " Hz"
                 color: Theme.secondaryHighlightColor
                 font.pixelSize: Theme.fontSizeExtraSmall
-            }
-        }
-
-        // Play - Stop button (uses custom icon-l-stop)
-        MouseArea {
-            id: customPlayIcon
-
-            anchors.horizontalCenter: parent.horizontalCenter
-            width:  Theme.iconSizeLarge + Theme.paddingMedium * 2
-            height: Theme.iconSizeLarge + Theme.paddingMedium * 2
-
-            Icon {
-                id: playStopIcon
-
-                anchors.centerIn: parent
-                width:  Theme.iconSizeLarge
-                height: Theme.iconSizeLarge
-
-                source: customBinauralPanel.customActive
-                        ? "../../images/icon-l-stop.svg"
-                        : "image://theme/icon-l-play"
-
-                color: customBinauralPanel.customActive
-                       ? (customBinauralPanel.playing
-                          ? Theme.highlightColor
-                          : Theme.secondaryHighlightColor)
-                       : Theme.primaryColor
-            }
-
-            onClicked: {
-                if (customBinauralPanel.customActive) {
-                    customBinauralPanel.stopRequested()
-                } else {
-                    customBinauralPanel.startRequested(
-                                baseFrequencySlider.value,
-                                beatFrequencySlider.value)
-                }
             }
         }
     }
