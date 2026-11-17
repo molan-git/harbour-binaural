@@ -412,6 +412,14 @@
         <source>Ambient Sound</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Standard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extended</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>NoiseWaveDrawer</name>

@@ -16,6 +16,8 @@ TARGET = harbour-binaural
 
 CONFIG += sailfishapp
 
+include(libs/opal.pri)
+
 
 # QtMultimedia for access to Sailfish's multimedia/audio APIs.
 QT += multimedia

@@ -17,6 +17,9 @@ int main(int argc, char *argv[])
         "Binaural", 1, 0, "SoundNames");
 
     QScopedPointer<QQuickView> view(SailfishApp::createView());
+
+    view->engine()->addImportPath(SailfishApp::pathTo("qml/modules").toString());
+
     view->setSource(SailfishApp::pathTo("qml/harbour-binaural.qml"));
     view->show();
 

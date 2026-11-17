@@ -472,38 +472,48 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="464"/>
+        <location filename="../qml/pages/MainPage.qml" line="500"/>
+        <source>Standard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/MainPage.qml" line="457"/>
         <source>About</source>
         <translation type="unfinished">Über</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="474"/>
+        <location filename="../qml/pages/MainPage.qml" line="466"/>
         <source>Deselect all sounds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="483"/>
+        <location filename="../qml/pages/MainPage.qml" line="474"/>
         <source>Timer</source>
         <translation type="unfinished">Timer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="509"/>
+        <location filename="../qml/pages/MainPage.qml" line="519"/>
         <source>Binaural Beats</source>
         <translation type="unfinished">Binaurale Beats</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="785"/>
+        <location filename="../qml/pages/MainPage.qml" line="624"/>
         <source>Colored Noise</source>
         <translation type="unfinished">Farbiges Rauschen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="869"/>
+        <location filename="../qml/pages/MainPage.qml" line="696"/>
         <source>Ambient Sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="884"/>
+        <location filename="../qml/pages/MainPage.qml" line="708"/>
         <source>Ambient sounds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/MainPage.qml" line="763"/>
+        <source>Extended</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
