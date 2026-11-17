@@ -16,6 +16,8 @@ BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  pkgconfig(Qt5Multimedia)
 BuildRequires:  desktop-file-utils
 
+%define __provides_exclude_from ^%{_datadir}/.*$
+
 %description
 Binaural is a sound app for relaxation, focus, sleep, and meditation,
 combining binaural beats, colored noise, and ambient sounds.
