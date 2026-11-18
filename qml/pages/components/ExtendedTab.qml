@@ -24,11 +24,11 @@ SilicaFlickable {
         id: extendedColumn
 
         width: parent.width
-        spacing: Theme.paddingMedium
+        spacing: Theme.paddingSmall
 
         // ── Solfeggio ──
 
-        SectionHeader {
+        CompactSectionHeader {
             text: SoundNames.label("Solfeggio frequencies")
         }
 
@@ -76,7 +76,7 @@ SilicaFlickable {
 
         // ── Isochronic Tones ──
 
-        SectionHeader {
+        CompactSectionHeader {
             text: SoundNames.label("Isochronic tones")
         }
 

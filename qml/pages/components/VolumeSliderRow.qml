@@ -5,7 +5,6 @@ import QtGraphicalEffects 1.0
 /*
  * Volume slider with speaker icon on the left.
  *
- * API:
  * value   - current volume 0-100 (alias of the slider)
  *           -> implicit valueChanged signal, use onValueChanged
  * enabled - dims slider and speaker icon when false

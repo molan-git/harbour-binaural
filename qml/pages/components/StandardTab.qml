@@ -27,7 +27,7 @@ SilicaFlickable {
 
         // ── Binaural Beats ──
 
-        SectionHeader {
+        CompactSectionHeader {
             text: qsTr("Binaural Beats")
         }
 
@@ -155,7 +155,7 @@ SilicaFlickable {
 
         // ── Colored Noise ──
 
-        SectionHeader {
+        CompactSectionHeader {
             text: qsTr("Colored Noise")
         }
 
@@ -246,7 +246,7 @@ SilicaFlickable {
 
         // ── Ambient Sound ──
 
-        SectionHeader {
+        CompactSectionHeader {
             text: qsTr("Ambient Sound")
         }
 

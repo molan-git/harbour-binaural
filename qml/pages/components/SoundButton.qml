@@ -1,9 +1,10 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-// Component which defines the buttons
-// used for sound selection
-
+/*
+ * Component which defines the buttons
+ * used for sound selection
+*/
 Item {
     id: root
 

@@ -49,6 +49,7 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/pages/TimerPage.qml \
     qml/pages/components/ActionDrawer.qml \
     qml/pages/components/AmbienceDrawer.qml \
+    qml/pages/components/CompactSectionHeader.qml \
     qml/pages/components/CustomBinauralDrawer.qml \
     qml/pages/components/CustomIsochronicDrawer.qml \
     qml/pages/components/ExtendedTab.qml \

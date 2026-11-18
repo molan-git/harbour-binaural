@@ -2,7 +2,7 @@ pragma Singleton
 import QtQuick 2.0
 
 /*
- * Maps canonical English sound keys to translated display labels.
+ * Maps English sound keys to translated display labels.
  *
  * Rules:
  *  - Keys ("Wind", "Pink", "Delta"...) are used in state and engine
@@ -53,7 +53,6 @@ QtObject {
             // General UI text
         case "Ambient mix":                 return qsTr("Ambient mix")
         case "Custom sound":                 return qsTr("Custom sound")
-        case "Solfeggio frequencies":    return qsTr("Solfeggio frequencies")
         case "Solfeggio frequencies":    return qsTr("Solfeggio frequencies")
         case "Solfeggio":                return qsTr("Solfeggio")
         case "Start your sound mix": return qsTr("Start your sound mix")
