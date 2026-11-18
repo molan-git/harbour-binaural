@@ -16,6 +16,7 @@ SilicaFlickable {
 
     signal solfeggioInfoRequested()
     signal isochronicInfoRequested()
+    signal sequenceInfoRequested()
 
     contentHeight: extendedColumn.height + Theme.paddingLarge
     clip: true
@@ -85,9 +86,9 @@ SilicaFlickable {
         Item {
             width: parent.width
 
-            height: headsetHint.height
-                    + Theme.paddingSmall
-                    + isochronicGrid.height
+            height: headsetHint.height +
+                    Theme.paddingSmall +
+                    isochronicGrid.height
 
             HeadsetHint {
                 id: headsetHint
@@ -195,6 +196,106 @@ SilicaFlickable {
 
             onValueChanged:
                 root.engine.setIsochronicVolume(value)
+        }
+
+        // ── Sequences ──
+
+        CompactSectionHeader {
+            text: qsTr("Sequences")
+        }
+
+        // SBaGen preset selector
+        ComboBox {
+            id: sequenceCombo
+
+            x: Theme.horizontalPageMargin
+            width: parent.width - 2 * Theme.horizontalPageMargin
+
+            label: qsTr("Preset")
+
+            menu: ContextMenu {
+                Repeater {
+                    model: root.engine.sequencePresets
+
+                    MenuItem {
+                        text: modelData
+
+                        onClicked:
+                            root.mainPage.selectSequence(modelData)
+                    }
+                }
+            }
+        }
+
+        // Selected sequence and playback control
+        Item {
+            width: parent.width
+            height: sequenceButton.height
+
+            SoundButton {
+                id: sequenceButton
+
+                anchors.centerIn: parent
+
+                preferredWidth: isochronicGrid.width -
+                                Theme.paddingMedium
+
+                text: root.mainPage.activeSequence !== ""
+                      ? root.mainPage.activeSequence
+                      : qsTr("No sequence selected")
+
+                selected: root.mainPage.activeSequence !== ""
+                playing: root.mainPage.sequencePlaying
+
+                enabled: root.mainPage.activeSequence !== ""
+
+                onClicked:
+                    root.mainPage.toggleSequencePlayback()
+
+                showInfoButton: true
+
+                onInfoClicked:
+                    root.sequenceInfoRequested()
+            }
+        }
+
+        // Sequence progress and remaining time
+        ProgressBar {
+            id: sequenceProgress
+
+            x: Theme.horizontalPageMargin
+            width: parent.width - 2 * Theme.horizontalPageMargin
+
+            minimumValue: 0
+            maximumValue: 1
+
+            value: root.engine.sequenceProgress
+
+            valueText: {
+                var remaining = root.engine.sequenceRemainingSeconds
+                var minutes = Math.floor(remaining / 60)
+                var seconds = remaining % 60
+
+                return minutes + ":" +
+                       (seconds < 10 ? "0" : "") + seconds
+            }
+
+            highlighted: root.mainPage.sequencePlaying
+
+            visible: root.mainPage.activeSequence !== ""
+
+            opacity: root.mainPage.sequencePlaying ? 1.0 : 0.6
+        }
+
+        // Sequence volume
+        VolumeSliderRow {
+            width: parent.width - 2 * Theme.horizontalPageMargin
+            x: Theme.horizontalPageMargin
+
+            enabled: root.mainPage.activeSequence !== ""
+
+            onValueChanged:
+                root.engine.setSequenceVolume(value)
         }
 
         Item {

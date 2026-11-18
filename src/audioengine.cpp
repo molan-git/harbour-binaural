@@ -1,4 +1,5 @@
 #include "audioengine.h"
+#include "sbgsequence.h"
 
 #include <QtMath>
 #include <QTimer>
@@ -21,21 +22,26 @@ AudioEngine::AudioEngine(QObject *parent)
       m_noiseChannel(nullptr),
       m_solfeggioChannel(nullptr),
       m_isochronicChannel(nullptr),
+      m_sequenceChannel(nullptr),
       m_binauralGenerator(nullptr),
       m_noiseGenerator(nullptr),
       m_solfeggioGenerator(nullptr),
       m_isochronicGenerator(nullptr),
+      m_sequenceGenerator(nullptr),
       m_customChannel(nullptr),
       m_sleepTimerFadeTimer(new QTimer(this)),
+      m_sequencePollTimer(new QTimer(this)),
       m_sleepTimerBinauralStartVolume(0.0),
       m_sleepTimerColoredNoiseStartVolume(0.0),
       m_sleepTimerSolfeggioStartVolume(0.0),
       m_sleepTimerIsochronicStartVolume(0.0),
+      m_sleepTimerSequenceStartVolume(0.0),
       m_sleepTimerCustomStartVolume(0),
       m_playlistIndex(0),
       m_playlistLoop(false),
       m_playlistActive(false),
       m_customVolume(50),
+      m_sequenceVolume(50),
       m_customLoop(true),
       m_customCrossfade(true),
       m_customManualStop(false),
@@ -120,6 +126,47 @@ AudioEngine::AudioEngine(QObject *parent)
                        static_cast<qreal>(
                            isochronicTargetVolume()) / 100.0,
                        this);
+
+    // Sequence playback channel.
+    m_sequenceChannel =
+        new PcmChannel(QStringLiteral("sequence"),
+                       static_cast<qreal>(
+                           m_sequenceVolume) / 100.0,
+                       this);
+
+    connect(m_sequenceChannel,
+            &PcmChannel::stateChanged,
+            this,
+            &AudioEngine::updatePlayingState);
+
+    connect(m_sequenceChannel,
+            &PcmChannel::stopped,
+            this,
+            [this]() {
+                m_sequenceGenerator = nullptr;
+                m_sequencePollTimer->stop();
+
+                emit sequenceProgressChanged();
+            });
+
+    // Poll sequence progress and detect completed sequences.
+    m_sequencePollTimer->setInterval(SequencePollInterval);
+    m_sequencePollTimer->setTimerType(Qt::CoarseTimer);
+
+    connect(m_sequencePollTimer,
+            &QTimer::timeout,
+            this,
+            &AudioEngine::updateSequencePoll);
+
+    // Load built-in SBaGen presets.
+    const QVector<SbgPreset> presets = Sbg::builtinPresets();
+
+    for (const SbgPreset &preset : presets)
+    {
+        m_sequencePresets.append(preset.title);
+        m_sequencePresetSources.insert(
+            preset.title, preset.source);
+    }
 
     connect(m_isochronicChannel,
             &PcmChannel::stateChanged,
@@ -222,6 +269,9 @@ AudioEngine::AudioEngine(QObject *parent)
                 m_isochronicChannel->setVolume(
                             m_sleepTimerIsochronicStartVolume * factor);
 
+                m_sequenceChannel->setVolume(
+                            m_sleepTimerSequenceStartVolume * factor);
+
                 if (progress >= 1.0) {
                     m_sleepTimerFadeTimer->stop();
 
@@ -231,6 +281,7 @@ AudioEngine::AudioEngine(QObject *parent)
                     m_noiseChannel->stopImmediately();
                     m_solfeggioChannel->stopImmediately();
                     m_isochronicChannel->stopImmediately();
+                    m_sequenceChannel->stopImmediately();
 
                     updatePlayingState();
                 }
@@ -248,6 +299,8 @@ AudioEngine::~AudioEngine()
     m_noiseChannel->stopImmediately();
     m_solfeggioChannel->stopImmediately();
     m_isochronicChannel->stopImmediately();
+    m_sequencePollTimer->stop();
+    m_sequenceChannel->stopImmediately();
 }
 
 void AudioEngine::updatePlayingState()
@@ -278,6 +331,9 @@ void AudioEngine::fadeOutForSleepTimer()
 
     m_sleepTimerIsochronicStartVolume =
             m_isochronicChannel->volume();
+
+    m_sleepTimerSequenceStartVolume =
+            m_sequenceChannel->volume();
 
     for (int i = 0; i < MaxAmbienceChannels; ++i) {
         m_sleepTimerAmbienceStartVolumes[i] =
