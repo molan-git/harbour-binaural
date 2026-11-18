@@ -255,7 +255,7 @@
     </message>
     <message>
         <source>Ambient Sound</source>
-        <translation>Ambientalni zvok</translation>
+        <translation type="unfinished">Ambientalni zvok</translation>
     </message>
     <message>
         <source>Colored Noise</source>
@@ -263,11 +263,11 @@
     </message>
     <message>
         <source>Deselect all sounds</source>
-        <translation>Prekliči izbor vseh zvokov</translation>
+        <translation type="unfinished">Prekliči izbor vseh zvokov</translation>
     </message>
     <message>
         <source>To be used with</source>
-        <translation>Namenjeno uporabi s</translation>
+        <translation type="unfinished">Namenjeno uporabi s</translation>
     </message>
     <message>
         <source>Timer</source>
