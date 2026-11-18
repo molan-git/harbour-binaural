@@ -5,7 +5,7 @@ import Binaural 1.0
 
 FullscreenContentPage {
     id: page
-    objectName: "InfoBinauralPage"
+    objectName: "InfoColoredPage"
 
     Rectangle {
         anchors.fill: parent
@@ -19,6 +19,8 @@ FullscreenContentPage {
         anchors.fill: parent
         contentHeight: scrollContent.height + Theme.paddingLarge
         clip: true
+
+        VerticalScrollDecorator { }
 
         Item {
             id: scrollContent
@@ -58,7 +60,7 @@ FullscreenContentPage {
                     width: parent.width - 2 * Theme.horizontalPageMargin
                     x: Theme.horizontalPageMargin
 
-                    text: qsTr("Binaural Beats")
+                    text: qsTr("Colored Noise")
                     color: Theme.highlightColor
                     font.pixelSize: Theme.fontSizeLarge
                     wrapMode: Text.WordWrap
@@ -68,7 +70,7 @@ FullscreenContentPage {
                     width: parent.width - 2 * Theme.horizontalPageMargin
                     x: Theme.horizontalPageMargin
 
-                    text: qsTr("Are created by playing two slightly different tones, one in each ear. The brain processes the difference as a rhythmic beat. Different beat frequencies can be used to support focus, relaxation, meditation, or sleep.")
+                    text: qsTr("Sound with different amounts of energy at different frequencies. Each color has a different character and is commonly used for different purposes.")
 
                     color: Theme.primaryColor
                     font.pixelSize: Theme.fontSizeMedium
@@ -84,7 +86,7 @@ FullscreenContentPage {
                         id: binauralGraphImage
 
                         anchors.fill: parent
-                        source: "../../images/image-binaural-graph.svg"
+                        source: "../images/image-colornoise-graph.svg"
                         sourceSize: Qt.size(width * 2, height * 2)
                         fillMode: Image.PreserveAspectFit
                         visible: false
@@ -108,7 +110,7 @@ FullscreenContentPage {
                 }
 
                 Grid {
-                    id: frequencyGrid
+                    id: noiseGrid
 
                     width: parent.width - 2 * Theme.horizontalPageMargin
                     x: Theme.horizontalPageMargin
@@ -118,129 +120,87 @@ FullscreenContentPage {
                     rowSpacing: Theme.paddingMedium
 
                     property real labelWidth: Math.max(
-                        deltaLabel.implicitWidth,
-                        deltaThetaLabel.implicitWidth,
-                        thetaLabel.implicitWidth,
-                        alphaLabel.implicitWidth,
-                        betaLabel.implicitWidth,
-                        gammaLabel.implicitWidth
-                    )
+                                                  whiteLabel.implicitWidth,
+                                                  pinkLabel.implicitWidth,
+                                                  brownLabel.implicitWidth,
+                                                  greyLabel.implicitWidth
+                                                  )
 
-                    // Delta
                     Label {
-                        id: deltaLabel
-
-                        width: frequencyGrid.labelWidth
-                        text: "δ " + SoundNames.label("Delta") + " - 2 Hz"
+                        id: whiteLabel
+                        width: noiseGrid.labelWidth
+                        text: SoundNames.label("White")
                         color: Theme.secondaryHighlightColor
                         font.pixelSize: Theme.fontSizeSmall
                         wrapMode: Text.NoWrap
                     }
 
                     Label {
-                        width: frequencyGrid.width - frequencyGrid.labelWidth - frequencyGrid.columnSpacing
+                        width: noiseGrid.width -
+                               noiseGrid.labelWidth -
+                               noiseGrid.columnSpacing
 
-                        text: qsTr("Deep sleep, rest")
+                        text: qsTr("Focus, sleep and background noise masking")
                         color: Theme.primaryColor
                         font.pixelSize: Theme.fontSizeSmall
                         wrapMode: Text.WordWrap
                     }
 
-                    // Delta / Theta
                     Label {
-                        id: deltaThetaLabel
-
-                        width: frequencyGrid.labelWidth
-                        text: "δ / θ " + "- 4 Hz"
+                        id: pinkLabel
+                        width: noiseGrid.labelWidth
+                        text: SoundNames.label("Pink")
                         color: Theme.secondaryHighlightColor
                         font.pixelSize: Theme.fontSizeSmall
                         wrapMode: Text.NoWrap
                     }
 
                     Label {
-                        width: frequencyGrid.width - frequencyGrid.labelWidth - frequencyGrid.columnSpacing
+                        width: noiseGrid.width -
+                               noiseGrid.labelWidth -
+                               noiseGrid.columnSpacing
 
-                        text: qsTr("Deep relaxation, sleep")
+                        text: qsTr("Relaxation, sleep and concentration")
                         color: Theme.primaryColor
                         font.pixelSize: Theme.fontSizeSmall
                         wrapMode: Text.WordWrap
                     }
 
-                    // Theta
                     Label {
-                        id: thetaLabel
-
-                        width: frequencyGrid.labelWidth
-                        text: "θ " + SoundNames.label("Theta") + " - 6 Hz"
+                        id: brownLabel
+                        width: noiseGrid.labelWidth
+                        text: SoundNames.label("Brown")
                         color: Theme.secondaryHighlightColor
                         font.pixelSize: Theme.fontSizeSmall
                         wrapMode: Text.NoWrap
                     }
 
                     Label {
-                        width: frequencyGrid.width - frequencyGrid.labelWidth - frequencyGrid.columnSpacing
+                        width: noiseGrid.width -
+                               noiseGrid.labelWidth -
+                               noiseGrid.columnSpacing
 
-                        text: qsTr("Meditation and relaxation")
+                        text: qsTr("Relaxation, sleep and reducing distracting sounds")
                         color: Theme.primaryColor
                         font.pixelSize: Theme.fontSizeSmall
                         wrapMode: Text.WordWrap
                     }
 
-                    // Alpha
                     Label {
-                        id: alphaLabel
-
-                        width: frequencyGrid.labelWidth
-                        text: "α " + SoundNames.label("Alpha") + " - 10 Hz"
+                        id: greyLabel
+                        width: noiseGrid.labelWidth
+                        text: SoundNames.label("Grey")
                         color: Theme.secondaryHighlightColor
                         font.pixelSize: Theme.fontSizeSmall
                         wrapMode: Text.NoWrap
                     }
 
                     Label {
-                        width: frequencyGrid.width - frequencyGrid.labelWidth - frequencyGrid.columnSpacing
+                        width: noiseGrid.width -
+                               noiseGrid.labelWidth -
+                               noiseGrid.columnSpacing
 
-                        text: qsTr("Calm and relaxed wakefulness")
-                        color: Theme.primaryColor
-                        font.pixelSize: Theme.fontSizeSmall
-                        wrapMode: Text.WordWrap
-                    }
-
-                    // Beta
-                    Label {
-                        id: betaLabel
-
-                        width: frequencyGrid.labelWidth
-                        text: "β " + SoundNames.label("Beta") + " - 20 Hz"
-                        color: Theme.secondaryHighlightColor
-                        font.pixelSize: Theme.fontSizeSmall
-                        wrapMode: Text.NoWrap
-                    }
-
-                    Label {
-                        width: frequencyGrid.width - frequencyGrid.labelWidth - frequencyGrid.columnSpacing
-
-                        text: qsTr("Alertness and focus")
-                        color: Theme.primaryColor
-                        font.pixelSize: Theme.fontSizeSmall
-                        wrapMode: Text.WordWrap
-                    }
-
-                    // Gamma
-                    Label {
-                        id: gammaLabel
-
-                        width: frequencyGrid.labelWidth
-                        text: "γ " + SoundNames.label("Gamma") + " - 40 Hz"
-                        color: Theme.secondaryHighlightColor
-                        font.pixelSize: Theme.fontSizeSmall
-                        wrapMode: Text.NoWrap
-                    }
-
-                    Label {
-                        width: frequencyGrid.width - frequencyGrid.labelWidth - frequencyGrid.columnSpacing
-
-                        text: qsTr("Complex thinking and information processing")
+                        text: qsTr("Sound masking and general listening")
                         color: Theme.primaryColor
                         font.pixelSize: Theme.fontSizeSmall
                         wrapMode: Text.WordWrap

@@ -37,14 +37,6 @@ ApplicationWindow {
                                        ? mainPage.customSoundSelected
                                        : false
 
-    property bool customSoundActive: mainPage
-                                     ? mainPage.customSoundActive
-                                     : false
-
-    property string activeCustomName: mainPage
-                                      ? mainPage.customSoundLabel
-                                      : ""
-
     property bool isPlaying: mainPage
                              ? mainPage.isPlaying
                              : false
@@ -168,8 +160,8 @@ ApplicationWindow {
     // stop): dimmed hint state of the playback bar.
     property bool pausedMode: !isPlaying &&
                               (activeBand !== "" ||
-                               activeAmbiences.length > 0 ||
-                               activeNoise !== "" ||
+                               (mainPage ? mainPage.activeAmbiences.length > 0 : false) ||
+                               (mainPage ? mainPage.activeNoise !== "" : false) ||
                                solfeggioSelected ||
                                customSoundSelected)
 

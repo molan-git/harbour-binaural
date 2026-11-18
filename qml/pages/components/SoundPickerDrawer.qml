@@ -484,7 +484,7 @@ ActionDrawer {
             Row {
                 id: switchesRow
 
-                anchors.top: customSoundVolumeIcon.bottom
+                anchors.top: customSoundVolumeRow.bottom
                 anchors.topMargin: Theme.paddingMedium
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: Theme.paddingLarge

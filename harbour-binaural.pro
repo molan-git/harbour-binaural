@@ -51,11 +51,12 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/pages/components/AmbienceDrawer.qml \
     qml/pages/components/CustomBinauralDrawer.qml \
     qml/pages/components/CustomIsochronicDrawer.qml \
+    qml/pages/components/ExtendedTab.qml \
     qml/pages/components/HeadsetHint.qml \
-    qml/pages/components/InfoBinauralPage.qml \
-    qml/pages/components/InfoColoredPage.qml \
-    qml/pages/components/InfoIsochronicPage.qml \
-    qml/pages/components/InfoSolfeggioPage.qml \
+    qml/pages/InfoBinauralPage.qml \
+    qml/pages/InfoColoredPage.qml \
+    qml/pages/InfoIsochronicPage.qml \
+    qml/pages/InfoSolfeggioPage.qml \
     qml/pages/components/NoiseWaveDrawer.qml \
     qml/pages/components/PageDrawer.qml \
     qml/pages/components/PlaybackBar.qml \
@@ -63,6 +64,7 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/pages/components/SoundButton.qml \
     qml/pages/components/SoundNames.qml \
     qml/pages/components/SoundPickerDrawer.qml \
+    qml/pages/components/StandardTab.qml \
     qml/pages/components/VolumeSliderRow.qml \
     rpm/harbour-binaural.changes \
     rpm/harbour-binaural.changes.run.in \

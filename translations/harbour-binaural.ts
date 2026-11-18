@@ -397,22 +397,6 @@
         <translation>Timer</translation>
     </message>
     <message>
-        <source>Binaural Beats</source>
-        <translation>Binaural Beats</translation>
-    </message>
-    <message>
-        <source>Colored Noise</source>
-        <translation>Colored Noise</translation>
-    </message>
-    <message>
-        <source>Ambient sounds</source>
-        <translation>Ambient sounds</translation>
-    </message>
-    <message>
-        <source>Ambient Sound</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Standard</source>
         <translation type="unfinished"></translation>
     </message>
@@ -580,6 +564,25 @@
     <message>
         <source>40 Hz</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>StandardTab</name>
+    <message>
+        <source>Binaural Beats</source>
+        <translation type="unfinished">Binaural Beats</translation>
+    </message>
+    <message>
+        <source>Colored Noise</source>
+        <translation type="unfinished">Colored Noise</translation>
+    </message>
+    <message>
+        <source>Ambient Sound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ambient sounds</source>
+        <translation type="unfinished">Ambient sounds</translation>
     </message>
 </context>
 <context>

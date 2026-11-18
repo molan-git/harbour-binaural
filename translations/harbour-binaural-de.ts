@@ -195,47 +195,47 @@
 <context>
     <name>InfoBinauralPage</name>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="61"/>
+        <location filename="../qml/pages/InfoBinauralPage.qml" line="61"/>
         <source>Binaural Beats</source>
         <translation>Binaurale Beats</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="71"/>
+        <location filename="../qml/pages/InfoBinauralPage.qml" line="71"/>
         <source>Are created by playing two slightly different tones, one in each ear. The brain processes the difference as a rhythmic beat. Different beat frequencies can be used to support focus, relaxation, meditation, or sleep.</source>
         <translation>Sie entstehen, indem zwei leicht unterschiedliche Töne abgespielt werden, einer in jedem Ohr. Das Gehirn verarbeitet den Unterschied als rhythmischen Beat. Verschiedene Beat-Frequenzen können Konzentration, Entspannung, Meditation oder Schlaf unterstützen.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="104"/>
+        <location filename="../qml/pages/InfoBinauralPage.qml" line="104"/>
         <source>Choose from:</source>
         <translation>Wähle aus:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="143"/>
+        <location filename="../qml/pages/InfoBinauralPage.qml" line="143"/>
         <source>Deep sleep, rest</source>
         <translation>Tiefschlaf, Ruhe</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="163"/>
+        <location filename="../qml/pages/InfoBinauralPage.qml" line="163"/>
         <source>Deep relaxation, sleep</source>
         <translation>Tiefe Entspannung, Schlaf</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="183"/>
+        <location filename="../qml/pages/InfoBinauralPage.qml" line="183"/>
         <source>Meditation and relaxation</source>
         <translation>Meditation und Entspannung</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="203"/>
+        <location filename="../qml/pages/InfoBinauralPage.qml" line="203"/>
         <source>Calm and relaxed wakefulness</source>
         <translation>Ruhiges und entspanntes Wachsein</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="223"/>
+        <location filename="../qml/pages/InfoBinauralPage.qml" line="223"/>
         <source>Alertness and focus</source>
         <translation>Wachheit und Konzentration</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoBinauralPage.qml" line="243"/>
+        <location filename="../qml/pages/InfoBinauralPage.qml" line="243"/>
         <source>Complex thinking and information processing</source>
         <translation>Komplexes Denken und Informationsverarbeitung</translation>
     </message>
@@ -243,37 +243,37 @@
 <context>
     <name>InfoColoredPage</name>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="63"/>
+        <location filename="../qml/pages/InfoColoredPage.qml" line="63"/>
         <source>Colored Noise</source>
         <translation>Farbiges Rauschen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="73"/>
+        <location filename="../qml/pages/InfoColoredPage.qml" line="73"/>
         <source>Sound with different amounts of energy at different frequencies. Each color has a different character and is commonly used for different purposes.</source>
         <translation>Geräusch mit unterschiedlichen Energiemengen bei verschiedenen Frequenzen. Jede Farbe hat einen eigenen Charakter und wird für unterschiedliche Zwecke verwendet.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="106"/>
+        <location filename="../qml/pages/InfoColoredPage.qml" line="106"/>
         <source>Choose from:</source>
         <translation>Wähle aus:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="143"/>
+        <location filename="../qml/pages/InfoColoredPage.qml" line="143"/>
         <source>Focus, sleep and background noise masking</source>
         <translation>Für Konzentration, Schlaf und Ausblenden von Hintergrundgeräuschen.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="163"/>
+        <location filename="../qml/pages/InfoColoredPage.qml" line="163"/>
         <source>Relaxation, sleep and concentration</source>
         <translation>Entspannung, Schlaf und Konzentration</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="183"/>
+        <location filename="../qml/pages/InfoColoredPage.qml" line="183"/>
         <source>Relaxation, sleep and reducing distracting sounds</source>
         <translation>Entspannung, Schlaf und Reduzierung störender Geräusche</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoColoredPage.qml" line="203"/>
+        <location filename="../qml/pages/InfoColoredPage.qml" line="203"/>
         <source>Sound masking and general listening</source>
         <translation>Geräuschmaskierung und allgemeines Hören</translation>
     </message>
@@ -281,82 +281,82 @@
 <context>
     <name>InfoIsochronicPage</name>
     <message>
-        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="71"/>
+        <location filename="../qml/pages/InfoIsochronicPage.qml" line="71"/>
         <source>An isochronic tone is a sound that switches on and off at regular intervals. A continuous carrier tone is rapidly pulsed on and off; the carrier frequency is the pitch you hear, while the pulse frequency determines how quickly the sound pulses. The tones are played identically in both ears, independent of binaural beats.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="82"/>
+        <location filename="../qml/pages/InfoIsochronicPage.qml" line="82"/>
         <source>Choose from:</source>
         <translation type="unfinished">Wähle aus:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="102"/>
+        <location filename="../qml/pages/InfoIsochronicPage.qml" line="102"/>
         <source>1 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="112"/>
+        <location filename="../qml/pages/InfoIsochronicPage.qml" line="112"/>
         <source>Deep sleep, slow breathing exercises</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="122"/>
+        <location filename="../qml/pages/InfoIsochronicPage.qml" line="122"/>
         <source>2 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="132"/>
+        <location filename="../qml/pages/InfoIsochronicPage.qml" line="132"/>
         <source>Deep relaxation, sleep-oriented meditation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="142"/>
+        <location filename="../qml/pages/InfoIsochronicPage.qml" line="142"/>
         <source>4 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="152"/>
+        <location filename="../qml/pages/InfoIsochronicPage.qml" line="152"/>
         <source>Deep meditation, visualization, lucid dreaming practices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="162"/>
+        <location filename="../qml/pages/InfoIsochronicPage.qml" line="162"/>
         <source>6 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="172"/>
+        <location filename="../qml/pages/InfoIsochronicPage.qml" line="172"/>
         <source>Deep meditation, guided visualization, relaxation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="182"/>
+        <location filename="../qml/pages/InfoIsochronicPage.qml" line="182"/>
         <source>7.83 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="192"/>
+        <location filename="../qml/pages/InfoIsochronicPage.qml" line="192"/>
         <source>Deep relaxation, meditative awareness, grounding</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="202"/>
+        <location filename="../qml/pages/InfoIsochronicPage.qml" line="202"/>
         <source>10 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="212"/>
+        <location filename="../qml/pages/InfoIsochronicPage.qml" line="212"/>
         <source>Relaxed wakefulness, stress management, calm concentration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="222"/>
+        <location filename="../qml/pages/InfoIsochronicPage.qml" line="222"/>
         <source>40 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoIsochronicPage.qml" line="232"/>
+        <location filename="../qml/pages/InfoIsochronicPage.qml" line="232"/>
         <source>Attention and sensory processing</source>
         <translation type="unfinished"></translation>
     </message>
@@ -364,107 +364,107 @@
 <context>
     <name>InfoSolfeggioPage</name>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="61"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="61"/>
         <source>Solfeggio Frequencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="71"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="71"/>
         <source>Solfeggio frequencies are a collection of specific tones commonly used in meditation, relaxation and sound-based practices. Each frequency has a traditional symbolic association, ranging from grounding and transformation to awareness and unity.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="82"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="82"/>
         <source>The nine frequencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="126"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="126"/>
         <source>Grounding, safety and relaxation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="148"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="148"/>
         <source>Restoration and renewal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="170"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="170"/>
         <source>Releasing fear and guilt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="192"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="192"/>
         <source>Change and transformation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="214"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="214"/>
         <source>Love, transformation and harmony</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="236"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="236"/>
         <source>Relationships and connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="258"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="258"/>
         <source>Clarity, expression and intuition</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="280"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="280"/>
         <source>Awareness and inner reflection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="302"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="302"/>
         <source>Unity, wholeness and higher consciousness</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="318"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="318"/>
         <source>The 3–6–9 pattern</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="328"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="328"/>
         <source>The nine frequencies form three numerical groups when their digits are added together:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="355"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="355"/>
         <source>174, 417, 741 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="373"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="373"/>
         <source>285, 528, 852 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="391"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="391"/>
         <source>396, 639, 963 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="402"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="402"/>
         <source>In numerological interpretations, 3 is associated with creation, 6 with harmony and 9 with completion or unity. This pattern is symbolic rather than a physical property of sound.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="418"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="418"/>
         <source>How to experience Solfeggio tones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="428"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="428"/>
         <source>Each frequency can be listened to individually as a pure tone or combined with other frequencies to create layered soundscapes. Experiment with different tones and volume levels to find what feels comfortable for you.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/InfoSolfeggioPage.qml" line="439"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="439"/>
         <source>Unlike binaural beats, Solfeggio tones do not require different frequencies in the left and right ears. They can be played identically through both channels.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -472,7 +472,7 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="500"/>
+        <location filename="../qml/pages/MainPage.qml" line="502"/>
         <source>Standard</source>
         <translation type="unfinished"></translation>
     </message>
@@ -492,27 +492,7 @@
         <translation type="unfinished">Timer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="519"/>
-        <source>Binaural Beats</source>
-        <translation type="unfinished">Binaurale Beats</translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/MainPage.qml" line="624"/>
-        <source>Colored Noise</source>
-        <translation type="unfinished">Farbiges Rauschen</translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/MainPage.qml" line="696"/>
-        <source>Ambient Sound</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/MainPage.qml" line="708"/>
-        <source>Ambient sounds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/MainPage.qml" line="763"/>
+        <location filename="../qml/pages/MainPage.qml" line="547"/>
         <source>Extended</source>
         <translation type="unfinished"></translation>
     </message>
@@ -715,6 +695,29 @@
         <location filename="../qml/pages/components/SoundNames.qml" line="60"/>
         <source>Individual experiences may vary.</source>
         <translation>Die Wirkung kann individuell variieren.</translation>
+    </message>
+</context>
+<context>
+    <name>StandardTab</name>
+    <message>
+        <location filename="../qml/pages/components/StandardTab.qml" line="31"/>
+        <source>Binaural Beats</source>
+        <translation type="unfinished">Binaurale Beats</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/StandardTab.qml" line="159"/>
+        <source>Colored Noise</source>
+        <translation type="unfinished">Farbiges Rauschen</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/StandardTab.qml" line="250"/>
+        <source>Ambient Sound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/StandardTab.qml" line="266"/>
+        <source>Ambient sounds</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
