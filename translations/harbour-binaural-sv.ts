@@ -24,10 +24,6 @@
         <translation>Dataskydd</translation>
     </message>
     <message>
-        <source>This application works exclusively offline and requires permission to output audio. No data is collected.</source>
-        <translation>Den här appen fungerar enbart offline och kräver behörighet att spela upp ljud. Ingen data samlas in.</translation>
-    </message>
-    <message>
         <source>License</source>
         <translation>Licens</translation>
     </message>
@@ -50,6 +46,10 @@
     <message>
         <source>Source code</source>
         <translation>Källkod</translation>
+    </message>
+    <message>
+        <source>This application works exclusively offline and requires permission to output audio and to access the Music directory. No data is collected.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -120,13 +120,21 @@
         <translation>Bilder</translation>
     </message>
     <message>
-        <source>Images have been manually edited for use in this app:</source>
-        <translation>Bilderna har redigerats manuellt för användning i den här appen:</translation>
-    </message>
-    <message>
         <source>Thanks to %1 for some guidance on improving audio engine / sound generators logic.</source>
         <extracomment>%1 is a hyperlink to the GitHub profile of &quot;poetaster&quot;. &quot;audio engine&quot; and &quot;sound generators&quot; are technical terms and may be left untranslated.</extracomment>
         <translation>Tack till %1 för vägledning kring hur logiken för ljudmotorn/ ljudgeneratorerna kan förbättras.</translation>
+    </message>
+    <message>
+        <source>Source:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>License:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Images have been manually edited for use in this application:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

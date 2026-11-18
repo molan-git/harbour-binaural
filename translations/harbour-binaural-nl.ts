@@ -24,10 +24,6 @@
         <translation>Gegevensbescherming</translation>
     </message>
     <message>
-        <source>This application works exclusively offline and requires permission to output audio. No data is collected.</source>
-        <translation>Deze applicatie werkt volledig offline en vereist toestemming om audio uit te voeren. Er worden geen gegevens verzameld.</translation>
-    </message>
-    <message>
         <source>License</source>
         <translation>Licentie</translation>
     </message>
@@ -50,6 +46,10 @@
     <message>
         <source>Source code</source>
         <translation>Broncode</translation>
+    </message>
+    <message>
+        <source>This application works exclusively offline and requires permission to output audio and to access the Music directory. No data is collected.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -120,12 +120,20 @@
         <translation>Afbeeldingen</translation>
     </message>
     <message>
-        <source>Images have been manually edited for use in this app:</source>
-        <translation>Afbeeldingen zijn handmatig bewerkt voor gebruik in deze app:</translation>
-    </message>
-    <message>
         <source>Thanks to %1 for some guidance on improving audio engine / sound generators logic.</source>
         <extracomment>%1 is a hyperlink to the GitHub profile of &quot;poetaster&quot;. &quot;audio engine&quot; and &quot;sound generators&quot; are technical terms and may be left untranslated.</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Source:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>License:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Images have been manually edited for use in this application:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

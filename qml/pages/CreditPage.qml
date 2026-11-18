@@ -92,30 +92,27 @@ Page {
         }
     ]
 
-    // Hidden text used to measure the widest "label:" column, so both credit columns align.
+    // Hidden text used to measure the widest "label:" column.
     Text {
         id: labelMetrics
         visible: false
         font.pixelSize: Theme.fontSizeExtraSmall
-    }
+        wrapMode: Text.NoWrap
 
-    property real creditsLabelWidth: {
-        var widest = 0
+        text: {
+            var labels = []
 
-        var measure = function (label) {
-            labelMetrics.text = label
-            if (labelMetrics.implicitWidth > widest)
-                widest = labelMetrics.implicitWidth
+            for (var i = 0; i < page.translationCredits.length; ++i)
+                labels.push(page.translationCredits[i].language + ":")
+
+            for (var j = 0; j < page.soundCredits.length; ++j)
+                labels.push(page.soundCredits[j].name + ":")
+
+            return labels.join("\n")
         }
-
-        for (var i = 0; i < translationCredits.length; ++i)
-            measure(translationCredits[i].language + ":")
-
-        for (var j = 0; j < soundCredits.length; ++j)
-            measure(soundCredits[j].name + ":")
-
-        return widest
     }
+
+    readonly property real creditsLabelWidth: labelMetrics.implicitWidth
 
     function openLink(link) {
         if (link.indexOf("https://") === 0 ||
@@ -335,7 +332,7 @@ Page {
                 linkColor: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeExtraSmall
 
-                text: qsTr("Images have been manually edited for use in this app:") +
+                text: qsTr("Images have been manually edited for use in this application:") +
                       "<br>" +
                       page.link("https://commons.wikimedia.org/wiki/File:Beating_Frequency.svg",
                                 "Beating_Frequency.svg") +
@@ -346,11 +343,49 @@ Page {
 
                 onLinkActivated: openLink(link)
             }
-        }
 
-        Item {
-            width: 1
-            height: Theme.paddingMedium
+            Item {
+                width: parent.width
+                height: Theme.paddingLarge
+            }
+
+            SectionHeader {
+                text: "Opal.Tabs (v.2.1.1)"
+            }
+
+            Text {
+                x: Theme.horizontalPageMargin
+                width: parent.width - 2 * Theme.horizontalPageMargin
+
+                textFormat: Text.StyledText
+                wrapMode: Text.WordWrap
+
+                color: Theme.highlightColor
+                linkColor: Theme.primaryColor
+                font.pixelSize: Theme.fontSizeExtraSmall
+
+                text: "opal-tabbar by Mirian Margiani." +
+                      "<br>" +
+                      "Adapted and integrated into this application." +
+                      "<br><br>" +
+                      "Based on Sailfish Silica components by Jolla and " +
+                      "Open Mobile Platform, originally licensed under BSD-3-Clause." +
+                      "<br><br>" +
+                      qsTr("Source:") + " " +
+                      page.link("https://codeberg.org/opal-sfos/opal-tabs",
+                                "Opal.Tabs") +
+                      "<br>" +
+                      qsTr("License:") + " " +
+                      page.link("https://codeberg.org/opal-sfos/opal-tabs#license",
+                                "Opal.Tabs License")
+
+                onLinkActivated: openLink(link)
+            }
+
+            Item {
+                width: 1
+                height: Theme.paddingLarge
+            }
         }
 
         VerticalScrollDecorator {}

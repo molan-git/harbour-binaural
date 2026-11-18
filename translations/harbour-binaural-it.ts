@@ -24,10 +24,6 @@
         <translation>Protezione dei dati</translation>
     </message>
     <message>
-        <source>This application works exclusively offline and requires permission to output audio. No data is collected.</source>
-        <translation>Questa applicazione funziona esclusivamente offline e richiede l’autorizzazione per riprodurre l’audio. Non viene raccolto alcun dato.</translation>
-    </message>
-    <message>
         <source>License</source>
         <translation>Licenza</translation>
     </message>
@@ -50,6 +46,10 @@
     <message>
         <source>Source code</source>
         <translation>Codice sorgente</translation>
+    </message>
+    <message>
+        <source>This application works exclusively offline and requires permission to output audio and to access the Music directory. No data is collected.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -120,13 +120,21 @@
         <translation>Immagini</translation>
     </message>
     <message>
-        <source>Images have been manually edited for use in this app:</source>
-        <translation>Le immagini sono state modificate manualmente per essere utilizzate in questa app:</translation>
-    </message>
-    <message>
         <source>Thanks to %1 for some guidance on improving audio engine / sound generators logic.</source>
         <extracomment>%1 is a hyperlink to the GitHub profile of &quot;poetaster&quot;. &quot;audio engine&quot; and &quot;sound generators&quot; are technical terms and may be left untranslated.</extracomment>
         <translation>Ringraziamenti a %1 per la guida nel miglioramento della logica dell&apos;audio e dei generatori di suoni.</translation>
+    </message>
+    <message>
+        <source>Source:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>License:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Images have been manually edited for use in this application:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

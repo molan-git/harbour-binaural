@@ -29,6 +29,11 @@
         <translation>Hilf dabei, die Anwendung in deine Sprache zu übersetzen.</translation>
     </message>
     <message>
+        <location filename="../qml/pages/AboutPage.qml" line="158"/>
+        <source>This application works exclusively offline and requires permission to output audio and to access the Music directory. No data is collected.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/pages/AboutPage.qml" line="103"/>
         <source>Support</source>
         <translation>Unterstützung</translation>
@@ -52,11 +57,6 @@
         <location filename="../qml/pages/AboutPage.qml" line="151"/>
         <source>Data protection</source>
         <translation>Datenschutz</translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/AboutPage.qml" line="158"/>
-        <source>This application works exclusively offline and requires permission to output audio. No data is collected.</source>
-        <translation>Diese Anwendung funktioniert ausschließlich offline und benötigt die Berechtigung zur Audioausgabe. Es werden keine Daten gesammelt.</translation>
     </message>
     <message>
         <location filename="../qml/pages/AboutPage.qml" line="166"/>
@@ -110,52 +110,62 @@
         <translation>Slowenisch</translation>
     </message>
     <message>
-        <location filename="../qml/pages/CreditPage.qml" line="140"/>
+        <location filename="../qml/pages/CreditPage.qml" line="137"/>
         <source>Credits</source>
         <translation>Danksagungen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/CreditPage.qml" line="150"/>
+        <location filename="../qml/pages/CreditPage.qml" line="147"/>
         <source>Binaural was inspired by</source>
         <extracomment>Full sentence: &quot;Binaural was inspired by Metiq.&quot;</extracomment>
         <translation>Binaural wurde inspiriert durch</translation>
     </message>
     <message>
-        <location filename="../qml/pages/CreditPage.qml" line="177"/>
+        <location filename="../qml/pages/CreditPage.qml" line="174"/>
         <source>Thanks to %1 for some guidance on improving audio engine / sound generators logic.</source>
         <extracomment>%1 is a hyperlink to the GitHub profile of &quot;poetaster&quot;. &quot;audio engine&quot; and &quot;sound generators&quot; are technical terms and may be left untranslated.</extracomment>
         <translation>Besonderer Dank an %1 für die Unterstützung bei der Verbesserung der Audio-Engine / Sound-Generator-Logik.</translation>
     </message>
     <message>
-        <location filename="../qml/pages/CreditPage.qml" line="189"/>
+        <location filename="../qml/pages/CreditPage.qml" line="186"/>
         <source>Translations</source>
         <translation>Übersetzungen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/CreditPage.qml" line="238"/>
+        <location filename="../qml/pages/CreditPage.qml" line="235"/>
         <source>Audio files</source>
         <translation>Audiodateien</translation>
     </message>
     <message>
-        <location filename="../qml/pages/CreditPage.qml" line="247"/>
+        <location filename="../qml/pages/CreditPage.qml" line="244"/>
         <source>Files have been manually edited for use in this app under the</source>
         <extracomment>Full sentence: &quot;Files have been manually edited for use in this app under the Pixabay Content License:&quot; Keep the sentence natural when translating; &quot;Pixabay Content License&quot; is a clickable link.</extracomment>
         <translation>Dateien wurden für die Verwendung in dieser Anwendung manuell angepasst unter der</translation>
     </message>
     <message>
-        <location filename="../qml/pages/CreditPage.qml" line="250"/>
+        <location filename="../qml/pages/CreditPage.qml" line="247"/>
         <source>Pixabay Content License</source>
         <translation>Pixabay-Inhaltslizenz</translation>
     </message>
     <message>
-        <location filename="../qml/pages/CreditPage.qml" line="324"/>
+        <location filename="../qml/pages/CreditPage.qml" line="321"/>
         <source>Images</source>
         <translation>Bilder</translation>
     </message>
     <message>
-        <location filename="../qml/pages/CreditPage.qml" line="338"/>
-        <source>Images have been manually edited for use in this app:</source>
-        <translation>Folgende Bilder wurden für die Verwendung in dieser Anwendung manuell angepasst:</translation>
+        <location filename="../qml/pages/CreditPage.qml" line="335"/>
+        <source>Images have been manually edited for use in this application:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="374"/>
+        <source>Source:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/CreditPage.qml" line="378"/>
+        <source>License:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
