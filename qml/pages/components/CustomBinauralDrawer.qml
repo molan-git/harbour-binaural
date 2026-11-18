@@ -32,7 +32,7 @@ ActionDrawer {
                 id: baseFrequencySlider
 
                 width: parent.width * 0.9
-                anchors.horizontalCenter: parent.horizontalCenter
+                x: (parent.width - width) / 2
 
                 label: qsTr("Base frequency")
 

@@ -31,10 +31,10 @@ Item {
         id: slider
 
         anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.rightMargin: infoButton.visible
-                             ? infoButton.width + Theme.paddingLarge
-                             : 0
+
+        width: parent.width - (infoButton.visible
+                               ? infoButton.width + Theme.paddingLarge
+                               : 0)
 
         minimumValue: 0
         maximumValue: 100

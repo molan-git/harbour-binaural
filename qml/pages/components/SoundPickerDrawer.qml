@@ -494,14 +494,17 @@ ActionDrawer {
 
                     icon.source: "image://theme/icon-m-repeat"
 
+                    automaticCheck: false
+
                     checked: page.audioEngine
                              ? page.audioEngine.customSoundLoop
                              : false
 
-                    onCheckedChanged: {
-                        page.loopFolder = checked
-                        if (page.audioEngine)
-                            page.audioEngine.customSoundLoop = checked
+                    onClicked: {
+                        if (page.audioEngine) {
+                            page.audioEngine.customSoundLoop = !checked
+                            page.loopFolder = !checked
+                        }
                     }
 
                     opacity: page.audioEngine
@@ -517,13 +520,15 @@ ActionDrawer {
 
                     icon.source: "image://theme/icon-m-shuffle"
 
+                    automaticCheck: false
+
                     checked: page.audioEngine
                              ? page.audioEngine.customSoundCrossfade
                              : true
 
-                    onCheckedChanged: {
+                    onClicked: {
                         if (page.audioEngine)
-                            page.audioEngine.customSoundCrossfade = checked
+                            page.audioEngine.customSoundCrossfade = !checked
                     }
 
                     enabled: page.audioEngine
