@@ -12,7 +12,7 @@ Dialog {
 
     property url homeFolder: StandardPaths.music !== ""
                              ? StandardPaths.music
-                             : "file:///home/defaultuser/Music"
+                             : StandardPaths.home
 
     property url currentFolder: homeFolder
 
