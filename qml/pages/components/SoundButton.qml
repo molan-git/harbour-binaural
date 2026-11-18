@@ -13,18 +13,46 @@ Item {
     property bool playing: false
     property string iconSource: ""
     property bool secondary: false
+    property bool showInfoButton: false
+
+    // Width available for the actual sound button
+    property real contentWidth: preferredWidth > 0
+                                 ? Math.max(0, preferredWidth -
+                                            (showInfoButton
+                                             ? infoButton.width + Theme.paddingSmall
+                                             : 0))
+                                 : -1
 
     // 'enabled' is inherited from Item
 
     signal clicked()
+    signal infoClicked()
 
-    width: button.width
-    height: button.height
+    // Total width includes the optional info button.
+    width: preferredWidth > 0
+           ? preferredWidth
+           : (secondary ? secondaryButton.width : button.width)
+             + (showInfoButton
+                ? infoButton.width + Theme.paddingSmall
+                : 0)
 
-    // Rounded highlight background. Declared before the
-    // Button so it renders underneath it.
+    height: Math.max(secondary
+                     ? secondaryButton.height : button.height,
+                     showInfoButton ? infoButton.height : 0)
+
+    // Rounded highlight background
     Rectangle {
-        anchors.fill: parent
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+
+        width: root.secondary
+               ? secondaryButton.width
+               : button.width
+
+        height: root.secondary
+                ? secondaryButton.height
+                : button.height
+
         radius: Theme.paddingSmall
 
         color: root.selected
@@ -44,15 +72,17 @@ Item {
     Button {
         id: button
 
-        anchors.centerIn: parent
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+
         visible: !root.secondary
         text: root.text
 
-        preferredWidth: root.preferredWidth
+        preferredWidth: root.contentWidth
 
         // Prevent long text from expanding the button.
-        width: root.preferredWidth > 0
-               ? root.preferredWidth
+        width: root.contentWidth > 0
+               ? root.contentWidth
                : implicitWidth
 
         enabled: root.enabled
@@ -87,13 +117,16 @@ Item {
     SecondaryButton {
         id: secondaryButton
 
-        anchors.centerIn: parent
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+
         visible: root.secondary
         text: root.text
 
-        preferredWidth: root.preferredWidth
-        width: root.preferredWidth > 0
-               ? root.preferredWidth
+        preferredWidth: root.contentWidth
+
+        width: root.contentWidth > 0
+               ? root.contentWidth
                : implicitWidth
 
         enabled: root.enabled
@@ -122,5 +155,22 @@ Item {
             source: root.iconSource
             color: secondaryButton.color
         }
+    }
+
+    // Optional info button
+    IconButton {
+        id: infoButton
+
+        visible: root.showInfoButton
+
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+
+        icon.source: "image://theme/icon-m-about?" +
+                     (pressed
+                      ? Theme.highlightColor
+                      : Theme.primaryColor)
+
+        onClicked: root.infoClicked()
     }
 }

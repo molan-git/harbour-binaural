@@ -177,16 +177,23 @@ ActionDrawer {
         spacing: Theme.paddingMedium
 
         // Selected folder and current track information
+        // Selected folder and current track information
         Item {
             id: trackInfoContainer
 
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width * 0.7
+            width: parent.width * 0.8
+
+            property bool showSelectionLabel:
+                page.selectedFolderName !== ""
+                || page.selectedFileName !== ""
+
+            property bool labelsVisible: false
 
             property bool showTrackInfo:
-                selectedFolderName !== ""
-                && audioEngine !== null
-                && audioEngine.customSoundPlaylistActive
+                page.selectedFolderName !== ""
+                && page.audioEngine !== null
+                && page.audioEngine.customSoundPlaylistActive
 
             property real expandedHeight:
                 folderNameLabel.implicitHeight
@@ -195,12 +202,24 @@ ActionDrawer {
                    ? trackNameLabel.implicitHeight + Theme.paddingSmall
                    : 0)
 
-            height: expandedHeight
+            // No reserved space when nothing is selected.
+            // Expand smoothly when a selection appears.
+            height: showSelectionLabel ? expandedHeight : 0
 
             Behavior on height {
                 NumberAnimation {
                     duration: 300
                     easing.type: Easing.OutCubic
+                }
+            }
+
+            onShowSelectionLabelChanged: {
+                if (showSelectionLabel) {
+                    labelAppearanceTimer.stop()
+                    labelAppearanceTimer.start()
+                } else {
+                    labelAppearanceTimer.stop()
+                    labelsVisible = false
                 }
             }
 
@@ -213,13 +232,22 @@ ActionDrawer {
                     right: parent.right
                 }
 
-                text: selectedFolderName !== ""
-                      ? selectedFolderName
-                      : selectedFileName
+                text: page.selectedFolderName !== ""
+                      ? page.selectedFolderName
+                      : page.selectedFileName
 
                 wrapMode: Text.Wrap
                 color: Theme.highlightColor
                 font.pixelSize: Theme.fontSizeMedium
+
+                opacity: trackInfoContainer.labelsVisible ? 1.0 : 0.0
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 250
+                        easing.type: Easing.OutCubic
+                    }
+                }
             }
 
             Label {
@@ -240,6 +268,27 @@ ActionDrawer {
                 wrapMode: Text.Wrap
                 color: Theme.secondaryHighlightColor
                 font.pixelSize: Theme.fontSizeSmall
+
+                opacity: trackInfoContainer.labelsVisible ? 1.0 : 0.0
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 250
+                        easing.type: Easing.OutCubic
+                    }
+                }
+            }
+
+            // Delay label appearance until the container has expanded.
+            Timer {
+                id: labelAppearanceTimer
+
+                interval: 300
+                repeat: false
+
+                onTriggered: {
+                    trackInfoContainer.labelsVisible = true
+                }
             }
         }
 
@@ -484,8 +533,6 @@ ActionDrawer {
             Row {
                 id: switchesRow
 
-                anchors.top: customSoundVolumeRow.bottom
-                anchors.topMargin: Theme.paddingMedium
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: Theme.paddingLarge
 

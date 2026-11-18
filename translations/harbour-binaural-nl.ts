@@ -346,30 +346,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>The 3–6–9 pattern</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The nine frequencies form three numerical groups when their digits are added together:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>174, 417, 741 Hz</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>285, 528, 852 Hz</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>396, 639, 963 Hz</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>In numerological interpretations, 3 is associated with creation, 6 with harmony and 9 with completion or unity. This pattern is symbolic rather than a physical property of sound.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>How to experience Solfeggio tones</source>
         <translation type="unfinished"></translation>
     </message>

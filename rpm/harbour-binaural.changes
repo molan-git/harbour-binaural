@@ -12,17 +12,21 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
-* Tue Nov 10 2026 molan <59296158+molan-git@users.noreply.github.com> - 0.9.0-1
+* Tue Nov 10 2026 molan <59296158+molan-git@users.noreply.github.com> - 0.9.1-1
 - [add] Custom sounds feature
 - [add] Solfeggio frequencies feature
 - [add] Play up to 3 ambient sounds together
 - [add] Custom binaural frequencies
 - [add] Wave generator with colored noises
+- [add] Updated mainpage UI with tab feature
+- [update] Credits page
+- [improvement] UI play and selection logic of frequency sounds
 - [improvement] TimerPage, MainPage, CoverPage, AboutPage UI
 - [improvement] UI decomposition
 - [improvement] Ambient sound channel hardening, better loops & loudness compensation
 - [refactoring] Audio engines and generators
 - [fix] Unstable ambient sound crossfade / fade-out
+- [fix] Breaking audio output when playing multiple ambient sounds
 
 * Wed Oct 14 2026 molan <59296158+molan-git@users.noreply.github.com> - 0.8.1-1
 - [add] new ambience sounds: Waves & Sailing (updated Lake)

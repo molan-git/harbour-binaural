@@ -47,10 +47,11 @@ Dialog {
         var path = normalizedPath(currentFolder)
         var parts = path.split("/")
         var name = parts.length > 0 ? parts[parts.length - 1] : path
+
         if (name === "")
             name = qsTr("Music")
+
         picker.folderSelected(currentFolder, name)
-        picker.accept()
     }
 
     canAccept: hasAudioFiles

@@ -136,6 +136,10 @@ SilicaFlickable {
                 playing: root.mainPage.bandPlaying
 
                 onClicked: root.openCustomBinauralRequested()
+
+                // Enable InfoBinauralPage-Button
+                showInfoButton: true
+                onInfoClicked: root.binauralInfoRequested()
             }
         }
 
@@ -143,14 +147,10 @@ SilicaFlickable {
             width: parent.width - 2 * Theme.horizontalPageMargin
             x: Theme.horizontalPageMargin
 
-            showInfoButton: true
             enabled: root.mainPage.activeBand !== ""
 
             onValueChanged:
                 root.engine.setBinauralVolume(value)
-
-            onInfoClicked:
-                root.binauralInfoRequested()
         }
 
         // ── Colored Noise ──
@@ -227,6 +227,10 @@ SilicaFlickable {
                 playing: root.mainPage.noisePlaying
 
                 onClicked: root.openNoiseWaveRequested()
+
+                // Enable InfoColoredPage-Button
+                showInfoButton: true
+                onInfoClicked: root.coloredNoiseInfoRequested()
             }
         }
 
@@ -234,14 +238,10 @@ SilicaFlickable {
             width: parent.width - 2 * Theme.horizontalPageMargin
             x: Theme.horizontalPageMargin
 
-            showInfoButton: true
             enabled: root.mainPage.activeNoise !== ""
 
             onValueChanged:
                 root.engine.setColoredNoiseVolume(value)
-
-            onInfoClicked:
-                root.coloredNoiseInfoRequested()
         }
 
         // ── Ambient Sound ──

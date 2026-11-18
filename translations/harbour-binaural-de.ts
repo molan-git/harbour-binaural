@@ -67,22 +67,22 @@
 <context>
     <name>AudioFilePickerPage</name>
     <message>
-        <location filename="../qml/pages/AudioFilePickerPage.qml" line="51"/>
+        <location filename="../qml/pages/AudioFilePickerPage.qml" line="52"/>
         <source>Music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/AudioFilePickerPage.qml" line="70"/>
+        <location filename="../qml/pages/AudioFilePickerPage.qml" line="71"/>
         <source>Use Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/AudioFilePickerPage.qml" line="71"/>
+        <location filename="../qml/pages/AudioFilePickerPage.qml" line="72"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/AudioFilePickerPage.qml" line="163"/>
+        <location filename="../qml/pages/AudioFilePickerPage.qml" line="164"/>
         <source>No audio files or folders</source>
         <translation type="unfinished"></translation>
     </message>
@@ -425,46 +425,16 @@
     </message>
     <message>
         <location filename="../qml/pages/InfoSolfeggioPage.qml" line="318"/>
-        <source>The 3–6–9 pattern</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="328"/>
-        <source>The nine frequencies form three numerical groups when their digits are added together:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="355"/>
-        <source>174, 417, 741 Hz</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="373"/>
-        <source>285, 528, 852 Hz</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="391"/>
-        <source>396, 639, 963 Hz</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="402"/>
-        <source>In numerological interpretations, 3 is associated with creation, 6 with harmony and 9 with completion or unity. This pattern is symbolic rather than a physical property of sound.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="418"/>
         <source>How to experience Solfeggio tones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="428"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="328"/>
         <source>Each frequency can be listened to individually as a pure tone or combined with other frequencies to create layered soundscapes. Experiment with different tones and volume levels to find what feels comfortable for you.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="439"/>
+        <location filename="../qml/pages/InfoSolfeggioPage.qml" line="339"/>
         <source>Unlike binaural beats, Solfeggio tones do not require different frequencies in the left and right ears. They can be played identically through both channels.</source>
         <translation type="unfinished"></translation>
     </message>

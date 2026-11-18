@@ -485,7 +485,7 @@ Page {
                                     Item {
                                         id: topSpacer
                                         width: parent.width
-                                        height: Theme.paddingLarge
+                                        height: Theme.paddingMedium
                                     }
 
                                     TabView {

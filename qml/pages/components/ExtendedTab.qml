@@ -58,6 +58,9 @@ SilicaFlickable {
                 playing: root.mainPage.solfeggioPlaying
 
                 onClicked: root.openSolfeggioDrawerRequested()
+
+                showInfoButton: true
+                onInfoClicked: root.solfeggioInfoRequested()
             }
         }
 
@@ -65,14 +68,10 @@ SilicaFlickable {
             width: parent.width - 2 * Theme.horizontalPageMargin
             x: Theme.horizontalPageMargin
 
-            showInfoButton: true
             enabled: root.mainPage.activeSolfeggio.length > 0
 
             onValueChanged:
                 root.engine.setSolfeggioVolume(value)
-
-            onInfoClicked:
-                root.solfeggioInfoRequested()
         }
 
         // ── Isochronic Tones ──
@@ -168,6 +167,9 @@ SilicaFlickable {
                 playing: root.mainPage.isochronicPlaying
 
                 onClicked: root.openIsochronicDrawerRequested()
+
+                showInfoButton: true
+                onInfoClicked: root.isochronicInfoRequested()
             }
         }
 
@@ -175,14 +177,10 @@ SilicaFlickable {
             width: parent.width - 2 * Theme.horizontalPageMargin
             x: Theme.horizontalPageMargin
 
-            showInfoButton: true
             enabled: root.mainPage.activeIsochronic !== ""
 
             onValueChanged:
                 root.engine.setIsochronicVolume(value)
-
-            onInfoClicked:
-                root.isochronicInfoRequested()
         }
 
         Item {
