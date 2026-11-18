@@ -155,7 +155,7 @@ Page {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
 
-                text: qsTr("This application works exclusively offline and requires permission to output audio. No data is collected.")
+                text: qsTr("This application works exclusively offline and requires permission to output audio and to access the Music directory. No data is collected.")
 
                 color: Theme.highlightColor
                 font.pixelSize: Theme.fontSizeSmall
