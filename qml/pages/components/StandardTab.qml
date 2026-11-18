@@ -324,11 +324,6 @@ SilicaFlickable {
                 onClicked: root.openSoundPickerRequested()
             }
         }
-
-        Item {
-            width: parent.width
-            height: Theme.itemSizeMedium
-        }
     }
 
     VerticalScrollDecorator {}

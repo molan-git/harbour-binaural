@@ -485,7 +485,8 @@ Page {
                                     Item {
                                         id: topSpacer
                                         width: parent.width
-                                        height: Theme.paddingMedium
+                                        // Spacing above TabView indicator (added because of J2 Notch)
+                                        height: Theme.paddingSmall
                                     }
 
                                     TabView {

@@ -442,7 +442,7 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="502"/>
+        <location filename="../qml/pages/MainPage.qml" line="503"/>
         <source>Standard</source>
         <translation type="unfinished"></translation>
     </message>
@@ -462,7 +462,7 @@
         <translation type="unfinished">Timer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="547"/>
+        <location filename="../qml/pages/MainPage.qml" line="548"/>
         <source>Extended</source>
         <translation type="unfinished"></translation>
     </message>
