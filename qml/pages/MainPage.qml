@@ -512,7 +512,7 @@ Page {
                                                         Column {
                                                             id: standardColumn
                                                             width: parent.width
-                                                            spacing: Theme.paddingMedium
+                                                            spacing: Theme.paddingSmall
 
                                                             // ── Binaural Beats ──
                                                             SectionHeader {
