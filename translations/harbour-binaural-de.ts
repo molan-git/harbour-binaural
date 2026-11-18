@@ -647,22 +647,21 @@
     </message>
     <message>
         <location filename="../qml/pages/components/SoundNames.qml" line="56"/>
-        <location filename="../qml/pages/components/SoundNames.qml" line="57"/>
         <source>Solfeggio frequencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="58"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="57"/>
         <source>Solfeggio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="59"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="58"/>
         <source>Start your sound mix</source>
         <translation>Starte deinen Klangmix</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/SoundNames.qml" line="60"/>
+        <location filename="../qml/pages/components/SoundNames.qml" line="59"/>
         <source>Individual experiences may vary.</source>
         <translation>Die Wirkung kann individuell variieren.</translation>
     </message>
@@ -675,17 +674,17 @@
         <translation type="unfinished">Binaurale Beats</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/StandardTab.qml" line="159"/>
+        <location filename="../qml/pages/components/StandardTab.qml" line="171"/>
         <source>Colored Noise</source>
         <translation type="unfinished">Farbiges Rauschen</translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/StandardTab.qml" line="250"/>
+        <location filename="../qml/pages/components/StandardTab.qml" line="262"/>
         <source>Ambient Sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/StandardTab.qml" line="266"/>
+        <location filename="../qml/pages/components/StandardTab.qml" line="280"/>
         <source>Ambient sounds</source>
         <translation type="unfinished"></translation>
     </message>

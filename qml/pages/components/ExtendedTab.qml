@@ -39,6 +39,8 @@ SilicaFlickable {
             SoundButton {
                 id: solfeggioButton
 
+                topPadding: Theme.paddingSmall * 1.5
+
                 anchors.centerIn: parent
 
                 preferredWidth: isochronicGrid.width -
@@ -80,58 +82,70 @@ SilicaFlickable {
             text: SoundNames.label("Isochronic tones")
         }
 
-        HeadsetHint {}
+        Item {
+            width: parent.width
 
-        SilicaGridView {
-            id: isochronicGrid
+            height: headsetHint.height
+                    + Theme.paddingSmall
+                    + isochronicGrid.height
 
-            x: Theme.horizontalPageMargin
-            width: parent.width - 2 * Theme.horizontalPageMargin
-            height: contentHeight
+            HeadsetHint {
+                id: headsetHint
+            }
 
-            cellWidth: width / 3
-            cellHeight: Theme.itemSizeMedium
+            SilicaGridView {
+                id: isochronicGrid
 
-            model: [
-                "1 Hz", "2 Hz", "4 Hz",
-                "6 Hz", "7.83 Hz", "10 Hz"
-            ]
+                y: headsetHint.height + Theme.paddingSmall
 
-            delegate: Item {
-                width: isochronicGrid.cellWidth
-                height: isochronicGrid.cellHeight
+                x: Theme.horizontalPageMargin
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                height: contentHeight
 
-                SoundButton {
-                    anchors.centerIn: parent
+                cellWidth: width / 3
+                cellHeight: Theme.itemSizeMedium
 
-                    preferredWidth: isochronicGrid.cellWidth -
-                                    Theme.paddingMedium
+                model: [
+                    "1 Hz", "2 Hz", "4 Hz",
+                    "6 Hz", "7.83 Hz", "10 Hz"
+                ]
 
-                    text: SoundNames.label(modelData)
+                delegate: Item {
+                    width: isochronicGrid.cellWidth
+                    height: isochronicGrid.cellHeight
 
-                    selected: root.mainPage.activeIsochronic === modelData
-                    playing: root.mainPage.isochronicPlaying
+                    SoundButton {
+                        anchors.centerIn: parent
 
-                    onClicked: {
-                        if (selected) {
-                            root.mainPage.activeIsochronic = ""
-                            root.mainPage.isCustomIsochronic = false
-                            root.engine.stopIsochronic()
+                        preferredWidth: isochronicGrid.cellWidth -
+                                        Theme.paddingMedium
 
-                        } else if (!root.mainPage.pausedMode) {
-                            root.mainPage.activeIsochronic = modelData
-                            root.mainPage.isCustomIsochronic = false
+                        text: SoundNames.label(modelData)
 
-                            root.engine.setIsochronicPreset(modelData)
-                            root.engine.startIsochronic()
+                        selected: root.mainPage.activeIsochronic === modelData
+                        playing: root.mainPage.isochronicPlaying
 
-                        } else {
-                            root.engine.stopIsochronic()
+                        onClicked: {
+                            if (selected) {
+                                root.mainPage.activeIsochronic = ""
+                                root.mainPage.isCustomIsochronic = false
+                                root.engine.stopIsochronic()
 
-                            root.mainPage.activeIsochronic = modelData
-                            root.mainPage.isCustomIsochronic = false
+                            } else if (!root.mainPage.pausedMode) {
+                                root.mainPage.activeIsochronic = modelData
+                                root.mainPage.isCustomIsochronic = false
 
-                            root.engine.setIsochronicPreset(modelData)
+                                root.engine.setIsochronicPreset(modelData)
+                                root.engine.startIsochronic()
+
+                            } else {
+                                root.engine.stopIsochronic()
+
+                                root.mainPage.activeIsochronic = modelData
+                                root.mainPage.isCustomIsochronic = false
+
+                                root.engine.setIsochronicPreset(modelData)
+                            }
                         }
                     }
                 }

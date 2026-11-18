@@ -13,13 +13,13 @@ Item {
     id: root
 
     property alias text: header.text
-    // Adjust spacing below component here:
     property real bottomSpacing: Theme.paddingSmall
 
     width: parent ? parent.width : 0
 
-    // Explicitly reserve space below the header
-    height: header.height + bottomSpacing
+    // Keep the actual spacing below the header consistent.
+    height: header.height + bottomSpacing -
+            (parent ? parent.spacing : 0)
 
     SectionHeader {
         id: header
@@ -27,7 +27,7 @@ Item {
         x: Theme.horizontalPageMargin
         width: parent.width - 2 * Theme.horizontalPageMargin
 
-        height: implicitHeight
         anchors.top: parent.top
+        height: implicitHeight
     }
 }

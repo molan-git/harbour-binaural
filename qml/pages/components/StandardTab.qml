@@ -31,68 +31,80 @@ SilicaFlickable {
             text: qsTr("Binaural Beats")
         }
 
-        HeadsetHint {}
+        Item {
+            width: parent.width
 
-        SilicaGridView {
-            id: frequencyGrid
+            height: headsetHint.height
+                    + Theme.paddingSmall
+                    + frequencyGrid.height
 
-            x: Theme.horizontalPageMargin
-            width: parent.width - 2 * Theme.horizontalPageMargin
-            height: contentHeight
-
-            cellWidth: width / 3
-            cellHeight: Theme.itemSizeMedium
-
-            model: ListModel {
-                ListElement { bandName: "Delta"; symbol: "δ" }
-                ListElement { bandName: "Delta/Theta"; symbol: "δ / θ" }
-                ListElement { bandName: "Theta"; symbol: "θ" }
-                ListElement { bandName: "Alpha"; symbol: "α" }
-                ListElement { bandName: "Beta"; symbol: "β" }
-                ListElement { bandName: "Gamma"; symbol: "γ" }
+            HeadsetHint {
+                id: headsetHint
             }
 
-            delegate: Item {
-                width: frequencyGrid.cellWidth
-                height: frequencyGrid.cellHeight
+            SilicaGridView {
+                id: frequencyGrid
 
-                SoundButton {
-                    anchors.centerIn: parent
+                y: headsetHint.height + Theme.paddingSmall
 
-                    preferredWidth: frequencyGrid.cellWidth -
-                                    Theme.paddingMedium
+                x: Theme.horizontalPageMargin
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                height: contentHeight
 
-                    text: symbol
+                cellWidth: width / 3
+                cellHeight: Theme.itemSizeMedium
 
-                    selected: root.mainPage.activeBand === bandName
-                    playing: root.mainPage.bandPlaying
+                model: ListModel {
+                    ListElement { bandName: "Delta"; symbol: "δ" }
+                    ListElement { bandName: "Delta/Theta"; symbol: "δ / θ" }
+                    ListElement { bandName: "Theta"; symbol: "θ" }
+                    ListElement { bandName: "Alpha"; symbol: "α" }
+                    ListElement { bandName: "Beta"; symbol: "β" }
+                    ListElement { bandName: "Gamma"; symbol: "γ" }
+                }
 
-                    onClicked: {
-                        if (selected) {
-                            root.mainPage.activeBand = ""
-                            root.mainPage.isCustomBinaural = false
-                            root.engine.stop()
+                delegate: Item {
+                    width: frequencyGrid.cellWidth
+                    height: frequencyGrid.cellHeight
 
-                        } else if (!root.mainPage.pausedMode) {
-                            root.mainPage.activeBand = bandName
-                            root.mainPage.isCustomBinaural = false
-                            root.mainPage.currentCarrier = 200
-                            root.mainPage.currentBeat =
-                                    root.mainPage.bandBeat(bandName)
+                    SoundButton {
+                        anchors.centerIn: parent
 
-                            root.engine.setFrequencyBand(bandName)
-                            root.engine.start()
+                        preferredWidth: frequencyGrid.cellWidth -
+                                        Theme.paddingMedium
 
-                        } else {
-                            root.engine.stop()
+                        text: symbol
 
-                            root.mainPage.activeBand = bandName
-                            root.mainPage.isCustomBinaural = false
-                            root.mainPage.currentCarrier = 200
-                            root.mainPage.currentBeat =
-                                    root.mainPage.bandBeat(bandName)
+                        selected: root.mainPage.activeBand === bandName
+                        playing: root.mainPage.bandPlaying
 
-                            root.engine.setFrequencyBand(bandName)
+                        onClicked: {
+                            if (selected) {
+                                root.mainPage.activeBand = ""
+                                root.mainPage.isCustomBinaural = false
+                                root.engine.stop()
+
+                            } else if (!root.mainPage.pausedMode) {
+                                root.mainPage.activeBand = bandName
+                                root.mainPage.isCustomBinaural = false
+                                root.mainPage.currentCarrier = 200
+                                root.mainPage.currentBeat =
+                                        root.mainPage.bandBeat(bandName)
+
+                                root.engine.setFrequencyBand(bandName)
+                                root.engine.start()
+
+                            } else {
+                                root.engine.stop()
+
+                                root.mainPage.activeBand = bandName
+                                root.mainPage.isCustomBinaural = false
+                                root.mainPage.currentCarrier = 200
+                                root.mainPage.currentBeat =
+                                        root.mainPage.bandBeat(bandName)
+
+                                root.engine.setFrequencyBand(bandName)
+                            }
                         }
                     }
                 }
@@ -257,6 +269,8 @@ SilicaFlickable {
             SoundButton {
                 id: ambienceButton
 
+                topPadding: Theme.paddingSmall * 1.5
+
                 anchors.centerIn: parent
 
                 preferredWidth: frequencyGrid.width -
@@ -288,6 +302,8 @@ SilicaFlickable {
 
             SoundButton {
                 id: customSoundButton
+
+                topPadding: Theme.paddingSmall
 
                 anchors.centerIn: parent
 
