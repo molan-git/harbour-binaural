@@ -10,6 +10,7 @@ Page {
 
     property string activeBand: ""
     property string activeNoise: ""
+    property string activeSequence: ""
     property var activeAmbiences: []
     property var activeSolfeggio: []
     property string activeIsochronic: ""
@@ -22,6 +23,8 @@ Page {
     property bool bandPlaying: audioEngine.binauralPlaying
     property bool ambiencePlaying: audioEngine.ambiencePlaying
     property bool noisePlaying: audioEngine.coloredNoisePlaying
+    property bool sequencePlaying: audioEngine.sequencePlaying
+    property bool sequencePaused: audioEngine.sequencePaused
     property bool solfeggioPlaying: audioEngine.solfeggioPlaying
     property bool isochronicPlaying: audioEngine.isochronicPlaying
 
@@ -34,6 +37,7 @@ Page {
     property bool hasActiveSounds:
         activeBand !== "" ||
         activeNoise !== "" ||
+        activeSequence !== "" ||
         activeAmbiences.length > 0 ||
         activeSolfeggio.length > 0 ||
         activeIsochronic !== "" ||
@@ -48,6 +52,9 @@ Page {
 
         if (activeNoise !== "")
             parts.push(SoundNames.label(activeNoise))
+
+        if (activeSequence !== "")
+            parts.push(activeSequence)
 
         if (activeSolfeggio.length > 0)
             parts.push(SoundNames.label("Solfeggio"))
@@ -69,6 +76,7 @@ Page {
     property bool isPlaying: bandPlaying ||
                              ambiencePlaying ||
                              noisePlaying ||
+                             sequencePlaying ||
                              solfeggioPlaying ||
                              isochronicPlaying ||
                              customSoundPlaying
@@ -88,6 +96,7 @@ Page {
     onActiveNoiseChanged: checkSleepTimer()
     onActiveSolfeggioChanged: checkSleepTimer()
     onActiveIsochronicChanged: checkSleepTimer()
+    onActiveSequenceChanged: checkSleepTimer()
     onCustomSoundSelectedChanged: checkSleepTimer()
 
     function checkSleepTimer() {
@@ -147,6 +156,14 @@ Page {
                 audioEngine.startIsochronic()
             }
         }
+
+        if (activeSequence !== "") {
+            if (audioEngine.sequencePaused) {
+                audioEngine.resumeSequence()
+            } else if (!audioEngine.sequencePlaying) {
+                audioEngine.startSequence(activeSequence)
+            }
+        }
     }
 
     function togglePlayback() {
@@ -154,6 +171,7 @@ Page {
             audioEngine.pauseBinaural()
             audioEngine.pauseAmbience()
             audioEngine.pauseColoredNoise()
+            audioEngine.pauseSequence()
             audioEngine.pauseSolfeggio()
             audioEngine.pauseIsochronic()
             audioEngine.pauseCustomSound()
@@ -170,6 +188,7 @@ Page {
         audioEngine.stopColoredNoise()
         audioEngine.stopSolfeggio()
         audioEngine.stopIsochronic()
+        audioEngine.stopSequence()
         audioEngine.stopCustomSound()
         noiseWaveDrawer.open = false
         solfeggioDrawer.open = false
@@ -182,6 +201,7 @@ Page {
         page.activeSolfeggio = []
         page.activeIsochronic = ""
         page.isCustomIsochronic = false
+        page.activeSequence = ""
 
         audioEngine.customSoundSource = ""
         audioEngine.customSoundName = ""
@@ -210,6 +230,50 @@ Page {
         return 10.0
     }
 
+    function selectSequence(preset) {
+        if (preset === "") {
+            page.activeSequence = ""
+            audioEngine.stopSequence()
+            return
+        }
+
+        // Selecting the currently active preset deselects it.
+        if (page.activeSequence === preset) {
+            page.activeSequence = ""
+            audioEngine.stopSequence()
+            return
+        }
+
+        // Preserve paused mode when selecting a sequence.
+        var wasPaused = page.pausedMode
+
+        page.activeSequence = preset
+
+        audioEngine.startSequence(preset)
+
+        if (wasPaused)
+            audioEngine.pauseSequence()
+    }
+
+    function toggleSequencePlayback() {
+        if (page.activeSequence === "")
+            return
+
+        if (audioEngine.sequencePlaying) {
+            audioEngine.pauseSequence()
+            appWindow.pauseSleepTimer()
+
+        } else if (audioEngine.sequencePaused) {
+            audioEngine.resumeSequence()
+            appWindow.resumeSleepTimer()
+
+        } else {
+            // Restart if the sequence has already finished.
+            audioEngine.startSequence(page.activeSequence)
+            appWindow.resumeSleepTimer()
+        }
+    }
+
     Component {
         id: infoBinauralPageComponent
         InfoBinauralPage {}
@@ -228,6 +292,11 @@ Page {
     Component {
         id: infoIsochronicPageComponent
         InfoIsochronicPage {}
+    }
+
+    Component {
+        id: infoSequencePageComponent
+        InfoSequencePage {}
     }
 
     PageDrawer {
@@ -573,6 +642,9 @@ Page {
 
                                                         onIsochronicInfoRequested:
                                                             pageStack.push(infoIsochronicPageComponent)
+
+                                                        onSequenceInfoRequested:
+                                                            pageStack.push(infoSequencePageComponent)
                                                     }
                                                 }
                                             }

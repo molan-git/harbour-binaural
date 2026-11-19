@@ -29,6 +29,7 @@ SOURCES += src/harbour-binaural.cpp \
     src/audioengine_ambience.cpp \
     src/audioengine_binaural.cpp \
     src/audioengine_colorednoise.cpp \
+    src/audioengine_sequence.cpp \
     src/audioengine_customsound.cpp \
     src/audioengine_isochronic.cpp \
     src/audioengine_solfeggio.cpp \
@@ -36,6 +37,8 @@ SOURCES += src/harbour-binaural.cpp \
     src/colorednoisegenerator.cpp \
     src/isochronicgenerator.cpp \
     src/pcmchannel.cpp \
+    src/sbgsequence.cpp \
+    src/sequencegenerator.cpp \
     src/solfeggiogenerator.cpp
 
 
@@ -58,6 +61,7 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/pages/InfoColoredPage.qml \
     qml/pages/InfoIsochronicPage.qml \
     qml/pages/InfoSolfeggioPage.qml \
+    qml/pages/InfoSequencePage.qml \
     qml/pages/components/NoiseWaveDrawer.qml \
     qml/pages/components/PageDrawer.qml \
     qml/pages/components/PlaybackBar.qml \
@@ -121,6 +125,8 @@ HEADERS += \
     src/colorednoisegenerator.h \
     src/isochronicgenerator.h \
     src/pcmchannel.h \
+    src/sbgsequence.h \
+    src/sequencegenerator.h \
     src/solfeggiogenerator.h
 
 

@@ -8,6 +8,8 @@
 #include <QUrl>
 #include <QVariantList>
 #include <QVector>
+#include <QStringList>
+#include <QHash>
 
 #include "ambiencechannel.h"
 #include "pcmchannel.h"
@@ -16,6 +18,7 @@ class BinauralGenerator;
 class ColoredNoiseGenerator;
 class SolfeggioGenerator;
 class IsochronicGenerator;
+class SequenceGenerator;
 
 class AudioEngine : public QObject
 {
@@ -48,6 +51,26 @@ class AudioEngine : public QObject
     Q_PROPERTY(bool isochronicPaused
                READ isIsochronicPaused
                NOTIFY playingChanged)
+
+    Q_PROPERTY(bool sequencePlaying
+               READ isSequencePlaying
+               NOTIFY playingChanged)
+
+    Q_PROPERTY(bool sequencePaused
+               READ isSequencePaused
+               NOTIFY playingChanged)
+
+    Q_PROPERTY(QStringList sequencePresets
+               READ sequencePresets
+               CONSTANT)
+
+    Q_PROPERTY(double sequenceProgress
+               READ sequenceProgress
+               NOTIFY sequenceProgressChanged)
+
+    Q_PROPERTY(int sequenceRemainingSeconds
+               READ sequenceRemainingSeconds
+               NOTIFY sequenceProgressChanged)
 
     Q_PROPERTY(bool binauralPaused
                READ isBinauralPaused
@@ -100,6 +123,7 @@ class AudioEngine : public QObject
 
 public:
     static constexpr int MaxAmbienceChannels = 3;
+    static constexpr int SequencePollInterval = 250;
 
     explicit AudioEngine(QObject *parent = nullptr);
     ~AudioEngine() override;
@@ -113,6 +137,13 @@ public:
 
     bool isIsochronicPlaying() const;
     bool isIsochronicPaused() const;
+
+    // Sequence getters.
+    bool isSequencePlaying() const;
+    bool isSequencePaused() const;
+    QStringList sequencePresets() const;
+    double sequenceProgress() const;
+    int sequenceRemainingSeconds() const;
 
     bool isBinauralPaused() const;
     bool isAmbiencePaused() const;
@@ -177,6 +208,13 @@ public:
     Q_INVOKABLE void stopIsochronic();
     Q_INVOKABLE void setIsochronicVolume(int volume);
 
+    // SBaGen sequence controls.
+    Q_INVOKABLE void startSequence(const QString &preset);
+    Q_INVOKABLE void stopSequence();
+    Q_INVOKABLE void pauseSequence();
+    Q_INVOKABLE void resumeSequence();
+    Q_INVOKABLE void setSequenceVolume(int volume);
+
     // Custom user sound (mp3/ogg/wav) and playlist controls.
     Q_INVOKABLE void playCustomSound();
     Q_INVOKABLE void stopCustomSound();
@@ -195,6 +233,7 @@ public:
 signals:
     void playingChanged();
     void customSoundChanged();
+    void sequenceProgressChanged();
 
 private:
     void updatePlayingState();
@@ -207,6 +246,9 @@ private:
     // Custom sound implementation.
     void playCustomTrack(int index);
     void handleCustomTrackFinished();
+
+    // Sequence implementation.
+    void updateSequencePoll();
 
     // Colored-noise volume.
     void applyPendingColoredNoiseVolume();
@@ -223,12 +265,14 @@ private:
     PcmChannel *m_noiseChannel;
     PcmChannel *m_solfeggioChannel;
     PcmChannel *m_isochronicChannel;
+    PcmChannel *m_sequenceChannel;
 
     // Generators (parameter access only; lifetime owned by PcmChannel).
     BinauralGenerator *m_binauralGenerator;
     ColoredNoiseGenerator *m_noiseGenerator;
     SolfeggioGenerator *m_solfeggioGenerator;
     IsochronicGenerator *m_isochronicGenerator;
+    SequenceGenerator *m_sequenceGenerator;
 
     // Three independent ambience channels.
     AmbienceChannel *m_ambienceChannels[MaxAmbienceChannels];
@@ -239,12 +283,14 @@ private:
     // Sleep timer.
     QTimer *m_sleepTimerFadeTimer;
     QElapsedTimer m_sleepTimerFadeElapsed;
+    QTimer *m_sequencePollTimer;
 
     double m_sleepTimerBinauralStartVolume;
     int m_sleepTimerAmbienceStartVolumes[MaxAmbienceChannels];
     double m_sleepTimerColoredNoiseStartVolume;
     double m_sleepTimerSolfeggioStartVolume;
     double m_sleepTimerIsochronicStartVolume;
+    double m_sleepTimerSequenceStartVolume;
     int m_sleepTimerCustomStartVolume;
 
     // Custom sound playlist.
@@ -258,6 +304,7 @@ private:
     QUrl m_customSource;
     QString m_customName;
     int m_customVolume;
+    int m_sequenceVolume;
     bool m_customLoop;
     bool m_customCrossfade;
     bool m_customManualStop;
@@ -278,6 +325,8 @@ private:
     int m_isochronicVolume;
 
     QString m_currentColoredNoise;
+    QStringList m_sequencePresets;
+    QHash<QString, QString> m_sequencePresetSources;
 
     // Selected solfeggio frequencies (Hz).
     QVector<double> m_solfeggioFrequencies;

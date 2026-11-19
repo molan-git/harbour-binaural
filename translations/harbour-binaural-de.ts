@@ -195,6 +195,24 @@
     </message>
 </context>
 <context>
+    <name>ExtendedTab</name>
+    <message>
+        <location filename="../qml/pages/components/ExtendedTab.qml" line="204"/>
+        <source>Sequences</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/ExtendedTab.qml" line="214"/>
+        <source>Preset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/ExtendedTab.qml" line="245"/>
+        <source>No sequence selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>HeadsetHint</name>
     <message>
         <location filename="../qml/pages/components/HeadsetHint.qml" line="20"/>
@@ -372,6 +390,119 @@
     </message>
 </context>
 <context>
+    <name>InfoSequencePage</name>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="61"/>
+        <source>SBaGen Sequences</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="71"/>
+        <source>Pre-programmed audio sessions that use binaural beats and changing frequencies to support relaxation, meditation, concentration and sleep. Each sequence creates a different listening experience.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="82"/>
+        <source>Choose from:</source>
+        <translation type="unfinished">Wähle aus:</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="112"/>
+        <source>Simple Meditation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="120"/>
+        <source>Calm awareness and relaxation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="129"/>
+        <source>Deep Sleep Aid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="137"/>
+        <source>Deep relaxation and sleep preparation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="146"/>
+        <source>Focus 10</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="154"/>
+        <source>Mind awake, body deeply relaxed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="163"/>
+        <source>Focus 12</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="171"/>
+        <source>Expanded awareness and deeper meditation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="180"/>
+        <source>Focus 15</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="188"/>
+        <source>Exploration of timeless awareness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="197"/>
+        <source>Focus 21</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="205"/>
+        <source>Exploration beyond ordinary awareness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="214"/>
+        <source>Lucid Dreaming</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="222"/>
+        <source>Dream awareness and dream exploration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="231"/>
+        <source>Focus / Concentration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="239"/>
+        <source>Alertness and mental focus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="250"/>
+        <source>About SBaGen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="260"/>
+        <source>The sequences in this app come from SBaGen (Sequenced Binaural Beat Generator), an open-source project by Jim Peters. SBaGen uses text-based sequence files to define binaural tones, frequency changes, timing and background sounds. Some names, such as Focus 10 and Focus 12, use terminology associated with consciousness exploration, but the sequences are from SBaGen, not official Monroe Institute recordings or programmes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoSequencePage.qml" line="276"/>
+        <source>Individual experiences may vary.</source>
+        <translation type="unfinished">Die Wirkung kann individuell variieren.</translation>
+    </message>
+</context>
+<context>
     <name>InfoSolfeggioPage</name>
     <message>
         <location filename="../qml/pages/InfoSolfeggioPage.qml" line="61"/>
@@ -452,27 +583,27 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="503"/>
+        <location filename="../qml/pages/MainPage.qml" line="572"/>
         <source>Standard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="457"/>
+        <location filename="../qml/pages/MainPage.qml" line="526"/>
         <source>About</source>
         <translation type="unfinished">Über</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="466"/>
+        <location filename="../qml/pages/MainPage.qml" line="535"/>
         <source>Deselect all sounds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="474"/>
+        <location filename="../qml/pages/MainPage.qml" line="543"/>
         <source>Timer</source>
         <translation type="unfinished">Timer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="548"/>
+        <location filename="../qml/pages/MainPage.qml" line="617"/>
         <source>Extended</source>
         <translation type="unfinished"></translation>
     </message>
