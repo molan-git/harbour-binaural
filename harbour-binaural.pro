@@ -65,6 +65,7 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/pages/components/NoiseWaveDrawer.qml \
     qml/pages/components/PageDrawer.qml \
     qml/pages/components/PlaybackBar.qml \
+    qml/pages/components/SequenceDrawer.qml \
     qml/pages/components/SolfeggioDrawer.qml \
     qml/pages/components/SoundButton.qml \
     qml/pages/components/SoundNames.qml \

@@ -165,14 +165,6 @@
         <source>Sequences</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Preset</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No sequence selected</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>HeadsetHint</name>
@@ -511,6 +503,13 @@
     <message>
         <source>Start your sound mix</source>
         <translation>Démarre ton mixage sonore</translation>
+    </message>
+</context>
+<context>
+    <name>SequenceDrawer</name>
+    <message>
+        <source>Sequences</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

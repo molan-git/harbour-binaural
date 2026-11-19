@@ -33,7 +33,6 @@ Page {
     property bool customSoundSelected:
         audioEngine.customSoundSource.toString() !== ""
 
-    // Anything selected - used by menus, bar, cover, pausedMode, sleep timer
     property bool hasActiveSounds:
         activeBand !== "" ||
         activeNoise !== "" ||
@@ -43,7 +42,6 @@ Page {
         activeIsochronic !== "" ||
         customSoundSelected
 
-    // Mix label ("Alpha & Custom", "Rain & White noise", ...)
     property string mixLabel: {
         var parts = []
 
@@ -190,9 +188,11 @@ Page {
         audioEngine.stopIsochronic()
         audioEngine.stopSequence()
         audioEngine.stopCustomSound()
+
         noiseWaveDrawer.open = false
         solfeggioDrawer.open = false
         isochronicDrawer.open = false
+        sequenceDrawer.open = false
 
         page.activeBand = ""
         page.isCustomBinaural = false
@@ -212,21 +212,21 @@ Page {
     }
 
     function beatBand(freq) {
-        if (freq >= 0.5  && freq < 4)    return "Delta"
-        if (freq >= 4    && freq < 8)    return "Theta"
-        if (freq >= 8    && freq < 13)   return "Alpha"
-        if (freq >= 13   && freq < 30)   return "Beta"
-        if (freq >= 30   && freq <= 100) return "Gamma"
+        if (freq >= 0.5 && freq < 4) return "Delta"
+        if (freq >= 4 && freq < 8) return "Theta"
+        if (freq >= 8 && freq < 13) return "Alpha"
+        if (freq >= 13 && freq < 30) return "Beta"
+        if (freq >= 30 && freq <= 100) return "Gamma"
         return ""
     }
 
     function bandBeat(band) {
-        if (band === "Delta")      return 2.0
+        if (band === "Delta") return 2.0
         if (band === "Delta/Theta") return 4.0
-        if (band === "Theta")      return 6.0
-        if (band === "Alpha")      return 10.0
-        if (band === "Beta")       return 20.0
-        if (band === "Gamma")      return 40.0
+        if (band === "Theta") return 6.0
+        if (band === "Alpha") return 10.0
+        if (band === "Beta") return 20.0
+        if (band === "Gamma") return 40.0
         return 10.0
     }
 
@@ -237,14 +237,12 @@ Page {
             return
         }
 
-        // Selecting the currently active preset deselects it.
         if (page.activeSequence === preset) {
             page.activeSequence = ""
             audioEngine.stopSequence()
             return
         }
 
-        // Preserve paused mode when selecting a sequence.
         var wasPaused = page.pausedMode
 
         page.activeSequence = preset
@@ -268,7 +266,6 @@ Page {
             appWindow.resumeSleepTimer()
 
         } else {
-            // Restart if the sequence has already finished.
             audioEngine.startSequence(page.activeSequence)
             appWindow.resumeSleepTimer()
         }
@@ -351,21 +348,16 @@ Page {
             drawerContent: CustomBinauralDrawer {
                 id: customBinauralPanel
 
-                onCloseRequested: {
+                onCloseRequested:
                     binauralDrawer.open = false
-                }
 
                 onFrequencyChanged: {
                     page.currentCarrier = carrier
                     page.currentBeat = beat
 
-                    // Live update of the running generator
-                    // (or store for the next start).
                     audioEngine.setBinauralFrequency(carrier, beat)
 
                     if (page.activeBand !== "") {
-                        // Band buttons follow the beat live:
-                        // e.g. Alpha -> Beta starts glowing.
                         page.activeBand = page.beatBand(beat)
                         page.isCustomBinaural = true
                     }
@@ -381,26 +373,22 @@ Page {
                     wavesActive: page.noiseWavesEnabled
                     playing: page.noisePlaying
 
-                    onCloseRequested: {
+                    onCloseRequested:
                         noiseWaveDrawer.open = false
-                    }
 
                     onWaveChanged: {
                         if (page.noiseWavesEnabled) {
-                            audioEngine.setNoiseWave(
-                                        true, depth, period)
+                            audioEngine.setNoiseWave(true, depth, period)
                         }
                     }
 
                     onEnableRequested: {
-                        audioEngine.setNoiseWave(
-                                    true, depth, period)
+                        audioEngine.setNoiseWave(true, depth, period)
                         page.noiseWavesEnabled = true
                     }
 
                     onDisableRequested: {
-                        audioEngine.setNoiseWave(
-                                    false, 0, 8)
+                        audioEngine.setNoiseWave(false, 0, 8)
                         page.noiseWavesEnabled = false
                         noiseWaveDrawer.open = false
                     }
@@ -416,9 +404,8 @@ Page {
                         solfeggioPlaying: page.solfeggioPlaying
                         pausedMode: page.pausedMode
 
-                        onCloseRequested: {
+                        onCloseRequested:
                             solfeggioDrawer.open = false
-                        }
 
                         onSolfeggioSelected: {
                             if (page.activeSolfeggio.indexOf(frequency) !== -1)
@@ -429,7 +416,7 @@ Page {
                                     page.activeSolfeggio.concat([frequency])
 
                             if (wasPaused)
-                                return   // stays paused; resumeAll() starts it
+                                return
 
                             audioEngine.setSolfeggio(page.activeSolfeggio)
                         }
@@ -444,13 +431,11 @@ Page {
                             updated.splice(index, 1)
                             page.activeSolfeggio = updated
 
-                            // setSolfeggio() stops the channel on an empty list
                             audioEngine.setSolfeggio(updated)
                         }
 
-                        onSolfeggioVolumeChanged: {
+                        onSolfeggioVolumeChanged:
                             audioEngine.setSolfeggioVolume(volume)
-                        }
                     }
 
                     PageDrawer {
@@ -462,9 +447,8 @@ Page {
                             customActive: page.isCustomIsochronic
                             playing: page.isochronicPlaying
 
-                            onCloseRequested: {
+                            onCloseRequested:
                                 isochronicDrawer.open = false
-                            }
 
                             onFrequencyChanged: {
                                 if (page.isCustomIsochronic)
@@ -493,158 +477,164 @@ Page {
                         }
 
                         PageDrawer {
-                            id: soundPickerDrawer
+                            id: sequenceDrawer
 
-                            drawerContent: SoundPickerDrawer {
-                                id: soundPickerPanel
+                            drawerContent: SequenceDrawer {
+                                id: sequenceSelector
 
-                                audioEngine: audioEngine
-                                pausedMode: page.pausedMode
+                                sequencePresets: audioEngine.sequencePresets
+                                activeSequence: page.activeSequence
+
+                                onSequenceSelected: {
+                                    page.selectSequence(sequence)
+                                    sequenceDrawer.open = false
+                                }
 
                                 onCloseRequested:
-                                    soundPickerDrawer.open = false
+                                    sequenceDrawer.open = false
                             }
 
-                            // The container is the Drawer foreground.
-                            // The dimmer and click handler move with the foreground,
-                            // leaving the exposed drawer background interactive.
-                            Item {
-                                id: foregroundContent
+                            PageDrawer {
+                                id: soundPickerDrawer
 
-                                anchors.fill: parent
+                                drawerContent: SoundPickerDrawer {
+                                    id: soundPickerPanel
 
-                                // Hosts the pulley menu and the page header
-                                // outside the tabs, so they are shared by both
-                                // tab pages and the menu works everywhere.
-                                SilicaFlickable {
-                                    id: foregroundFlick
+                                    audioEngine: audioEngine
+                                    pausedMode: page.pausedMode
+
+                                    onCloseRequested:
+                                        soundPickerDrawer.open = false
+                                }
+
+                                Item {
+                                    id: foregroundContent
+
                                     anchors.fill: parent
-                                    contentHeight: height
 
-                                    PullDownMenu {
-                                        MenuItem {
-                                            text: qsTr("About")
-                                            onClicked: {
-                                                pageStack.push(
-                                                            Qt.resolvedUrl("AboutPage.qml")
-                                                            )
+                                    SilicaFlickable {
+                                        id: foregroundFlick
+                                        anchors.fill: parent
+                                        contentHeight: height
+
+                                        PullDownMenu {
+                                            MenuItem {
+                                                text: qsTr("About")
+                                                onClicked: {
+                                                    pageStack.push(
+                                                        Qt.resolvedUrl("AboutPage.qml")
+                                                    )
+                                                }
                                             }
-                                        }
 
-                                        MenuItem {
-                                            text: qsTr("Deselect all sounds")
-                                            enabled: page.hasActiveSounds
-                                            onClicked: {
-                                                page.deselectAllSounds()
+                                            MenuItem {
+                                                text: qsTr("Deselect all sounds")
+                                                enabled: page.hasActiveSounds
+                                                onClicked: page.deselectAllSounds()
                                             }
-                                        }
 
-                                        MenuItem {
-                                            text: qsTr("Timer")
-                                            enabled: page.hasActiveSounds
-                                            onClicked: {
-                                                pageStack.push(
-                                                            Qt.resolvedUrl("TimerPage.qml"),
-                                                            { appWindow: appWindow }
-                                                            )
-                                            }
-                                        }
-                                    }
-
-                                    Item {
-                                        id: topSpacer
-                                        width: parent.width
-                                        // Spacing above TabView indicator (added because of J2 Notch)
-                                        height: Theme.paddingSmall
-                                    }
-
-                                    TabView {
-                                        anchors.top: topSpacer.bottom
-                                        anchors.left: parent.left
-                                        anchors.right: parent.right
-                                        anchors.bottom: parent.bottom
-
-                                        tabBarPosition: Qt.AlignTop
-
-                                        // ─── STANDARD TAB ──────────────────────────
-
-                                        Tab {
-                                            title: qsTr("Standard")
-
-                                            Component {
-                                                TabItem {
-                                                    flickable: standardTab
-
-                                                    StandardTab {
-                                                        id: standardTab
-
-                                                        anchors.fill: parent
-
-                                                        mainPage: page
-                                                        engine: audioEngine
-
-                                                        onOpenCustomBinauralRequested: {
-                                                            customBinauralPanel.setValues(
-                                                                        page.currentCarrier,
-                                                                        page.currentBeat
-                                                                        )
-
-                                                            binauralDrawer.open = true
-                                                        }
-
-                                                        onOpenNoiseWaveRequested:
-                                                            noiseWaveDrawer.open = true
-
-                                                        onOpenAmbienceRequested:
-                                                            ambienceDrawer.open = true
-
-                                                        onOpenSoundPickerRequested:
-                                                            soundPickerDrawer.open = true
-
-                                                        onBinauralInfoRequested:
-                                                            pageStack.push(infoBinauralPageComponent)
-
-                                                        onColoredNoiseInfoRequested:
-                                                            pageStack.push(infoColoredPageComponent)
-                                                    }
+                                            MenuItem {
+                                                text: qsTr("Timer")
+                                                enabled: page.hasActiveSounds
+                                                onClicked: {
+                                                    pageStack.push(
+                                                        Qt.resolvedUrl("TimerPage.qml"),
+                                                        { appWindow: appWindow }
+                                                    )
                                                 }
                                             }
                                         }
 
-                                        // ─── EXTENDED TAB ──────────────────────────
+                                        Item {
+                                            id: topSpacer
+                                            width: parent.width
+                                            height: Theme.paddingSmall
+                                        }
 
-                                        Tab {
-                                            title: qsTr("Extended")
+                                        TabView {
+                                            anchors.top: topSpacer.bottom
+                                            anchors.left: parent.left
+                                            anchors.right: parent.right
+                                            anchors.bottom: parent.bottom
 
-                                            Component {
-                                                TabItem {
-                                                    flickable: extendedTab
+                                            tabBarPosition: Qt.AlignTop
 
-                                                    ExtendedTab {
-                                                        id: extendedTab
+                                            Tab {
+                                                title: qsTr("Standard")
 
-                                                        anchors.fill: parent
+                                                Component {
+                                                    TabItem {
+                                                        flickable: standardTab
 
-                                                        mainPage: page
-                                                        engine: audioEngine
+                                                        StandardTab {
+                                                            id: standardTab
+                                                            anchors.fill: parent
 
-                                                        customCarrierHz: customIsochronicPanel.carrierHz
-                                                        customPulseHz: customIsochronicPanel.pulseHz
+                                                            mainPage: page
+                                                            engine: audioEngine
 
-                                                        onOpenSolfeggioDrawerRequested:
-                                                            solfeggioDrawer.open = true
+                                                            onOpenCustomBinauralRequested: {
+                                                                customBinauralPanel.setValues(
+                                                                    page.currentCarrier,
+                                                                    page.currentBeat
+                                                                )
+                                                                binauralDrawer.open = true
+                                                            }
 
-                                                        onOpenIsochronicDrawerRequested:
-                                                            isochronicDrawer.open = true
+                                                            onOpenNoiseWaveRequested:
+                                                                noiseWaveDrawer.open = true
 
-                                                        onSolfeggioInfoRequested:
-                                                            pageStack.push(infoSolfeggioPageComponent)
+                                                            onOpenAmbienceRequested:
+                                                                ambienceDrawer.open = true
 
-                                                        onIsochronicInfoRequested:
-                                                            pageStack.push(infoIsochronicPageComponent)
+                                                            onOpenSoundPickerRequested:
+                                                                soundPickerDrawer.open = true
 
-                                                        onSequenceInfoRequested:
-                                                            pageStack.push(infoSequencePageComponent)
+                                                            onBinauralInfoRequested:
+                                                                pageStack.push(infoBinauralPageComponent)
+
+                                                            onColoredNoiseInfoRequested:
+                                                                pageStack.push(infoColoredPageComponent)
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            Tab {
+                                                title: qsTr("Extended")
+
+                                                Component {
+                                                    TabItem {
+                                                        flickable: extendedTab
+
+                                                        ExtendedTab {
+                                                            id: extendedTab
+                                                            anchors.fill: parent
+
+                                                            mainPage: page
+                                                            engine: audioEngine
+
+                                                            customCarrierHz: customIsochronicPanel.carrierHz
+                                                            customPulseHz: customIsochronicPanel.pulseHz
+
+                                                            onOpenSolfeggioDrawerRequested:
+                                                                solfeggioDrawer.open = true
+
+                                                            onOpenIsochronicDrawerRequested:
+                                                                isochronicDrawer.open = true
+
+                                                            onOpenSequenceDrawerRequested:
+                                                                sequenceDrawer.open = true
+
+                                                            onSolfeggioInfoRequested:
+                                                                pageStack.push(infoSolfeggioPageComponent)
+
+                                                            onIsochronicInfoRequested:
+                                                                pageStack.push(infoIsochronicPageComponent)
+
+                                                            onSequenceInfoRequested:
+                                                                pageStack.push(infoSequencePageComponent)
+                                                        }
                                                     }
                                                 }
                                             }

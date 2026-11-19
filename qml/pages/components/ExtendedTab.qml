@@ -18,6 +18,8 @@ SilicaFlickable {
     signal isochronicInfoRequested()
     signal sequenceInfoRequested()
 
+    signal openSequenceDrawerRequested()
+
     contentHeight: extendedColumn.height + Theme.paddingLarge
     clip: true
 
@@ -204,30 +206,8 @@ SilicaFlickable {
             text: qsTr("Sequences")
         }
 
-        // SBaGen preset selector
-        ComboBox {
-            id: sequenceCombo
-
-            x: Theme.horizontalPageMargin
-            width: parent.width - 2 * Theme.horizontalPageMargin
-
-            label: qsTr("Preset")
-
-            menu: ContextMenu {
-                Repeater {
-                    model: root.engine.sequencePresets
-
-                    MenuItem {
-                        text: modelData
-
-                        onClicked:
-                            root.mainPage.selectSequence(modelData)
-                    }
-                }
-            }
-        }
-
-        // Selected sequence and playback control
+        // Sequence selection and playback
+        // Sequence selection and playback
         Item {
             width: parent.width
             height: sequenceButton.height
@@ -235,27 +215,30 @@ SilicaFlickable {
             SoundButton {
                 id: sequenceButton
 
-                anchors.centerIn: parent
+                anchors.horizontalCenter: parent.horizontalCenter
 
-                preferredWidth: isochronicGrid.width -
-                                Theme.paddingMedium
+                preferredWidth: isochronicGrid.width - Theme.paddingMedium
 
                 text: root.mainPage.activeSequence !== ""
                       ? root.mainPage.activeSequence
-                      : qsTr("No sequence selected")
+                      : ""
+
+                iconSource: root.mainPage.activeSequence === ""
+                            ? "image://theme/icon-m-add"
+                            : ""
 
                 selected: root.mainPage.activeSequence !== ""
                 playing: root.mainPage.sequencePlaying
 
-                enabled: root.mainPage.activeSequence !== ""
-
-                onClicked:
-                    root.mainPage.toggleSequencePlayback()
+                onClicked: {
+                    if (root.mainPage.activeSequence === "")
+                        root.openSequenceDrawerRequested()
+                    else
+                        root.mainPage.toggleSequencePlayback()
+                }
 
                 showInfoButton: true
-
-                onInfoClicked:
-                    root.sequenceInfoRequested()
+                onInfoClicked: root.sequenceInfoRequested()
             }
         }
 

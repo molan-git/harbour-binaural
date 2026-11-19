@@ -197,18 +197,8 @@
 <context>
     <name>ExtendedTab</name>
     <message>
-        <location filename="../qml/pages/components/ExtendedTab.qml" line="204"/>
+        <location filename="../qml/pages/components/ExtendedTab.qml" line="206"/>
         <source>Sequences</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/components/ExtendedTab.qml" line="214"/>
-        <source>Preset</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/components/ExtendedTab.qml" line="245"/>
-        <source>No sequence selected</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -583,27 +573,27 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="572"/>
+        <location filename="../qml/pages/MainPage.qml" line="563"/>
         <source>Standard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="526"/>
+        <location filename="../qml/pages/MainPage.qml" line="522"/>
         <source>About</source>
         <translation type="unfinished">Über</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="535"/>
+        <location filename="../qml/pages/MainPage.qml" line="531"/>
         <source>Deselect all sounds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="543"/>
+        <location filename="../qml/pages/MainPage.qml" line="537"/>
         <source>Timer</source>
         <translation type="unfinished">Timer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="617"/>
+        <location filename="../qml/pages/MainPage.qml" line="604"/>
         <source>Extended</source>
         <translation type="unfinished"></translation>
     </message>
@@ -627,6 +617,14 @@
         <location filename="../qml/pages/components/PlaybackBar.qml" line="146"/>
         <source>Start your sound mix</source>
         <translation>Starte deinen Klangmix</translation>
+    </message>
+</context>
+<context>
+    <name>SequenceDrawer</name>
+    <message>
+        <location filename="../qml/pages/components/SequenceDrawer.qml" line="12"/>
+        <source>Sequences</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
