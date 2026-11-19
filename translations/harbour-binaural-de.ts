@@ -811,20 +811,16 @@
     <name>StandardTab</name>
     <message>
         <location filename="../qml/pages/components/StandardTab.qml" line="31"/>
-        <source>Binaural Beats</source>
-        <translation type="unfinished">Binaurale Beats</translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/components/StandardTab.qml" line="171"/>
-        <source>Colored Noise</source>
-        <translation type="unfinished">Farbiges Rauschen</translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/components/StandardTab.qml" line="262"/>
-        <source>Ambient Sound</source>
+        <source>Binaural beats</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../qml/pages/components/StandardTab.qml" line="171"/>
+        <source>Colored noise</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/StandardTab.qml" line="262"/>
         <location filename="../qml/pages/components/StandardTab.qml" line="280"/>
         <source>Ambient sounds</source>
         <translation type="unfinished"></translation>

@@ -28,7 +28,7 @@ SilicaFlickable {
         // ── Binaural Beats ──
 
         CompactSectionHeader {
-            text: qsTr("Binaural Beats")
+            text: qsTr("Binaural beats")
         }
 
         Item {
@@ -168,7 +168,7 @@ SilicaFlickable {
         // ── Colored Noise ──
 
         CompactSectionHeader {
-            text: qsTr("Colored Noise")
+            text: qsTr("Colored noise")
         }
 
         SilicaGridView {
@@ -259,7 +259,7 @@ SilicaFlickable {
         // ── Ambient Sound ──
 
         CompactSectionHeader {
-            text: qsTr("Ambient Sound")
+            text: qsTr("Ambient sounds")
         }
 
         Item {

@@ -659,19 +659,15 @@
 <context>
     <name>StandardTab</name>
     <message>
-        <source>Binaural Beats</source>
-        <translation type="unfinished">Battiti binaurali</translation>
-    </message>
-    <message>
-        <source>Colored Noise</source>
-        <translation type="unfinished">Rumore colorato</translation>
-    </message>
-    <message>
-        <source>Ambient Sound</source>
+        <source>Ambient sounds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Ambient sounds</source>
+        <source>Binaural beats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Colored noise</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
