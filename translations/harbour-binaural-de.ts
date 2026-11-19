@@ -624,7 +624,7 @@
 <context>
     <name>PlaybackBar</name>
     <message>
-        <location filename="../qml/pages/components/PlaybackBar.qml" line="140"/>
+        <location filename="../qml/pages/components/PlaybackBar.qml" line="146"/>
         <source>Start your sound mix</source>
         <translation>Starte deinen Klangmix</translation>
     </message>

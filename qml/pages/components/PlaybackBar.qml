@@ -2,8 +2,10 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Binaural 1.0
 
+//
 // Component which shows a playbackBar at the bottom
 // of the screen
+//
 
 DockedPanel {
     id: playbackBar
@@ -65,12 +67,14 @@ DockedPanel {
 
             var page = app.mainPage
             var ambiences = page.activeAmbiences || []
+            var solfeggio = page.activeSolfeggio || []
 
-            return app.activeBand !== "" ||
-                    app.activeNoise !== "" ||
+            return page.activeBand !== "" ||
+                    page.activeNoise !== "" ||
+                    page.activeSequence !== "" ||
                     ambiences.length > 0 ||
                     app.customSoundSelected ||
-                    page.activeSolfeggio.length > 0 ||
+                    solfeggio.length > 0 ||
                     page.activeIsochronic !== ""
         }
 
@@ -115,13 +119,15 @@ DockedPanel {
 
             var page = app.mainPage
             var ambiences = page.activeAmbiences || []
+            var solfeggio = page.activeSolfeggio || []
 
             if (page.activeBand === "" &&
                     page.activeNoise === "" &&
+                    page.activeSequence === "" &&
                     ambiences.length === 0 &&
                     !app.customSoundSelected &&
                     page.activeIsochronic === "" &&
-                    page.activeSolfeggio.length === 0) {
+                    solfeggio.length === 0) {
                 return Theme.secondaryColor
             }
 
@@ -142,6 +148,7 @@ DockedPanel {
             var page = app.mainPage
             var parts = []
             var ambiences = page.activeAmbiences || []
+            var solfeggio = page.activeSolfeggio || []
 
             if (page.activeBand !== "")
                 parts.push(SoundNames.label(page.activeBand))
@@ -149,7 +156,10 @@ DockedPanel {
             if (page.activeNoise !== "")
                 parts.push(SoundNames.label(page.activeNoise))
 
-            if (page.activeSolfeggio.length > 0)
+            if (page.activeSequence !== "")
+                parts.push(SoundNames.label(page.activeSequence))
+
+            if (solfeggio.length > 0)
                 parts.push(SoundNames.label("Solfeggio"))
 
             if (page.activeIsochronic !== "")
