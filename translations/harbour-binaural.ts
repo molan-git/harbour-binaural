@@ -506,13 +506,6 @@
     </message>
 </context>
 <context>
-    <name>SequenceDrawer</name>
-    <message>
-        <source>Sequences</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>SoundNames</name>
     <message>
         <source>Delta</source>

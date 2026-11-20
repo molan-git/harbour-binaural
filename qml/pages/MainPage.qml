@@ -510,7 +510,11 @@ Page {
 
                                 onSequenceSelected: {
                                     page.selectSequence(sequence)
-                                    sequenceDrawer.open = false
+                                }
+
+                                onSequenceDeselected: {
+                                    page.activeSequence = ""
+                                    audioEngine.stopSequence()
                                 }
 
                                 onCloseRequested:

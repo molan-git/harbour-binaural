@@ -573,27 +573,27 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="586"/>
+        <location filename="../qml/pages/MainPage.qml" line="590"/>
         <source>Standard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="545"/>
+        <location filename="../qml/pages/MainPage.qml" line="549"/>
         <source>About</source>
         <translation type="unfinished">Über</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="554"/>
+        <location filename="../qml/pages/MainPage.qml" line="558"/>
         <source>Deselect all sounds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="560"/>
+        <location filename="../qml/pages/MainPage.qml" line="564"/>
         <source>Timer</source>
         <translation type="unfinished">Timer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="627"/>
+        <location filename="../qml/pages/MainPage.qml" line="631"/>
         <source>Extended</source>
         <translation type="unfinished"></translation>
     </message>
@@ -617,14 +617,6 @@
         <location filename="../qml/pages/components/PlaybackBar.qml" line="146"/>
         <source>Start your sound mix</source>
         <translation>Starte deinen Klangmix</translation>
-    </message>
-</context>
-<context>
-    <name>SequenceDrawer</name>
-    <message>
-        <location filename="../qml/pages/components/SequenceDrawer.qml" line="12"/>
-        <source>Sequences</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

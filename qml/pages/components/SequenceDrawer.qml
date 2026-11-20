@@ -8,8 +8,9 @@ ActionDrawer {
     property string activeSequence: ""
 
     signal sequenceSelected(string sequence)
+    signal sequenceDeselected()
 
-    title: qsTr("Sequences")
+    // title: "Sequences"
 
     Column {
         width: parent.width
@@ -18,15 +19,30 @@ ActionDrawer {
         Repeater {
             model: sequenceDrawer.sequencePresets
 
-            delegate: Button {
+            delegate: TextSwitch {
+                id: sequenceSwitch
+
                 width: parent.width - 2 * Theme.horizontalPageMargin
-                anchors.horizontalCenter: parent.horizontalCenter
 
                 text: modelData
-                highlighted: sequenceDrawer.activeSequence === modelData
+                checked: sequenceDrawer.activeSequence === modelData
 
                 onClicked: {
-                    sequenceDrawer.sequenceSelected(modelData)
+                    if (sequenceDrawer.activeSequence === modelData)
+                        sequenceDrawer.sequenceDeselected()
+                    else
+                        sequenceDrawer.sequenceSelected(modelData)
+                }
+
+                // Re-assert the checked state after external
+                // changes (a click destroys the checked binding
+                // through Silica's built-in auto-toggle).
+                Connections {
+                    target: sequenceDrawer
+
+                    onActiveSequenceChanged:
+                        sequenceSwitch.checked =
+                            sequenceDrawer.activeSequence === modelData
                 }
             }
         }

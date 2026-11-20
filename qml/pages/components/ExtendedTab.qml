@@ -221,44 +221,51 @@ SilicaFlickable {
                 selected: root.mainPage.activeSequence !== ""
                 playing: root.mainPage.sequencePlaying
 
-                onClicked: {
-                    if (root.mainPage.activeSequence === "")
-                        root.openSequenceDrawerRequested()
-                    else
-                        root.mainPage.toggleSequencePlayback()
-                }
+                onClicked: root.openSequenceDrawerRequested()
 
                 showInfoButton: true
                 onInfoClicked: root.sequenceInfoRequested()
             }
         }
 
-        // Sequence progress and remaining time
-        ProgressBar {
-            id: sequenceProgress
-
+        // Sequence progress and remaining time — press to stop / play again
+        Item {
             x: Theme.horizontalPageMargin
             width: parent.width - 2 * Theme.horizontalPageMargin
-
-            minimumValue: 0
-            maximumValue: 1
-
-            value: root.engine.sequenceProgress
-
-            valueText: {
-                var remaining = root.engine.sequenceRemainingSeconds
-                var minutes = Math.floor(remaining / 60)
-                var seconds = remaining % 60
-
-                return minutes + ":" +
-                       (seconds < 10 ? "0" : "") + seconds
-            }
-
-            highlighted: root.mainPage.sequencePlaying
+            height: Theme.itemSizeMedium
 
             visible: root.mainPage.activeSequence !== ""
 
-            opacity: root.mainPage.sequencePlaying ? 1.0 : 0.6
+            ProgressBar {
+                id: sequenceProgress
+
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width
+
+                minimumValue: 0
+                maximumValue: 1
+
+                value: root.engine.sequenceProgress
+
+                valueText: {
+                    var remaining = root.engine.sequenceRemainingSeconds
+                    var minutes = Math.floor(remaining / 60)
+                    var seconds = remaining % 60
+
+                    return minutes + ":" +
+                           (seconds < 10 ? "0" : "") + seconds
+                }
+
+                highlighted: root.mainPage.sequencePlaying
+
+                opacity: root.mainPage.sequencePlaying ? 1.0 : 0.6
+            }
+
+            MouseArea {
+                anchors.fill: parent
+
+                onClicked: root.mainPage.toggleSequencePlayback()
+            }
         }
 
         // Sequence volume
