@@ -251,7 +251,7 @@
     </message>
     <message>
         <source>Ambient Sound</source>
-        <translation>Ympäristöäänet</translation>
+        <translation type="unfinished">Ympäristöäänet</translation>
     </message>
     <message>
         <source>Colored Noise</source>
@@ -259,11 +259,11 @@
     </message>
     <message>
         <source>Deselect all sounds</source>
-        <translation>Poista kaikkien äänien valinta</translation>
+        <translation type="unfinished">Poista kaikkien äänien valinta</translation>
     </message>
     <message>
         <source>To be used with</source>
-        <translation>Käytettäväksi yhdessä seuraavien kanssa</translation>
+        <translation type="unfinished">Käytettäväksi yhdessä seuraavien kanssa</translation>
     </message>
     <message>
         <source>Timer</source>

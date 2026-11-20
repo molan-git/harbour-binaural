@@ -214,43 +214,43 @@
     <name>MainPage</name>
     <message>
         <source>About</source>
-        <translation type="unfinished">Om</translation>
+        <translation>Om</translation>
     </message>
     <message>
         <source>Deselect all sounds</source>
-        <translation type="unfinished"></translation>
+        <translation>Fjern valget av alle lyder</translation>
     </message>
     <message>
         <source>Timer</source>
-        <translation type="unfinished">Timer</translation>
+        <translation>Timer</translation>
     </message>
     <message>
         <source>Binaural Beats</source>
-        <translation type="unfinished">Binaurale beats</translation>
+        <translation>Binaurale beats</translation>
     </message>
     <message>
         <source>To be used with</source>
-        <translation type="unfinished"></translation>
+        <translation>Brukes sammen med</translation>
     </message>
     <message>
         <source>Custom frequencies</source>
-        <translation type="unfinished"></translation>
+        <translation>Egendefinerte frekvenser</translation>
     </message>
     <message>
         <source>Colored Noise</source>
-        <translation type="unfinished">Farget støy</translation>
+        <translation>Farget støy</translation>
     </message>
     <message>
         <source>Wave motion</source>
-        <translation type="unfinished"></translation>
+        <translation>Bølgebevegelse</translation>
     </message>
     <message>
         <source>Ambient Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Farget støy</translation>
     </message>
     <message>
         <source>Ambient sounds</source>
-        <translation type="unfinished"></translation>
+        <translation>Farget støy</translation>
     </message>
 </context>
 <context>

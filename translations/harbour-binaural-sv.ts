@@ -56,19 +56,19 @@
     <name>AudioFilePickerPage</name>
     <message>
         <source>Music</source>
-        <translation type="unfinished"></translation>
+        <translation>Musik</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Avbryt</translation>
     </message>
     <message>
         <source>No audio files or folders</source>
-        <translation type="unfinished"></translation>
+        <translation>Inga ljudfiler eller mappar</translation>
     </message>
     <message>
         <source>Use Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Använd mapp</translation>
     </message>
 </context>
 <context>
@@ -133,11 +133,11 @@
     <name>CustomBinauralDrawer</name>
     <message>
         <source>Base frequency</source>
-        <translation type="unfinished"></translation>
+        <translation>Basfrekvens</translation>
     </message>
     <message>
         <source>Beat frequency</source>
-        <translation type="unfinished"></translation>
+        <translation>Taktfrekvens</translation>
     </message>
 </context>
 <context>
@@ -214,54 +214,54 @@
     <name>MainPage</name>
     <message>
         <source>About</source>
-        <translation type="unfinished">Om</translation>
+        <translation>Om</translation>
     </message>
     <message>
         <source>Deselect all sounds</source>
-        <translation type="unfinished"></translation>
+        <translation>Avmarkera alla ljud</translation>
     </message>
     <message>
         <source>Timer</source>
-        <translation type="unfinished">Timer</translation>
+        <translation>Timer</translation>
     </message>
     <message>
         <source>Binaural Beats</source>
-        <translation type="unfinished">Binaurala toner</translation>
+        <translation>Binaurala toner</translation>
     </message>
     <message>
         <source>To be used with</source>
-        <translation type="unfinished"></translation>
+        <translation>Att användas med</translation>
     </message>
     <message>
         <source>Custom frequencies</source>
-        <translation type="unfinished"></translation>
+        <translation>Anpassade frekvenser</translation>
     </message>
     <message>
         <source>Colored Noise</source>
-        <translation type="unfinished">Färgat brus</translation>
+        <translation>Färgat brus</translation>
     </message>
     <message>
         <source>Wave motion</source>
-        <translation type="unfinished"></translation>
+        <translation>Vågrörelse</translation>
     </message>
     <message>
         <source>Ambient Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Omgivningsljud</translation>
     </message>
     <message>
         <source>Ambient sounds</source>
-        <translation type="unfinished"></translation>
+        <translation>Omgivningsljud</translation>
     </message>
 </context>
 <context>
     <name>NoiseWaveDrawer</name>
     <message>
         <source>Wave depth</source>
-        <translation type="unfinished"></translation>
+        <translation>Vågdjup</translation>
     </message>
     <message>
         <source>Wave length</source>
-        <translation type="unfinished"></translation>
+        <translation>Våglängd</translation>
     </message>
 </context>
 <context>
@@ -367,7 +367,7 @@
     </message>
     <message>
         <source>Custom sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Anpassat ljud</translation>
     </message>
 </context>
 <context>
