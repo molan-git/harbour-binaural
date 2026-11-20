@@ -85,18 +85,18 @@ SilicaFlickable {
         Item {
             width: parent.width
 
-            height: headsetHint.height +
+            height: headsetHintIsochronic.height +
                     Theme.paddingSmall +
                     isochronicGrid.height
 
             HeadsetHint {
-                id: headsetHint
+                id: headsetHintIsochronic
             }
 
             SilicaGridView {
                 id: isochronicGrid
 
-                y: headsetHint.height + Theme.paddingSmall
+                y: headsetHintIsochronic.height + Theme.paddingSmall
 
                 x: Theme.horizontalPageMargin
                 width: parent.width - 2 * Theme.horizontalPageMargin
@@ -201,10 +201,19 @@ SilicaFlickable {
         // Sequence selection and playback
         Item {
             width: parent.width
-            height: sequenceButton.height
+
+            height: headsetHintSequences.height +
+                    Theme.paddingSmall +
+                    sequenceButton.height
+
+            HeadsetHint {
+                id: headsetHintSequences
+            }
 
             SoundButton {
                 id: sequenceButton
+
+                y: headsetHintSequences.height + Theme.paddingSmall * 2
 
                 anchors.horizontalCenter: parent.horizontalCenter
 

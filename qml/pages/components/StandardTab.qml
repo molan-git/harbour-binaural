@@ -34,18 +34,18 @@ SilicaFlickable {
         Item {
             width: parent.width
 
-            height: headsetHint.height
+            height: headsetHintBinaural.height
                     + Theme.paddingSmall
                     + frequencyGrid.height
 
             HeadsetHint {
-                id: headsetHint
+                id: headsetHintBinaural
             }
 
             SilicaGridView {
                 id: frequencyGrid
 
-                y: headsetHint.height + Theme.paddingSmall
+                y: headsetHintBinaural.height + Theme.paddingSmall
 
                 x: Theme.horizontalPageMargin
                 width: parent.width - 2 * Theme.horizontalPageMargin
