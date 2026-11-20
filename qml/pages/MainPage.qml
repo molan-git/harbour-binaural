@@ -18,6 +18,8 @@ Page {
     property bool isCustomBinaural: false
     property real currentCarrier: 200
     property real currentBeat: 10
+    property real currentIsoCarrier: 200
+    property real currentIsoPulse: 10
     property bool noiseWavesEnabled: false
 
     property bool bandPlaying: audioEngine.binauralPlaying
@@ -228,6 +230,41 @@ Page {
         if (band === "Beta") return 20.0
         if (band === "Gamma") return 40.0
         return 10.0
+    }
+
+    function pulsePreset(pulse) {
+        var presets = ["1 Hz", "2 Hz", "4 Hz",
+                       "6 Hz", "7.83 Hz", "10 Hz"]
+
+        for (var i = 0; i < presets.length; ++i) {
+            if (Math.abs(pulse - parseFloat(presets[i])) < 0.01)
+                return presets[i]
+        }
+
+        return ""
+    }
+
+    function selectIsochronic(preset) {
+        if (page.activeIsochronic === preset) {
+            page.activeIsochronic = ""
+            page.isCustomIsochronic = false
+            audioEngine.stopIsochronic()
+            return
+        }
+
+        var wasPaused = page.pausedMode
+
+        page.activeIsochronic = preset
+        page.isCustomIsochronic = false
+
+        page.currentIsoCarrier = 200
+        page.currentIsoPulse = parseFloat(preset)
+
+        audioEngine.setIsochronicPreset(preset)
+        audioEngine.startIsochronic()
+
+        if (wasPaused)
+            audioEngine.pauseIsochronic()
     }
 
     function selectSequence(preset) {
@@ -444,35 +481,21 @@ Page {
                         drawerContent: CustomIsochronicDrawer {
                             id: customIsochronicPanel
 
-                            customActive: page.isCustomIsochronic
-                            playing: page.isochronicPlaying
-
                             onCloseRequested:
                                 isochronicDrawer.open = false
 
                             onFrequencyChanged: {
-                                if (page.isCustomIsochronic)
-                                    audioEngine.setIsochronicFrequency(carrier, pulse)
-                            }
+                                if (page.activeIsochronic !== "") {
+                                    page.currentIsoCarrier = carrier
+                                    page.currentIsoPulse = pulse
 
-                            onStartRequested: {
-                                if (page.pausedMode) {
-                                    audioEngine.stopIsochronic()
-                                    page.activeIsochronic = "Custom"
+                                    var preset = page.pulsePreset(pulse)
+                                    page.activeIsochronic =
+                                            preset !== "" ? preset : "Custom"
                                     page.isCustomIsochronic = true
+
                                     audioEngine.setIsochronicFrequency(carrier, pulse)
-                                } else {
-                                    page.activeIsochronic = "Custom"
-                                    page.isCustomIsochronic = true
-                                    audioEngine.setIsochronicFrequency(carrier, pulse)
-                                    audioEngine.startIsochronic()
                                 }
-                            }
-
-                            onStopRequested: {
-                                page.activeIsochronic = ""
-                                page.isCustomIsochronic = false
-                                audioEngine.stopIsochronic()
                             }
                         }
 
@@ -614,14 +637,16 @@ Page {
                                                             mainPage: page
                                                             engine: audioEngine
 
-                                                            customCarrierHz: customIsochronicPanel.carrierHz
-                                                            customPulseHz: customIsochronicPanel.pulseHz
-
                                                             onOpenSolfeggioDrawerRequested:
                                                                 solfeggioDrawer.open = true
 
-                                                            onOpenIsochronicDrawerRequested:
+                                                            onOpenIsochronicDrawerRequested: {
+                                                                customIsochronicPanel.setValues(
+                                                                    page.currentIsoCarrier,
+                                                                    page.currentIsoPulse
+                                                                )
                                                                 isochronicDrawer.open = true
+                                                            }
 
                                                             onOpenSequenceDrawerRequested:
                                                                 sequenceDrawer.open = true

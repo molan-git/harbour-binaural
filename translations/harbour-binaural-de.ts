@@ -184,12 +184,12 @@
 <context>
     <name>CustomIsochronicDrawer</name>
     <message>
-        <location filename="../qml/pages/components/CustomIsochronicDrawer.qml" line="42"/>
+        <location filename="../qml/pages/components/CustomIsochronicDrawer.qml" line="44"/>
         <source>Carrier frequency</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/CustomIsochronicDrawer.qml" line="80"/>
+        <location filename="../qml/pages/components/CustomIsochronicDrawer.qml" line="82"/>
         <source>Pulse frequency</source>
         <translation type="unfinished"></translation>
     </message>
@@ -197,7 +197,7 @@
 <context>
     <name>ExtendedTab</name>
     <message>
-        <location filename="../qml/pages/components/ExtendedTab.qml" line="206"/>
+        <location filename="../qml/pages/components/ExtendedTab.qml" line="198"/>
         <source>Sequences</source>
         <translation type="unfinished"></translation>
     </message>
@@ -573,27 +573,27 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="563"/>
+        <location filename="../qml/pages/MainPage.qml" line="586"/>
         <source>Standard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="522"/>
+        <location filename="../qml/pages/MainPage.qml" line="545"/>
         <source>About</source>
         <translation type="unfinished">Über</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="531"/>
+        <location filename="../qml/pages/MainPage.qml" line="554"/>
         <source>Deselect all sounds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="537"/>
+        <location filename="../qml/pages/MainPage.qml" line="560"/>
         <source>Timer</source>
         <translation type="unfinished">Timer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="604"/>
+        <location filename="../qml/pages/MainPage.qml" line="627"/>
         <source>Extended</source>
         <translation type="unfinished"></translation>
     </message>

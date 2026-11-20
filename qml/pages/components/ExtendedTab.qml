@@ -8,9 +8,6 @@ SilicaFlickable {
     property var mainPage
     property var engine
 
-    property real customCarrierHz: 200
-    property real customPulseHz: 10
-
     signal openSolfeggioDrawerRequested()
     signal openIsochronicDrawerRequested()
 
@@ -135,19 +132,12 @@ SilicaFlickable {
                                 root.engine.stopIsochronic()
 
                             } else if (!root.mainPage.pausedMode) {
-                                root.mainPage.activeIsochronic = modelData
-                                root.mainPage.isCustomIsochronic = false
-
-                                root.engine.setIsochronicPreset(modelData)
-                                root.engine.startIsochronic()
+                                root.mainPage.selectIsochronic(modelData)
 
                             } else {
                                 root.engine.stopIsochronic()
 
-                                root.mainPage.activeIsochronic = modelData
-                                root.mainPage.isCustomIsochronic = false
-
-                                root.engine.setIsochronicPreset(modelData)
+                                root.mainPage.selectIsochronic(modelData)
                             }
                         }
                     }
@@ -171,16 +161,18 @@ SilicaFlickable {
 
                 secondary: true
 
-                text: root.mainPage.isCustomIsochronic
-                      ? Math.round(root.customCarrierHz) + " Hz / " +
-                        root.customPulseHz.toFixed(2) + " Hz"
+                text: root.mainPage.activeIsochronic !== ""
+                      ? Math.round(root.mainPage.currentIsoCarrier) + " Hz / " +
+                        root.mainPage.currentIsoPulse.toFixed(2) + " Hz"
                       : ""
 
-                iconSource: !root.mainPage.isCustomIsochronic
+                iconSource: root.mainPage.activeIsochronic === ""
                             ? "../../images/icon-m-soundsettings.svg"
                             : ""
 
-                selected: root.mainPage.isCustomIsochronic
+                selected: root.mainPage.isCustomIsochronic &&
+                          root.mainPage.activeIsochronic !== ""
+
                 playing: root.mainPage.isochronicPlaying
 
                 onClicked: root.openIsochronicDrawerRequested()
@@ -206,7 +198,6 @@ SilicaFlickable {
             text: qsTr("Sequences")
         }
 
-        // Sequence selection and playback
         // Sequence selection and playback
         Item {
             width: parent.width

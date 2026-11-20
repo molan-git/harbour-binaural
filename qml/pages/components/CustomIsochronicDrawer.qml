@@ -11,15 +11,17 @@ import Sailfish.Silica 1.0
 ActionDrawer {
     id: customIsochronicPanel
 
-    property bool customActive: false
-    property bool playing: false
-
     property real carrierHz: carrierFrequencySlider.value
     property real pulseHz: pulseFrequencySlider.value
 
     signal frequencyChanged(real carrier, real pulse)
-    signal startRequested(real carrier, real pulse)
-    signal stopRequested()
+
+    // Sync the sliders to the current engine values
+    // before the drawer is opened.
+    function setValues(carrier, pulse) {
+        carrierFrequencySlider.value = carrier
+        pulseFrequencySlider.value = pulse
+    }
 
     // title: "Custom Isochronic"
 
@@ -100,43 +102,6 @@ ActionDrawer {
                 text: pulseFrequencySlider.value.toFixed(2) + " Hz"
                 color: Theme.secondaryHighlightColor
                 font.pixelSize: Theme.fontSizeExtraSmall
-            }
-        }
-
-        // Play - Stop button (uses custom icon-l-stop)
-        MouseArea {
-            id: customPlayIcon
-
-            anchors.horizontalCenter: parent.horizontalCenter
-            width:  Theme.iconSizeLarge + Theme.paddingMedium * 2
-            height: Theme.iconSizeLarge + Theme.paddingMedium * 2
-
-            Icon {
-                id: playStopIcon
-
-                anchors.centerIn: parent
-                width:  Theme.iconSizeLarge
-                height: Theme.iconSizeLarge
-
-                source: customIsochronicPanel.customActive
-                        ? "../../images/icon-l-stop.svg"
-                        : "image://theme/icon-l-play"
-
-                color: customIsochronicPanel.customActive
-                       ? (customIsochronicPanel.playing
-                          ? Theme.highlightColor
-                          : Theme.secondaryHighlightColor)
-                       : Theme.primaryColor
-            }
-
-            onClicked: {
-                if (customIsochronicPanel.customActive) {
-                    customIsochronicPanel.stopRequested()
-                } else {
-                    customIsochronicPanel.startRequested(
-                                carrierFrequencySlider.value,
-                                pulseFrequencySlider.value)
-                }
             }
         }
     }
