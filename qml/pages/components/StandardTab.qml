@@ -233,7 +233,7 @@ SilicaFlickable {
                 secondary: true
                 text: ""
 
-                iconSource: "../../images/icon-m-soundsettings.svg"
+                iconSource: "../../images/icon-m-waves.svg"
 
                 selected: root.mainPage.noiseWavesEnabled
                 playing: root.mainPage.noisePlaying

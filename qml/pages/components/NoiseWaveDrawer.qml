@@ -11,7 +11,7 @@ ActionDrawer {
     signal enableRequested(real depth, real period)
     signal disableRequested()
 
-    title: "Wave motion"
+    // title: "Wave motion"
 
     Column {
         width: parent.width
