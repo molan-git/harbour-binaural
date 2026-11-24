@@ -12,3 +12,11 @@ moc_*.cpp
 *.autosave
 harbour-binaural.pro.user.679960a
 harbour-binaural.pro.user.847da93
+harbour-binaural.pro.user.00475f2
+harbour-binaural
+elfbins.list
+documentation.list
+debugsources.list
+debugsourcefiles.list
+debuglinks.list
+debugfiles.list
