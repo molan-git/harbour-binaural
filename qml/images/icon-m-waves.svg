@@ -1,11 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 30.0.0, SVG Export Plug-In . SVG Version: 9.03 Build 0)  -->
-<svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve">
-<path fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M10.013,25.702
-	C17.443,8.851,35.179,11.95,35.67,12.29c0.858,0.593-12.229,6.957-5.359,13.259c6.043,5.544,15.851,5.43,24.988,5.599"/>
-<path opacity="0.6" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="
-	M10.384,37.917c2.373-3.061,5.158-7.27,9.663-7.159c4.931,0.121,6.218,3.614,11.478,7.086c6.905,4.557,12.343,4.48,23.774,4.404"/>
-<path fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
-	M10.384,49.224c2.373-3.061,5.775-4.54,10.276-4.306c5.898,0.306,6.946,3.564,13.039,5.711c7.852,2.766,8.98,2.199,21.6,2.426"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64">
+  <!-- Generator: Adobe Illustrator 30.0.0, SVG Export Plug-In . SVG Version: 2.1.1 Build 123)  -->
+  <g id="icon-m-do-not-disturb" display="none">
+    <rect id="icon-m-do-not-disturb1" data-name="icon-m-do-not-disturb" width="64" height="64" fill="#fff" fill-opacity="0"/>
+    <g>
+      <path d="M33.264,55.539c-1.15,0-2.311-.083-3.474-.255-12.94-1.909-21.916-13.989-20.008-26.93,1.483-10.058,9.199-18.046,19.2-19.878.55-.098,1.065.26,1.164.803.1.543-.26,1.064-.803,1.164-9.158,1.678-16.223,8.993-17.582,18.203-1.747,11.849,6.472,22.912,18.321,24.66,9.208,1.361,18.253-3.294,22.503-11.578.251-.491.856-.687,1.346-.434.492.252.686.854.434,1.346-4.105,8.001-12.303,12.899-21.101,12.899Z" fill="#fff"/>
+      <path d="M49.377,43.778c-1.161,0-2.325-.086-3.485-.257-6.266-.924-11.798-4.234-15.579-9.323s-5.354-11.341-4.43-17.606c.38-2.582,1.173-5.059,2.355-7.364.252-.49.854-.685,1.346-.433.491.252.685.855.433,1.346-1.082,2.109-1.808,4.378-2.156,6.743-.846,5.736.595,11.462,4.057,16.122,3.462,4.659,8.528,7.691,14.264,8.537,2.365.349,4.749.309,7.078-.117.554-.103,1.065.261,1.164.803.1.544-.26,1.064-.803,1.164-1.402.256-2.821.385-4.244.385Z" fill="#fff" isolation="isolate" opacity=".6"/>
+    </g>
+  </g>
+  <path d="M10.013,25.702c4.207-9.459,14.701-14.386,22.438-13.856.566.029,1.408.153,1.666.595.432.53-.686,1.852-1.326,2.493-5.328,5.139-4.285,10.253,1.954,13.237,5.858,2.789,13.347,2.796,20.554,2.978" fill="none" stroke="#fff" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2.1"/>
+  <path d="M10.384,37.917c12.012-11.172,14.922.777,31.216,3.238,7.342,1.109,13.699,1.092,13.699,1.092" fill="none" opacity=".6" stroke="#fff" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2.1"/>
+  <path d="M10.384,49.224c12.084-8.201,17.647.414,29.572,2.708,8.023,1.544,15.343,1.084,15.343,1.121" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1"/>
 </svg>
