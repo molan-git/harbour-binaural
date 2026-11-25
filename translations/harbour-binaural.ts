@@ -263,6 +263,81 @@
     </message>
 </context>
 <context>
+    <name>InfoFocusPage</name>
+    <message>
+        <source>Focus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The focus sessions combine several binaural-beat voices into one soundscape: each voice is a pair of slightly different tones played into the left and right earphone, and the difference between them is the beat frequency the brain follows. The presets layer delta, theta, alpha and beta beats on different carriers, following the classic &apos;Focus level&apos; sessions.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Presets:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F3 (Sleep)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deep delta beats for falling asleep</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F10 (Body Asleep)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Body asleep, mind awake</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F12 (Expanded Awareness)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F10 voices extended by alpha-band beats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F15 (No Time)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F10 voices extended by low theta beats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F21 (Other Energy Systems)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F10 voices extended by high beta beats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F&amp;C (Concentration)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pink noise with beta beats for focus and concentration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom mix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Build your own three-voice stack: set the carrier and beat frequency of each voice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The preset frequencies follow the classic SBaGen session collections; isochronic voices are approximated as binaural beats. Sessions run as timed sequences; use the progress bar below a preset to pause or stop early.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>InfoIsochronicPage</name>
     <message>
         <source>An isochronic tone is a sound that switches on and off at regular intervals. A continuous carrier tone is rapidly pulsed on and off; the carrier frequency is the pitch you hear, while the pulse frequency determines how quickly the sound pulses. The tones are played identically in both ears, independent of binaural beats.</source>

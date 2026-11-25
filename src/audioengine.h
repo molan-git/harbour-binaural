@@ -144,6 +144,7 @@ public:
     QStringList sequencePresets() const;
     double sequenceProgress() const;
     int sequenceRemainingSeconds() const;
+    int sequenceVolume() const;
 
     bool isBinauralPaused() const;
     bool isAmbiencePaused() const;
@@ -218,7 +219,6 @@ public:
     // Custom user-built sequence (Focus mixes).
     Q_INVOKABLE void setCustomSequenceSource(const QString &name,
                                              const QString &source);
-    // Custom sequence volume (Focus)
     Q_PROPERTY(int sequenceVolume
                READ sequenceVolume
                WRITE setSequenceVolume
@@ -244,7 +244,6 @@ signals:
     void customSoundChanged();
     void sequenceProgressChanged();
     void sequenceVolumeChanged();
-    int sequenceVolume() const;
 
 private:
     void updatePlayingState();
