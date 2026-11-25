@@ -11,20 +11,27 @@ Page {
     property string activeBand: ""
     property string activeNoise: ""
     property string activeSequence: ""
+    property string activeIsochronic: ""
+    property string activeFocusPreset: ""
     property var activeAmbiences: []
     property var activeSolfeggio: []
-    property string activeIsochronic: ""
+    property var currentFocusVoices: [
+        { carrier: 100, beat: 1.5 },
+        { carrier: 200, beat: 4.0 },
+        { carrier: 300, beat: 4.0 }
+    ]
     property bool isCustomIsochronic: false
     property bool isCustomBinaural: false
+    property bool isCustomFocus: false
     property real currentCarrier: 200
     property real currentBeat: 10
     property real currentIsoCarrier: 200
     property real currentIsoPulse: 10
-    property bool noiseWavesEnabled: false
 
     property bool bandPlaying: audioEngine.binauralPlaying
     property bool ambiencePlaying: audioEngine.ambiencePlaying
     property bool noisePlaying: audioEngine.coloredNoisePlaying
+    property bool noiseWavesEnabled: false
     property bool sequencePlaying: audioEngine.sequencePlaying
     property bool sequencePaused: audioEngine.sequencePaused
     property bool solfeggioPlaying: audioEngine.solfeggioPlaying
@@ -42,6 +49,7 @@ Page {
         activeAmbiences.length > 0 ||
         activeSolfeggio.length > 0 ||
         activeIsochronic !== "" ||
+        activeFocusPreset !== "" ||
         customSoundSelected
 
     property string mixLabel: {
@@ -61,6 +69,9 @@ Page {
 
         if (activeIsochronic !== "")
             parts.push(SoundNames.label("Isochronic"))
+
+        if (activeFocusPreset !== "")
+            parts.push(activeFocusPreset)
 
         if (activeAmbiences.length === 1)
             parts.push(SoundNames.label(activeAmbiences[0]))
@@ -96,6 +107,7 @@ Page {
     onActiveNoiseChanged: checkSleepTimer()
     onActiveSolfeggioChanged: checkSleepTimer()
     onActiveIsochronicChanged: checkSleepTimer()
+    onActiveFocusPresetChanged: checkSleepTimer()
     onActiveSequenceChanged: checkSleepTimer()
     onCustomSoundSelectedChanged: checkSleepTimer()
 
@@ -164,6 +176,14 @@ Page {
                 audioEngine.startSequence(activeSequence)
             }
         }
+
+        if (activeFocusPreset !== "") {
+            if (audioEngine.sequencePaused) {
+                audioEngine.resumeSequence()
+            } else if (!audioEngine.sequencePlaying) {
+                audioEngine.startSequence(activeFocusPreset)
+            }
+        }
     }
 
     function togglePlayback() {
@@ -194,6 +214,7 @@ Page {
         noiseWaveDrawer.open = false
         solfeggioDrawer.open = false
         isochronicDrawer.open = false
+        focusDrawer.open = false
         sequenceDrawer.open = false
 
         page.activeBand = ""
@@ -203,6 +224,8 @@ Page {
         page.activeSolfeggio = []
         page.activeIsochronic = ""
         page.isCustomIsochronic = false
+        page.activeFocusPreset = ""
+        page.isCustomFocus = false
         page.activeSequence = ""
 
         audioEngine.customSoundSource = ""
@@ -267,6 +290,47 @@ Page {
             audioEngine.pauseIsochronic()
     }
 
+    function focusSource(voices) {
+        var tokens = []
+
+        for (var i = 0; i < voices.length; ++i) {
+            tokens.push(voices[i].carrier.toFixed(1) + "+" +
+                        voices[i].beat.toFixed(1) + "/10")
+        }
+
+        return "ts: " + tokens.join(" ") + "\n" +
+               "off: -\n" +
+               "NOW ts\n" +
+               "+00:60:00 off\n"
+    }
+
+    function selectFocus(preset) {
+        if (preset === "") {
+            page.activeFocusPreset = ""
+            page.isCustomFocus = false
+            audioEngine.stopSequence()
+            return
+        }
+
+        if (page.activeFocusPreset === preset) {
+            page.activeFocusPreset = ""
+            page.isCustomFocus = false
+            audioEngine.stopSequence()
+            return
+        }
+
+        var wasPaused = page.pausedMode
+
+        page.activeSequence = ""
+        page.activeFocusPreset = preset
+        page.isCustomFocus = false
+
+        audioEngine.startSequence(preset)
+
+        if (wasPaused)
+            audioEngine.pauseSequence()
+    }
+
     function selectSequence(preset) {
         if (preset === "") {
             page.activeSequence = ""
@@ -276,6 +340,8 @@ Page {
 
         if (page.activeSequence === preset) {
             page.activeSequence = ""
+            page.activeFocusPreset = ""
+            page.isCustomFocus = false
             audioEngine.stopSequence()
             return
         }
@@ -283,6 +349,8 @@ Page {
         var wasPaused = page.pausedMode
 
         page.activeSequence = preset
+        page.activeFocusPreset = ""
+        page.isCustomFocus = false
 
         audioEngine.startSequence(preset)
 
@@ -326,6 +394,11 @@ Page {
     Component {
         id: infoIsochronicPageComponent
         InfoIsochronicPage {}
+    }
+
+    Component {
+        id: infoFocusPageComponent
+        InfoFocusPage {}
     }
 
     Component {
@@ -500,169 +573,215 @@ Page {
                         }
 
                         PageDrawer {
-                            id: sequenceDrawer
+                            id: focusDrawer
 
-                            drawerContent: SequenceDrawer {
-                                id: sequenceSelector
-
-                                sequencePresets: audioEngine.sequencePresets
-                                activeSequence: page.activeSequence
-
-                                onSequenceSelected: {
-                                    page.selectSequence(sequence)
-                                }
-
-                                onSequenceDeselected: {
-                                    page.activeSequence = ""
-                                    audioEngine.stopSequence()
-                                }
+                            drawerContent: FocusDrawer {
+                                id: focusPanel
 
                                 onCloseRequested:
-                                    sequenceDrawer.open = false
+                                    focusDrawer.open = false
+
+                                onMixChanged: {
+                                    page.currentFocusVoices = voices
+
+                                    audioEngine.setCustomSequenceSource(
+                                        "Custom Focus",
+                                        page.focusSource(voices))
+
+                                    if (page.activeFocusPreset !== "") {
+                                        var wasPaused = page.pausedMode
+
+                                        page.activeSequence = ""
+                                        page.activeFocusPreset =
+                                                "Custom Focus"
+                                        page.isCustomFocus = true
+
+                                        audioEngine.startSequence(
+                                            "Custom Focus")
+
+                                        if (wasPaused)
+                                            audioEngine.pauseSequence()
+                                    }
+                                }
                             }
 
                             PageDrawer {
-                                id: soundPickerDrawer
+                                id: sequenceDrawer
 
-                                drawerContent: SoundPickerDrawer {
-                                    id: soundPickerPanel
+                                drawerContent: SequenceDrawer {
+                                    id: sequenceSelector
 
-                                    audioEngine: audioEngine
-                                    pausedMode: page.pausedMode
+                                    sequencePresets: audioEngine.sequencePresets
+                                    activeSequence: page.activeSequence
+
+                                    onSequenceSelected: {
+                                        page.selectSequence(sequence)
+                                    }
+
+                                    onSequenceDeselected: {
+                                        page.activeSequence = ""
+                                        page.activeFocusPreset = ""
+                                        page.isCustomFocus = false
+                                        audioEngine.stopSequence()
+                                    }
 
                                     onCloseRequested:
-                                        soundPickerDrawer.open = false
+                                        sequenceDrawer.open = false
                                 }
 
-                                Item {
-                                    id: foregroundContent
+                                PageDrawer {
+                                    id: soundPickerDrawer
 
-                                    anchors.fill: parent
+                                    drawerContent: SoundPickerDrawer {
+                                        id: soundPickerPanel
 
-                                    SilicaFlickable {
-                                        id: foregroundFlick
+                                        audioEngine: audioEngine
+                                        pausedMode: page.pausedMode
+
+                                        onCloseRequested:
+                                            soundPickerDrawer.open = false
+                                    }
+
+                                    Item {
+                                        id: foregroundContent
+
                                         anchors.fill: parent
-                                        contentHeight: height
 
-                                        PullDownMenu {
-                                            MenuItem {
-                                                text: qsTr("About")
-                                                onClicked: {
-                                                    pageStack.push(
-                                                        Qt.resolvedUrl("AboutPage.qml")
-                                                    )
+                                        SilicaFlickable {
+                                            id: foregroundFlick
+                                            anchors.fill: parent
+                                            contentHeight: height
+
+                                            PullDownMenu {
+                                                MenuItem {
+                                                    text: qsTr("About")
+                                                    onClicked: {
+                                                        pageStack.push(
+                                                            Qt.resolvedUrl("AboutPage.qml")
+                                                        )
+                                                    }
                                                 }
-                                            }
 
-                                            MenuItem {
-                                                text: qsTr("Deselect all sounds")
-                                                enabled: page.hasActiveSounds
-                                                onClicked: page.deselectAllSounds()
-                                            }
-
-                                            MenuItem {
-                                                text: qsTr("Timer")
-                                                enabled: page.hasActiveSounds
-                                                onClicked: {
-                                                    pageStack.push(
-                                                        Qt.resolvedUrl("TimerPage.qml"),
-                                                        { appWindow: appWindow }
-                                                    )
+                                                MenuItem {
+                                                    text: qsTr("Deselect all sounds")
+                                                    enabled: page.hasActiveSounds
+                                                    onClicked: page.deselectAllSounds()
                                                 }
-                                            }
-                                        }
 
-                                        Item {
-                                            id: topSpacer
-                                            width: parent.width
-                                            height: Theme.paddingSmall
-                                        }
-
-                                        TabView {
-                                            anchors.top: topSpacer.bottom
-                                            anchors.left: parent.left
-                                            anchors.right: parent.right
-                                            anchors.bottom: parent.bottom
-
-                                            tabBarPosition: Qt.AlignTop
-
-                                            Tab {
-                                                title: qsTr("Standard")
-
-                                                Component {
-                                                    TabItem {
-                                                        flickable: standardTab
-
-                                                        StandardTab {
-                                                            id: standardTab
-                                                            anchors.fill: parent
-
-                                                            mainPage: page
-                                                            engine: audioEngine
-
-                                                            onOpenCustomBinauralRequested: {
-                                                                customBinauralPanel.setValues(
-                                                                    page.currentCarrier,
-                                                                    page.currentBeat
-                                                                )
-                                                                binauralDrawer.open = true
-                                                            }
-
-                                                            onOpenNoiseWaveRequested:
-                                                                noiseWaveDrawer.open = true
-
-                                                            onOpenAmbienceRequested:
-                                                                ambienceDrawer.open = true
-
-                                                            onOpenSoundPickerRequested:
-                                                                soundPickerDrawer.open = true
-
-                                                            onBinauralInfoRequested:
-                                                                pageStack.push(infoBinauralPageComponent)
-
-                                                            onColoredNoiseInfoRequested:
-                                                                pageStack.push(infoColoredPageComponent)
-                                                        }
+                                                MenuItem {
+                                                    text: qsTr("Timer")
+                                                    enabled: page.hasActiveSounds
+                                                    onClicked: {
+                                                        pageStack.push(
+                                                            Qt.resolvedUrl("TimerPage.qml"),
+                                                            { appWindow: appWindow }
+                                                        )
                                                     }
                                                 }
                                             }
 
-                                            Tab {
-                                                title: qsTr("Extended")
+                                            Item {
+                                                id: topSpacer
+                                                width: parent.width
+                                                height: Theme.paddingSmall
+                                            }
 
-                                                Component {
-                                                    TabItem {
-                                                        flickable: extendedTab
+                                            TabView {
+                                                anchors.top: topSpacer.bottom
+                                                anchors.left: parent.left
+                                                anchors.right: parent.right
+                                                anchors.bottom: parent.bottom
 
-                                                        ExtendedTab {
-                                                            id: extendedTab
-                                                            anchors.fill: parent
+                                                tabBarPosition: Qt.AlignTop
 
-                                                            mainPage: page
-                                                            engine: audioEngine
+                                                Tab {
+                                                    title: qsTr("Standard")
 
-                                                            onOpenSolfeggioDrawerRequested:
-                                                                solfeggioDrawer.open = true
+                                                    Component {
+                                                        TabItem {
+                                                            flickable: standardTab
 
-                                                            onOpenIsochronicDrawerRequested: {
-                                                                customIsochronicPanel.setValues(
-                                                                    page.currentIsoCarrier,
-                                                                    page.currentIsoPulse
-                                                                )
-                                                                isochronicDrawer.open = true
+                                                            StandardTab {
+                                                                id: standardTab
+                                                                anchors.fill: parent
+
+                                                                mainPage: page
+                                                                engine: audioEngine
+
+                                                                onOpenCustomBinauralRequested: {
+                                                                    customBinauralPanel.setValues(
+                                                                        page.currentCarrier,
+                                                                        page.currentBeat
+                                                                    )
+                                                                    binauralDrawer.open = true
+                                                                }
+
+                                                                onOpenNoiseWaveRequested:
+                                                                    noiseWaveDrawer.open = true
+
+                                                                onOpenAmbienceRequested:
+                                                                    ambienceDrawer.open = true
+
+                                                                onOpenSoundPickerRequested:
+                                                                    soundPickerDrawer.open = true
+
+                                                                onBinauralInfoRequested:
+                                                                    pageStack.push(infoBinauralPageComponent)
+
+                                                                onColoredNoiseInfoRequested:
+                                                                    pageStack.push(infoColoredPageComponent)
                                                             }
+                                                        }
+                                                    }
+                                                }
 
-                                                            onOpenSequenceDrawerRequested:
-                                                                sequenceDrawer.open = true
+                                                Tab {
+                                                    title: qsTr("Extended")
 
-                                                            onSolfeggioInfoRequested:
-                                                                pageStack.push(infoSolfeggioPageComponent)
+                                                    Component {
+                                                        TabItem {
+                                                            flickable: extendedTab
 
-                                                            onIsochronicInfoRequested:
-                                                                pageStack.push(infoIsochronicPageComponent)
+                                                            ExtendedTab {
+                                                                id: extendedTab
+                                                                anchors.fill: parent
 
-                                                            onSequenceInfoRequested:
-                                                                pageStack.push(infoSequencePageComponent)
+                                                                mainPage: page
+                                                                engine: audioEngine
+
+                                                                onOpenSolfeggioDrawerRequested:
+                                                                    solfeggioDrawer.open = true
+
+                                                                onOpenIsochronicDrawerRequested: {
+                                                                    customIsochronicPanel.setValues(
+                                                                        page.currentIsoCarrier,
+                                                                        page.currentIsoPulse
+                                                                    )
+                                                                    isochronicDrawer.open = true
+                                                                }
+
+                                                                onOpenFocusDrawerRequested: {
+                                                                    focusPanel.setVoices(
+                                                                        page.currentFocusVoices
+                                                                    )
+                                                                    focusDrawer.open = true
+                                                                }
+
+                                                                onOpenSequenceDrawerRequested:
+                                                                    sequenceDrawer.open = true
+
+                                                                onSolfeggioInfoRequested:
+                                                                    pageStack.push(infoSolfeggioPageComponent)
+
+                                                                onIsochronicInfoRequested:
+                                                                    pageStack.push(infoIsochronicPageComponent)
+
+                                                                onSequenceInfoRequested:
+                                                                    pageStack.push(infoSequencePageComponent)
+
+                                                                onFocusInfoRequested:
+                                                                    pageStack.push(infoFocusPageComponent)
+                                                            }
                                                         }
                                                     }
                                                 }

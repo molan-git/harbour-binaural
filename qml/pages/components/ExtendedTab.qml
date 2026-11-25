@@ -16,6 +16,7 @@ SilicaFlickable {
     signal sequenceInfoRequested()
 
     signal openSequenceDrawerRequested()
+    signal openFocusDrawerRequested()
 
     contentHeight: extendedColumn.height + Theme.paddingLarge
     clip: true
@@ -190,6 +191,121 @@ SilicaFlickable {
 
             onValueChanged:
                 root.engine.setIsochronicVolume(value)
+        }
+
+        // ── Focus ──
+
+        CompactSectionHeader {
+            text: qsTr("Focus")
+        }
+
+        Item {
+            width: parent.width
+
+            height: headsetHintFocus.height +
+                    Theme.paddingSmall +
+                    focusGrid.height
+
+            HeadsetHint {
+                id: headsetHintFocus
+            }
+
+            SilicaGridView {
+                id: focusGrid
+
+                y: headsetHintFocus.height + Theme.paddingSmall
+
+                x: Theme.horizontalPageMargin
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                height: contentHeight
+
+                cellWidth: width / 3
+                cellHeight: Theme.itemSizeMedium
+
+                model: [
+                    { label: "F3",  preset: "Focus 3 (Sleep)" },
+                    { label: "F10", preset: "Focus 10 (Body Asleep)" },
+                    { label: "F12", preset: "Focus 12 (Expanded Awareness)" },
+                    { label: "F15", preset: "Focus 15 (No Time)" },
+                    { label: "F21", preset: "Focus 21 (Other Energy Systems)" },
+                    { label: "F&C", preset: "Focus & Concentration (Beta)" }
+                ]
+
+                delegate: Item {
+                    width: focusGrid.cellWidth
+                    height: focusGrid.cellHeight
+
+                    SoundButton {
+                        anchors.centerIn: parent
+
+                        preferredWidth: focusGrid.cellWidth -
+                                        Theme.paddingMedium
+
+                        text: modelData.label
+
+                        selected: root.mainPage.activeFocusPreset ===
+                                  modelData.preset
+                        playing: root.mainPage.sequencePlaying
+
+                        onClicked:
+                            root.mainPage.selectFocus(modelData.preset)
+                    }
+                }
+            }
+        }
+
+        // Custom focus button
+        Item {
+            width: parent.width
+            height: customFocusButton.height
+
+            SoundButton {
+                id: customFocusButton
+
+                anchors.centerIn: parent
+
+                preferredWidth: focusGrid.width -
+                                Theme.paddingMedium
+
+                secondary: true
+
+                text: {
+                    if (root.mainPage.activeFocusPreset === "")
+                        return ""
+
+                    if (root.mainPage.isCustomFocus)
+                        return qsTr("Custom mix")
+
+                    return root.mainPage.activeFocusPreset.replace(
+                                /\s*\(.*\)$/, "")
+                }
+
+                iconSource: root.mainPage.activeFocusPreset === ""
+                            ? "../../images/icon-m-soundsettings.svg"
+                            : ""
+
+                selected: root.mainPage.isCustomFocus &&
+                          root.mainPage.activeFocusPreset !== ""
+
+                playing: root.mainPage.sequencePlaying
+
+                onClicked: root.openFocusDrawerRequested()
+
+                showInfoButton: true
+                onInfoClicked: root.focusInfoRequested()
+            }
+        }
+
+        VolumeSliderRow {
+            width: parent.width - 2 * Theme.horizontalPageMargin
+            x: Theme.horizontalPageMargin
+
+            enabled: root.mainPage.activeFocusPreset !== ""
+
+            value: root.engine.sequenceVolume
+
+            onValueChanged:
+                root.engine.setSequenceVolume(value)
         }
 
         // ── Sequences ──

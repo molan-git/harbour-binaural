@@ -46,6 +46,7 @@ DISTFILES += qml/harbour-binaural.qml \
     icons/216x216/harbour-binaural.png \
     qml/pages/AudioFilePickerPage.qml \
     qml/pages/CreditPage.qml \
+    qml/pages/InfoFocusPage.qml \
     qml/pages/MainPage.qml \
     qml/cover/CoverPage.qml \
     qml/pages/AboutPage.qml \
@@ -56,6 +57,7 @@ DISTFILES += qml/harbour-binaural.qml \
     qml/pages/components/CustomBinauralDrawer.qml \
     qml/pages/components/CustomIsochronicDrawer.qml \
     qml/pages/components/ExtendedTab.qml \
+    qml/pages/components/FocusDrawer.qml \
     qml/pages/components/HeadsetHint.qml \
     qml/pages/InfoBinauralPage.qml \
     qml/pages/InfoColoredPage.qml \

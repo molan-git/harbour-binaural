@@ -126,6 +126,18 @@ void AudioEngine::startSequence(const QString &preset)
     updatePlayingState();
 }
 
+void AudioEngine::setCustomSequenceSource(const QString &name,
+                                          const QString &source)
+{
+    if (name.isEmpty())
+        return;
+
+    if (!m_sequencePresets.contains(name))
+        m_sequencePresets.append(name);
+
+    m_sequencePresetSources.insert(name, source);
+}
+
 // ============================================================================
 // PAUSE / RESUME / STOP
 // ============================================================================
@@ -155,12 +167,19 @@ void AudioEngine::stopSequence()
 // VOLUME
 // ============================================================================
 
+int AudioEngine::sequenceVolume() const
+{
+    return m_sequenceVolume;
+}
+
 void AudioEngine::setSequenceVolume(int volume)
 {
     m_sequenceVolume = qBound(0, volume, 100);
 
     m_sequenceChannel->setVolume(
         m_sequenceVolume / 100.0);
+
+    emit sequenceVolumeChanged();
 }
 
 // ============================================================================

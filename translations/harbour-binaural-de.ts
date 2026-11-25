@@ -197,8 +197,31 @@
 <context>
     <name>ExtendedTab</name>
     <message>
-        <location filename="../qml/pages/components/ExtendedTab.qml" line="198"/>
+        <location filename="../qml/pages/components/ExtendedTab.qml" line="199"/>
+        <source>Focus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/ExtendedTab.qml" line="275"/>
+        <source>Custom mix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/ExtendedTab.qml" line="294"/>
         <source>Sequences</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FocusDrawer</name>
+    <message>
+        <location filename="../qml/pages/components/FocusDrawer.qml" line="62"/>
+        <source>Voice %1 carrier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/FocusDrawer.qml" line="92"/>
+        <source>Voice %1 beat</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -573,27 +596,27 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="590"/>
+        <location filename="../qml/pages/MainPage.qml" line="693"/>
         <source>Standard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="549"/>
+        <location filename="../qml/pages/MainPage.qml" line="652"/>
         <source>About</source>
         <translation type="unfinished">Über</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="558"/>
+        <location filename="../qml/pages/MainPage.qml" line="661"/>
         <source>Deselect all sounds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="564"/>
+        <location filename="../qml/pages/MainPage.qml" line="667"/>
         <source>Timer</source>
         <translation type="unfinished">Timer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="631"/>
+        <location filename="../qml/pages/MainPage.qml" line="734"/>
         <source>Extended</source>
         <translation type="unfinished"></translation>
     </message>

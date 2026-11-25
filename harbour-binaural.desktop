@@ -12,6 +12,6 @@ Name=Binaural
 Name[de]=Binaural
 
 [X-Sailjail]
-OrganizationName=org.molan-git
-ApplicationName=binaural
+OrganizationName=ch.molan-git
+ApplicationName=harbour-binaural
 Permissions=Audio;Music

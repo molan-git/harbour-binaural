@@ -165,6 +165,25 @@
         <source>Sequences</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Focus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom mix</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FocusDrawer</name>
+    <message>
+        <source>Voice %1 carrier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Voice %1 beat</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HeadsetHint</name>

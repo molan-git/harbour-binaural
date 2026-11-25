@@ -215,6 +215,15 @@ public:
     Q_INVOKABLE void resumeSequence();
     Q_INVOKABLE void setSequenceVolume(int volume);
 
+    // Custom user-built sequence (Focus mixes).
+    Q_INVOKABLE void setCustomSequenceSource(const QString &name,
+                                             const QString &source);
+    // Custom sequence volume (Focus)
+    Q_PROPERTY(int sequenceVolume
+               READ sequenceVolume
+               WRITE setSequenceVolume
+               NOTIFY sequenceVolumeChanged)
+
     // Custom user sound (mp3/ogg/wav) and playlist controls.
     Q_INVOKABLE void playCustomSound();
     Q_INVOKABLE void stopCustomSound();
@@ -234,6 +243,8 @@ signals:
     void playingChanged();
     void customSoundChanged();
     void sequenceProgressChanged();
+    void sequenceVolumeChanged();
+    int sequenceVolume() const;
 
 private:
     void updatePlayingState();
