@@ -14,6 +14,7 @@ SilicaFlickable {
     signal solfeggioInfoRequested()
     signal isochronicInfoRequested()
     signal sequenceInfoRequested()
+    signal focusInfoRequested()
 
     signal openSequenceDrawerRequested()
     signal openFocusDrawerRequested()

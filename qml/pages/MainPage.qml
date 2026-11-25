@@ -776,11 +776,11 @@ Page {
                                                                 onIsochronicInfoRequested:
                                                                     pageStack.push(infoIsochronicPageComponent)
 
-                                                                onSequenceInfoRequested:
-                                                                    pageStack.push(infoSequencePageComponent)
-
                                                                 onFocusInfoRequested:
                                                                     pageStack.push(infoFocusPageComponent)
+
+                                                                onSequenceInfoRequested:
+                                                                    pageStack.push(infoSequencePageComponent)
                                                             }
                                                         }
                                                     }
