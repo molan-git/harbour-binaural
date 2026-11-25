@@ -88,6 +88,10 @@ Item {
         visible: !root.secondary
         text: root.text
 
+        icon.source: root.iconSource !== "" && root.text !== ""
+                     ? root.iconSource
+                     : ""
+
         preferredWidth: root.contentWidth
 
         // Prevent long text from expanding the button.

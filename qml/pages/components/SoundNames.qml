@@ -6,8 +6,7 @@ import QtQuick 2.0
  *
  * Rules:
  *  - Keys ("Wind", "Pink", "Delta"...) are used in state and engine
- *    logic and are NEVER translated.
- *  - Every qsTr() call for a sound name lives in THIS file only.
+ *    logic and are never translated.
  *  - Callers: SoundNames.label(key)
  */
 QtObject {

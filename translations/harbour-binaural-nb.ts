@@ -651,15 +651,23 @@
 <context>
     <name>StandardTab</name>
     <message>
-        <source>Ambient sounds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Binaural beats</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Colored noise</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source></source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Soundscape</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ambient sounds</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -262,6 +262,7 @@ SilicaFlickable {
             text: qsTr("Ambient sounds")
         }
 
+        // Soundscape button
         Item {
             width: parent.width
             height: ambienceButton.height
@@ -277,10 +278,14 @@ SilicaFlickable {
                                 Theme.paddingMedium
 
                 text: root.mainPage.activeAmbiences.length === 0
-                      ? qsTr("Ambient sounds")
+                      ? qsTr("Soundscape")
                       : root.mainPage.activeAmbiences.map(function(a) {
                             return SoundNames.label(a)
                         }).join(", ")
+
+                iconSource: root.mainPage.activeAmbiences.length === 0
+                            ? "image://theme/icon-m-add"
+                            : ""
 
                 selected: root.mainPage.activeAmbiences.length > 0
                 playing: root.mainPage.ambiencePlaying
@@ -295,7 +300,6 @@ SilicaFlickable {
         }
 
         // Custom sound button
-
         Item {
             width: parent.width
             height: customSoundButton.height
@@ -310,10 +314,13 @@ SilicaFlickable {
                 preferredWidth: frequencyGrid.width -
                                 Theme.paddingMedium
 
-                text: "  " +
-                      (root.engine.customSoundName !== ""
-                       ? root.engine.customSoundName
-                       : SoundNames.label("Custom sound")) + "  "
+                text: root.engine.customSoundName !== ""
+                      ? root.engine.customSoundName
+                      : SoundNames.label("Custom sound")
+
+                iconSource: root.engine.customSoundName === ""
+                            ? "image://theme/icon-m-add"
+                            : ""
 
                 enabled: root.mainPage.customSoundSelected ||
                          root.mainPage.activeAmbiences.length < 3
