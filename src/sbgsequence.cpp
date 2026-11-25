@@ -483,7 +483,7 @@ QVector<SbgPreset> Sbg::builtinPresets()
         "ts: 59+1.2/10 110+1.3/10 288+3.7/10\n"
         "off: -\n"
         "NOW ts\n"
-        "+00:30:00 off\n");
+        "+00:60:00 off\n");
     presets.append(focus3);
 
     SbgPreset focus10;
@@ -494,7 +494,7 @@ QVector<SbgPreset> Sbg::builtinPresets()
         "ts: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10\n"
         "off: -\n"
         "NOW ts\n"
-        "+00:30:00 off\n");
+        "+00:60:00 off\n");
     presets.append(focus10);
 
     SbgPreset focus12;
@@ -507,7 +507,7 @@ QVector<SbgPreset> Sbg::builtinPresets()
         "400+10.0/10 500+10.1/10 600+4.8/10\n"
         "off: -\n"
         "NOW ts\n"
-        "+00:30:00 off\n");
+        "+00:60:00 off\n");
     presets.append(focus12);
 
     SbgPreset focus15;
@@ -520,7 +520,7 @@ QVector<SbgPreset> Sbg::builtinPresets()
         "500+7.05/10 630+7.1/10 750+7.0/10\n"
         "off: -\n"
         "NOW ts\n"
-        "+00:30:00 off\n");
+        "+00:60:00 off\n");
     presets.append(focus15);
 
     SbgPreset focus21;
@@ -533,7 +533,7 @@ QVector<SbgPreset> Sbg::builtinPresets()
         "600+16.2/10 750+15.9/10 900+16.2/10\n"
         "off: -\n"
         "NOW ts\n"
-        "+00:30:00 off\n");
+        "+00:60:00 off\n");
     presets.append(focus21);
 
     // ------------------------------------------------------------------
