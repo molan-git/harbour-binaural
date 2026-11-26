@@ -7,26 +7,40 @@
 /*
  * Data model for a parsed SBaGen sequence (.sbg).
  *
- * Only the deterministic subset of the SBaGen format is
- * supported -- the subset that the well-known focus/relax/sleep
- * example sequences are built from:
+ * The deterministic subset of the SBaGen format is supported --
+ * the subset the well-known focus/relax/sleep example sequences
+ * and the community contributions are built from:
  *
- *   # comment
- *   -SE                          (options line; sequence always crossfades)
+ *   # comment                    (full-line and end-of-line)
+ *   -SE, -r, -F, -q ...          (option lines; accepted and ignored,
+ *                                 the sequence always crossfades)
  *   name: 100+4.5/8 pink/40      (tone-set definition, '-' = off;
  *                                 a leading 'spin:' is accepted and
  *                                 its modulation ignored)
- *   NOW name                     (timeline event at t=0)
- *   +00:05:00 name               (event after a relative offset)
- *   00:05:00 name ...            (clock-style time, treated as an
- *                                  offset from sequence start;
- *                                  trailing tokens such as '->'
- *                                  are ignored)
+ *   NOW name
+ *   NOW+00:05:00 name            (relative to playback start)
+ *   +00:05:00 name               (relative to the last-mentioned
+ *                                 absolute time, as in SBaGen)
+ *   00:05:00 name ...            (clock-style absolute time,
+ *                                  treated as an offset from sequence
+ *                                  start; also accepts appended
+ *                                  relative groups, "12:00+00:00:20")
  *
- * Voice forms: carrier+beat/amp, carrier-beat/amp, carrier@beat/amp
- * (sbagen-plus isochronic, approximated as a binaural '+beat'
- * voice), carrier/amp (plain tone), color/amp (noise voice).
- * Amplitude defaults to 20 when omitted.
+ * Fade-in/fade-out specifications ("--", "==", "->", "<>", ...) in
+ * time-sequence lines are accepted and read, but rendered with the
+ * default smooth per-voice blend (see SequenceGenerator).
+ *
+ * Voice forms:
+ *   carrier+beat/amp    binaural, right channel higher
+ *   carrier-beat/amp    binaural, right channel lower
+ *   carrier@beat/amp    isochronic pulse (rendered as an amplitude-
+ *                       pulsed tone on both ears, matching the
+ *                       IsochronicGenerator behaviour)
+ *   carrier/amp         plain tone
+ *   color/amp           noise voice (white/pink/brown/grey)
+ *
+ * Amplitude defaults to 20 when omitted; negative amplitudes and
+ * tone-sets without voices (other than 'off') are errors.
  *
  * Pure data only: runtime state (oscillator phases, noise filter
  * state) lives in SequenceGenerator, so a parsed sequence can be
@@ -42,8 +56,10 @@ struct SbgVoice
 
     // Tone voices.
     double carrier = 0.0;    // Hz, left channel frequency
-    double offset = 0.0;     // Hz, binaural offset added to the
-                             // right channel ('+' higher, '-' lower)
+    double offset = 0.0;     // Hz, binaural offset ('+' higher,
+                             // '-' lower) or isochronic pulse
+                             // frequency ('@')
+    bool isochronic = false; // 'carrier@beat': amplitude pulse
 
     // Noise voices.
     int noiseColor = Pink;
@@ -88,16 +104,17 @@ namespace Sbg
     /*
      * Parses .sbg text into a sequence. Returns false and fills
      * *error on malformed input. Unknown tone-set references and
-     * unsupported constructs (absolute clock times, spin
-     * variation '@', bell-form beats) are reported as errors
-     * rather than silently misinterpreted.
+     * unsupported constructs are reported as errors rather than
+     * silently misinterpreted.
      */
     bool parse(const QString &source,
                SbgSequence *out,
                QString *error = nullptr);
 
-    // Presets embedded with the app (no runtime files needed).
+    // Generic .sbg presets shown in the sequence drawer.
     QVector<SbgPreset> builtinPresets();
+
+    // Monroe 'Focus level' presets, shown only in the Focus section.
     QVector<SbgPreset> focusPresets();
 }
 

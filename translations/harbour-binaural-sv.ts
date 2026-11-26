@@ -309,22 +309,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>F21 (Other Energy Systems)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>F10 voices extended by high beta beats</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>F&amp;C (Concentration)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pink noise with beta beats for focus and concentration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Custom mix</source>
         <translation type="unfinished"></translation>
     </message>
@@ -334,6 +318,38 @@
     </message>
     <message>
         <source>The preset frequencies follow the classic SBaGen session collections; isochronic voices are approximated as binaural beats. Sessions run as timed sequences; use the progress bar below a preset to pause or stop early.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F21/22 (Other Energy Systems)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Beta beats on high carriers; Focus 22 uses the same tone-set as Focus 21</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F23</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delta-range beats (~4 Hz) layered on higher carriers (400–900 Hz)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F24</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F23 tones extended by a deep 50 Hz voice with a very slow (0.75 Hz) beat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F25</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>High-carrier delta stack (503–900 Hz)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

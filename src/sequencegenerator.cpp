@@ -9,7 +9,7 @@ namespace
 
     const double TwoPi = 2.0 * M_PI;
 
-    // SBaGen '-SE' spin: crossfade length between tone-sets.
+    // Crossfade length between tone-sets (SBaGen '-SE' decay).
     const qint64 SpinDurationMs = 10000;
 
     // Grace period of silence after the final fade before the
@@ -28,6 +28,67 @@ namespace
 
     // Final limiter.
     const double PeakSample = 32000.0;
+
+    // Isochronic pulse envelope (matches IsochronicGenerator).
+    const double IsochronicDutyCycle = 0.5;
+    const double PulseRampSeconds = 0.003;
+
+    /*
+     * Amplitude envelope of an isochronic pulse: on for the first
+     * IsochronicDutyCycle of the cycle, with linear ramps at both
+     * edges so the switching stays click-free (at high pulse
+     * rates the ramps are capped to 40 % of the on-time).
+     */
+    double isochronicEnvelope(double pulsePhase,
+                              double pulseFrequency,
+                              int sampleRate)
+    {
+        if (pulseFrequency <= 0.0)
+            return 0.0;
+
+        const double cycleFrames =
+            sampleRate / pulseFrequency;
+
+        const double onFrames =
+            cycleFrames * IsochronicDutyCycle;
+
+        const double rampFrames = qMin(
+            onFrames * 0.4,
+            PulseRampSeconds * sampleRate);
+
+        const double pos = pulsePhase * cycleFrames;
+
+        if (pos >= onFrames)
+            return 0.0;
+
+        if (rampFrames <= 0.0)
+            return 1.0;
+
+        return qBound(
+            0.0,
+            qMin(pos / rampFrames,
+                 (onFrames - pos) / rampFrames),
+            1.0);
+    }
+
+    /*
+     * Two voices "match" across consecutive tone-sets when they
+     * are the same kind of sound with identical parameters: such
+     * voices keep playing seamlessly across the transition
+     * (mirror of the helper in sbgsequence.cpp).
+     */
+    bool voicesMatch(const SbgVoice &a, const SbgVoice &b)
+    {
+        if (a.type != b.type)
+            return false;
+
+        if (a.type == SbgVoice::Noise)
+            return a.noiseColor == b.noiseColor;
+
+        return a.isochronic == b.isochronic
+            && a.carrier == b.carrier
+            && a.offset == b.offset;
+    }
 }
 
 // ============================================================================
@@ -116,21 +177,23 @@ qint64 SequenceGenerator::readData(char *data, qint64 maxlen)
     for (qint64 frame = 0; frame < frameCount; ++frame)
     {
         // Advance the current segment across event boundaries.
+        // Continuing voices carry their runtime state over.
         while (m_segment + 1 < eventCount
                && tMs >= static_cast<double>(
                             m_sequence.events.at(m_segment + 1)
                                 .timeMs))
         {
+            carryOverRuntime(m_segment);
             ++m_segment;
         }
 
         /*
-         * Crossfade weight of the current tone-set. During the
-         * last SpinDurationMs of a segment the next tone-set
-         * blends in; before that the weight is exactly 1 and the
-         * next set is not rendered at all.
+         * Fade progress towards the next boundary: 0 outside the
+         * fade window, 1 at the boundary itself. During the
+         * window, ending voices fade out and new voices fade in
+         * with equal-power weights.
          */
-        double weightCurrent = 1.0;
+        double fadePos = 0.0;
 
         if (m_segment + 1 < eventCount)
         {
@@ -147,38 +210,30 @@ qint64 SequenceGenerator::readData(char *data, qint64 maxlen)
             if (tMs > static_cast<double>(fadeStartMs)
                 && boundaryMs > fadeStartMs)
             {
-                weightCurrent =
-                    static_cast<double>(boundaryMs - tMs)
+                fadePos =
+                    (tMs - static_cast<double>(fadeStartMs))
                     / static_cast<double>(
                         boundaryMs - fadeStartMs);
 
-                if (weightCurrent < 0.0)
-                    weightCurrent = 0.0;
+                if (fadePos < 0.0)
+                    fadePos = 0.0;
+
+                if (fadePos > 1.0)
+                    fadePos = 1.0;
             }
         }
+
+        const bool fading = fadePos > 0.0;
+
+        const double outWeight = qCos(fadePos * M_PI / 2.0);
+        const double inWeight = qSin(fadePos * M_PI / 2.0);
 
         double left = 0.0;
         double right = 0.0;
 
-        renderSetFrame(m_eventSetIndex.at(m_segment),
-                       &left, &right);
-
-        if (weightCurrent < 1.0)
-        {
-            double nextLeft = 0.0;
-            double nextRight = 0.0;
-
-            renderSetFrame(m_eventSetIndex.at(m_segment + 1),
-                           &nextLeft, &nextRight);
-
-            const double weightNext = 1.0 - weightCurrent;
-
-            left = left * weightCurrent
-                + nextLeft * weightNext;
-
-            right = right * weightCurrent
-                + nextRight * weightNext;
-        }
+        renderSegmentFrame(&left, &right,
+                           fading, fadePos,
+                           outWeight, inWeight);
 
         samples[frame * 2] =
             static_cast<qint16>(
@@ -217,6 +272,8 @@ void SequenceGenerator::buildRuntime()
 {
     m_eventSetIndex.clear();
     m_setRuntime.clear();
+    m_voiceMatchToNext.clear();
+    m_voiceMatchToEnd.clear();
 
     // Resolve event tone-set names to indices once.
     for (int i = 0; i < m_sequence.events.size(); ++i)
@@ -258,6 +315,7 @@ void SequenceGenerator::buildRuntime()
                 tone.voiceIndex = v;
                 tone.leftPhase = 0.0;
                 tone.rightPhase = 0.0;
+                tone.pulsePhase = 0.0;
 
                 runtime.tones.append(tone);
             }
@@ -275,24 +333,197 @@ void SequenceGenerator::buildRuntime()
 
         m_setRuntime.append(runtime);
     }
+
+    // Continuation matching across each event boundary.
+    for (int i = 0; i < m_sequence.events.size(); ++i)
+    {
+        if (i + 1 >= m_sequence.events.size())
+        {
+            // No next event: keep the tables parallel to the
+            // event list.
+            m_voiceMatchToNext.append(QVector<int>());
+            m_voiceMatchToEnd.append(QVector<int>());
+            continue;
+        }
+
+        const int curIdx = m_eventSetIndex.at(i);
+        const int nextIdx = m_eventSetIndex.at(i + 1);
+
+        const int curCount =
+            curIdx >= 0
+                ? m_sequence.toneSets.at(curIdx).voices.size()
+                : 0;
+
+        const int nextCount =
+            nextIdx >= 0
+                ? m_sequence.toneSets.at(nextIdx).voices.size()
+                : 0;
+
+        QVector<int> toNext(curCount, -1);
+        QVector<int> toCur(nextCount, -1);
+
+        if (curIdx >= 0 && nextIdx >= 0)
+        {
+            const SbgToneSet &cur =
+                m_sequence.toneSets.at(curIdx);
+
+            const SbgToneSet &next =
+                m_sequence.toneSets.at(nextIdx);
+
+            if (curIdx == nextIdx)
+            {
+                /*
+                 * The same tone-set is scheduled again: every
+                 * voice continues seamlessly (an '==' re-mark).
+                 */
+                for (int j = 0; j < cur.voices.size(); ++j)
+                    toNext[j] = j;
+
+                for (int k = 0; k < next.voices.size(); ++k)
+                    toCur[k] = k;
+            }
+            else
+            {
+                for (int j = 0; j < cur.voices.size(); ++j)
+                {
+                    for (int k = 0; k < next.voices.size(); ++k)
+                    {
+                        if (voicesMatch(cur.voices.at(j),
+                                        next.voices.at(k)))
+                        {
+                            toNext[j] = k;
+                            break;
+                        }
+                    }
+                }
+
+                for (int k = 0; k < next.voices.size(); ++k)
+                {
+                    for (int j = 0; j < cur.voices.size(); ++j)
+                    {
+                        if (voicesMatch(cur.voices.at(j),
+                                        next.voices.at(k)))
+                        {
+                            toCur[k] = j;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        m_voiceMatchToNext.append(toNext);
+        m_voiceMatchToEnd.append(toCur);
+    }
+}
+
+void SequenceGenerator::carryOverRuntime(int eventIndex)
+{
+    if (eventIndex + 1 >= m_eventSetIndex.size())
+        return;
+
+    const int curIdx = m_eventSetIndex.at(eventIndex);
+    const int nextIdx = m_eventSetIndex.at(eventIndex + 1);
+
+    if (curIdx < 0 || nextIdx < 0 || curIdx == nextIdx)
+        return;
+
+    const QVector<int> &toCur =
+        m_voiceMatchToEnd.at(eventIndex);
+
+    SetRuntime &curRuntime = m_setRuntime[curIdx];
+    SetRuntime &nextRuntime = m_setRuntime[nextIdx];
+
+    // Continuing voices inherit the phase and filter state of
+    // the voice they continue, so the sound carries over the
+    // boundary without a restart.
+    for (int j = 0; j < toCur.size(); ++j)
+    {
+        const int fromVoice = toCur.at(j);
+
+        if (fromVoice < 0)
+            continue;
+
+        if (ToneRuntime *dst =
+                findToneRuntime(nextRuntime, j))
+        {
+            if (ToneRuntime *src =
+                    findToneRuntime(curRuntime, fromVoice))
+                *dst = *src;
+        }
+
+        if (NoiseRuntime *dst =
+                findNoiseRuntime(nextRuntime, j))
+        {
+            if (NoiseRuntime *src =
+                    findNoiseRuntime(curRuntime, fromVoice))
+                *dst = *src;
+        }
+    }
+}
+
+SequenceGenerator::ToneRuntime *
+SequenceGenerator::findToneRuntime(SetRuntime &runtime,
+                                   int voiceIndex)
+{
+    for (int i = 0; i < runtime.tones.size(); ++i)
+    {
+        if (runtime.tones.at(i).voiceIndex == voiceIndex)
+            return &runtime.tones[i];
+    }
+
+    return nullptr;
+}
+
+SequenceGenerator::NoiseRuntime *
+SequenceGenerator::findNoiseRuntime(SetRuntime &runtime,
+                                    int voiceIndex)
+{
+    for (int i = 0; i < runtime.noises.size(); ++i)
+    {
+        if (runtime.noises.at(i).voiceIndex == voiceIndex)
+            return &runtime.noises[i];
+    }
+
+    return nullptr;
 }
 
 // ============================================================================
-// PER-SET RENDERING
+// PER-SEGMENT RENDERING
 // ============================================================================
 
-void SequenceGenerator::renderSetFrame(int setIndex,
-                                       double *outLeft,
-                                       double *outRight)
+void SequenceGenerator::renderSegmentFrame(double *outLeft,
+                                           double *outRight,
+                                           bool fading,
+                                           double fadePos,
+                                           double outWeight,
+                                           double inWeight)
 {
     double left = 0.0;
     double right = 0.0;
 
-    if (setIndex >= 0)
-    {
-        const SbgToneSet &set = m_sequence.toneSets.at(setIndex);
+    const int eventCount = m_sequence.events.size();
 
-        SetRuntime &runtime = m_setRuntime[setIndex];
+    const int curSetIdx = m_eventSetIndex.at(m_segment);
+
+    const int nextSetIdx =
+        m_segment + 1 < eventCount
+            ? m_eventSetIndex.at(m_segment + 1)
+            : -1;
+
+    // ----------------------------------------------------------
+    // Current tone-set.
+    // ----------------------------------------------------------
+
+    if (curSetIdx >= 0)
+    {
+        const SbgToneSet &set =
+            m_sequence.toneSets.at(curSetIdx);
+
+        SetRuntime &runtime = m_setRuntime[curSetIdx];
+
+        const QVector<int> &toNext =
+            m_voiceMatchToNext.at(m_segment);
 
         for (int i = 0; i < runtime.tones.size(); ++i)
         {
@@ -301,23 +532,41 @@ void SequenceGenerator::renderSetFrame(int setIndex,
             const SbgVoice &voice =
                 set.voices.at(tone.voiceIndex);
 
-            const double gain =
-                voice.amplitude * AmplitudeScale;
+            double amplitude = voice.amplitude;
+            double weight = 1.0;
 
-            left += qSin(tone.leftPhase * TwoPi) * gain;
-            right += qSin(tone.rightPhase * TwoPi) * gain;
+            if (fading)
+            {
+                const int match =
+                    toNext.at(tone.voiceIndex);
 
-            tone.leftPhase +=
-                voice.carrier / m_sampleRate;
+                if (match < 0)
+                {
+                    // Voice ends here: fade it out.
+                    weight = outWeight;
+                }
+                else if (nextSetIdx >= 0 && fadePos > 0.0)
+                {
+                    // Voice continues: glide its amplitude
+                    // towards the next tone-set's value.
+                    const SbgVoice &nextVoice =
+                        m_sequence.toneSets.at(nextSetIdx)
+                            .voices.at(match);
 
-            tone.rightPhase +=
-                (voice.carrier + voice.offset) / m_sampleRate;
+                    if (nextVoice.amplitude
+                        != voice.amplitude)
+                    {
+                        amplitude +=
+                            (nextVoice.amplitude
+                             - voice.amplitude) * fadePos;
+                    }
+                }
+            }
 
-            if (tone.leftPhase >= 1.0)
-                tone.leftPhase -= 1.0;
-
-            if (tone.rightPhase >= 1.0)
-                tone.rightPhase -= 1.0;
+            renderToneVoice(voice, tone,
+                            amplitude * AmplitudeScale,
+                            weight,
+                            &left, &right);
         }
 
         for (int i = 0; i < runtime.noises.size(); ++i)
@@ -327,16 +576,168 @@ void SequenceGenerator::renderSetFrame(int setIndex,
             const SbgVoice &voice =
                 set.voices.at(noise.voiceIndex);
 
-            const double gain =
-                voice.amplitude * AmplitudeScale;
+            double amplitude = voice.amplitude;
+            double weight = 1.0;
 
-            left += nextNoiseSample(noise, 0) * gain;
-            right += nextNoiseSample(noise, 1) * gain;
+            if (fading)
+            {
+                const int match =
+                    toNext.at(noise.voiceIndex);
+
+                if (match < 0)
+                {
+                    weight = outWeight;
+                }
+                else if (nextSetIdx >= 0 && fadePos > 0.0)
+                {
+                    const SbgVoice &nextVoice =
+                        m_sequence.toneSets.at(nextSetIdx)
+                            .voices.at(match);
+
+                    if (nextVoice.amplitude
+                        != voice.amplitude)
+                    {
+                        amplitude +=
+                            (nextVoice.amplitude
+                             - voice.amplitude) * fadePos;
+                    }
+                }
+            }
+
+            renderNoiseVoice(voice, noise,
+                             amplitude * AmplitudeScale,
+                             weight,
+                             &left, &right);
+        }
+    }
+
+    // ----------------------------------------------------------
+    // Voices of the next tone-set that are new: fade them in.
+    // (Continuing voices are already sounding from above.)
+    // ----------------------------------------------------------
+
+    if (fading && fadePos < 1.0 && nextSetIdx >= 0
+        && nextSetIdx != curSetIdx)
+    {
+        const SbgToneSet &nextSet =
+            m_sequence.toneSets.at(nextSetIdx);
+
+        SetRuntime &nextRuntime = m_setRuntime[nextSetIdx];
+
+        const QVector<int> &toCur =
+            m_voiceMatchToEnd.at(m_segment);
+
+        for (int i = 0; i < nextRuntime.tones.size(); ++i)
+        {
+            ToneRuntime &tone = nextRuntime.tones[i];
+
+            if (toCur.at(tone.voiceIndex) >= 0)
+                continue;
+
+            const SbgVoice &voice =
+                nextSet.voices.at(tone.voiceIndex);
+
+            renderToneVoice(voice, tone,
+                            voice.amplitude * AmplitudeScale,
+                            inWeight,
+                            &left, &right);
+        }
+
+        for (int i = 0; i < nextRuntime.noises.size(); ++i)
+        {
+            NoiseRuntime &noise = nextRuntime.noises[i];
+
+            if (toCur.at(noise.voiceIndex) >= 0)
+                continue;
+
+            const SbgVoice &voice =
+                nextSet.voices.at(noise.voiceIndex);
+
+            renderNoiseVoice(voice, noise,
+                             voice.amplitude * AmplitudeScale,
+                             inWeight,
+                             &left, &right);
         }
     }
 
     *outLeft = left;
     *outRight = right;
+}
+
+void SequenceGenerator::renderToneVoice(const SbgVoice &voice,
+                                        ToneRuntime &tone,
+                                        double gain,
+                                        double weight,
+                                        double *outLeft,
+                                        double *outRight)
+{
+    if (weight <= 0.0)
+        return;
+
+    if (voice.isochronic)
+    {
+        // Amplitude-pulsed tone on both ears, matching the
+        // standalone IsochronicGenerator.
+        const double envelope =
+            isochronicEnvelope(tone.pulsePhase,
+                               voice.offset,
+                               static_cast<int>(m_sampleRate));
+
+        const double value =
+            qSin(tone.leftPhase * TwoPi)
+            * gain * envelope * weight;
+
+        *outLeft += value;
+        *outRight += value;
+
+        tone.leftPhase +=
+            voice.carrier / m_sampleRate;
+
+        tone.pulsePhase +=
+            voice.offset / m_sampleRate;
+
+        if (tone.leftPhase >= 1.0)
+            tone.leftPhase -= 1.0;
+
+        if (tone.pulsePhase >= 1.0)
+            tone.pulsePhase -= 1.0;
+
+        return;
+    }
+
+    *outLeft +=
+        qSin(tone.leftPhase * TwoPi)
+        * gain * weight;
+
+    *outRight +=
+        qSin(tone.rightPhase * TwoPi)
+        * gain * weight;
+
+    tone.leftPhase +=
+        voice.carrier / m_sampleRate;
+
+    tone.rightPhase +=
+        (voice.carrier + voice.offset) / m_sampleRate;
+
+    if (tone.leftPhase >= 1.0)
+        tone.leftPhase -= 1.0;
+
+    if (tone.rightPhase >= 1.0)
+        tone.rightPhase -= 1.0;
+}
+
+void SequenceGenerator::renderNoiseVoice(const SbgVoice &voice,
+                                         NoiseRuntime &noise,
+                                         double gain,
+                                         double weight,
+                                         double *outLeft,
+                                         double *outRight)
+{
+    if (weight <= 0.0)
+        return;
+
+    *outLeft += nextNoiseSample(noise, 0) * gain * weight;
+    *outRight += nextNoiseSample(noise, 1) * gain * weight;
 }
 
 // ============================================================================
@@ -372,7 +773,7 @@ double SequenceGenerator::nextNoiseSample(NoiseRuntime &noise,
                                           int channel)
 {
     // Raw white source: 32-bit LCG.
-    auto nextRawWhite = [&noise, channel]()
+    auto nextRawWhite = [&noise, channel]() -> double
     {
         noise.randomState[channel] =
             1664525u * noise.randomState[channel]
@@ -384,6 +785,7 @@ double SequenceGenerator::nextNoiseSample(NoiseRuntime &noise,
 
     // Smoothed white.
     auto nextWhite = [&noise, channel, &nextRawWhite]()
+        -> double
     {
         const double white = nextRawWhite();
 

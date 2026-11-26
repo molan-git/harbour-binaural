@@ -16,10 +16,22 @@
  *   readData calls) freezes the sequence at the right point and
  *   resuming continues seamlessly. No wall-clock timer needed.
  *
- * - Consecutive tone-sets are crossfaded over the last 10 s of
- *   each segment (SBaGen '-SE' spin behaviour). Each tone-set
- *   owns its own oscillator/noise state, so both sets render
- *   independently during the blend.
+ * - Tone-set changes blend per voice, as in SBaGen: voices that
+ *   continue from one tone-set to the next (same noise color, or
+ *   same carrier/offset/isochronic parameters) keep playing
+ *   seamlessly, with only their amplitude gliding if it changes.
+ *   Ending voices fade out and new voices fade in with
+ *   equal-power weights over the last 10 s of each segment,
+ *   avoiding the ~3 dB level dip a linear crossfade produces for
+ *   uncorrelated signals.
+ *
+ * - On segment changes, continuing voices inherit the oscillator
+ *   phase and noise filter state of the voice they continue, so
+ *   the sound carries across the boundary without a restart.
+ *
+ * - '@' isochronic voices render as an amplitude-pulsed tone on
+ *   both ears (duty cycle 50 %, click-free edges), matching the
+ *   standalone IsochronicGenerator.
  *
  * - If the final tone-set is active (not 'off'), the sequence
  *   keeps playing it indefinitely until the channel is stopped;
@@ -50,6 +62,7 @@ private:
         int voiceIndex = -1;
         double leftPhase = 0.0;
         double rightPhase = 0.0;
+        double pulsePhase = 0.0;   // isochronic voices only
     };
 
     /*
@@ -78,9 +91,50 @@ private:
     };
 
     void buildRuntime();
+
+    /*
+     * Continuation matching across the boundary between events
+     * 'i' and 'i + 1', built once in buildRuntime():
+     *
+     * - m_voiceMatchToNext.at(i): per voice of tone-set(i), the
+     *   index of the matching voice in tone-set(i + 1), or -1.
+     * - m_voiceMatchToEnd.at(i): per voice of tone-set(i + 1),
+     *   the index of the matching voice in tone-set(i), or -1.
+     */
+    QVector<QVector<int>> m_voiceMatchToNext;
+    QVector<QVector<int>> m_voiceMatchToEnd;
+
+    void carryOverRuntime(int eventIndex);
+
+    ToneRuntime *findToneRuntime(SetRuntime &runtime,
+                                 int voiceIndex);
+
+    NoiseRuntime *findNoiseRuntime(SetRuntime &runtime,
+                                   int voiceIndex);
+
+    void renderSegmentFrame(double *outLeft,
+                            double *outRight,
+                            bool fading,
+                            double fadePos,
+                            double outWeight,
+                            double inWeight);
+
+    void renderToneVoice(const SbgVoice &voice,
+                         ToneRuntime &tone,
+                         double gain,
+                         double weight,
+                         double *outLeft,
+                         double *outRight);
+
+    void renderNoiseVoice(const SbgVoice &voice,
+                          NoiseRuntime &noise,
+                          double gain,
+                          double weight,
+                          double *outLeft,
+                          double *outRight);
+
     void resetNoiseState(NoiseRuntime &noise);
     double nextNoiseSample(NoiseRuntime &noise, int channel);
-    void renderSetFrame(int setIndex, double *outLeft, double *outRight);
 
     SbgSequence m_sequence;
 

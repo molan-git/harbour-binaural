@@ -10,10 +10,16 @@
 
 namespace
 {
+    /*
+     * Whitespace-based tokenizing: splits on spaces and tabs so
+     * sequence files with tab indentation parse like their
+     * space-indented equivalents.
+     */
     QStringList splitTokens(const QString &line)
     {
         QStringList tokens;
-        QString token;
+
+        QString current;
 
         for (int i = 0; i < line.size(); ++i)
         {
@@ -21,19 +27,20 @@ namespace
 
             if (c.isSpace())
             {
-                if (!token.isEmpty())
-                    tokens.append(token);
-
-                token.clear();
+                if (!current.isEmpty())
+                {
+                    tokens.append(current);
+                    current.clear();
+                }
             }
             else
             {
-                token.append(c);
+                current.append(c);
             }
         }
 
-        if (!token.isEmpty())
-            tokens.append(token);
+        if (!current.isEmpty())
+            tokens.append(current);
 
         return tokens;
     }
@@ -44,12 +51,13 @@ namespace
 
         const double value = text.toDouble(&ok);
 
-        if (!ok || !qIsFinite(value))
-            return false;
+        if (ok && qIsFinite(value))
+        {
+            *out = value;
+            return true;
+        }
 
-        *out = value;
-
-        return true;
+        return false;
     }
 
     /*
@@ -95,14 +103,59 @@ namespace
     }
 
     /*
-     * "+HH:MM:SS", "+MM:SS" or "+SS" -> milliseconds offset.
+     * "+HH:MM:SS[+MM:SS...]" -> milliseconds. A time token may
+     * carry several relative groups, e.g. "12:00+00:00:20".
      */
-    bool parseRelativeTimeMs(const QString &token, qint64 *out)
+    bool parseRelativeGroups(const QString &token, qint64 *out)
     {
         if (!token.startsWith(QLatin1Char('+')))
             return false;
 
-        return parseClockTimeMs(token.mid(1), out);
+        const QStringList parts =
+            token.split(QLatin1Char('+'));
+
+        if (parts.size() < 2)
+            return false;
+
+        qint64 totalMs = 0;
+
+        for (int i = 1; i < parts.size(); ++i)
+        {
+            qint64 deltaMs = 0;
+
+            if (!parseClockTimeMs(parts.at(i), &deltaMs))
+                return false;
+
+            totalMs += deltaMs;
+        }
+
+        *out = totalMs;
+
+        return true;
+    }
+
+    /*
+     * Fade-in/fade-out specification in a time-sequence line
+     * ("--", "==", "->", "<>", "=<", ...). Two characters:
+     * fade-in from {<, -, =}, fade-out to {>, -, =}.
+     */
+    bool isFadeSpec(const QString &token)
+    {
+        if (token.size() != 2)
+            return false;
+
+        const QChar in = token.at(0);
+        const QChar out = token.at(1);
+
+        const bool inOk = in == QLatin1Char('<')
+            || in == QLatin1Char('-')
+            || in == QLatin1Char('=');
+
+        const bool outOk = out == QLatin1Char('>')
+            || out == QLatin1Char('-')
+            || out == QLatin1Char('=');
+
+        return inOk && outOk;
     }
 
     bool noiseColorFromName(const QString &name, int *out)
@@ -129,9 +182,8 @@ namespace
      *   pink/40            noise voice
      *   100+4.5/8          tone, right channel higher
      *   200-4/6            tone, right channel lower
-     *   300@6/10           sbagen-plus isochronic; approximated
-     *                      here as a binaural '+offset' voice
-     *   300/6              plain tone (no binaural offset)
+     *   300@6/10           isochronic pulse at 6 Hz
+     *   300/6              plain tone (no offset/pulse)
      *
      * Amplitude defaults to 20 (a common SBaGen level) when omitted.
      */
@@ -183,7 +235,7 @@ namespace
 
         const QString &freqPart = head;
 
-        // Optional binaural offset: a single '+', '-' or '@'.
+        // Optional offset/pulse marker: a single '+', '-' or '@'.
         int signPos = -1;
 
         for (int i = 0; i < freqPart.size(); ++i)
@@ -209,6 +261,7 @@ namespace
             }
 
             out->offset = 0.0;
+            out->isochronic = false;
             return true;
         }
 
@@ -222,14 +275,80 @@ namespace
         if (!parseDouble(freqPart.mid(signPos + 1), &out->offset))
         {
             *error = QStringLiteral(
-                "bad binaural offset: %1").arg(token);
+                "bad offset/pulse frequency: %1").arg(token);
             return false;
         }
 
-        // '@' (isochronic) approximates a right-higher binaural beat.
-        if (freqPart.at(signPos) == QLatin1Char('-'))
+        // '@' marks an isochronic pulse at the given rate.
+        out->isochronic =
+            freqPart.at(signPos) == QLatin1Char('@');
+
+        // '-' places the lower tone in the right channel.
+        if (!out->isochronic
+            && freqPart.at(signPos) == QLatin1Char('-'))
             out->offset = -out->offset;
 
+        return true;
+    }
+
+    /*
+     * Two voices "match" across consecutive tone-sets when they
+     * are the same kind of sound with identical parameters: such
+     * voices keep playing seamlessly across the transition.
+     */
+    bool voicesMatch(const SbgVoice &a, const SbgVoice &b)
+    {
+        if (a.type != b.type)
+            return false;
+
+        if (a.type == SbgVoice::Noise)
+            return a.noiseColor == b.noiseColor;
+
+        return a.isochronic == b.isochronic
+            && a.carrier == b.carrier
+            && a.offset == b.offset;
+    }
+
+    /*
+     * Extracts the tone-set name from the tokens that follow a
+     * time specification, accepting an optional fade spec:
+     *   "00:10:00 == ts1"  ->  "ts1"
+     *   "0:58 -> t58"      ->  "t58"
+     *   "00:00:15 ts1 ->"  ->  "ts1"
+     */
+    bool extractToneSetName(const QStringList &tokens,
+                            int startIndex,
+                            QString *name,
+                            QString *error,
+                            int lineNr)
+    {
+        if (tokens.size() <= startIndex)
+        {
+            if (error)
+                *error = QStringLiteral(
+                    "line %1: expected tone-set name")
+                    .arg(lineNr + 1);
+            return false;
+        }
+
+        const QString first = tokens.at(startIndex);
+
+        if (isFadeSpec(first))
+        {
+            if (tokens.size() <= startIndex + 1)
+            {
+                if (error)
+                    *error = QStringLiteral(
+                        "line %1: fade spec without tone-set name")
+                        .arg(lineNr + 1);
+                return false;
+            }
+
+            *name = tokens.at(startIndex + 1);
+            return true;
+        }
+
+        *name = first;
         return true;
     }
 }
@@ -265,21 +384,23 @@ bool Sbg::parse(const QString &source,
     out->toneSets.clear();
     out->events.clear();
 
-    qint64 nowMs = 0;
+    /*
+     * Relative times ("+00:05:00") are relative to the
+     * last-mentioned absolute time ("NOW" or a clock time), as in
+     * SBaGen -- they do not accumulate from line to line.
+     */
+    qint64 lastAbsoluteMs = 0;
 
     const QStringList lines = source.split(QLatin1Char('\n'));
 
     for (int lineNr = 0; lineNr < lines.size(); ++lineNr)
     {
-        QString line = lines.at(lineNr).trimmed();
+        QString line = lines.at(lineNr);
 
-        // '#' starts a comment running to the end of the line.
+        // Full-line and end-of-line comments.
         const int hash = line.indexOf(QLatin1Char('#'));
 
-        if (hash == 0)
-            continue;
-
-        if (hash > 0)
+        if (hash >= 0)
             line.truncate(hash);
 
         line = line.trimmed();
@@ -288,109 +409,160 @@ bool Sbg::parse(const QString &source,
             continue;
 
         /*
-         * Option lines (-SE, -S, -TS, -m ...). The sequence engine
-         * always crossfades between tone-sets, so -SE behaviour is
-         * implicit; other options are accepted and ignored.
+         * Option lines (-SE, -S, -TS, -m, -r, -F, -q ...). The
+         * sequence engine always crossfades between tone-sets, so
+         * -SE behaviour is implicit; other options are accepted
+         * and ignored.
          */
         if (line.startsWith(QLatin1Char('-')))
             continue;
-
-        // Timeline: "NOW name".
-        if (line == QLatin1String("NOW")
-            || line.startsWith(QLatin1String("NOW ")))
-        {
-            SbgTimelineEvent event;
-            event.timeMs = nowMs;
-
-            if (line.size() > 4)
-                event.toneSetName = line.mid(4).trimmed();
-
-            out->events.append(event);
-            continue;
-        }
 
         const QStringList tokens = splitTokens(line);
 
         if (tokens.isEmpty())
             continue;
 
-        // Timeline: "+time name ...".
-        if (tokens.at(0).startsWith(QLatin1Char('+')))
+        // ======================================================
+        // Time-sequence lines.
+        // ======================================================
+
+        // "NOW name" or "NOW+HH:MM:SS name".
+        if (tokens.at(0) == QLatin1String("NOW")
+            || tokens.at(0).startsWith(QLatin1String("NOW+")))
         {
-            if (tokens.size() < 2)
-            {
-                if (error)
-                    *error = QStringLiteral(
-                        "line %1: expected '+time name'")
-                        .arg(lineNr + 1);
-                return false;
-            }
-
-            qint64 deltaMs = 0;
-
-            if (!parseRelativeTimeMs(tokens.at(0), &deltaMs))
-            {
-                if (error)
-                    *error = QStringLiteral(
-                        "line %1: bad time: %2")
-                        .arg(lineNr + 1)
-                        .arg(tokens.at(0));
-                return false;
-            }
-
-            nowMs += deltaMs;
-
-            SbgTimelineEvent event;
-            event.timeMs = nowMs;
-            event.toneSetName = tokens.at(1);
-
-            out->events.append(event);
-            continue;
-        }
-
-        /*
-         * Timeline: absolute clock-style entries ("0:00 ts" or
-         * "00:05:00 ts-focus ->"). Treated as offsets from the
-         * start of the sequence; trailing tokens such as the
-         * sbagen-plus '->' marker are ignored.
-         */
-        if (tokens.at(0).at(0).isDigit())
-        {
-            if (tokens.size() < 2)
-            {
-                if (error)
-                    *error = QStringLiteral(
-                        "line %1: expected 'time name'")
-                        .arg(lineNr + 1);
-                return false;
-            }
-
             qint64 timeMs = 0;
 
-            if (!parseClockTimeMs(tokens.at(0), &timeMs))
+            if (tokens.at(0).size() > 3)
             {
-                if (error)
-                    *error = QStringLiteral(
-                        "line %1: bad time: %2")
-                        .arg(lineNr + 1)
-                        .arg(tokens.at(0));
-                return false;
+                qint64 deltaMs = 0;
+
+                if (!parseRelativeGroups(
+                        tokens.at(0).mid(3), &deltaMs))
+                {
+                    if (error)
+                        *error = QStringLiteral(
+                            "line %1: bad time: %2")
+                            .arg(lineNr + 1)
+                            .arg(tokens.at(0));
+                    return false;
+                }
+
+                timeMs = deltaMs;
             }
+
+            // NOW marks the playback start.
+            lastAbsoluteMs = 0;
 
             SbgTimelineEvent event;
             event.timeMs = timeMs;
-            event.toneSetName = tokens.at(1);
 
+            QString name;
+
+            if (!extractToneSetName(
+                    tokens, 1, &name, error, lineNr))
+                return false;
+
+            event.toneSetName = name;
             out->events.append(event);
             continue;
         }
 
-        /*
-         * Tone-set definition: "name: voice voice ...".
-         * A leading "spin:" keyword marks a slowly spun voice
-         * set; the spin modulation is ignored, the voices render
-         * as ordinary binaural voices.
-         */
+        // "+HH:MM:SS name": relative to the last absolute time.
+        if (tokens.at(0).startsWith(QLatin1Char('+')))
+        {
+            qint64 deltaMs = 0;
+
+            if (!parseRelativeGroups(tokens.at(0), &deltaMs))
+            {
+                if (error)
+                    *error = QStringLiteral(
+                        "line %1: bad time: %2")
+                        .arg(lineNr + 1)
+                        .arg(tokens.at(0));
+                return false;
+            }
+
+            SbgTimelineEvent event;
+            event.timeMs = lastAbsoluteMs + deltaMs;
+
+            QString name;
+
+            if (!extractToneSetName(
+                    tokens, 1, &name, error, lineNr))
+                return false;
+
+            event.toneSetName = name;
+            out->events.append(event);
+            continue;
+        }
+
+        // Absolute clock time, optionally with relative groups
+        // appended ("00:05:00 ts1 ->", "12:00+00:00:20 name").
+        if (tokens.at(0).at(0).isDigit())
+        {
+            const QString timeToken = tokens.at(0);
+
+            const int plus = timeToken.indexOf(QLatin1Char('+'));
+
+            const QString base =
+                plus >= 0 ? timeToken.left(plus) : timeToken;
+
+            qint64 timeMs = 0;
+
+            if (!parseClockTimeMs(base, &timeMs))
+            {
+                if (error)
+                    *error = QStringLiteral(
+                        "line %1: bad time: %2")
+                        .arg(lineNr + 1)
+                        .arg(tokens.at(0));
+                return false;
+            }
+
+            if (plus >= 0)
+            {
+                qint64 deltaMs = 0;
+
+                if (!parseRelativeGroups(
+                        timeToken.mid(plus), &deltaMs))
+                {
+                    if (error)
+                        *error = QStringLiteral(
+                            "line %1: bad time: %2")
+                            .arg(lineNr + 1)
+                            .arg(tokens.at(0));
+                    return false;
+                }
+
+                timeMs += deltaMs;
+            }
+
+            // Absolute times act as the base for later
+            // relative times.
+            lastAbsoluteMs = timeMs;
+
+            SbgTimelineEvent event;
+            event.timeMs = timeMs;
+
+            QString name;
+
+            if (!extractToneSetName(
+                    tokens, 1, &name, error, lineNr))
+                return false;
+
+            event.toneSetName = name;
+            out->events.append(event);
+            continue;
+        }
+
+        // ======================================================
+        // Tone-set definition: "name: voice voice ...".
+        // ======================================================
+        //
+        // A leading "spin:" keyword marks a slowly spun voice
+        // set; the spin modulation is ignored, the voices render
+        // as ordinary voices.
+
         const int colon = line.indexOf(QLatin1Char(':'));
 
         if (colon > 0)
@@ -414,7 +586,7 @@ bool Sbg::parse(const QString &source,
                 const QString &token = voices.at(i);
 
                 if (token == QLatin1String("-"))
-                    continue;   // 'off' tone-set
+                    continue;   // 'off' channel marker
 
                 SbgVoice voice;
 
@@ -431,11 +603,14 @@ bool Sbg::parse(const QString &source,
                 set.voices.append(voice);
             }
 
-            if (set.voices.isEmpty())
+            // 'off: -' is the legal silent tone-set; anything
+            // else without voices is a mistake.
+            if (set.voices.isEmpty()
+                && set.name != QLatin1String("off"))
             {
                 if (error)
                     *error = QStringLiteral(
-                        "line %1: tone-set '%2' has no voices")
+                        "line %1: tone-set without voices: %2")
                         .arg(lineNr + 1)
                         .arg(set.name);
                 return false;
@@ -500,10 +675,20 @@ bool Sbg::parse(const QString &source,
 //
 // Preset sources are taken from the classic SBaGen example
 // collections (SBaGen by Jim Peters; example bundles by the
-// sbagen-plus project).
+// sbagen-plus project) and from the community contributions
+// shipped with SBaGenX (posted to the sbagen-users mailing list).
+// All sources are GPL-2.0 licensed.
 //
-// sbagen-plus '@' isochronic voices are approximated as binaural
-// beats (see parseVoice).
+// The Monroe 'Focus level' tone-sets are based on community-
+// measured carrier/offset values, published with the original
+// SBaGen distribution (focus.txt).
+//
+// The Focus-level files originally contain only a single
+// continuous tone-set ("0:00 ts"); a 60-minute session timeline
+// has been added for use as an app preset.
+//
+// sbagen-plus '@' isochronic voices are rendered as amplitude
+// pulses on both ears (see parseVoice / SequenceGenerator).
 
 QVector<SbgPreset> Sbg::builtinPresets()
 {
@@ -683,6 +868,204 @@ QVector<SbgPreset> Sbg::builtinPresets()
         "01:00:00 off\n");
     presets.append(gatewayWave3);
 
+    // ------------------------------------------------------------------
+    // Community contributions, as shipped with SBaGenX
+    // (examples/contrib; posted to the sbagen-users mailing list).
+    // ------------------------------------------------------------------
+
+    SbgPreset schumannCycle;
+    schumannCycle.title = QStringLiteral("Schumann Cycle");
+    schumannCycle.source = QStringLiteral(
+        "# Schumann Cycle - posted by Crawford Hart to the\n"
+        "# sbagen-users mailing list, 19 May 2006.\n"
+        "# All seven Schumann Resonances, each in its own\n"
+        "# harmonic box; each higher frequency holds 5 minutes.\n"
+        "-SE\n"
+        "ts1: pink/80 125.2+7.83/4 109.62-7.83/4\n"
+        "ts2: pink/80 112-14/3 126+14/3\n"
+        "ts3: pink/80 160+20/3 120-20/3\n"
+        "ts4: pink/80 208+26/3 156-26/3\n"
+        "ts5: pink/80 264+33/3 198-33/3\n"
+        "ts6: pink/80 312+39/3 234-39/3\n"
+        "ts7: pink/80 125.2+7.83/0 109.62-7.83/0 360+45/3 270-45/3\n"
+        "ts8: pink/80 125.2+7.83/3 109.62-7.83/3 360+45/0 270-45/0\n"
+        "off: -\n"
+        "00:00:00 off ->\n"
+        "00:00:15 ts1 ->\n"
+        "00:10:00 == ts1\n"
+        "00:10:02 ts2 ->\n"
+        "00:15:00 == ts2\n"
+        "00:15:02 ts3 ->\n"
+        "00:20:00 == ts3\n"
+        "00:20:02 ts4 ->\n"
+        "00:25:00 == ts4\n"
+        "00:25:02 ts5 ->\n"
+        "00:30:00 == ts5\n"
+        "00:30:02 ts6 ->\n"
+        "00:35:00 == ts6\n"
+        "00:35:02 ts7 ->\n"
+        "00:40:00 ts7 ->\n"
+        "00:42:00 ts8\n"
+        "00:45:00 ts8 ->\n"
+        "00:45:30 off\n");
+    presets.append(schumannCycle);
+
+    SbgPreset awakenedMind;
+    awakenedMind.title = QStringLiteral("The Awakened Mind");
+    awakenedMind.source = QStringLiteral(
+        "# The Awakened Mind - posted by Crawford Hart to the\n"
+        "# sbagen-users mailing list, 19 May 2006.\n"
+        "# 20 minute program; four voices, one each in beta,\n"
+        "# alpha, theta and delta. Slow drop in frequency while\n"
+        "# the volume glides from beta- to delta-weighted.\n"
+        "-SE\n"
+        "off: -\n"
+        "ts1: pink/60 750+15/8 500+10/4 350+7/0 100+2/0\n"
+        "ts2: pink/60 750+14/0 500+9/8 350+6/6 100+2/8\n"
+        "00:00:00 off ->\n"
+        "00:00:15 ts1 ->\n"
+        "00:20:00 ts2 ->\n"
+        "00:20:30 off\n");
+    presets.append(awakenedMind);
+
+    SbgPreset ultimateAspirin;
+    ultimateAspirin.title = QStringLiteral("Ultimate Aspirin");
+    ultimateAspirin.source = QStringLiteral(
+        "# Ultimate Aspirin - posted by Crawford Hart to the\n"
+        "# sbagen-users mailing list, 19 May 2006.\n"
+        "# Three frequencies said to promote endorphin release;\n"
+        "# 2.5 and 4 Hz pair in turn with 38 Hz, all three play\n"
+        "# in the middle of the cycle. Carriers sound in octaves.\n"
+        "-SE\n"
+        "ts1: pink/80 100+2.5/3 200+4/0 400+38/3\n"
+        "ts2: pink/80 100+2.5/0 200+4/3 400+38/3\n"
+        "ts3: pink/80 100+2.5/3 200+4/3 400+38/3\n"
+        "off: -\n"
+        "00:00:00 off ->\n"
+        "00:00:15 ts1\n"
+        "00:03:30 ts1 ->\n"
+        "00:04:00 ts2\n"
+        "00:06:00 ts2 ->\n"
+        "00:06:30 ts3\n"
+        "00:08:00 ts3 ->\n"
+        "00:08:30 ts2\n"
+        "00:10:30 ts2 ->\n"
+        "00:11:00 ts1\n"
+        "00:12:00 ts1 ->\n"
+        "00:12:30 off\n");
+    presets.append(ultimateAspirin);
+
+    SbgPreset instantEinstein;
+    instantEinstein.title = QStringLiteral("Instant Einstein");
+    instantEinstein.source = QStringLiteral(
+        "# Instant Einstein - posted by Crawford Hart to the\n"
+        "# sbagen-users mailing list, 19 May 2006.\n"
+        "# 15 minutes at 40 Hz in a two-voice harmonic box.\n"
+        "-SE\n"
+        "ts: pink/80 360-40/6 440+40/6\n"
+        "off: -\n"
+        "00:00:00 off ->\n"
+        "00:00:15 ts\n"
+        "00:15:00 ts ->\n"
+        "00:15:30 off\n");
+    presets.append(instantEinstein);
+
+    SbgPreset inspiration;
+    inspiration.title = QStringLiteral("Inspiration");
+    inspiration.source = QStringLiteral(
+        "# Inspiration - posted by Crawford Hart to the\n"
+        "# sbagen-users mailing list, 1 Jun 2007.\n"
+        "# 5 minutes harmonized carriers at 10 Hz alpha, a\n"
+        "# 2-minute glide to 8 Hz, 10 minutes at 8 Hz, then a\n"
+        "# low 1.5 Hz delta in a third harmonized carrier; ends\n"
+        "# with a 3-minute glide back to 10 Hz.\n"
+        "-SE\n"
+        "off: -\n"
+        "ts1: pink/80 100+1.5/0 200+10.5/3 400+10.5/3\n"
+        "ts2: pink/80 100+1.5/0 200+8/3 400+8/3\n"
+        "ts3: pink/80 100+1.5/4 200+7.5/3 400+7.5/3\n"
+        "00:00:00 off ->\n"
+        "00:00:10 ts1\n"
+        "00:05:00 ts1 ->\n"
+        "00:07:00 ts2\n"
+        "00:17:00 ts2 ->\n"
+        "00:18:00 ts3\n"
+        "00:30:00 ts3 ->\n"
+        "00:33:00 ts1 ->\n"
+        "00:33:30 off\n");
+    presets.append(inspiration);
+
+    SbgPreset sonicCaffeine;
+    sonicCaffeine.title = QStringLiteral("Sonic Caffeine");
+    sonicCaffeine.source = QStringLiteral(
+        "# Sonic Caffeine - posted by Crawford Hart to the\n"
+        "# sbagen-users mailing list, 1 Jun 2007.\n"
+        "# Focus and concentration; a 45-minute program ramping\n"
+        "# up through several beta frequencies.\n"
+        "-SE\n"
+        "ts: pink/80 250+18/4\n"
+        "ts1: pink/80 250+22/4\n"
+        "ts2: pink/80 250+30/4\n"
+        "ts3: pink/80 250+33/4\n"
+        "ts4: pink/80 250+14/4\n"
+        "off: -\n"
+        "00:00:00 off ->\n"
+        "00:00:10 ts\n"
+        "00:05:00 ts ->\n"
+        "00:05:10 ts1\n"
+        "00:09:00 ts1 ->\n"
+        "00:09:10 ts2\n"
+        "00:15:00 ts2 ->\n"
+        "00:15:10 ts3\n"
+        "00:17:00 ts3 ->\n"
+        "00:17:10 ts1\n"
+        "00:20:00 ts1 ->\n"
+        "00:20:10 ts2\n"
+        "00:30:00 ts2 ->\n"
+        "00:30:10 ts3\n"
+        "00:35:00 ts3 ->\n"
+        "00:35:10 ts2\n"
+        "00:40:00 ts2 ->\n"
+        "00:43:00 ts4\n"
+        "00:45:00 ts4 ->\n"
+        "00:45:30 off\n");
+    presets.append(sonicCaffeine);
+
+    SbgPreset runnersHigh;
+    runnersHigh.title = QStringLiteral("Runner's High");
+    runnersHigh.source = QStringLiteral(
+        "# Runner's High - posted by Crawford Hart to the\n"
+        "# sbagen-users mailing list, 1 Jun 2007.\n"
+        "# A harmonic box reinforcing the endorphin-releasing\n"
+        "# 38 Hz.\n"
+        "-SE\n"
+        "ts1: pink/80 111-38/4 187+38/3\n"
+        "off: -\n"
+        "00:00:00 off ->\n"
+        "00:00:15 ts1\n"
+        "00:20:00 ts1 ->\n"
+        "00:20:30 off\n");
+    presets.append(runnersHigh);
+
+    SbgPreset pranaEnergizer;
+    pranaEnergizer.title = QStringLiteral("Prana Energizer");
+    pranaEnergizer.source = QStringLiteral(
+        "# Prana Energizer - posted by Chaven R Yenketswamy to\n"
+        "# the sbagen-users mailing list; reproduced from a\n"
+        "# Brainwave Generator scan of a calm 5.2-5.9 Hz\n"
+        "# interval, carriers raised for audibility.\n"
+        "-SE\n"
+        "ts1: 744+12.4/5.0 312+5.2/5.0\n"
+        "ts2: 696+11.6/5.0 342+5.7/5.0\n"
+        "ts3: 672+11.2/5.0 354+5.9/5.0\n"
+        "off: -\n"
+        "00:00:00 == off ->\n"
+        "00:00:01 == ts1 ->\n"
+        "00:01:30 == ts2 ->\n"
+        "00:03:00 == ts3 ->\n"
+        "00:03:01 == off ->\n");
+    presets.append(pranaEnergizer);
+
     return presets;
 }
 
@@ -692,15 +1075,9 @@ QVector<SbgPreset> Sbg::builtinPresets()
 //
 // The Monroe 'Focus level' tone-sets (community-measured values,
 // focus.txt from the original SBaGen distribution). Registered
-// separately from builtinPresets so they appear only in the
-// Focus section, not in the sequence drawer.
-//
-// The Focus-level files originally contain only a single
-// continuous tone-set ("NOW ts"); a session timeline has been
-// added for use as an app preset.
-//
-// sbagen-plus '@' isochronic voices are approximated as binaural
-// beats (see parseVoice).
+// separately from builtinPresets so they appear only in the Focus
+// section, not in the sequence drawer. F22 uses the same tone-set
+// as F21, so the two share one preset.
 
 QVector<SbgPreset> Sbg::focusPresets()
 {

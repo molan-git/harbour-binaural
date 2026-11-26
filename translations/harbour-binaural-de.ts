@@ -202,12 +202,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/ExtendedTab.qml" line="278"/>
+        <location filename="../qml/pages/components/ExtendedTab.qml" line="280"/>
         <source>Custom mix</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/components/ExtendedTab.qml" line="315"/>
+        <location filename="../qml/pages/components/ExtendedTab.qml" line="317"/>
         <source>Sequences</source>
         <translation type="unfinished"></translation>
     </message>
@@ -378,36 +378,56 @@
     </message>
     <message>
         <location filename="../qml/pages/InfoFocusPage.qml" line="182"/>
-        <source>F21 (Other Energy Systems)</source>
+        <source>F21/22 (Other Energy Systems)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/pages/InfoFocusPage.qml" line="192"/>
-        <source>F10 voices extended by high beta beats</source>
+        <source>Beta beats on high carriers; Focus 22 uses the same tone-set as Focus 21</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/pages/InfoFocusPage.qml" line="202"/>
-        <source>F&amp;C (Concentration)</source>
+        <source>F23</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/pages/InfoFocusPage.qml" line="212"/>
-        <source>Pink noise with beta beats for focus and concentration</source>
+        <source>Delta-range beats (~4 Hz) layered on higher carriers (400–900 Hz)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/pages/InfoFocusPage.qml" line="222"/>
-        <source>Custom mix</source>
+        <source>F24</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/pages/InfoFocusPage.qml" line="232"/>
+        <source>F23 tones extended by a deep 50 Hz voice with a very slow (0.75 Hz) beat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoFocusPage.qml" line="242"/>
+        <source>F25</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoFocusPage.qml" line="252"/>
+        <source>High-carrier delta stack (503–900 Hz)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoFocusPage.qml" line="262"/>
+        <source>Custom mix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/InfoFocusPage.qml" line="272"/>
         <source>Build your own three-voice stack: set the carrier and beat frequency of each voice</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/InfoFocusPage.qml" line="248"/>
+        <location filename="../qml/pages/InfoFocusPage.qml" line="288"/>
         <source>The preset frequencies follow the classic SBaGen session collections; isochronic voices are approximated as binaural beats. Sessions run as timed sequences; use the progress bar below a preset to pause or stop early.</source>
         <translation type="unfinished"></translation>
     </message>
