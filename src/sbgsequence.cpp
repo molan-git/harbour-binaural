@@ -13,14 +13,27 @@ namespace
     QStringList splitTokens(const QString &line)
     {
         QStringList tokens;
+        QString token;
 
-        const QStringList parts = line.split(QLatin1Char(' '));
-
-        for (int i = 0; i < parts.size(); ++i)
+        for (int i = 0; i < line.size(); ++i)
         {
-            if (!parts.at(i).isEmpty())
-                tokens.append(parts.at(i));
+            const QChar c = line.at(i);
+
+            if (c.isSpace())
+            {
+                if (!token.isEmpty())
+                    tokens.append(token);
+
+                token.clear();
+            }
+            else
+            {
+                token.append(c);
+            }
         }
+
+        if (!token.isEmpty())
+            tokens.append(token);
 
         return tokens;
     }
@@ -31,10 +44,12 @@ namespace
 
         const double value = text.toDouble(&ok);
 
-        if (ok)
-            *out = value;
+        if (!ok || !qIsFinite(value))
+            return false;
 
-        return ok;
+        *out = value;
+
+        return true;
     }
 
     /*
@@ -71,7 +86,7 @@ namespace
                 return false;
         }
 
-        *out = qRound(
+        *out = qRound64(
             (hours * 3600.0
              + minutes * 60.0
              + seconds) * 1000.0);
@@ -141,6 +156,13 @@ namespace
         {
             *error = QStringLiteral(
                 "bad amplitude: %1").arg(token);
+            return false;
+        }
+
+        if (amplitude < 0.0)
+        {
+            *error = QStringLiteral(
+                "negative amplitude: %1").arg(token);
             return false;
         }
 
@@ -251,7 +273,18 @@ bool Sbg::parse(const QString &source,
     {
         QString line = lines.at(lineNr).trimmed();
 
-        if (line.isEmpty() || line.startsWith(QLatin1Char('#')))
+        // '#' starts a comment running to the end of the line.
+        const int hash = line.indexOf(QLatin1Char('#'));
+
+        if (hash == 0)
+            continue;
+
+        if (hash > 0)
+            line.truncate(hash);
+
+        line = line.trimmed();
+
+        if (line.isEmpty())
             continue;
 
         /*
@@ -398,6 +431,16 @@ bool Sbg::parse(const QString &source,
                 set.voices.append(voice);
             }
 
+            if (set.voices.isEmpty())
+            {
+                if (error)
+                    *error = QStringLiteral(
+                        "line %1: tone-set '%2' has no voices")
+                        .arg(lineNr + 1)
+                        .arg(set.name);
+                return false;
+            }
+
             out->toneSets.append(set);
             continue;
         }
@@ -457,13 +500,7 @@ bool Sbg::parse(const QString &source,
 //
 // Preset sources are taken from the classic SBaGen example
 // collections (SBaGen by Jim Peters; example bundles by the
-// sbagen-plus project). The Monroe 'Focus level' tone-sets are
-// based on community-measured carrier/offset values, published
-// with the original SBaGen distribution.
-//
-// The Focus-level files originally contain only a single
-// continuous tone-set ("0:00 ts"); a 30-minute session timeline
-// has been added for use as an app preset.
+// sbagen-plus project).
 //
 // sbagen-plus '@' isochronic voices are approximated as binaural
 // beats (see parseVoice).
@@ -471,70 +508,6 @@ bool Sbg::parse(const QString &source,
 QVector<SbgPreset> Sbg::builtinPresets()
 {
     QVector<SbgPreset> presets;
-
-    // ------------------------------------------------------------------
-    // Focus levels (community-measured tone-sets).
-    // ------------------------------------------------------------------
-
-    SbgPreset focus3;
-    focus3.title = QStringLiteral("Focus 3 (Sleep)");
-    focus3.source = QStringLiteral(
-        "# F3: 59[1.2]-110[1.3], 288[3.7]\n"
-        "ts: 59+1.2/10 110+1.3/10 288+3.7/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:60:00 off\n");
-    presets.append(focus3);
-
-    SbgPreset focus10;
-    focus10.title = QStringLiteral("Focus 10 (Body Asleep)");
-    focus10.source = QStringLiteral(
-        "# F10 \"Brain awake, body asleep\":\n"
-        "# 100[1.5], 200[4.0], 250[4.0], 300[4.0]\n"
-        "ts: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:60:00 off\n");
-    presets.append(focus10);
-
-    SbgPreset focus12;
-    focus12.title = QStringLiteral("Focus 12 (Expanded Awareness)");
-    focus12.source = QStringLiteral(
-        "# F12 \"Expanded consciousness\":\n"
-        "# 100[1.5], 200[4.0], 250[4.0], 300[4.0],\n"
-        "# 400[10.0], 500[10.1], 600[4.8]\n"
-        "ts: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10 "
-        "400+10.0/10 500+10.1/10 600+4.8/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:60:00 off\n");
-    presets.append(focus12);
-
-    SbgPreset focus15;
-    focus15.title = QStringLiteral("Focus 15 (No Time)");
-    focus15.source = QStringLiteral(
-        "# F15 \"No time -- 3 hours seems like 2 minutes\":\n"
-        "# 100[1.5], 200[4.0], 250[4.0], 300[4.0],\n"
-        "# 500[7.05], 630[7.1], 750[7.0]\n"
-        "ts: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10 "
-        "500+7.05/10 630+7.1/10 750+7.0/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:60:00 off\n");
-    presets.append(focus15);
-
-    SbgPreset focus21;
-    focus21.title = QStringLiteral("Focus 21 (Other Energy Systems)");
-    focus21.source = QStringLiteral(
-        "# F21:\n"
-        "# 200[4.0], 250[4.0], 300[4.0],\n"
-        "# 600[16.2], 750[15.9], 900[16.2]\n"
-        "ts: 200+4.0/10 250+4.0/10 300+4.0/10 "
-        "600+16.2/10 750+15.9/10 900+16.2/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:60:00 off\n");
-    presets.append(focus21);
 
     // ------------------------------------------------------------------
     // Sequences from the sbagen-plus example bundle.
@@ -709,6 +682,120 @@ QVector<SbgPreset> Sbg::builtinPresets()
         "00:55:00 ts-f10\n"
         "01:00:00 off\n");
     presets.append(gatewayWave3);
+
+    return presets;
+}
+
+// ============================================================================
+// FOCUS PRESETS
+// ============================================================================
+//
+// The Monroe 'Focus level' tone-sets (community-measured values,
+// focus.txt from the original SBaGen distribution). Registered
+// separately from builtinPresets so they appear only in the
+// Focus section, not in the sequence drawer.
+//
+// The Focus-level files originally contain only a single
+// continuous tone-set ("NOW ts"); a session timeline has been
+// added for use as an app preset.
+//
+// sbagen-plus '@' isochronic voices are approximated as binaural
+// beats (see parseVoice).
+
+QVector<SbgPreset> Sbg::focusPresets()
+{
+    QVector<SbgPreset> presets;
+
+    SbgPreset focus3;
+    focus3.title = QStringLiteral("Focus 3 (Sleep)");
+    focus3.source = QStringLiteral(
+        "# F3: 59[1.2]-110[1.3], 288[3.7]\n"
+        "ts: 59+1.2/10 110+1.3/10 288+3.7/10\n"
+        "off: -\n"
+        "NOW ts\n"
+        "+00:60:00 off\n");
+    presets.append(focus3);
+
+    SbgPreset focus10;
+    focus10.title = QStringLiteral("Focus 10 (Body Asleep)");
+    focus10.source = QStringLiteral(
+        "# F10 \"Brain awake, body asleep\":\n"
+        "# 100[1.5], 200[4.0], 250[4.0], 300[4.0]\n"
+        "ts: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10\n"
+        "off: -\n"
+        "NOW ts\n"
+        "+00:60:00 off\n");
+    presets.append(focus10);
+
+    SbgPreset focus12;
+    focus12.title = QStringLiteral("Focus 12 (Expanded Awareness)");
+    focus12.source = QStringLiteral(
+        "# F12 \"Expanded consciousness\":\n"
+        "# 100[1.5], 200[4.0], 250[4.0], 300[4.0],\n"
+        "# 400[10.0], 500[10.1], 600[4.8]\n"
+        "ts: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10 "
+        "400+10.0/10 500+10.1/10 600+4.8/10\n"
+        "off: -\n"
+        "NOW ts\n"
+        "+00:60:00 off\n");
+    presets.append(focus12);
+
+    SbgPreset focus15;
+    focus15.title = QStringLiteral("Focus 15 (No Time)");
+    focus15.source = QStringLiteral(
+        "# F15 \"No time -- 3 hours seems like 2 minutes\":\n"
+        "# 100[1.5], 200[4.0], 250[4.0], 300[4.0],\n"
+        "# 500[7.05], 630[7.1], 750[7.0]\n"
+        "ts: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10 "
+        "500+7.05/10 630+7.1/10 750+7.0/10\n"
+        "off: -\n"
+        "NOW ts\n"
+        "+00:60:00 off\n");
+    presets.append(focus15);
+
+    SbgPreset focus21;
+    focus21.title = QStringLiteral("Focus 21/22 (Other Energy Systems)");
+    focus21.source = QStringLiteral(
+        "# F21/F22 (F22 uses the same tone-set as F21):\n"
+        "# 200[4.0], 250[4.0], 300[4.0],\n"
+        "# 600[16.2], 750[15.9], 900[16.2]\n"
+        "ts: 200+4.0/10 250+4.0/10 300+4.0/10 "
+        "600+16.2/10 750+15.9/10 900+16.2/10\n"
+        "off: -\n"
+        "NOW ts\n"
+        "+00:60:00 off\n");
+    presets.append(focus21);
+
+    SbgPreset focus23;
+    focus23.title = QStringLiteral("Focus 23");
+    focus23.source = QStringLiteral(
+        "# F23: 400[3.9], 503[4.0], 600[4.0], 750[3.9], 900[4.0]\n"
+        "ts: 400+3.9/10 503+4.0/10 600+4.0/10 750+3.9/10 900+4.0/10\n"
+        "off: -\n"
+        "NOW ts\n"
+        "+00:60:00 off\n");
+    presets.append(focus23);
+
+    SbgPreset focus24;
+    focus24.title = QStringLiteral("Focus 24");
+    focus24.source = QStringLiteral(
+        "# F24: 50[0.75], 400[3.9], 503[4.0], 600[4.0], 750[4.0], 900[4.0]\n"
+        "ts: 50+0.75/10 400+3.9/10 503+4.0/10 600+4.0/10 "
+        "750+4.0/10 900+4.0/10\n"
+        "off: -\n"
+        "NOW ts\n"
+        "+00:60:00 off\n");
+    presets.append(focus24);
+
+    SbgPreset focus25;
+    focus25.title = QStringLiteral("Focus 25");
+    focus25.source = QStringLiteral(
+        "# F25: 503[4.0], 600[4.0], 750[4.0], 900[4.0]\n"
+        "ts: 503+4.0/10 600+4.0/10 750+4.0/10 900+4.0/10\n"
+        "off: -\n"
+        "NOW ts\n"
+        "+00:60:00 off\n");
+    presets.append(focus25);
 
     return presets;
 }

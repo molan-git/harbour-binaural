@@ -220,16 +220,18 @@ SilicaFlickable {
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 height: contentHeight
 
-                cellWidth: width / 3
+                cellWidth: width / 4
                 cellHeight: Theme.itemSizeMedium
 
                 model: [
-                    { label: "F3",  preset: "Focus 3 (Sleep)" },
-                    { label: "F10", preset: "Focus 10 (Body Asleep)" },
-                    { label: "F12", preset: "Focus 12 (Expanded Awareness)" },
-                    { label: "F15", preset: "Focus 15 (No Time)" },
-                    { label: "F21", preset: "Focus 21 (Other Energy Systems)" },
-                    { label: "F&C", preset: "Focus & Concentration (Beta)" }
+                    { label: "F3",     preset: "Focus 3 (Sleep)" },
+                    { label: "F10",    preset: "Focus 10 (Body Asleep)" },
+                    { label: "F12",    preset: "Focus 12 (Expanded Awareness)" },
+                    { label: "F15",    preset: "Focus 15 (No Time)" },
+                    { label: "F21/22", preset: "Focus 21/22 (Other Energy Systems)" },
+                    { label: "F23",    preset: "Focus 23" },
+                    { label: "F24",    preset: "Focus 24" },
+                    { label: "F25",    preset: "Focus 25" }
                 ]
 
                 delegate: Item {

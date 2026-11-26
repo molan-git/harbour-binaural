@@ -98,6 +98,7 @@ namespace Sbg
 
     // Presets embedded with the app (no runtime files needed).
     QVector<SbgPreset> builtinPresets();
+    QVector<SbgPreset> focusPresets();
 }
 
 #endif

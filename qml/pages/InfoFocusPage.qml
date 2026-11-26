@@ -179,7 +179,7 @@ FullscreenContentPage {
                         width: focusInfoGrid.width / 2 -
                                focusInfoGrid.columnSpacing / 2
 
-                        text: qsTr("F21 (Other Energy Systems)")
+                        text: qsTr("F21/22 (Other Energy Systems)")
                         color: Theme.secondaryHighlightColor
                         font.pixelSize: Theme.fontSizeSmall
                         wrapMode: Text.NoWrap
@@ -189,7 +189,7 @@ FullscreenContentPage {
                         width: focusInfoGrid.width / 2 -
                                focusInfoGrid.columnSpacing / 2
 
-                        text: qsTr("F10 voices extended by high beta beats")
+                        text: qsTr("Beta beats on high carriers; Focus 22 uses the same tone-set as Focus 21")
                         color: Theme.primaryColor
                         font.pixelSize: Theme.fontSizeSmall
                         wrapMode: Text.WordWrap
@@ -199,7 +199,7 @@ FullscreenContentPage {
                         width: focusInfoGrid.width / 2 -
                                focusInfoGrid.columnSpacing / 2
 
-                        text: qsTr("F&C (Concentration)")
+                        text: qsTr("F23")
                         color: Theme.secondaryHighlightColor
                         font.pixelSize: Theme.fontSizeSmall
                         wrapMode: Text.NoWrap
@@ -209,7 +209,47 @@ FullscreenContentPage {
                         width: focusInfoGrid.width / 2 -
                                focusInfoGrid.columnSpacing / 2
 
-                        text: qsTr("Pink noise with beta beats for focus and concentration")
+                        text: qsTr("Delta-range beats (~4 Hz) layered on higher carriers (400–900 Hz)")
+                        color: Theme.primaryColor
+                        font.pixelSize: Theme.fontSizeSmall
+                        wrapMode: Text.WordWrap
+                    }
+
+                    Label {
+                        width: focusInfoGrid.width / 2 -
+                               focusInfoGrid.columnSpacing / 2
+
+                        text: qsTr("F24")
+                        color: Theme.secondaryHighlightColor
+                        font.pixelSize: Theme.fontSizeSmall
+                        wrapMode: Text.NoWrap
+                    }
+
+                    Label {
+                        width: focusInfoGrid.width / 2 -
+                               focusInfoGrid.columnSpacing / 2
+
+                        text: qsTr("F23 tones extended by a deep 50 Hz voice with a very slow (0.75 Hz) beat")
+                        color: Theme.primaryColor
+                        font.pixelSize: Theme.fontSizeSmall
+                        wrapMode: Text.WordWrap
+                    }
+
+                    Label {
+                        width: focusInfoGrid.width / 2 -
+                               focusInfoGrid.columnSpacing / 2
+
+                        text: qsTr("F25")
+                        color: Theme.secondaryHighlightColor
+                        font.pixelSize: Theme.fontSizeSmall
+                        wrapMode: Text.NoWrap
+                    }
+
+                    Label {
+                        width: focusInfoGrid.width / 2 -
+                               focusInfoGrid.columnSpacing / 2
+
+                        text: qsTr("High-carrier delta stack (503–900 Hz)")
                         color: Theme.primaryColor
                         font.pixelSize: Theme.fontSizeSmall
                         wrapMode: Text.WordWrap

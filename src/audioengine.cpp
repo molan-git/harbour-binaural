@@ -168,6 +168,16 @@ AudioEngine::AudioEngine(QObject *parent)
             preset.title, preset.source);
     }
 
+    // Focus presets: playable sources only, not listed as
+    // sequence presets (they are shown in the Focus section).
+    const QVector<SbgPreset> focusPresets = Sbg::focusPresets();
+
+    for (const SbgPreset &preset : focusPresets)
+    {
+        m_sequencePresetSources.insert(
+            preset.title, preset.source);
+    }
+
     connect(m_isochronicChannel,
             &PcmChannel::stateChanged,
             this,

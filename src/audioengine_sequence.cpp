@@ -132,9 +132,6 @@ void AudioEngine::setCustomSequenceSource(const QString &name,
     if (name.isEmpty())
         return;
 
-    if (!m_sequencePresets.contains(name))
-        m_sequencePresets.append(name);
-
     m_sequencePresetSources.insert(name, source);
 }
 
