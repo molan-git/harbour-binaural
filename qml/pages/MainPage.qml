@@ -62,7 +62,7 @@ Page {
             parts.push(SoundNames.label(activeNoise))
 
         if (activeSequence !== "")
-            parts.push(activeSequence)
+            parts.push(SoundNames.label("Sequence"))
 
         if (activeSolfeggio.length > 0)
             parts.push(SoundNames.label("Solfeggio"))
@@ -71,7 +71,7 @@ Page {
             parts.push(SoundNames.label("Isochronic"))
 
         if (activeFocusPreset !== "")
-            parts.push(activeFocusPreset)
+            parts.push(SoundNames.label("Focus"))
 
         if (activeAmbiences.length === 1)
             parts.push(SoundNames.label(activeAmbiences[0]))

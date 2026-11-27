@@ -188,10 +188,6 @@
         <source>Focus</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Custom mix</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>FocusDrawer</name>
@@ -793,6 +789,14 @@
     </message>
     <message>
         <source>40 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Focus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sequence</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

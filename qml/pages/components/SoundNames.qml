@@ -9,6 +9,7 @@ import QtQuick 2.0
  *    logic and are never translated.
  *  - Callers: SoundNames.label(key)
  */
+
 QtObject {
     function label(key) {
         switch (key) {
@@ -49,13 +50,17 @@ QtObject {
         case "Sailing":     return qsTr("Sailing")
         case "Lake":        return qsTr("Lake")
 
+            // Cover Page / Playbackbar
+        case "Ambient mix":                         return qsTr("Ambient mix")
+        case "Custom sound":                        return qsTr("Custom sound")
+        case "Solfeggio":                           return qsTr("Solfeggio")
+        case "Focus":                               return qsTr("Focus")
+        case "Sequence":                            return qsTr("Sequence")
+
             // General UI text
-        case "Ambient mix":                 return qsTr("Ambient mix")
-        case "Custom sound":                 return qsTr("Custom sound")
-        case "Solfeggio frequencies":    return qsTr("Solfeggio frequencies")
-        case "Solfeggio":                return qsTr("Solfeggio")
-        case "Start your sound mix": return qsTr("Start your sound mix")
-        case "Individual experiences may vary.": return qsTr("Individual experiences may vary.")
+        case "Start your sound mix":                return qsTr("Start your sound mix")
+        case "Individual experiences may vary.":    return qsTr("Individual experiences may vary.")
+        case "Solfeggio frequencies":               return qsTr("Solfeggio frequencies")
 
         default:            return key
         }

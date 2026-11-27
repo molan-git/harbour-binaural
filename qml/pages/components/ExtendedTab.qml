@@ -276,9 +276,6 @@ SilicaFlickable {
                     if (root.mainPage.activeFocusPreset === "")
                         return ""
 
-                    if (root.mainPage.isCustomFocus)
-                        return qsTr("Custom mix")
-
                     return root.mainPage.activeFocusPreset.replace(
                                 /\s*\(.*\)$/, "")
                 }
@@ -322,8 +319,11 @@ SilicaFlickable {
             width: parent.width
 
             height: headsetHintSequences.height +
-                    Theme.paddingSmall +
-                    sequenceButton.height
+                    Theme.paddingSmall * 2 +
+                    sequenceButton.height +
+                    (sequenceProgress.visible
+                     ? sequenceProgress.height + Theme.paddingMedium
+                     : 0)
 
             HeadsetHint {
                 id: headsetHintSequences
@@ -354,45 +354,89 @@ SilicaFlickable {
                 showInfoButton: true
                 onInfoClicked: root.sequenceInfoRequested()
             }
-        }
 
-        // Sequence progress and remaining time — press to stop / play again
-        Item {
-            x: Theme.horizontalPageMargin
-            width: parent.width - 2 * Theme.horizontalPageMargin
-            height: Theme.itemSizeMedium
 
-            visible: root.mainPage.activeSequence !== ""
-
-            ProgressBar {
+            // Sequence progress and remaining time — press to
+            // stop / play again. Exactly below the visible part
+            // of the sequence button; bar and label are primary
+            // while playing and secondary while paused.
+            Item {
                 id: sequenceProgress
 
-                anchors.verticalCenter: parent.verticalCenter
-                width: parent.width
+                x: sequenceButton.x
+                anchors.top: sequenceButton.bottom
+                anchors.topMargin: Theme.paddingMedium
 
-                minimumValue: 0
-                maximumValue: 1
+                width: sequenceButton.contentWidth
+                height: grooveHeight + remainingLabel.height
 
-                value: root.engine.sequenceProgress
+                property int grooveHeight: Theme.paddingSmall
 
-                valueText: {
-                    var remaining = root.engine.sequenceRemainingSeconds
-                    var minutes = Math.floor(remaining / 60)
-                    var seconds = remaining % 60
+                property color progressColor:
+                    root.mainPage.sequencePlaying
+                    ? Theme.primaryColor
+                    : Theme.secondaryColor
 
-                    return minutes + ":" +
-                           (seconds < 10 ? "0" : "") + seconds
+                visible: root.mainPage.activeSequence !== ""
+
+                // Groove.
+                Rectangle {
+                    id: groove
+
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.verticalCenterOffset:
+                        -remainingLabel.height / 2
+
+                    height: sequenceProgress.grooveHeight
+                    radius: height / 2
+                    color: Theme.rgba(Theme.secondaryColor, 0.3)
                 }
 
-                highlighted: root.mainPage.sequencePlaying
+                // Fill.
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.verticalCenter: groove.verticalCenter
 
-                opacity: root.mainPage.sequencePlaying ? 1.0 : 0.6
-            }
+                    width: Math.round(
+                        groove.width
+                        * Math.max(0.0,
+                                   Math.min(1.0,
+                                       root.engine.sequenceProgress)))
 
-            MouseArea {
-                anchors.fill: parent
+                    height: groove.height
+                    radius: height / 2
+                    color: sequenceProgress.progressColor
+                    visible: width > 0
+                }
 
-                onClicked: root.mainPage.toggleSequencePlayback()
+                Label {
+                    id: remainingLabel
+
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+
+                    text: {
+                        var remaining =
+                                root.engine.sequenceRemainingSeconds
+
+                        var minutes = Math.floor(remaining / 60)
+                        var seconds = remaining % 60
+
+                        return minutes + ":" +
+                               (seconds < 10 ? "0" : "") + seconds
+                    }
+
+                    color: sequenceProgress.progressColor
+                    font.pixelSize: Theme.fontSizeExtraSmall
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: root.mainPage.toggleSequencePlayback()
+                }
             }
         }
 
