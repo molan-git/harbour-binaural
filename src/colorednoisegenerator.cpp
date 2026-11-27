@@ -18,6 +18,7 @@ ColoredNoiseGenerator::ColoredNoiseGenerator(QObject *parent)
       m_channelCount(2),
       m_noiseType(WhiteNoise),
       m_waveDepth(0.0),
+      m_waveDepthTarget(0.0),
       m_wavePeriod(8.0),
       m_wavePhase(0.0)
 {
@@ -71,15 +72,16 @@ void ColoredNoiseGenerator::setWaveModulation(
     double depth,
     double periodSeconds)
 {
-    m_waveDepth = qBound(0.0, depth, 1.0);
+    /*
+     * Only the target depth is stored here; the effective
+     * depth glides towards it in readData, so switching the
+     * swell on/off or moving the depth slider never steps
+     * the volume.
+     */
+    m_waveDepthTarget = qBound(0.0, depth, 1.0);
 
     if (periodSeconds >= 0.5)
         m_wavePeriod = periodSeconds;
-
-    // depth 0 disables the swell; park the phase at the swell
-    // peak so re-enabling does not start mid-dip.
-    if (m_waveDepth <= 0.0)
-        m_wavePhase = 0.0;
 }
 
 qint64 ColoredNoiseGenerator::readData(char *data, qint64 maxlen)
@@ -102,6 +104,10 @@ qint64 ColoredNoiseGenerator::readData(char *data, qint64 maxlen)
     qint16 *samples =
         reinterpret_cast<qint16 *>(data);
 
+    // Per-frame glide factor for a ~0.5 s depth time constant.
+    const double glideFactor =
+        1.0 - qExp(-1.0 / (0.5 * m_sampleRate));
+
     for (qint64 frame = 0;
          frame < frameCount;
          ++frame)
@@ -112,7 +118,18 @@ qint64 ColoredNoiseGenerator::readData(char *data, qint64 maxlen)
          * noise is unmodulated, at depth = 1 it dips to silence
          * at the wave trough. Computed once per frame so both
          * channels swell in perfect sync.
+         *
+         * The effective depth glides towards the target depth
+         * with a time constant of half a second, so depth
+         * changes stay click-free. Phase 0 is the trough: the
+         * swell starts quiet and rises from there.
          */
+        m_waveDepth +=
+            (m_waveDepthTarget - m_waveDepth) * glideFactor;
+
+        if (qAbs(m_waveDepthTarget - m_waveDepth) < 0.0005)
+            m_waveDepth = m_waveDepthTarget;
+
         double envelope = 1.0;
 
         if (m_waveDepth > 0.0)

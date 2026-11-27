@@ -34,6 +34,25 @@ namespace
     const double PulseRampSeconds = 0.003;
 
     /*
+     * Two voices "match" across consecutive tone-sets when they
+     * are the same kind of sound with identical parameters: such
+     * voices keep playing seamlessly across the transition
+     * (mirror of the helper in sbgsequence.cpp).
+     */
+    bool voicesMatch(const SbgVoice &a, const SbgVoice &b)
+    {
+        if (a.type != b.type)
+            return false;
+
+        if (a.type == SbgVoice::Noise)
+            return a.noiseColor == b.noiseColor;
+
+        return a.isochronic == b.isochronic
+            && a.carrier == b.carrier
+            && a.offset == b.offset;
+    }
+
+    /*
      * Amplitude envelope of an isochronic pulse: on for the first
      * IsochronicDutyCycle of the cycle, with linear ramps at both
      * edges so the switching stays click-free (at high pulse
@@ -69,25 +88,6 @@ namespace
             qMin(pos / rampFrames,
                  (onFrames - pos) / rampFrames),
             1.0);
-    }
-
-    /*
-     * Two voices "match" across consecutive tone-sets when they
-     * are the same kind of sound with identical parameters: such
-     * voices keep playing seamlessly across the transition
-     * (mirror of the helper in sbgsequence.cpp).
-     */
-    bool voicesMatch(const SbgVoice &a, const SbgVoice &b)
-    {
-        if (a.type != b.type)
-            return false;
-
-        if (a.type == SbgVoice::Noise)
-            return a.noiseColor == b.noiseColor;
-
-        return a.isochronic == b.isochronic
-            && a.carrier == b.carrier
-            && a.offset == b.offset;
     }
 }
 
@@ -316,6 +316,7 @@ void SequenceGenerator::buildRuntime()
                 tone.leftPhase = 0.0;
                 tone.rightPhase = 0.0;
                 tone.pulsePhase = 0.0;
+                tone.wavePhase = 0.0;
 
                 runtime.tones.append(tone);
             }
@@ -324,6 +325,7 @@ void SequenceGenerator::buildRuntime()
                 NoiseRuntime noise;
                 noise.voiceIndex = v;
                 noise.color = voice.noiseColor;
+                noise.wavePhase = 0.0;
 
                 resetNoiseState(noise);
 
@@ -462,6 +464,32 @@ void SequenceGenerator::carryOverRuntime(int eventIndex)
     }
 }
 
+double SequenceGenerator::waveEnvelope(double depth,
+                                       double periodSeconds,
+                                       double &phase)
+{
+    if (depth <= 0.0 || periodSeconds <= 0.0)
+        return 1.0;
+
+    /*
+     * Raised-cosine swell over the whole frame, matching the
+     * colored-noise wave modulation. Range [1 - depth .. 1];
+     * phase 0 is the trough, so fresh voices start quiet and
+     * swell up from there.
+     */
+    const double envelope =
+        (1.0 - depth)
+        + depth * 0.5
+            * (1.0 - qCos(phase * TwoPi));
+
+    phase += 1.0 / (periodSeconds * m_sampleRate);
+
+    if (phase >= 1.0)
+        phase -= 1.0;
+
+    return envelope;
+}
+
 SequenceGenerator::ToneRuntime *
 SequenceGenerator::findToneRuntime(SetRuntime &runtime,
                                    int voiceIndex)
@@ -563,8 +591,14 @@ void SequenceGenerator::renderSegmentFrame(double *outLeft,
                 }
             }
 
+            const double swell = waveEnvelope(
+                set.waveDepth,
+                set.wavePeriodSeconds,
+                runtime.tones[i].wavePhase);
+
             renderToneVoice(voice, tone,
-                            amplitude * AmplitudeScale,
+                            amplitude * AmplitudeScale
+                                * swell,
                             weight,
                             &left, &right);
         }
@@ -604,8 +638,14 @@ void SequenceGenerator::renderSegmentFrame(double *outLeft,
                 }
             }
 
+            const double swell = waveEnvelope(
+                set.waveDepth,
+                set.wavePeriodSeconds,
+                runtime.noises[i].wavePhase);
+
             renderNoiseVoice(voice, noise,
-                             amplitude * AmplitudeScale,
+                             amplitude * AmplitudeScale
+                                 * swell,
                              weight,
                              &left, &right);
         }
@@ -637,8 +677,14 @@ void SequenceGenerator::renderSegmentFrame(double *outLeft,
             const SbgVoice &voice =
                 nextSet.voices.at(tone.voiceIndex);
 
+            const double swell = waveEnvelope(
+                nextSet.waveDepth,
+                nextSet.wavePeriodSeconds,
+                nextRuntime.tones[i].wavePhase);
+
             renderToneVoice(voice, tone,
-                            voice.amplitude * AmplitudeScale,
+                            voice.amplitude * AmplitudeScale
+                                * swell,
                             inWeight,
                             &left, &right);
         }
@@ -653,8 +699,14 @@ void SequenceGenerator::renderSegmentFrame(double *outLeft,
             const SbgVoice &voice =
                 nextSet.voices.at(noise.voiceIndex);
 
+            const double swell = waveEnvelope(
+                nextSet.waveDepth,
+                nextSet.wavePeriodSeconds,
+                nextRuntime.noises[i].wavePhase);
+
             renderNoiseVoice(voice, noise,
-                             voice.amplitude * AmplitudeScale,
+                             voice.amplitude * AmplitudeScale
+                                 * swell,
                              inWeight,
                              &left, &right);
         }

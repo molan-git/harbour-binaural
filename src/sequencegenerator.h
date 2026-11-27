@@ -33,6 +33,14 @@
  *   both ears (duty cycle 50 %, click-free edges), matching the
  *   standalone IsochronicGenerator.
  *
+ * - A tone-set marked with a leading "wave:period[/depth]"
+ *   keyword plays with a slow raised-cosine volume swell (the
+ *   same envelope as the colored-noise wave modulation). Every
+ *   voice carries its own swell phase; continuing voices inherit
+ *   it across tone-set boundaries, so the swell never restarts
+ *   mid-sequence. New voices start at the swell trough and rise
+ *   from there.
+ *
  * - If the final tone-set is active (not 'off'), the sequence
  *   keeps playing it indefinitely until the channel is stopped;
  *   otherwise the generator reports finished() once the final
@@ -63,6 +71,7 @@ private:
         double leftPhase = 0.0;
         double rightPhase = 0.0;
         double pulsePhase = 0.0;   // isochronic voices only
+        double wavePhase = 0.0;    // authored swell ('wave:') only
     };
 
     /*
@@ -82,6 +91,8 @@ private:
         double greyMid[2];
         double greyHigh[2];
         double whiteFiltered[2];
+
+        double wavePhase = 0.0;    // authored swell ('wave:') only
     };
 
     struct SetRuntime
@@ -118,6 +129,16 @@ private:
                             double fadePos,
                             double outWeight,
                             double inWeight);
+
+    /*
+     * Raised-cosine volume swell for 'wave:' tone-sets (range
+     * [1 - depth .. 1]); returns 1.0 and leaves the phase alone
+     * when the swell is disabled. Advances the phase by one
+     * frame per call.
+     */
+    double waveEnvelope(double depth,
+                        double periodSeconds,
+                        double &phase);
 
     void renderToneVoice(const SbgVoice &voice,
                          ToneRuntime &tone,

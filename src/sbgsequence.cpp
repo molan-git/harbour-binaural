@@ -158,6 +158,59 @@ namespace
         return inOk && outOk;
     }
 
+    /*
+     * Tone-set swell specification: "wave:period" or
+     * "wave:period/depth". Period in seconds; depth in per cent
+     * (0 < depth <= 100), how far the volume dips below full
+     * level at the trough; defaults to 30 %.
+     */
+    bool parseWaveSpec(const QString &token,
+                       SbgToneSet *set,
+                       QString *error,
+                       int lineNr)
+    {
+        const QString spec = token.mid(
+            QStringLiteral("wave:").size());
+
+        const int slash = spec.indexOf(QLatin1Char('/'));
+
+        const QString periodPart =
+            slash >= 0 ? spec.left(slash) : spec;
+
+        double period = 0.0;
+
+        if (!parseDouble(periodPart, &period)
+            || period <= 0.0)
+        {
+            if (error)
+                *error = QStringLiteral(
+                    "line %1: bad wave spec: %2")
+                    .arg(lineNr + 1)
+                    .arg(token);
+            return false;
+        }
+
+        double depthPercent = 30.0;
+
+        if (slash >= 0
+            && (!parseDouble(spec.mid(slash + 1), &depthPercent)
+                || depthPercent <= 0.0
+                || depthPercent > 100.0))
+        {
+            if (error)
+                *error = QStringLiteral(
+                    "line %1: bad wave spec: %2")
+                    .arg(lineNr + 1)
+                    .arg(token);
+            return false;
+        }
+
+        set->wavePeriodSeconds = period;
+        set->waveDepth = depthPercent / 100.0;
+
+        return true;
+    }
+
     bool noiseColorFromName(const QString &name, int *out)
     {
         const QString lower = name.toLower();
@@ -561,7 +614,8 @@ bool Sbg::parse(const QString &source,
         //
         // A leading "spin:" keyword marks a slowly spun voice
         // set; the spin modulation is ignored, the voices render
-        // as ordinary voices.
+        // as ordinary voices. A leading "wave:period[/depth]"
+        // keyword marks the set with a slow volume swell.
 
         const int colon = line.indexOf(QLatin1Char(':'));
 
@@ -581,7 +635,21 @@ bool Sbg::parse(const QString &source,
 
             const QStringList voices = splitTokens(voiceList);
 
-            for (int i = 0; i < voices.size(); ++i)
+            // Optional leading "wave:period[/depth]" keyword.
+            int firstVoice = 0;
+
+            if (!voices.isEmpty()
+                && voices.at(0).startsWith(
+                    QStringLiteral("wave:")))
+            {
+                if (!parseWaveSpec(
+                        voices.at(0), &set, error, lineNr))
+                    return false;
+
+                firstVoice = 1;
+            }
+
+            for (int i = firstVoice; i < voices.size(); ++i)
             {
                 const QString &token = voices.at(i);
 
@@ -689,6 +757,10 @@ bool Sbg::parse(const QString &source,
 //
 // sbagen-plus '@' isochronic voices are rendered as amplitude
 // pulses on both ears (see parseVoice / SequenceGenerator).
+//
+// App extension: a leading "wave:period[/depth]" keyword in a
+// tone-set definition adds a slow volume swell to that set (see
+// SbgToneSet / SequenceGenerator).
 
 QVector<SbgPreset> Sbg::builtinPresets()
 {

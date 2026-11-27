@@ -17,6 +17,11 @@
  *   name: 100+4.5/8 pink/40      (tone-set definition, '-' = off;
  *                                 a leading 'spin:' is accepted and
  *                                 its modulation ignored)
+ *   name: wave:12/30 100+4.5/8   (optional leading 'wave:' keyword
+ *                                 marks the set with a slow volume
+ *                                 swell: period in seconds, depth
+ *                                 in per cent below full level;
+ *                                 'wave:12' defaults to depth 30 %)
  *   NOW name
  *   NOW+00:05:00 name            (relative to playback start)
  *   +00:05:00 name               (relative to the last-mentioned
@@ -72,6 +77,16 @@ struct SbgToneSet
 {
     QString name;
     QVector<SbgVoice> voices;   // empty = 'off' (silence)
+
+    /*
+     * Authored volume swell ('wave:period[/depth]' keyword): a
+     * raised-cosine amplitude envelope applied to every voice of
+     * the set, matching the colored-noise wave modulation.
+     * waveDepth 0 = no swell; otherwise the volume dips to
+     * (1 - waveDepth) of full level at the trough.
+     */
+    double wavePeriodSeconds = 0.0;
+    double waveDepth = 0.0;
 
     bool isOff() const { return voices.isEmpty(); }
 };

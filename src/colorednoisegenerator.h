@@ -55,8 +55,11 @@ private:
 
     NoiseType m_noiseType;
 
-    // Wave swell state (phase advances per frame, not per channel).
+    // Wave swell state (phase advances per frame, not per
+    // channel). The effective depth glides towards the target
+    // depth so depth changes stay click-free.
     double m_waveDepth;
+    double m_waveDepthTarget;
     double m_wavePeriod;
     double m_wavePhase;
 
