@@ -10,6 +10,24 @@ Dialog {
     property string selectionMode: "file"
     property bool filePicked: false
 
+    // File types offered by the picker; override for other file
+    // types (e.g. SBaGen sequence import).
+    property var nameFilters: [
+        "*.mp3", "*.MP3", "*.wav", "*.WAV",
+        "*.ogg", "*.OGG", "*.oga", "*.OGA",
+        "*.flac", "*.FLAC", "*.m4a", "*.M4A",
+        "*.aac", "*.AAC", "*.opus", "*.OPUS",
+        "*.wma", "*.WMA", "*.aif", "*.AIF",
+        "*.aiff", "*.AIFF", "*.m4b", "*.M4B",
+        "*.3gp", "*.3GP"
+    ]
+
+    // Dialog header accept button text ("Use Folder" for audio
+    // folder selection, "Add" for file import).
+    property string acceptText: qsTr("Use Folder")
+
+    property string emptyText: qsTr("No audio files or folders")
+
     property url homeFolder: StandardPaths.music !== ""
                              ? StandardPaths.music
                              : StandardPaths.home
@@ -31,7 +49,7 @@ Dialog {
     property bool atHome:
         normalizedPath(currentFolder) === normalizedPath(homeFolder)
 
-    property bool hasAudioFiles: folderModel.count > 0
+    property bool hasFiles: folderModel.count > 0
 
     function displayPath() {
         var current = normalizedPath(currentFolder)
@@ -54,7 +72,26 @@ Dialog {
         picker.folderSelected(currentFolder, name)
     }
 
-    canAccept: hasAudioFiles
+    function fileIconSource(fileName, isDir) {
+        if (isDir)
+            return "image://theme/icon-m-file-folder"
+
+        var name = fileName.toString().toLowerCase()
+        var audio = [".mp3", ".wav", ".ogg", ".oga", ".flac",
+                     ".m4a", ".m4b", ".aac", ".opus", ".wma",
+                     ".aif", ".aiff", ".3gp"]
+
+        for (var i = 0; i < audio.length; i++) {
+            if (name.length >= audio[i].length
+                    && name.lastIndexOf(audio[i])
+                       === name.length - audio[i].length)
+                return "image://theme/icon-m-file-audio"
+        }
+
+        return "image://theme/icon-m-file-doc"
+    }
+
+    canAccept: hasFiles
 
     onAccepted: {
         if (!filePicked)
@@ -68,7 +105,7 @@ Dialog {
         DialogHeader {
             id: dialogHeader
 
-            acceptText: qsTr("Use Folder")
+            acceptText: picker.acceptText
             cancelText: qsTr("Cancel")
         }
 
@@ -129,9 +166,7 @@ Dialog {
                     anchors.verticalCenter: parent.verticalCenter
                     width: Theme.iconSizeMedium
                     height: Theme.iconSizeMedium
-                    source: fileIsDir
-                            ? "image://theme/icon-m-file-folder"
-                            : "image://theme/icon-m-file-audio"
+                    source: picker.fileIconSource(fileName, fileIsDir)
                     fillMode: Image.PreserveAspectFit
                 }
 
@@ -161,7 +196,7 @@ Dialog {
             ViewPlaceholder {
                 enabled: folderModel.status === FolderListModel.Ready
                          && folderModel.count === 0
-                text: qsTr("No audio files or folders")
+                text: picker.emptyText
             }
 
             VerticalScrollDecorator {}
@@ -176,14 +211,6 @@ Dialog {
         showHidden: false
         showOnlyReadable: true
         sortField: FolderListModel.Name
-        nameFilters: [
-            "*.mp3", "*.MP3", "*.wav", "*.WAV",
-            "*.ogg", "*.OGG", "*.oga", "*.OGA",
-            "*.flac", "*.FLAC", "*.m4a", "*.M4A",
-            "*.aac", "*.AAC", "*.opus", "*.OPUS",
-            "*.wma", "*.WMA", "*.aif", "*.AIF",
-            "*.aiff", "*.AIFF", "*.m4b", "*.M4B",
-            "*.3gp", "*.3GP"
-        ]
+        nameFilters: picker.nameFilters
     }
 }

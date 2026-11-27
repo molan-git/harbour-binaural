@@ -376,6 +376,27 @@ Page {
         }
     }
 
+    function openSequenceImportPicker() {
+        var dialog = pageStack.push(
+                    Qt.resolvedUrl("AudioFilePickerPage.qml"),
+                    {
+                        "selectionMode": "file",
+                        "nameFilters": ["*.sbg", "*.SBG", "*.txt", "*.TXT"],
+                        "acceptText": qsTr("Add"),
+                        "emptyText": qsTr("No SBaGen files")
+                    })
+
+        dialog.fileSelected.connect(function(fileUrl, fileName) {
+            audioEngine.importSequenceFile(fileUrl)
+        })
+    }
+
+    Connections {
+        target: audioEngine
+
+        onSequenceImportError: sequenceSelector.notice = message
+    }
+
     Component {
         id: infoBinauralPageComponent
         InfoBinauralPage {}
@@ -613,6 +634,7 @@ Page {
 
                                     sequencePresets: audioEngine.sequencePresets
                                     activeSequence: page.activeSequence
+                                    audioEngine: audioEngine
 
                                     onSequenceSelected: {
                                         page.selectSequence(sequence)
@@ -620,10 +642,11 @@ Page {
 
                                     onSequenceDeselected: {
                                         page.activeSequence = ""
-                                        page.activeFocusPreset = ""
-                                        page.isCustomFocus = false
                                         audioEngine.stopSequence()
                                     }
+
+                                    onImportRequested:
+                                        page.openSequenceImportPicker()
 
                                     onCloseRequested:
                                         sequenceDrawer.open = false

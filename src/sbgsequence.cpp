@@ -282,6 +282,29 @@ namespace
             return true;
         }
 
+        /*
+         * Known SBaGen constructs the renderer does not support:
+         * external audio voices ("mix/100", "wave00:300+5/50")
+         * and bell voices ("bell+4500/20"). Reported as errors so
+         * imports of such files fail with a clear message instead
+         * of being silently misrendered.
+         */
+        if (head.contains(QLatin1Char(':')))
+        {
+            *error = QStringLiteral(
+                "unsupported voice: %1 (external audio "
+                "voices are not supported)").arg(token);
+            return false;
+        }
+
+        if (head.startsWith(QLatin1String("bell")))
+        {
+            *error = QStringLiteral(
+                "unsupported voice: %1 (bell voices are "
+                "not supported)").arg(token);
+            return false;
+        }
+
         // Tone voice: "carrier[+-@offset][/amplitude]".
         out->type = SbgVoice::Tone;
         out->amplitude = amplitude;
@@ -345,21 +368,76 @@ namespace
     }
 
     /*
-     * Two voices "match" across consecutive tone-sets when they
-     * are the same kind of sound with identical parameters: such
-     * voices keep playing seamlessly across the transition.
+     * Preset display title from a comment line: strips the '#'
+     * markers and returns the text if it looks like a name --
+     * starting with an upper-case letter or digit, not ending in
+     * ':' (attribution intros), not starting with common
+     * boilerplate ("Please note ...", "Posted by ..."), and not
+     * longer than 60 characters. Sentence descriptions starting
+     * lower-case ("that appeared on USENET ...") are rejected by
+     * the upper-case rule; the import then falls back to the
+     * file name.
      */
-    bool voicesMatch(const SbgVoice &a, const SbgVoice &b)
+    QString titleFromCommentLine(const QString &line)
     {
-        if (a.type != b.type)
-            return false;
+        static const char *metaPrefixes[] =
+        {
+            "please note",
+            "posted by",
+            "from ",
+            "this is",
+            "these ",
+            "this file",
+            "this one",
+            "this based",
+            "this sequence",
+            "downloaded",
+            "http",
+            "re:",
+            "warning"
+        };
 
-        if (a.type == SbgVoice::Noise)
-            return a.noiseColor == b.noiseColor;
+        QString content = line.mid(line.indexOf(QLatin1Char('#')));
 
-        return a.isochronic == b.isochronic
-            && a.carrier == b.carrier
-            && a.offset == b.offset;
+        while (!content.isEmpty()
+               && content.at(0) == QLatin1Char('#'))
+            content = content.mid(1);
+
+        content = content.trimmed();
+
+        if (content.isEmpty() || content.size() > 60)
+            return QString();
+
+        const QChar first = content.at(0);
+
+        if (!first.isLetter() || !first.isUpper())
+            return QString();
+
+        if (content.endsWith(QLatin1Char(':')))
+            return QString();
+
+        // Multi-sentence comment text is a description, not a
+        // name (sentence continuations wrap over comment lines).
+        const int dot = content.indexOf(QLatin1Char('.'));
+
+        if (dot >= 0
+            && dot + 1 < content.size()
+            && content.at(dot + 1) == QLatin1Char(' '))
+            return QString();
+
+        const QString lower = content.toLower();
+
+        for (int i = 0;
+             i < int(sizeof(metaPrefixes)
+                     / sizeof(metaPrefixes[0]));
+             ++i)
+        {
+            if (lower.startsWith(
+                    QLatin1String(metaPrefixes[i])))
+                return QString();
+        }
+
+        return content;
     }
 
     /*
@@ -444,15 +522,28 @@ bool Sbg::parse(const QString &source,
      */
     qint64 lastAbsoluteMs = 0;
 
+    bool titleScanDone = false;
+
     const QStringList lines = source.split(QLatin1Char('\n'));
 
     for (int lineNr = 0; lineNr < lines.size(); ++lineNr)
     {
         QString line = lines.at(lineNr);
 
-        // Full-line and end-of-line comments.
         const int hash = line.indexOf(QLatin1Char('#'));
 
+        // Preset title: the first name-like comment before the
+        // first content line.
+        if (!titleScanDone && hash >= 0)
+        {
+            const QString comment =
+                titleFromCommentLine(line.trimmed());
+
+            if (!comment.isEmpty() && out->title.isEmpty())
+                out->title = comment;
+        }
+
+        // Full-line and end-of-line comments.
         if (hash >= 0)
             line.truncate(hash);
 
@@ -460,6 +551,9 @@ bool Sbg::parse(const QString &source,
 
         if (line.isEmpty())
             continue;
+
+        // Comments after the first content line are not titles.
+        titleScanDone = true;
 
         /*
          * Option lines (-SE, -S, -TS, -m, -r, -F, -q ...). The
@@ -635,6 +729,9 @@ bool Sbg::parse(const QString &source,
 
             const QStringList voices = splitTokens(voiceList);
 
+            // '-' marks an explicitly silent tone-set.
+            bool sawOffMarker = false;
+
             // Optional leading "wave:period[/depth]" keyword.
             int firstVoice = 0;
 
@@ -654,7 +751,22 @@ bool Sbg::parse(const QString &source,
                 const QString &token = voices.at(i);
 
                 if (token == QLatin1String("-"))
+                {
+                    sawOffMarker = true;
                     continue;   // 'off' channel marker
+                }
+
+                if (token == QLatin1String("{")
+                    || token == QLatin1String("}"))
+                {
+                    if (error)
+                        *error = QStringLiteral(
+                            "line %1: unsupported construct: "
+                            "SBaGen '{}' block definitions "
+                            "are not supported")
+                            .arg(lineNr + 1);
+                    return false;
+                }
 
                 SbgVoice voice;
 
@@ -671,10 +783,14 @@ bool Sbg::parse(const QString &source,
                 set.voices.append(voice);
             }
 
-            // 'off: -' is the legal silent tone-set; anything
-            // else without voices is a mistake.
+            /*
+             * "off: -" and any explicitly silenced set
+             * ("ts3: -") are legal; anything else without voices
+             * is a mistake.
+             */
             if (set.voices.isEmpty()
-                && set.name != QLatin1String("off"))
+                && set.name != QLatin1String("off")
+                && !sawOffMarker)
             {
                 if (error)
                     *error = QStringLiteral(
@@ -686,6 +802,18 @@ bool Sbg::parse(const QString &source,
 
             out->toneSets.append(set);
             continue;
+        }
+
+        if (line == QLatin1String("{")
+            || line == QLatin1String("}"))
+        {
+            if (error)
+                *error = QStringLiteral(
+                    "line %1: unsupported construct: "
+                    "SBaGen '{}' block definitions "
+                    "are not supported")
+                    .arg(lineNr + 1);
+            return false;
         }
 
         if (error)

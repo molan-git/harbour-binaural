@@ -4,7 +4,11 @@
 
 #include <QAudioFormat>
 #include <QDebug>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
 #include <QHash>
+#include <QStandardPaths>
 #include <QtMath>
 
 namespace
@@ -120,6 +124,7 @@ void AudioEngine::startSequence(const QString &preset)
     }
 
     m_sequenceGenerator = generator;
+    m_activeSequenceName = preset;
 
     m_sequencePollTimer->start();
 
@@ -132,7 +137,221 @@ void AudioEngine::setCustomSequenceSource(const QString &name,
     if (name.isEmpty())
         return;
 
+    if (!m_sequencePresets.contains(name))
+        m_sequencePresets.append(name);
+
     m_sequencePresetSources.insert(name, source);
+}
+
+// ============================================================================
+// IMPORTED SEQUENCES
+// ============================================================================
+
+/*
+ * Imported .sbg files are copied into AppDataLocation/sequences
+ * and reloaded from there on every start, so imports survive
+ * restarts without extra bookkeeping.
+ */
+QString AudioEngine::importedSequencesDir() const
+{
+    return QStandardPaths::writableLocation(
+        QStandardPaths::AppDataLocation)
+        + QStringLiteral("/sequences");
+}
+
+void AudioEngine::loadImportedSequences()
+{
+    QDir dir(importedSequencesDir());
+
+    if (!dir.exists())
+        return;
+
+    const QStringList files = dir.entryList(
+        QStringList() << QStringLiteral("*.sbg")
+                      << QStringLiteral("*.txt"),
+        QDir::Files,
+        QDir::Name);
+
+    for (int i = 0; i < files.size(); ++i)
+        registerImportedSequence(files.at(i));
+}
+
+/*
+ * Reads a stored .sbg file and registers it as a sequence preset.
+ * The display name is the file's preset name (its first comment
+ * line) or, if the file has none, the file name without
+ * extension. Names are kept unique across all presets.
+ */
+void AudioEngine::registerImportedSequence(const QString &fileName)
+{
+    QFile file(
+        importedSequencesDir()
+        + QLatin1Char('/')
+        + fileName);
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+
+    const QString source = QString::fromUtf8(file.readAll());
+
+    SbgSequence sequence;
+    QString error;
+
+    if (!Sbg::parse(source, &sequence, &error))
+    {
+        qWarning() << "Imported sequence:"
+                   << fileName
+                   << "parse error:" << error;
+        return;
+    }
+
+    QString name = sequence.title;
+
+    if (name.isEmpty())
+        name = QFileInfo(fileName).completeBaseName();
+
+    const QString baseName = name;
+    int suffix = 2;
+
+    while (m_sequencePresetSources.contains(name))
+    {
+        name = baseName
+            + QStringLiteral(" (")
+            + QString::number(suffix++)
+            + QLatin1Char(')');
+    }
+
+    m_sequencePresets.append(name);
+    m_sequencePresetSources.insert(name, source);
+    m_importedSequenceNames.append(name);
+    m_importedSequenceFiles.insert(name, fileName);
+}
+
+/*
+ * Validates, copies and registers an .sbg file picked by the
+ * user. Returns true on success; on failure sequenceImportError
+ * carries a user-readable message.
+ */
+bool AudioEngine::importSequenceFile(const QUrl &fileUrl)
+{
+    const QString path = fileUrl.isLocalFile()
+        ? fileUrl.toLocalFile()
+        : fileUrl.toString();
+
+    QFile file(path);
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        emit sequenceImportError(
+            tr("Cannot read file: %1")
+            .arg(QFileInfo(path).fileName()));
+        return false;
+    }
+
+    const QString source = QString::fromUtf8(file.readAll());
+
+    SbgSequence sequence;
+    QString error;
+
+    if (!Sbg::parse(source, &sequence, &error))
+    {
+        emit sequenceImportError(
+            tr("Not a valid SBaGen sequence: %1")
+            .arg(error));
+        return false;
+    }
+
+    const QFileInfo info(path);
+
+    // Keep the original name; normalise unknown suffixes to .sbg.
+    const QString suffix = info.suffix().toLower();
+
+    const QString fileName =
+        (suffix == QLatin1String("sbg")
+         || suffix == QLatin1String("txt"))
+        ? info.fileName()
+        : info.completeBaseName() + QStringLiteral(".sbg");
+
+    QDir dir;
+
+    if (!dir.mkpath(importedSequencesDir()))
+    {
+        emit sequenceImportError(
+            tr("Cannot create the sequences folder"));
+        return false;
+    }
+
+    QFile target(
+        importedSequencesDir()
+        + QLatin1Char('/')
+        + fileName);
+
+    if (!target.open(
+            QIODevice::WriteOnly | QIODevice::Truncate))
+    {
+        emit sequenceImportError(
+            tr("Cannot store the sequence file"));
+        return false;
+    }
+
+    target.write(source.toUtf8());
+    target.close();
+
+    /*
+     * Re-importing a previously imported file replaces its entry
+     * (otherwise the uniqueness logic would add a suffix).
+     */
+    const QStringList replaced =
+        m_importedSequenceFiles.keys(fileName);
+
+    for (int i = 0; i < replaced.size(); ++i)
+    {
+        const QString oldName = replaced.at(i);
+
+        m_sequencePresets.removeOne(oldName);
+        m_sequencePresetSources.remove(oldName);
+        m_importedSequenceNames.removeOne(oldName);
+        m_importedSequenceFiles.remove(oldName);
+    }
+
+    registerImportedSequence(fileName);
+
+    emit sequencePresetsChanged();
+
+    return true;
+}
+
+void AudioEngine::removeImportedSequence(const QString &name)
+{
+    if (!m_importedSequenceNames.contains(name))
+        return;
+
+    if (m_activeSequenceName == name)
+    {
+        stopSequence();
+        m_activeSequenceName.clear();
+    }
+
+    const QString fileName =
+        m_importedSequenceFiles.value(name);
+
+    if (!fileName.isEmpty())
+        QFile::remove(
+            importedSequencesDir()
+            + QLatin1Char('/')
+            + fileName);
+
+    m_sequencePresetSources.remove(name);
+    m_importedSequenceFiles.remove(name);
+    m_importedSequenceNames.removeOne(name);
+    m_sequencePresets.removeOne(name);
+
+    emit sequencePresetsChanged();
+}
+
+bool AudioEngine::isImportedSequence(const QString &name) const
+{
+    return m_importedSequenceNames.contains(name);
 }
 
 // ============================================================================
@@ -201,6 +420,8 @@ void AudioEngine::updateSequencePoll()
         m_sequencePollTimer->stop();
 
         m_sequenceChannel->stopImmediately();
+
+        m_activeSequenceName.clear();
 
         return;
     }

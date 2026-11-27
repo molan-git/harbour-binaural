@@ -53,6 +53,25 @@
     </message>
 </context>
 <context>
+    <name>AudioEngine</name>
+    <message>
+        <source>Cannot read file: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not a valid SBaGen sequence: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot create the sequences folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot store the sequence file</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AudioFilePickerPage</name>
     <message>
         <source>Music</source>
@@ -596,6 +615,14 @@
         <source>Extended</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Add</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No SBaGen files</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>NoiseWaveDrawer</name>
@@ -613,6 +640,17 @@
     <message>
         <source>Start your sound mix</source>
         <translation>Begin je geluidsmix</translation>
+    </message>
+</context>
+<context>
+    <name>SequenceDrawer</name>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import SBaGen File</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

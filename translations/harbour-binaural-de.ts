@@ -65,24 +65,47 @@
     </message>
 </context>
 <context>
+    <name>AudioEngine</name>
+    <message>
+        <location filename="../src/audioengine_sequence.cpp" line="246"/>
+        <source>Cannot read file: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/audioengine_sequence.cpp" line="259"/>
+        <source>Not a valid SBaGen sequence: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/audioengine_sequence.cpp" line="280"/>
+        <source>Cannot create the sequences folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/audioengine_sequence.cpp" line="293"/>
+        <source>Cannot store the sequence file</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AudioFilePickerPage</name>
     <message>
-        <location filename="../qml/pages/AudioFilePickerPage.qml" line="52"/>
+        <location filename="../qml/pages/AudioFilePickerPage.qml" line="70"/>
         <source>Music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/AudioFilePickerPage.qml" line="71"/>
+        <location filename="../qml/pages/AudioFilePickerPage.qml" line="27"/>
         <source>Use Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/AudioFilePickerPage.qml" line="72"/>
+        <location filename="../qml/pages/AudioFilePickerPage.qml" line="109"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/AudioFilePickerPage.qml" line="164"/>
+        <location filename="../qml/pages/AudioFilePickerPage.qml" line="29"/>
         <source>No audio files or folders</source>
         <translation type="unfinished"></translation>
     </message>
@@ -709,27 +732,37 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="698"/>
+        <location filename="../qml/pages/MainPage.qml" line="721"/>
         <source>Standard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="657"/>
+        <location filename="../qml/pages/MainPage.qml" line="680"/>
         <source>About</source>
         <translation type="unfinished">Über</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="666"/>
+        <location filename="../qml/pages/MainPage.qml" line="385"/>
+        <source>Add</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/MainPage.qml" line="386"/>
+        <source>No SBaGen files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/MainPage.qml" line="689"/>
         <source>Deselect all sounds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="672"/>
+        <location filename="../qml/pages/MainPage.qml" line="695"/>
         <source>Timer</source>
         <translation type="unfinished">Timer</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="739"/>
+        <location filename="../qml/pages/MainPage.qml" line="762"/>
         <source>Extended</source>
         <translation type="unfinished"></translation>
     </message>
@@ -753,6 +786,19 @@
         <location filename="../qml/pages/components/PlaybackBar.qml" line="146"/>
         <source>Start your sound mix</source>
         <translation>Starte deinen Klangmix</translation>
+    </message>
+</context>
+<context>
+    <name>SequenceDrawer</name>
+    <message>
+        <location filename="../qml/pages/components/SequenceDrawer.qml" line="50"/>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/components/SequenceDrawer.qml" line="97"/>
+        <source>Import SBaGen File</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

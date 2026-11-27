@@ -45,7 +45,12 @@
  *   color/amp           noise voice (white/pink/brown/grey)
  *
  * Amplitude defaults to 20 when omitted; negative amplitudes and
- * tone-sets without voices (other than 'off') are errors.
+ * tone-sets without voices (other than 'off' and explicitly
+ * silenced sets like 'ts3: -') are errors.
+ *
+ * The first full-line comment containing readable text is stored
+ * as the sequence title (used as the display name when importing
+ * an .sbg file).
  *
  * Pure data only: runtime state (oscillator phases, noise filter
  * state) lives in SequenceGenerator, so a parsed sequence can be
@@ -99,7 +104,7 @@ struct SbgTimelineEvent
 
 struct SbgSequence
 {
-    QString title;
+    QString title;             // first name-like comment line
     qint64 durationMs = 0;     // time of the last timeline event
 
     QVector<SbgToneSet> toneSets;

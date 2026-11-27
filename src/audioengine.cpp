@@ -144,6 +144,7 @@ AudioEngine::AudioEngine(QObject *parent)
             this,
             [this]() {
                 m_sequenceGenerator = nullptr;
+                m_activeSequenceName.clear();
                 m_sequencePollTimer->stop();
 
                 emit sequenceProgressChanged();
@@ -177,6 +178,9 @@ AudioEngine::AudioEngine(QObject *parent)
         m_sequencePresetSources.insert(
             preset.title, preset.source);
     }
+
+    // Load imported .sbg sequences from the app data folder.
+    loadImportedSequences();
 
     connect(m_isochronicChannel,
             &PcmChannel::stateChanged,

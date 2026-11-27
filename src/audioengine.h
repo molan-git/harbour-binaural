@@ -62,7 +62,7 @@ class AudioEngine : public QObject
 
     Q_PROPERTY(QStringList sequencePresets
                READ sequencePresets
-               CONSTANT)
+               NOTIFY sequencePresetsChanged)
 
     Q_PROPERTY(double sequenceProgress
                READ sequenceProgress
@@ -83,6 +83,12 @@ class AudioEngine : public QObject
     Q_PROPERTY(bool coloredNoisePaused
                READ isColoredNoisePaused
                NOTIFY playingChanged)
+
+    // Custom sequence volume (Focus)
+    Q_PROPERTY(int sequenceVolume
+               READ sequenceVolume
+               WRITE setSequenceVolume
+               NOTIFY sequenceVolumeChanged)
 
     Q_PROPERTY(bool customSoundPlaying
                READ isCustomSoundPlaying
@@ -219,10 +225,11 @@ public:
     // Custom user-built sequence (Focus mixes).
     Q_INVOKABLE void setCustomSequenceSource(const QString &name,
                                              const QString &source);
-    Q_PROPERTY(int sequenceVolume
-               READ sequenceVolume
-               WRITE setSequenceVolume
-               NOTIFY sequenceVolumeChanged)
+
+    // Imported .sbg sequences (sequence drawer).
+    Q_INVOKABLE bool importSequenceFile(const QUrl &fileUrl);
+    Q_INVOKABLE void removeImportedSequence(const QString &name);
+    Q_INVOKABLE bool isImportedSequence(const QString &name) const;
 
     // Custom user sound (mp3/ogg/wav) and playlist controls.
     Q_INVOKABLE void playCustomSound();
@@ -233,7 +240,7 @@ public:
     Q_INVOKABLE void playPreviousCustomSound();
     Q_INVOKABLE void restartCustomSound();
     Q_INVOKABLE void startCustomSoundPlaylist(const QVariantList &files,
-                                               bool loopFolder);
+                                              bool loopFolder);
 
     Q_INVOKABLE void setBinauralVolume(int volume);
     Q_INVOKABLE void setAmbienceVolume(int volume);
@@ -244,6 +251,8 @@ signals:
     void customSoundChanged();
     void sequenceProgressChanged();
     void sequenceVolumeChanged();
+    void sequencePresetsChanged();
+    void sequenceImportError(const QString &message);
 
 private:
     void updatePlayingState();
@@ -259,6 +268,9 @@ private:
 
     // Sequence implementation.
     void updateSequencePoll();
+    void loadImportedSequences();
+    void registerImportedSequence(const QString &fileName);
+    QString importedSequencesDir() const;
 
     // Colored-noise volume.
     void applyPendingColoredNoiseVolume();
@@ -337,6 +349,13 @@ private:
     QString m_currentColoredNoise;
     QStringList m_sequencePresets;
     QHash<QString, QString> m_sequencePresetSources;
+
+    // Imported .sbg sequences: display name -> stored file name.
+    QStringList m_importedSequenceNames;
+    QHash<QString, QString> m_importedSequenceFiles;
+
+    // Preset currently playing (for removing while playing).
+    QString m_activeSequenceName;
 
     // Selected solfeggio frequencies (Hz).
     QVector<double> m_solfeggioFrequencies;
