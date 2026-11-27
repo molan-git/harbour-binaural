@@ -16,14 +16,20 @@
  *   readData calls) freezes the sequence at the right point and
  *   resuming continues seamlessly. No wall-clock timer needed.
  *
+ * - The timeline starts in an implicit silent period before the
+ *   first event, as in SBaGen; a first event at time zero plays
+ *   immediately instead (and then does not ring bells).
+ *
  * - Tone-set changes blend per voice, as in SBaGen: voices that
  *   continue from one tone-set to the next (same noise color, or
  *   same carrier/offset/isochronic parameters) keep playing
  *   seamlessly, with only their amplitude gliding if it changes.
- *   Ending voices fade out and new voices fade in with
- *   equal-power weights over the last 10 s of each segment,
- *   avoiding the ~3 dB level dip a linear crossfade produces for
- *   uncorrelated signals.
+ *   Ending voices fade out with an equal-power weight over the
+ *   last 10 s before the boundary; voices that start with the
+ *   new tone-set fade in over the first 10 s after it, so the
+ *   mix passes through silence at the boundary -- SBaGen's
+ *   default transition. Bells struck at the boundary therefore
+ *   ring unmasked, as in SBaGen.
  *
  * - On segment changes, continuing voices inherit the oscillator
  *   phase and noise filter state of the voice they continue, so
@@ -35,10 +41,13 @@
  *
  * - 'bell+freq/amp' voices render as a decaying pure sine at
  *   'freq', played identically into both ears, as in SBaGen:
- *   the bell is struck every time the timeline enters a
+ *   the bell is struck every time the timeline ADVANCES into a
  *   tone-set containing it (phase reset, envelope back to full
- *   amplitude), and the envelope then loses about 1/12 of its
- *   value every 50 ms until it fades to silence.
+ *   amplitude) -- not for the initial period at time zero -- and
+ *   the envelope (kept in SBaGen's internal amplitude units,
+ *   40.96 per cent) then loses 1/12 of its value plus one unit
+ *   every 50 ms until it fades to silence; an amplitude-20 bell
+ *   rings for roughly 2.5-3 s.
  *
  * - A tone-set marked with a leading "wave:period[/depth]"
  *   keyword plays with a slow raised-cosine volume swell (the
@@ -103,16 +112,16 @@ private:
     };
 
     /*
-     * Per-bell strike state, one entry per 'bell+freq/amp'
-     * voice of the tone-set. The envelope is kept in SBaGen
-     * amplitude units and decays towards zero; the bell sounds
-     * while it is above zero.
+     * Per-bell strike state, one entry per 'bell+freq/amp' voice
+     * of the tone-set. The envelope is kept in SBaGen's internal
+     * amplitude units (40.96 per cent) and decays towards zero;
+     * the bell sounds while it is above zero.
      */
     struct BellRuntime
     {
         int voiceIndex = -1;
         double phase = 0.0;        // sine phase, cycles
-        double envelope = 0.0;     // SBaGen amplitude units
+        double envelope = 0.0;     // SBaGen internal amplitude units
         int framesToDecay = 0;     // frames until next decay step
     };
 
@@ -196,7 +205,7 @@ private:
 
     double m_sampleRate;
     qint64 m_frames;      // frames rendered so far
-    int m_segment;        // current timeline segment index
+    int m_segment;        // current timeline segment; -1 = initial silence
 
     qint64 m_durationMs;
     bool m_openEnded;

@@ -26,6 +26,15 @@ namespace
      */
     const double AmplitudeScale = 400.0;
 
+    /*
+     * SBaGen keeps amplitudes internally as 40.96 units per
+     * cent (AMP_DA in sbagen.c). The bell decay law
+     * "-= 1 + amp/12 each 50 ms" is defined on those internal
+     * units, so the bell envelope is kept in them too --
+     * otherwise the constant -1 shortens the ring drastically.
+     */
+    const double AmpUnitsPerPercent = 40.96;
+
     // Final limiter.
     const double PeakSample = 32000.0;
 
@@ -101,7 +110,7 @@ SequenceGenerator::SequenceGenerator(const SbgSequence &sequence,
       m_sequence(sequence),
       m_sampleRate(DefaultSampleRate),
       m_frames(0),
-      m_segment(0),
+      m_segment(-1),
       m_durationMs(0),
       m_openEnded(false)
 {
@@ -126,10 +135,14 @@ void SequenceGenerator::setSampleRate(int sampleRate)
 
 void SequenceGenerator::start()
 {
-    // The timeline starts by entering the first tone-set: any
-    // bells in it are struck immediately.
-    triggerBells(m_segment);
-
+    /*
+     * The timeline starts in an implicit silent period (before
+     * the first event), as in SBaGen. Bells ring when the
+     * timeline ADVANCES into a period -- including the first
+     * one after that silence -- but a first period starting at
+     * time zero is the initial period and does not ring them,
+     * exactly as in SBaGen.
+     */
     open(QIODevice::ReadOnly);
 }
 
@@ -187,19 +200,26 @@ qint64 SequenceGenerator::readData(char *data, qint64 maxlen)
                             m_sequence.events.at(m_segment + 1)
                                 .timeMs))
         {
-            carryOverRuntime(m_segment);
+            if (m_segment >= 0)
+                carryOverRuntime(m_segment);
+
             ++m_segment;
 
-            // Entering a period strikes the bells of the
-            // new tone-set (as in SBaGen).
-            triggerBells(m_segment);
+            /*
+             * Entering a period strikes the bells of the new
+             * tone-set (as in SBaGen). The period starting at
+             * time zero is the initial period -- it is entered
+             * at playback start without a strike.
+             */
+            if (m_sequence.events.at(m_segment).timeMs > 0)
+                triggerBells(m_segment);
         }
 
         /*
          * Fade progress towards the next boundary: 0 outside the
          * fade window, 1 at the boundary itself. During the
-         * window, ending voices fade out and new voices fade in
-         * with equal-power weights.
+         * window, ending voices fade out towards silence at the
+         * boundary.
          */
         double fadePos = 0.0;
 
@@ -209,7 +229,9 @@ qint64 SequenceGenerator::readData(char *data, qint64 maxlen)
                 m_sequence.events.at(m_segment + 1).timeMs;
 
             const qint64 segmentStartMs =
-                m_sequence.events.at(m_segment).timeMs;
+                m_segment >= 0
+                    ? m_sequence.events.at(m_segment).timeMs
+                    : 0;
 
             const qint64 fadeStartMs =
                 qMax(segmentStartMs,
@@ -234,14 +256,45 @@ qint64 SequenceGenerator::readData(char *data, qint64 maxlen)
         const bool fading = fadePos > 0.0;
 
         const double outWeight = qCos(fadePos * M_PI / 2.0);
-        const double inWeight = qSin(fadePos * M_PI / 2.0);
+
+        /*
+         * Fade-in of the voices that start with the current
+         * segment, over the first 10 s AFTER the boundary:
+         * the old set fades out to silence at the boundary and
+         * the new set rises after it -- SBaGen's default
+         * transition. This also leaves the boundary moment to
+         * the bells, which ring unmasked there, as in SBaGen.
+         * Voices of the initial period at time zero play at
+         * full level immediately.
+         */
+        double inWeight = 1.0;
+
+        if (m_segment >= 0)
+        {
+            const qint64 entryMs =
+                m_sequence.events.at(m_segment).timeMs;
+
+            if (entryMs > 0)
+            {
+                inWeight = qSin(
+                    qBound(0.0,
+                           (tMs - static_cast<double>(entryMs))
+                               / static_cast<double>(
+                                   SpinDurationMs),
+                           1.0)
+                    * M_PI / 2.0);
+            }
+        }
 
         double left = 0.0;
         double right = 0.0;
 
-        renderSegmentFrame(&left, &right,
-                           fading, fadePos,
-                           outWeight, inWeight);
+        if (m_segment >= 0)
+        {
+            renderSegmentFrame(&left, &right,
+                               fading, fadePos,
+                               outWeight, inWeight);
+        }
 
         samples[frame * 2] =
             static_cast<qint16>(
@@ -453,7 +506,8 @@ void SequenceGenerator::triggerBells(int eventIndex)
             set.voices.at(bell.voiceIndex);
 
         bell.phase = 0.0;
-        bell.envelope = voice.amplitude;
+        bell.envelope =
+            voice.amplitude * AmpUnitsPerPercent;
         bell.framesToDecay =
             static_cast<int>(m_sampleRate / 20.0);
     }
@@ -474,6 +528,7 @@ void SequenceGenerator::carryOverRuntime(int eventIndex)
         m_voiceMatchToEnd.at(eventIndex);
 
     SetRuntime &curRuntime = m_setRuntime[curIdx];
+
     SetRuntime &nextRuntime = m_setRuntime[nextIdx];
 
     // Continuing voices inherit the phase and filter state of
@@ -570,6 +625,14 @@ void SequenceGenerator::renderSegmentFrame(double *outLeft,
     double left = 0.0;
     double right = 0.0;
 
+    if (m_segment < 0)
+    {
+        // Before the first event: the implicit silent period.
+        *outLeft = 0.0;
+        *outRight = 0.0;
+        return;
+    }
+
     const int eventCount = m_sequence.events.size();
 
     const int curSetIdx = m_eventSetIndex.at(m_segment);
@@ -593,6 +656,21 @@ void SequenceGenerator::renderSegmentFrame(double *outLeft,
         const QVector<int> &toNext =
             m_voiceMatchToNext.at(m_segment);
 
+        /*
+         * Voices that start with this segment: either all of
+         * them (first set entered after the initial silence),
+         * or those without a continuation from the previous
+         * set. They rise with the post-boundary fade-in.
+         */
+        const bool introEntry =
+            m_segment == 0
+            && m_sequence.events.at(0).timeMs > 0;
+
+        const QVector<int> *toCur = nullptr;
+
+        if (m_segment > 0)
+            toCur = &m_voiceMatchToEnd.at(m_segment - 1);
+
         for (int i = 0; i < runtime.tones.size(); ++i)
         {
             ToneRuntime &tone = runtime.tones[i];
@@ -603,6 +681,14 @@ void SequenceGenerator::renderSegmentFrame(double *outLeft,
             double amplitude = voice.amplitude;
             double weight = 1.0;
 
+            const bool isNew =
+                introEntry
+                || (toCur
+                    && toCur->at(tone.voiceIndex) < 0);
+
+            if (isNew && inWeight < 1.0)
+                weight = inWeight;
+
             if (fading)
             {
                 const int match =
@@ -611,7 +697,7 @@ void SequenceGenerator::renderSegmentFrame(double *outLeft,
                 if (match < 0)
                 {
                     // Voice ends here: fade it out.
-                    weight = outWeight;
+                    weight *= outWeight;
                 }
                 else if (nextSetIdx >= 0 && fadePos > 0.0)
                 {
@@ -653,6 +739,14 @@ void SequenceGenerator::renderSegmentFrame(double *outLeft,
             double amplitude = voice.amplitude;
             double weight = 1.0;
 
+            const bool isNew =
+                introEntry
+                || (toCur
+                    && toCur->at(noise.voiceIndex) < 0);
+
+            if (isNew && inWeight < 1.0)
+                weight = inWeight;
+
             if (fading)
             {
                 const int match =
@@ -660,7 +754,7 @@ void SequenceGenerator::renderSegmentFrame(double *outLeft,
 
                 if (match < 0)
                 {
-                    weight = outWeight;
+                    weight *= outWeight;
                 }
                 else if (nextSetIdx >= 0 && fadePos > 0.0)
                 {
@@ -708,7 +802,8 @@ void SequenceGenerator::renderSegmentFrame(double *outLeft,
 
             const double value =
                 qSin(bell.phase * TwoPi)
-                * bell.envelope * AmplitudeScale;
+                * bell.envelope
+                * (AmplitudeScale / AmpUnitsPerPercent);
 
             left += value;
             right += value;
@@ -721,10 +816,11 @@ void SequenceGenerator::renderSegmentFrame(double *outLeft,
             if (--bell.framesToDecay <= 0)
             {
                 /*
-                 * SBaGen decay: every 50 ms the envelope
-                 * loses 1/12 of its value plus one unit,
-                 * which rings a bell of amplitude 20 for
-                 * roughly a second.
+                 * SBaGen decay: every 50 ms the envelope (kept
+                 * in SBaGen's internal units, 40.96 per cent)
+                 * loses 1/12 of its value plus one unit -- an
+                 * amplitude-20 bell (819 units) rings for
+                 * roughly 2.5-3 s, as in SBaGen.
                  */
                 bell.framesToDecay =
                     static_cast<int>(m_sampleRate / 20.0);
@@ -735,67 +831,6 @@ void SequenceGenerator::renderSegmentFrame(double *outLeft,
                 if (bell.envelope < 0.0)
                     bell.envelope = 0.0;
             }
-        }
-    }
-
-    // ----------------------------------------------------------
-    // Voices of the next tone-set that are new: fade them in.
-    // (Continuing voices are already sounding from above.)
-    // ----------------------------------------------------------
-
-    if (fading && fadePos < 1.0 && nextSetIdx >= 0
-        && nextSetIdx != curSetIdx)
-    {
-        const SbgToneSet &nextSet =
-            m_sequence.toneSets.at(nextSetIdx);
-
-        SetRuntime &nextRuntime = m_setRuntime[nextSetIdx];
-
-        const QVector<int> &toCur =
-            m_voiceMatchToEnd.at(m_segment);
-
-        for (int i = 0; i < nextRuntime.tones.size(); ++i)
-        {
-            ToneRuntime &tone = nextRuntime.tones[i];
-
-            if (toCur.at(tone.voiceIndex) >= 0)
-                continue;
-
-            const SbgVoice &voice =
-                nextSet.voices.at(tone.voiceIndex);
-
-            const double swell = waveEnvelope(
-                nextSet.waveDepth,
-                nextSet.wavePeriodSeconds,
-                nextRuntime.tones[i].wavePhase);
-
-            renderToneVoice(voice, tone,
-                            voice.amplitude * AmplitudeScale
-                                * swell,
-                            inWeight,
-                            &left, &right);
-        }
-
-        for (int i = 0; i < nextRuntime.noises.size(); ++i)
-        {
-            NoiseRuntime &noise = nextRuntime.noises[i];
-
-            if (toCur.at(noise.voiceIndex) >= 0)
-                continue;
-
-            const SbgVoice &voice =
-                nextSet.voices.at(noise.voiceIndex);
-
-            const double swell = waveEnvelope(
-                nextSet.waveDepth,
-                nextSet.wavePeriodSeconds,
-                nextRuntime.noises[i].wavePhase);
-
-            renderNoiseVoice(voice, noise,
-                             voice.amplitude * AmplitudeScale
-                                 * swell,
-                             inWeight,
-                             &left, &right);
         }
     }
 

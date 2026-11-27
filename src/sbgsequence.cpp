@@ -61,15 +61,15 @@ namespace
     }
 
     /*
-     * "HH:MM:SS", "MM:SS" or "SS" -> milliseconds.
+     * SBaGen time format (readTime() in sbagen.c): "H:MM:SS" or
+     * "H:MM" -- the FIRST field is always hours. "0:03" is three
+     * minutes, and a single bare number is not a time at all.
+     * Ranges are strict (0..23 h, 0..59 m/s) as in SBaGen.
      */
     bool parseClockTimeMs(const QString &token, qint64 *out)
     {
         const QStringList parts =
             token.split(QLatin1Char(':'));
-
-        if (parts.isEmpty() || parts.size() > 3)
-            return false;
 
         double hours = 0.0;
         double minutes = 0.0;
@@ -84,15 +84,21 @@ namespace
         }
         else if (parts.size() == 2)
         {
-            if (!parseDouble(parts.at(0), &minutes)
-                || !parseDouble(parts.at(1), &seconds))
+            // Two fields are hours and minutes -- NOT
+            // minutes and seconds.
+            if (!parseDouble(parts.at(0), &hours)
+                || !parseDouble(parts.at(1), &minutes))
                 return false;
         }
         else
         {
-            if (!parseDouble(parts.at(0), &seconds))
-                return false;
+            return false;
         }
+
+        if (hours < 0.0 || hours >= 24.0
+            || minutes < 0.0 || minutes >= 60.0
+            || seconds < 0.0 || seconds >= 60.0)
+            return false;
 
         *out = qRound64(
             (hours * 3600.0
