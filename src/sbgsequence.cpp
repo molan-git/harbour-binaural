@@ -1522,6 +1522,10 @@ QVector<SbgPreset> Sbg::builtinPresets()
 // separately from builtinPresets so they appear only in the Focus
 // section, not in the sequence drawer. F22 uses the same tone-set
 // as F21, so the two share one preset.
+//
+// Focus sessions are started manually and ended by the user (or
+// the sleep timer), so the sources have no end event: the last
+// tone-set stays active and plays open-ended until stopped.
 
 QVector<SbgPreset> Sbg::focusPresets()
 {
@@ -1532,9 +1536,7 @@ QVector<SbgPreset> Sbg::focusPresets()
     focus3.source = QStringLiteral(
         "# F3: 59[1.2]-110[1.3], 288[3.7]\n"
         "ts: 59+1.2/10 110+1.3/10 288+3.7/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:60:00 off\n");
+        "NOW ts\n");
     presets.append(focus3);
 
     SbgPreset focus10;
@@ -1543,9 +1545,7 @@ QVector<SbgPreset> Sbg::focusPresets()
         "# F10 \"Brain awake, body asleep\":\n"
         "# 100[1.5], 200[4.0], 250[4.0], 300[4.0]\n"
         "ts: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:60:00 off\n");
+        "NOW ts\n");
     presets.append(focus10);
 
     SbgPreset focus12;
@@ -1556,9 +1556,7 @@ QVector<SbgPreset> Sbg::focusPresets()
         "# 400[10.0], 500[10.1], 600[4.8]\n"
         "ts: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10 "
         "400+10.0/10 500+10.1/10 600+4.8/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:60:00 off\n");
+        "NOW ts\n");
     presets.append(focus12);
 
     SbgPreset focus15;
@@ -1569,9 +1567,7 @@ QVector<SbgPreset> Sbg::focusPresets()
         "# 500[7.05], 630[7.1], 750[7.0]\n"
         "ts: 100+1.5/10 200+4.0/10 250+4.0/10 300+4.0/10 "
         "500+7.05/10 630+7.1/10 750+7.0/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:60:00 off\n");
+        "NOW ts\n");
     presets.append(focus15);
 
     SbgPreset focus21;
@@ -1582,9 +1578,7 @@ QVector<SbgPreset> Sbg::focusPresets()
         "# 600[16.2], 750[15.9], 900[16.2]\n"
         "ts: 200+4.0/10 250+4.0/10 300+4.0/10 "
         "600+16.2/10 750+15.9/10 900+16.2/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:60:00 off\n");
+        "NOW ts\n");
     presets.append(focus21);
 
     SbgPreset focus23;
@@ -1592,9 +1586,7 @@ QVector<SbgPreset> Sbg::focusPresets()
     focus23.source = QStringLiteral(
         "# F23: 400[3.9], 503[4.0], 600[4.0], 750[3.9], 900[4.0]\n"
         "ts: 400+3.9/10 503+4.0/10 600+4.0/10 750+3.9/10 900+4.0/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:60:00 off\n");
+        "NOW ts\n");
     presets.append(focus23);
 
     SbgPreset focus24;
@@ -1603,9 +1595,7 @@ QVector<SbgPreset> Sbg::focusPresets()
         "# F24: 50[0.75], 400[3.9], 503[4.0], 600[4.0], 750[4.0], 900[4.0]\n"
         "ts: 50+0.75/10 400+3.9/10 503+4.0/10 600+4.0/10 "
         "750+4.0/10 900+4.0/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:60:00 off\n");
+        "NOW ts\n");
     presets.append(focus24);
 
     SbgPreset focus25;
@@ -1613,9 +1603,7 @@ QVector<SbgPreset> Sbg::focusPresets()
     focus25.source = QStringLiteral(
         "# F25: 503[4.0], 600[4.0], 750[4.0], 900[4.0]\n"
         "ts: 503+4.0/10 600+4.0/10 750+4.0/10 900+4.0/10\n"
-        "off: -\n"
-        "NOW ts\n"
-        "+00:60:00 off\n");
+        "NOW ts\n");
     presets.append(focus25);
 
     return presets;

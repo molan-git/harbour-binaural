@@ -231,6 +231,14 @@ public:
     Q_INVOKABLE void removeImportedSequence(const QString &name);
     Q_INVOKABLE bool isImportedSequence(const QString &name) const;
 
+    /*
+     * Tone voices (carrier/beat) of the first active tone-set of
+     * a registered sequence or focus preset, for the FocusDrawer
+     * sliders. Returns an empty list for unknown presets.
+     */
+    Q_INVOKABLE QVariantList focusPresetVoices(
+        const QString &preset) const;
+
     // Custom user sound (mp3/ogg/wav) and playlist controls.
     Q_INVOKABLE void playCustomSound();
     Q_INVOKABLE void stopCustomSound();

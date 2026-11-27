@@ -137,10 +137,92 @@ void AudioEngine::setCustomSequenceSource(const QString &name,
     if (name.isEmpty())
         return;
 
+    /*
+     * Derived custom-focus mixes ("Custom Focus 12", "Custom
+     * Focus 21", ...) are transient: only the latest one is
+     * kept, so switching the base preset does not accumulate
+     * stale entries in the sequence list.
+     */
+    if (name.startsWith(QStringLiteral("Custom Focus")))
+    {
+        for (int i = m_sequencePresets.size() - 1; i >= 0; --i)
+        {
+            const QString &existing = m_sequencePresets.at(i);
+
+            if (existing != name
+                && existing.startsWith(
+                    QStringLiteral("Custom Focus")))
+            {
+                m_sequencePresetSources.remove(existing);
+                m_sequencePresets.removeAt(i);
+            }
+        }
+    }
+
     if (!m_sequencePresets.contains(name))
         m_sequencePresets.append(name);
 
     m_sequencePresetSources.insert(name, source);
+}
+
+QVariantList AudioEngine::focusPresetVoices(
+    const QString &preset) const
+{
+    const QString source =
+        m_sequencePresetSources.value(preset);
+
+    if (source.isEmpty())
+        return QVariantList();
+
+    SbgSequence sequence;
+
+    QString error;
+
+    if (!Sbg::parse(source, &sequence, &error))
+        return QVariantList();
+
+    /*
+     * The first event whose tone-set contains tone voices
+     * describes the mix the preset starts with.
+     */
+    for (int i = 0; i < sequence.events.size(); ++i)
+    {
+        const QString &name =
+            sequence.events.at(i).toneSetName;
+
+        if (name == QLatin1String("-")
+            || name == QLatin1String("off"))
+            continue;
+
+        const SbgToneSet *set =
+            sequence.toneSetByName(name);
+
+        if (!set)
+            continue;
+
+        QVariantList voices;
+
+        for (int v = 0; v < set->voices.size(); ++v)
+        {
+            const SbgVoice &voice = set->voices.at(v);
+
+            if (voice.type != SbgVoice::Tone)
+                continue;
+
+            QVariantMap entry;
+            entry.insert(QStringLiteral("carrier"),
+                         voice.carrier);
+            entry.insert(QStringLiteral("beat"),
+                         qAbs(voice.offset));
+
+            voices.append(entry);
+        }
+
+        if (!voices.isEmpty())
+            return voices;
+    }
+
+    return QVariantList();
 }
 
 // ============================================================================

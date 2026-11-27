@@ -298,10 +298,20 @@ Page {
                         voices[i].beat.toFixed(1) + "/10")
         }
 
+        // No end event: a focus session runs open-ended until
+        // the user or the sleep timer stops it.
         return "ts: " + tokens.join(" ") + "\n" +
-               "off: -\n" +
-               "NOW ts\n" +
-               "+00:60:00 off\n"
+               "NOW ts\n"
+    }
+
+    function customFocusName() {
+        if (page.activeFocusPreset.indexOf("Custom Focus") === 0)
+            return page.activeFocusPreset
+
+        var match = page.activeFocusPreset.match(/Focus\s*(\d+)/)
+
+        return match ? "Custom Focus " + match[1]
+                     : "Custom Focus"
     }
 
     function selectFocus(preset) {
@@ -324,6 +334,15 @@ Page {
         page.activeSequence = ""
         page.activeFocusPreset = preset
         page.isCustomFocus = false
+
+        // The drawer sliders always mirror the preset that is
+        // now active -- also while the drawer is open.
+        var voices = audioEngine.focusPresetVoices(preset)
+
+        if (voices.length > 0) {
+            page.currentFocusVoices = voices
+            focusPanel.setVoices(voices)
+        }
 
         audioEngine.startSequence(preset)
 
@@ -605,24 +624,29 @@ Page {
                                 onMixChanged: {
                                     page.currentFocusVoices = voices
 
+                                    if (page.activeFocusPreset === "")
+                                        return
+
+                                    var wasPaused = page.pausedMode
+
+                                    // Named after the preset the mix
+                                    // was first derived from, e.g.
+                                    // "Custom Focus 21"; the name is
+                                    // kept while the sliders are tuned.
+                                    var name = page.customFocusName()
+
                                     audioEngine.setCustomSequenceSource(
-                                        "Custom Focus",
+                                        name,
                                         page.focusSource(voices))
 
-                                    if (page.activeFocusPreset !== "") {
-                                        var wasPaused = page.pausedMode
+                                    page.activeSequence = ""
+                                    page.activeFocusPreset = name
+                                    page.isCustomFocus = true
 
-                                        page.activeSequence = ""
-                                        page.activeFocusPreset =
-                                                "Custom Focus"
-                                        page.isCustomFocus = true
+                                    audioEngine.startSequence(name)
 
-                                        audioEngine.startSequence(
-                                            "Custom Focus")
-
-                                        if (wasPaused)
-                                            audioEngine.pauseSequence()
-                                    }
+                                    if (wasPaused)
+                                        audioEngine.pauseSequence()
                                 }
                             }
 

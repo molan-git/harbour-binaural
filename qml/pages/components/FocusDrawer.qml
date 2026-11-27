@@ -2,10 +2,13 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 /*
- * FocusDrawer: content-only drawer for a custom three-voice
- * binaural focus mix (same pattern as CustomIsochronicDrawer).
- * The mix is committed on slider release because starting a
- * sequence restarts the renderer.
+ * FocusDrawer: content-only drawer for a custom binaural focus
+ * mix (same pattern as CustomIsochronicDrawer). The number of
+ * voice rows follows the active preset (setVoices), so the
+ * sliders always show the real mixture -- also when the preset
+ * is switched from the grid while the drawer is open. The mix
+ * is committed on slider release because starting a sequence
+ * restarts the renderer.
  */
 
 ActionDrawer {
@@ -14,10 +17,15 @@ ActionDrawer {
     signal mixChanged(var voices)
 
     function setVoices(voices) {
-        for (var i = 0; i < voiceRepeater.count && i < voices.length; ++i) {
+        voiceRepeater.model = voices.length
+
+        for (var i = 0; i < voiceRepeater.count
+             && i < voices.length; ++i) {
             var row = voiceRepeater.itemAt(i)
+
             row.carrier = voices[i].carrier
             row.beat = voices[i].beat
+            row.syncSliders()
         }
     }
 
@@ -52,6 +60,11 @@ ActionDrawer {
                                     : index === 1 ? 4.0 : 4.0
 
                 width: parent.width
+
+                function syncSliders() {
+                    carrierSlider.value = voiceRow.carrier
+                    beatSlider.value = voiceRow.beat
+                }
 
                 Slider {
                     id: carrierSlider
