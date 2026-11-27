@@ -33,6 +33,13 @@
  *   both ears (duty cycle 50 %, click-free edges), matching the
  *   standalone IsochronicGenerator.
  *
+ * - 'bell+freq/amp' voices render as a decaying pure sine at
+ *   'freq', played identically into both ears, as in SBaGen:
+ *   the bell is struck every time the timeline enters a
+ *   tone-set containing it (phase reset, envelope back to full
+ *   amplitude), and the envelope then loses about 1/12 of its
+ *   value every 50 ms until it fades to silence.
+ *
  * - A tone-set marked with a leading "wave:period[/depth]"
  *   keyword plays with a slow raised-cosine volume swell (the
  *   same envelope as the colored-noise wave modulation). Every
@@ -95,10 +102,25 @@ private:
         double wavePhase = 0.0;    // authored swell ('wave:') only
     };
 
+    /*
+     * Per-bell strike state, one entry per 'bell+freq/amp'
+     * voice of the tone-set. The envelope is kept in SBaGen
+     * amplitude units and decays towards zero; the bell sounds
+     * while it is above zero.
+     */
+    struct BellRuntime
+    {
+        int voiceIndex = -1;
+        double phase = 0.0;        // sine phase, cycles
+        double envelope = 0.0;     // SBaGen amplitude units
+        int framesToDecay = 0;     // frames until next decay step
+    };
+
     struct SetRuntime
     {
         QVector<ToneRuntime> tones;
         QVector<NoiseRuntime> noises;
+        QVector<BellRuntime> bells;
     };
 
     void buildRuntime();
@@ -116,6 +138,13 @@ private:
     QVector<QVector<int>> m_voiceMatchToEnd;
 
     void carryOverRuntime(int eventIndex);
+
+    /*
+     * Strikes every bell voice of the tone-set of event
+     * 'eventIndex' (phase reset, envelope back to full
+     * amplitude), as SBaGen does on entering a period.
+     */
+    void triggerBells(int eventIndex);
 
     ToneRuntime *findToneRuntime(SetRuntime &runtime,
                                  int voiceIndex);

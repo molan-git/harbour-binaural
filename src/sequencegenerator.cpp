@@ -126,6 +126,10 @@ void SequenceGenerator::setSampleRate(int sampleRate)
 
 void SequenceGenerator::start()
 {
+    // The timeline starts by entering the first tone-set: any
+    // bells in it are struck immediately.
+    triggerBells(m_segment);
+
     open(QIODevice::ReadOnly);
 }
 
@@ -185,6 +189,10 @@ qint64 SequenceGenerator::readData(char *data, qint64 maxlen)
         {
             carryOverRuntime(m_segment);
             ++m_segment;
+
+            // Entering a period strikes the bells of the
+            // new tone-set (as in SBaGen).
+            triggerBells(m_segment);
         }
 
         /*
@@ -320,7 +328,7 @@ void SequenceGenerator::buildRuntime()
 
                 runtime.tones.append(tone);
             }
-            else
+            else if (voice.type == SbgVoice::Noise)
             {
                 NoiseRuntime noise;
                 noise.voiceIndex = v;
@@ -330,6 +338,13 @@ void SequenceGenerator::buildRuntime()
                 resetNoiseState(noise);
 
                 runtime.noises.append(noise);
+            }
+            else
+            {
+                BellRuntime bell;
+                bell.voiceIndex = v;
+
+                runtime.bells.append(bell);
             }
         }
 
@@ -416,6 +431,31 @@ void SequenceGenerator::buildRuntime()
 
         m_voiceMatchToNext.append(toNext);
         m_voiceMatchToEnd.append(toCur);
+    }
+}
+
+void SequenceGenerator::triggerBells(int eventIndex)
+{
+    const int setIdx = m_eventSetIndex.at(eventIndex);
+
+    if (setIdx < 0)
+        return;
+
+    const SbgToneSet &set = m_sequence.toneSets.at(setIdx);
+
+    SetRuntime &runtime = m_setRuntime[setIdx];
+
+    for (int i = 0; i < runtime.bells.size(); ++i)
+    {
+        BellRuntime &bell = runtime.bells[i];
+
+        const SbgVoice &voice =
+            set.voices.at(bell.voiceIndex);
+
+        bell.phase = 0.0;
+        bell.envelope = voice.amplitude;
+        bell.framesToDecay =
+            static_cast<int>(m_sampleRate / 20.0);
     }
 }
 
@@ -649,6 +689,53 @@ void SequenceGenerator::renderSegmentFrame(double *outLeft,
                              weight,
                              &left, &right);
         }
+
+        /*
+         * Bell voices: a decaying pure sine, the same signal
+         * into both ears (as in SBaGen). Bells do not take
+         * part in the crossfade blending -- they are struck
+         * at the boundary itself and ring out independently.
+         */
+        for (int i = 0; i < runtime.bells.size(); ++i)
+        {
+            BellRuntime &bell = runtime.bells[i];
+
+            if (bell.envelope <= 0.0)
+                continue;
+
+            const SbgVoice &voice =
+                set.voices.at(bell.voiceIndex);
+
+            const double value =
+                qSin(bell.phase * TwoPi)
+                * bell.envelope * AmplitudeScale;
+
+            left += value;
+            right += value;
+
+            bell.phase += voice.carrier / m_sampleRate;
+
+            if (bell.phase >= 1.0)
+                bell.phase -= 1.0;
+
+            if (--bell.framesToDecay <= 0)
+            {
+                /*
+                 * SBaGen decay: every 50 ms the envelope
+                 * loses 1/12 of its value plus one unit,
+                 * which rings a bell of amplitude 20 for
+                 * roughly a second.
+                 */
+                bell.framesToDecay =
+                    static_cast<int>(m_sampleRate / 20.0);
+
+                bell.envelope =
+                    bell.envelope * (11.0 / 12.0) - 1.0;
+
+                if (bell.envelope < 0.0)
+                    bell.envelope = 0.0;
+            }
+        }
     }
 
     // ----------------------------------------------------------
@@ -785,6 +872,8 @@ void SequenceGenerator::renderNoiseVoice(const SbgVoice &voice,
                                          double *outLeft,
                                          double *outRight)
 {
+    Q_UNUSED(voice);
+
     if (weight <= 0.0)
         return;
 

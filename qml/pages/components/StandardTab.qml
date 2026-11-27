@@ -262,7 +262,7 @@ SilicaFlickable {
             text: qsTr("Ambient sounds")
         }
 
-        // Soundscape button
+        // Nature sounds button
         Item {
             width: parent.width
             height: ambienceButton.height
@@ -278,7 +278,7 @@ SilicaFlickable {
                                 Theme.paddingMedium
 
                 text: root.mainPage.activeAmbiences.length === 0
-                      ? qsTr("Soundscape")
+                      ? qsTr("Nature sounds")
                       : root.mainPage.activeAmbiences.map(function(a) {
                             return SoundNames.label(a)
                         }).join(", ")

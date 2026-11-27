@@ -811,11 +811,11 @@
         <translation></translation>
     </message>
     <message>
-        <source>Soundscape</source>
+        <source>Ambient sounds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Ambient sounds</source>
+        <source>Nature sounds</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

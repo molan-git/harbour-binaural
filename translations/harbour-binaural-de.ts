@@ -997,14 +997,14 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../qml/pages/components/StandardTab.qml" line="281"/>
+        <source>Nature sounds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/pages/components/StandardTab.qml" line="262"/>
         <source></source>
         <translation></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/components/StandardTab.qml" line="281"/>
-        <source>Soundscape</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

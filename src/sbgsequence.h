@@ -15,13 +15,17 @@
  *   -SE, -r, -F, -q ...          (option lines; accepted and ignored,
  *                                 the sequence always crossfades)
  *   name: 100+4.5/8 pink/40      (tone-set definition, '-' = off;
- *                                 a leading 'spin:' is accepted and
- *                                 its modulation ignored)
+ *                                 'spin:' voices render as plain
+ *                                 pink noise, without the pan)
  *   name: wave:12/30 100+4.5/8   (optional leading 'wave:' keyword
  *                                 marks the set with a slow volume
  *                                 swell: period in seconds, depth
  *                                 in per cent below full level;
  *                                 'wave:12' defaults to depth 30 %)
+ *   name: {                     (block definition; the braces
+ *     +0:00 ts1                  contain relative time lines only;
+ *     +0:05 ts2                  blocks may reference other blocks
+ *   }                            and are expanded into the timeline)
  *   NOW name
  *   NOW+00:05:00 name            (relative to playback start)
  *   +00:05:00 name               (relative to the last-mentioned
@@ -43,6 +47,13 @@
  *                       IsochronicGenerator behaviour)
  *   carrier/amp         plain tone
  *   color/amp           noise voice (white/pink/brown/grey)
+ *   spin:w+r/amp        spinning pink noise (pan width/rate
+ *                       ignored; renders as plain pink noise)
+ *   bell+freq/amp       bell strike (a decaying pure sine at
+ *                       'freq', played identically into both
+ *                       ears and re-struck every time the
+ *                       timeline enters a tone-set containing
+ *                       it, as in SBaGen)
  *
  * Amplitude defaults to 20 when omitted; negative amplitudes and
  * tone-sets without voices (other than 'off' and explicitly
@@ -59,7 +70,7 @@
 
 struct SbgVoice
 {
-    enum Type { Tone = 0, Noise = 1 };
+    enum Type { Tone = 0, Noise = 1, Bell = 2 };
     enum NoiseColor { White = 0, Pink = 1, Brown = 2, Grey = 3 };
 
     Type type = Tone;
@@ -73,6 +84,8 @@ struct SbgVoice
 
     // Noise voices.
     int noiseColor = Pink;
+
+    // Bell voices ('bell+freq/amp'): carrier = strike frequency.
 
     // SBaGen linear volume units (typical presets use 5..40).
     double amplitude = 0.0;
@@ -104,7 +117,7 @@ struct SbgTimelineEvent
 
 struct SbgSequence
 {
-    QString title;             // first name-like comment line
+    QString title;             // first comment line with text
     qint64 durationMs = 0;     // time of the last timeline event
 
     QVector<SbgToneSet> toneSets;

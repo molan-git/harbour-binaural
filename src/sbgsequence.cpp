@@ -237,6 +237,7 @@ namespace
      *   200-4/6            tone, right channel lower
      *   300@6/10           isochronic pulse at 6 Hz
      *   300/6              plain tone (no offset/pulse)
+     *   bell+2050/20       bell strike at 2050 Hz
      *
      * Amplitude defaults to 20 (a common SBaGen level) when omitted.
      */
@@ -283,11 +284,24 @@ namespace
         }
 
         /*
+         * Spinning noise voice: "spin:200+7.5/30" (pan width in
+         * microseconds and pan rate in Hz). SBaGen pans pink
+         * noise between the ears; the pan sweep is not
+         * reproduced, the voice renders as plain pink noise.
+         */
+        if (head.startsWith(QLatin1String("spin:")))
+        {
+            out->type = SbgVoice::Noise;
+            out->noiseColor = SbgVoice::Pink;
+            out->amplitude = amplitude;
+            return true;
+        }
+
+        /*
          * Known SBaGen constructs the renderer does not support:
-         * external audio voices ("mix/100", "wave00:300+5/50")
-         * and bell voices ("bell+4500/20"). Reported as errors so
-         * imports of such files fail with a clear message instead
-         * of being silently misrendered.
+         * external audio voices ("mix/100", "wave00:300+5/50").
+         * Reported as errors so imports of such files fail with
+         * a clear message instead of being silently misrendered.
          */
         if (head.contains(QLatin1Char(':')))
         {
@@ -297,12 +311,30 @@ namespace
             return false;
         }
 
+        /*
+         * Bell voice: "bell+2050/20" (the sign is part of the
+         * SBaGen spelling; a negative frequency is the same
+         * sine reversed, so the absolute value is used).
+         * Rendered as a decaying pure sine struck on every
+         * entry into the tone-set (see SequenceGenerator).
+         */
         if (head.startsWith(QLatin1String("bell")))
         {
-            *error = QStringLiteral(
-                "unsupported voice: %1 (bell voices are "
-                "not supported)").arg(token);
-            return false;
+            double frequency = 0.0;
+
+            if (!parseDouble(head.mid(4), &frequency)
+                || frequency == 0.0)
+            {
+                *error = QStringLiteral(
+                    "bad bell frequency: %1").arg(token);
+                return false;
+            }
+
+            out->type = SbgVoice::Bell;
+            out->carrier = frequency < 0.0 ? -frequency
+                                           : frequency;
+            out->amplitude = amplitude;
+            return true;
         }
 
         // Tone voice: "carrier[+-@offset][/amplitude]".
@@ -441,6 +473,24 @@ namespace
     }
 
     /*
+     * Two voices "match" across consecutive tone-sets when they
+     * are the same kind of sound with identical parameters: such
+     * voices keep playing seamlessly across the transition.
+     */
+    bool voicesMatch(const SbgVoice &a, const SbgVoice &b)
+    {
+        if (a.type != b.type)
+            return false;
+
+        if (a.type == SbgVoice::Noise)
+            return a.noiseColor == b.noiseColor;
+
+        return a.isochronic == b.isochronic
+            && a.carrier == b.carrier
+            && a.offset == b.offset;
+    }
+
+    /*
      * Extracts the tone-set name from the tokens that follow a
      * time specification, accepting an optional fade spec:
      *   "00:10:00 == ts1"  ->  "ts1"
@@ -481,6 +531,109 @@ namespace
 
         *name = first;
         return true;
+    }
+
+    /*
+     * '{}' block definitions (SBaGen sequence blocks): a named
+     * group of relative time lines that is expanded into the
+     * timeline wherever the block name is referenced. Blocks
+     * may reference other blocks; nesting and the expanded
+     * timeline are capped to catch circular references.
+     */
+    const int MaxBlockDepth = 32;
+    const int MaxTimelineEvents = 100000;
+
+    struct SbgBlockLine
+    {
+        qint64 deltaMs = 0;
+        QString name;
+    };
+
+    struct SbgBlockDef
+    {
+        QString name;
+        QVector<SbgBlockLine> lines;
+    };
+
+    /*
+     * Expands a timeline reference recursively: a tone-set name
+     * becomes a single event, a block name expands its lines
+     * with the accumulated offset, "-" passes through as the
+     * silence marker. Returns false with *error set on unknown
+     * names or runaway nesting.
+     */
+    bool expandTimelineReference(const QString &name,
+                                 qint64 timeMs,
+                                 int depth,
+                                 const QVector<SbgToneSet> &toneSets,
+                                 const QVector<SbgBlockDef> &blocks,
+                                 QVector<SbgTimelineEvent> *events,
+                                 QString *error)
+    {
+        if (depth > MaxBlockDepth)
+        {
+            if (error)
+                *error = QStringLiteral(
+                    "'{}' block nesting too deep "
+                    "(circular block reference: %1)").arg(name);
+            return false;
+        }
+
+        if (events->size() > MaxTimelineEvents)
+        {
+            if (error)
+                *error = QStringLiteral(
+                    "expanded timeline too long "
+                    "(circular block reference?)");
+            return false;
+        }
+
+        for (int i = 0; i < toneSets.size(); ++i)
+        {
+            if (toneSets.at(i).name == name)
+            {
+                SbgTimelineEvent event;
+                event.timeMs = timeMs;
+                event.toneSetName = name;
+                events->append(event);
+                return true;
+            }
+        }
+
+        for (int i = 0; i < blocks.size(); ++i)
+        {
+            const SbgBlockDef &block = blocks.at(i);
+
+            if (block.name != name)
+                continue;
+
+            for (int j = 0; j < block.lines.size(); ++j)
+            {
+                if (!expandTimelineReference(
+                        block.lines.at(j).name,
+                        timeMs + block.lines.at(j).deltaMs,
+                        depth + 1,
+                        toneSets, blocks, events, error))
+                    return false;
+            }
+
+            return true;
+        }
+
+        if (name == QLatin1String("-"))
+        {
+            SbgTimelineEvent event;
+            event.timeMs = timeMs;
+            event.toneSetName = name;
+            events->append(event);
+            return true;
+        }
+
+        if (error)
+            *error = QStringLiteral(
+                "unknown tone-set or block: %1").arg(name);
+
+        return false;
     }
 }
 
@@ -523,6 +676,11 @@ bool Sbg::parse(const QString &source,
     qint64 lastAbsoluteMs = 0;
 
     bool titleScanDone = false;
+
+    // '{}' block definitions collected during the scan and
+    // expanded into the timeline afterwards; -1 = not in a block.
+    QVector<SbgBlockDef> blocks;
+    int activeBlock = -1;
 
     const QStringList lines = source.split(QLatin1Char('\n'));
 
@@ -568,6 +726,47 @@ bool Sbg::parse(const QString &source,
 
         if (tokens.isEmpty())
             continue;
+
+        // ======================================================
+        // Inside a '{}' block definition: collect relative time
+        // lines until the closing '}'.
+        // ======================================================
+
+        if (activeBlock >= 0)
+        {
+            if (line == QLatin1String("}"))
+            {
+                activeBlock = -1;
+                continue;
+            }
+
+            qint64 deltaMs = 0;
+
+            if (!tokens.at(0).startsWith(QLatin1Char('+'))
+                || !parseRelativeGroups(tokens.at(0), &deltaMs))
+            {
+                if (error)
+                    *error = QStringLiteral(
+                        "line %1: only relative time lines "
+                        "('+HH:MM:SS name') are allowed "
+                        "inside '{}' blocks")
+                        .arg(lineNr + 1);
+                return false;
+            }
+
+            QString name;
+
+            if (!extractToneSetName(
+                    tokens, 1, &name, error, lineNr))
+                return false;
+
+            SbgBlockLine blockLine;
+            blockLine.deltaMs = deltaMs;
+            blockLine.name = name;
+
+            blocks[activeBlock].lines.append(blockLine);
+            continue;
+        }
 
         // ======================================================
         // Time-sequence lines.
@@ -706,10 +905,9 @@ bool Sbg::parse(const QString &source,
         // Tone-set definition: "name: voice voice ...".
         // ======================================================
         //
-        // A leading "spin:" keyword marks a slowly spun voice
-        // set; the spin modulation is ignored, the voices render
-        // as ordinary voices. A leading "wave:period[/depth]"
-        // keyword marks the set with a slow volume swell.
+        // A leading "wave:period[/depth]" keyword marks the set
+        // with a slow volume swell; "spin:" and "bell" voice
+        // tokens are handled in parseVoice().
 
         const int colon = line.indexOf(QLatin1Char(':'));
 
@@ -720,11 +918,16 @@ bool Sbg::parse(const QString &source,
 
             QString voiceList = line.mid(colon + 1);
 
-            if (voiceList.trimmed().startsWith(
-                    QStringLiteral("spin:")))
+            // Block definition start: "name: {".
+            if (voiceList.trimmed() == QLatin1String("{"))
             {
-                voiceList = voiceList.trimmed().mid(
-                    QStringLiteral("spin:").size());
+                SbgBlockDef block;
+                block.name = set.name;
+
+                blocks.append(block);
+                activeBlock = blocks.size() - 1;
+
+                continue;
             }
 
             const QStringList voices = splitTokens(voiceList);
@@ -804,14 +1007,21 @@ bool Sbg::parse(const QString &source,
             continue;
         }
 
-        if (line == QLatin1String("{")
-            || line == QLatin1String("}"))
+        if (line == QLatin1String("{"))
         {
             if (error)
                 *error = QStringLiteral(
-                    "line %1: unsupported construct: "
-                    "SBaGen '{}' block definitions "
-                    "are not supported")
+                    "line %1: '{' must follow a block name "
+                    "(\"name: {\")")
+                    .arg(lineNr + 1);
+            return false;
+        }
+
+        if (line == QLatin1String("}"))
+        {
+            if (error)
+                *error = QStringLiteral(
+                    "line %1: unexpected '}'")
                     .arg(lineNr + 1);
             return false;
         }
@@ -822,6 +1032,34 @@ bool Sbg::parse(const QString &source,
                 .arg(lineNr + 1)
                 .arg(line);
         return false;
+    }
+
+    if (activeBlock >= 0)
+    {
+        if (error)
+            *error = QStringLiteral(
+                "unterminated '{}' block: %1")
+                .arg(blocks.at(activeBlock).name);
+        return false;
+    }
+
+    // Expand '{}' block references into flat timeline events.
+    if (!blocks.isEmpty())
+    {
+        QVector<SbgTimelineEvent> expanded;
+
+        for (int i = 0; i < out->events.size(); ++i)
+        {
+            if (!expandTimelineReference(
+                    out->events.at(i).toneSetName,
+                    out->events.at(i).timeMs,
+                    0,
+                    out->toneSets, blocks,
+                    &expanded, error))
+                return false;
+        }
+
+        out->events = expanded;
     }
 
     if (out->events.isEmpty())
