@@ -59,24 +59,13 @@ DockedPanel {
                      ? "image://theme/icon-m-pause"
                      : "image://theme/icon-m-play"
 
-        enabled: {
-            var app = playbackBar.applicationWindow
-
-            if (!app || !app.mainPage)
-                return false
-
-            var page = app.mainPage
-            var ambiences = page.activeAmbiences || []
-            var solfeggio = page.activeSolfeggio || []
-
-            return page.activeBand !== "" ||
-                    page.activeNoise !== "" ||
-                    page.activeSequence !== "" ||
-                    ambiences.length > 0 ||
-                    app.customSoundSelected ||
-                    solfeggio.length > 0 ||
-                    page.activeIsochronic !== ""
-        }
+        // Same single source of truth as the cover page:
+        // any selected sound (binaural band, noise, sequence,
+        // focus preset, ambiences, custom sound, solfeggio,
+        // isochronic) enables the button.
+        enabled: playbackBar.applicationWindow &&
+                 playbackBar.applicationWindow.mainPage &&
+                 playbackBar.applicationWindow.mainPage.hasActiveSounds
 
         opacity: enabled ? 1.0 : 0.5
 
@@ -88,7 +77,9 @@ DockedPanel {
         }
     }
 
-    // Current sound mix label.
+    // Current sound mix label: the exact string the cover page
+    // shows (MainPage.mixLabel), so focus presets and sequences
+    // appear here like on the cover.
     Label {
         id: soundLabel
 
@@ -117,19 +108,8 @@ DockedPanel {
             if (!app || !app.mainPage)
                 return Theme.secondaryColor
 
-            var page = app.mainPage
-            var ambiences = page.activeAmbiences || []
-            var solfeggio = page.activeSolfeggio || []
-
-            if (page.activeBand === "" &&
-                    page.activeNoise === "" &&
-                    page.activeSequence === "" &&
-                    ambiences.length === 0 &&
-                    !app.customSoundSelected &&
-                    page.activeIsochronic === "" &&
-                    solfeggio.length === 0) {
+            if (!app.mainPage.hasActiveSounds)
                 return Theme.secondaryColor
-            }
 
             return app.isPlaying
                     ? Theme.highlightColor
@@ -145,37 +125,10 @@ DockedPanel {
             if (!app || !app.mainPage)
                 return qsTr("Start your sound mix")
 
-            var page = app.mainPage
-            var parts = []
-            var ambiences = page.activeAmbiences || []
-            var solfeggio = page.activeSolfeggio || []
+            var label = app.mainPage.mixLabel
 
-            if (page.activeBand !== "")
-                parts.push(SoundNames.label(page.activeBand))
-
-            if (page.activeNoise !== "")
-                parts.push(SoundNames.label(page.activeNoise))
-
-            if (page.activeSequence !== "")
-                parts.push(SoundNames.label(page.activeSequence))
-
-            if (solfeggio.length > 0)
-                parts.push(SoundNames.label("Solfeggio"))
-
-            if (page.activeIsochronic !== "")
-                parts.push(SoundNames.label("Isochronic"))
-
-            if (ambiences.length === 1) {
-                parts.push(SoundNames.label(ambiences[0]))
-            } else if (ambiences.length > 1) {
-                parts.push(SoundNames.label("Ambient mix"))
-            }
-
-            if (app.customSoundSelected)
-                parts.push(SoundNames.label("Custom sound"))
-
-            return parts.length > 0
-                    ? parts.join(", ")
+            return label !== ""
+                    ? label
                     : SoundNames.label("Start your sound mix")
         }
     }
