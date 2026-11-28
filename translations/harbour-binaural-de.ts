@@ -262,27 +262,27 @@
     <message>
         <location filename="../qml/pages/MainPage.qml" line="324"/>
         <source>About</source>
-        <translation type="unfinished">Über</translation>
+        <translation>Über</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="334"/>
         <source>Deselect all sounds</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle Klänge deaktivieren</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="343"/>
         <source>Timer</source>
-        <translation type="unfinished">Timer</translation>
+        <translation>Timer</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="369"/>
         <source>Binaural Beats</source>
-        <translation type="unfinished">Binaurale Beats</translation>
+        <translation>Binaurale Beats</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="383"/>
         <source>To be used with</source>
-        <translation type="unfinished"></translation>
+        <translation>Zu verwenden mit</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="509"/>
@@ -292,7 +292,7 @@
     <message>
         <location filename="../qml/pages/MainPage.qml" line="535"/>
         <source>Colored Noise</source>
-        <translation type="unfinished">Farbiges Rauschen</translation>
+        <translation>Farbiges Rauschen</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="593"/>
@@ -302,12 +302,12 @@
     <message>
         <location filename="../qml/pages/MainPage.qml" line="618"/>
         <source>Ambient Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Umgebungsgeräusch</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="633"/>
         <source>Ambient sounds</source>
-        <translation type="unfinished"></translation>
+        <translation>Umgebungsgeräusche</translation>
     </message>
 </context>
 <context>
